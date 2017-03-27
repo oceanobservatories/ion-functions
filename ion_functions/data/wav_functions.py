@@ -65,7 +65,7 @@ def wav_triaxys_dir_freq(nfreq_nondir, nfreq_dir, freq0, delta_freq):
     # each data packet may call for a different number of directional frequency values nfreq_dir.
     # however, this number will always be <= nfreq_nondir, and all the nfreq_nondir values will be identical.
     npackets = nfreq_nondir.shape[0]
-    fds = np.zeros((npackets, nfreq_nondir[0])) + fill_value
+    fds = np.zeros((npackets, int(nfreq_nondir[0]))) + fill_value
 
     # for the linspace calculation, which is slightly slower than using arange.
     #freq_end = freq0 + (nfreq_dir - 1) * delta_freq
