@@ -172,6 +172,8 @@ def pco2_pco2wat(mtype, light, therm, ea434, eb434, ea620, eb620,
         2014-02-19: Christopher Wingard. Updated comments.
         2014-03-19: Christopher Wingard. Optimized using feedback provided by
                     Chris Fortin.
+        2017-04-04: Pete Cable. Updated algorithm to use thermistor/blank counts
+                    as indicated in the DPS and the usage below.
 
     Usage:
 
@@ -296,6 +298,12 @@ def pco2_calc_pco2(light, therm, ea434, eb434, ea620, eb620,
     #S620 = light[5]   # 434nm Signal Signal LED intensity
     Ratio434 = light[:, 6]     # 434nm Ratio
     Ratio620 = light[:, 7]     # 620nm Ratio
+
+    # Convert thermistor counts to degrees C
+    therm = pco2_thermistor(therm)
+    # Convert blank light readings to absorbance
+    a434blank = pco2_blank(a434blank)
+    a620blank = pco2_blank(a620blank)
 
     # calculate absorbance ratio, correcting for blanks
     A434 = -1. * sp.log10(Ratio434 / a434blank)  # 434 absorbance

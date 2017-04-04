@@ -69,8 +69,8 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
                 strt += step
 
             if self.mtype[i] == 5:
-                a434blnk = co2func.pco2_blank(self.light[i, 6])
-                a620blnk = co2func.pco2_blank(self.light[i, 7])
+                a434blnk = self.light[i, 6]
+                a620blnk = self.light[i, 7]
 
         self.a434blnk = np.ones(11) * a434blnk
         self.a620blnk = np.ones(11) * a620blnk
@@ -88,6 +88,9 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
             1341-00490_Data_Product_SPEC_PCO2WAT_OOI.pdf)
 
         Implemented by Christopher Wingard, April 2013
+
+        Updated 2017-04-04 to pass raw thermistor and blank values into pco2_pco2wat
+        as indicated in the function description and DPS.
         """
 
         # compute the thermistor temperature in deg_C, derive blanks and then
@@ -95,7 +98,7 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
 
         ### bulk case ###
         tout = co2func.pco2_thermistor(self.traw)
-        pco2out = co2func.pco2_pco2wat(self.mtype, self.light, tout,
+        pco2out = co2func.pco2_pco2wat(self.mtype, self.light, self.traw,
                                        self.ea434, self.eb434, self.ea620, self.eb620,
                                        self.calt, self.cala, self.calb, self.calc,
                                        self.a434blnk, self.a620blnk)
@@ -107,7 +110,7 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
         indx = 0
         for mtype in self.mtype:
             tout = co2func.pco2_thermistor(self.traw[indx])
-            pco2out = co2func.pco2_pco2wat(mtype, self.light[indx, :], tout,
+            pco2out = co2func.pco2_pco2wat(mtype, self.light[indx, :], self.traw[indx],
                                            self.ea434[indx], self.eb434[indx],
                                            self.ea620[indx], self.eb620[indx],
                                            self.calt[indx], self.cala[indx],
