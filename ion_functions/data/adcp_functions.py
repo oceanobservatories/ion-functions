@@ -6,6 +6,8 @@
 @brief Module containing ADCP related data-calculations.
 """
 import numpy as np
+
+from ion_functions import deprecated
 from ion_functions.data.generic_functions import magnetic_declination
 from ion_functions.data.generic_functions import replace_fill_with_nan
 
@@ -510,6 +512,7 @@ def adcp_earth_error(e):
 
 
 # Compute the VELTURB_L1 data products for the VADCP instrument deployed by RSN.
+@deprecated('use adcp_beam_eastward')
 def vadcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
     """
     Description:
@@ -576,6 +579,7 @@ def vadcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
     return uu_cor
 
 
+@deprecated('use adcp_beam_northward')
 def vadcp_beam_northward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
     """
     Description:
@@ -752,6 +756,7 @@ def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, h, p, r, vf):
     return ww
 
 
+@deprecated('use adcp_beam_error')
 def vadcp_beam_error(b1, b2, b3, b4):
     """
     Description:
