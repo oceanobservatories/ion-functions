@@ -91,6 +91,7 @@ Setup a virtualenv to run ion-functions (use any name you like):
     mkvirtualenv --python=python2.7 ion_functions
     workon ion_functions
     pip install numpy==1.6.2
+    pip install -r requirements.txt
 
 #Source
 
