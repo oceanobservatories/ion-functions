@@ -1,7 +1,7 @@
 import warnings
 import functools
 
-#__version__ = '2.1.0'
+__version__ = '2.1.0'
 
 
 def deprecated(func):
@@ -18,4 +18,3 @@ def deprecated(func):
         return func(*args, **kwargs)
 
     return new_func
-
