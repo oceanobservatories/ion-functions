@@ -8,7 +8,6 @@
 
 import numpy as np
 import numexpr as ne
-import scipy as sp
 from ion_functions.utils import fill_value
 
 
@@ -97,6 +96,8 @@ def pco2_blank(raw_blank):
         2014-02-19: Christopher Wingard. Updated comments.
         2014-02-28: Christopher Wingard. Updated to except raw blank values
                     from a sparse array.
+        2018-03-04: Christopher Wingard. Updated to correctly calculate the
+                    blank based on new code from the vendor.
 
     Usage:
 
@@ -115,9 +116,7 @@ def pco2_blank(raw_blank):
             OOI >> Controlled >> 1000 System Level >>
             1341-00490_Data_Product_SPEC_PCO2WAT_OOI.pdf)
     """
-    #blank = -1. * sp.log10(raw_blank / 16384.)
-    blank = -1. * sp.log10(raw_blank)
-
+    blank = raw_blank / 16384.
     return blank
 
 
@@ -207,11 +206,11 @@ def pco2_pco2wat(mtype, light, therm, ea434, eb434, ea620, eb620,
             1341-00490_Data_Product_SPEC_PCO2WAT_OOI.pdf)
     """
     # reset inputs to arrays
-    ### measurements
+    # measurements
     mtype = np.atleast_1d(mtype)
     light = np.atleast_2d(light)
     therm = np.atleast_1d(therm)
-    ### calibration coefficients
+    # calibration coefficients
     ea434 = np.atleast_1d(ea434)
     eb434 = np.atleast_1d(eb434)
     ea620 = np.atleast_1d(ea620)
@@ -220,7 +219,7 @@ def pco2_pco2wat(mtype, light, therm, ea434, eb434, ea620, eb620,
     cala = np.atleast_1d(cala)
     calb = np.atleast_1d(calb)
     calc = np.atleast_1d(calc)
-    ### blank measurements
+    # blank measurements
     a434blank = np.atleast_1d(a434blank)
     a620blank = np.atleast_1d(a620blank)
 
@@ -251,6 +250,11 @@ def pco2_calc_pco2(light, therm, ea434, eb434, ea620, eb620,
         2013-04-20: Christopher Wingard. Initial python code.
         2014-02-19: Christopher Wingard. Updated comments.
         2014-03-19: Christopher Wingard. Optimized.
+        2018-03-04: Christopher Wingard. Updated to correctly calculate pCO2 using
+                    newly formulated code provided by the vendor. Original vendor code
+                    incorrectly calculated the blank correction. Applies additional
+                    corrections to calculations to avoid errors thrown when running a
+                    blank measurement.
 
     Usage:
 
@@ -281,43 +285,48 @@ def pco2_calc_pco2(light, therm, ea434, eb434, ea620, eb620,
             OOI >> Controlled >> 1000 System Level >>
             1341-00490_Data_Product_SPEC_PCO2WAT_OOI.pdf)
     """
-    # set constants
-    ea434 = ea434 - 29.3 * calt
-    eb620 = eb620 - 70.6 * calt
-    e1 = ea620 / ea434
-    e2 = eb620 / ea434
-    e3 = eb434 / ea434
+    # set constants -- original vendor formulation, reset below
+    # ea434 = ea434 - 29.3 * calt
+    # eb620 = eb620 - 70.6 * calt
+    # e1 = ea620 / ea434
+    # e2 = eb620 / ea434
+    # e3 = eb434 / ea434
+
+    # set the e constants, values provided by Sunburst
+    e1 = 0.0043
+    e2 = 2.136
+    e3 = 0.2105
 
     # Extract variables from light array
-    light = light.astype(np.float)
-    #DRef1 = light[0]  # Dark Reference LED
-    #DSig1 = light[1]  # Dark Signal LED
-    #R434 = light[2]   # 434nm Reference LED intensity
-    #S434 = light[3]   # 434nm Signal Signal LED intensity
-    #R620 = light[4]   # 620nm Reference LED intensity
-    #S620 = light[5]   # 434nm Signal Signal LED intensity
     Ratio434 = light[:, 6]     # 434nm Ratio
     Ratio620 = light[:, 7]     # 620nm Ratio
 
     # Convert thermistor counts to degrees C
     therm = pco2_thermistor(therm)
-    # Convert blank light readings to absorbance
-    a434blank = pco2_blank(a434blank)
-    a620blank = pco2_blank(a620blank)
 
-    # calculate absorbance ratio, correcting for blanks
-    A434 = -1. * sp.log10(Ratio434 / a434blank)  # 434 absorbance
-    A620 = -1. * sp.log10(Ratio620 / a620blank)  # 620 absorbance
-    Ratio = A620 / A434      # Absorbance ratio
+    # correct the absorbance ratios using the blanks
+    AR434 = (Ratio434 / a434blank)
+    AR620 = (Ratio620 / a620blank)
+
+    # map out blank measurements and spoof the ratios to avoid throwing an error
+    m = np.where(AR434 == AR620)[0]
+    AR434[m] = 0.99999
+    AR620[m] = 0.99999
+
+    # Calculate the final absorbance ratio
+    A434 = -1 * np.log10(AR434)  # 434 absorbance
+    A620 = -1 * np.log10(AR620)  # 620 absorbance
+    Ratio = A620 / A434          # Absorbance ratio
 
     # calculate pCO2
     V1 = Ratio - e1
     V2 = e2 - e3 * Ratio
-    RCO21 = -1. * sp.log10(V1 / V2)
-    RCO22 = (therm - calt) * 0.007 + RCO21
+    RCO21 = -1 * np.log10(V1 / V2)
+    RCO22 = (therm - calt) * 0.008 + RCO21
     Tcoeff = 0.0075778 - 0.0012389 * RCO22 - 0.00048757 * RCO22**2
     Tcor_RCO2 = RCO21 + Tcoeff * (therm - calt)
     pco2 = 10.**((-1. * calb + (calb**2 - (4. * cala * (calc - Tcor_RCO2)))**0.5) / (2. * cala))
+    pco2[m] = fill_value  # reset the blanks captured earlier to a fill value
 
     return np.real(pco2)
 
