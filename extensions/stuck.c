@@ -14,6 +14,9 @@ int stuck(signed char *out, const double *dat, size_t len, double reso, int num)
 {
     int i,j,k;
     int i_max;
+    num=abs(num);
+    if(num==0)
+        num=10;
     int *tmp = malloc(sizeof(int) * (num-1));
     for(i=0;i<(len - num + 1);i++) {
         i_max = int_min(i+num, len)-1;
