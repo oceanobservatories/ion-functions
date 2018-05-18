@@ -1,4 +1,4 @@
-# Development Release 0.1.0 2018-05-17
+# Development Release 2.4.0 2018-05-18
 
 Issue #13276 - make stuck test handle invalid arguments
 - Use the absolute value of num parameter if it is negative
