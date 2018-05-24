@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <float.h>
+#include "stuck.h"
 #include "spike.h"
 #include "utils.h"
 #include "polycals.h"
@@ -17,6 +18,9 @@ signed char all(signed char *, size_t);
 void print_array(signed char *, size_t);
 void print_double_array(double *, size_t);
 void print_array_size_t(size_t *array, size_t len);
+char test_stuck(void);
+char test_stuck_zero_num(void);
+char test_stuck_neg_num(void);
 char test_spike_simple(void);
 char test_spike_l(void);
 char test_spike_long(void);
@@ -43,6 +47,9 @@ static const char *message=NULL;
 
 int main(int argc, char *argv[])
 {
+    test(&test_stuck);
+    test(&test_stuck_zero_num);
+    test(&test_stuck_neg_num);
     test(&test_spike_simple);
     test(&test_spike_l);
     test(&test_spike_long);
@@ -75,6 +82,7 @@ void test(char (*func)(void))
             printf("%s\n", message);
     }
 }
+
 char test_velocity_corr()
 {
     velocity_profile in, out;
@@ -82,7 +90,7 @@ char test_velocity_corr()
     double uu_cor[10], vv_cor[10];
     int64_t timestamp[10];
     WMM_Model *wmm_model;
-    printf("test_velocity_corr...");
+    printf("test_velocity_corr... ");
     if(wmm_initialize("ion_functions/data/WMM2010.COF", &wmm_model)) {
         message = "Error initializing models";
         printf("\n%s\n", wmm_errmsg);
@@ -147,7 +155,7 @@ char test_mag_decl()
     WMM_Model *model;
     char filename[] = "ion_functions/data/WMM2010.COF";
 
-    printf("test_mag_decl...");
+    printf("test_mag_decl... ");
     if(wmm_initialize(filename, &model)) {
         message = "Error initializing models";
         printf("\n%s\n", wmm_errmsg);
@@ -168,7 +176,6 @@ char test_mag_decl()
     }
     return true;
 }
-
 
 char test_time_vector()
 {
@@ -207,6 +214,7 @@ char test_time_vector_split()
     }
     return true;
 }
+
 char test_time_month()
 {
     double tval = 3580142023.566965;
@@ -272,6 +280,7 @@ char test_gradient2()
     }
     return true;
 }
+
 char test_gradient3()
 {
     double dat[] = {3., 5., 98., 99., 4.};
@@ -381,8 +390,6 @@ char test_gradient6()
     return true;
 }
 
-
-
 char test_polyval()
 {
     double p[] = {1., 2., -3.};
@@ -396,6 +403,114 @@ char test_polyval()
         if(!nearly_equal(expected[i], polyval(p,3,inputs[i]), e)) 
             return false;
     return true;
+}
+
+char test_stuck()
+{
+    double example[20];
+    size_t i=0;
+    signed char output[20];
+    printf("test_stuck... ");
+    arange(example, 20);
+    for(i=0;i<20;i++)
+        output[i] = 1;
+
+    // make a set of stuck values at the beginning
+    example[0] = 5.1; /* 1st stuck value */
+    example[1] = 5.2; /* 2nd stuck value */
+    example[2] = 5.1; /* 3rd stuck value */
+    // make a set that fails to be stuck values because num is 3 and the 3rd
+    // stuck value is more than reso different than the others
+    example[6] = 6.1; /* 1st stuck value */
+    example[7] = 6.1; /* 2nd stuck value */
+    example[8] = 6.5; /* Would be 3rd stuck value */
+    // make a set of stuck values in the middle, longer than num
+    example[11] = 2.0; /* 1st stuck value */
+    example[12] = 2.1; /* 2nd stuck value */
+    example[13] = 2.0; /* 3rd stuck value */
+    example[14] = 2.0; /* 4th stuck value */
+   // make a set of stuck values at the end
+    example[17] = -3.6; /* 1st stuck value */
+    example[18] = -3.5; /* 2nd stuck value */
+    example[19] = -3.5; /* 3rd stuck value */
+    stuck(output, example, 20, 0.2, 3);
+
+    if(all(output, 20))
+        return 0;
+    for(i=0;i<20;i++) {
+        if(i<3 || (i>10 && i<15) || i>16) {
+            if(output[i]!=0)
+                return 0;
+        }
+        else {
+            if(output[i]!=1)
+                return 0;
+        }
+    }
+    return 1;
+}
+
+char test_stuck_zero_num()
+{
+    double example[20];
+    size_t i=0;
+    signed char output[20];
+    printf("test_stuck_zero_num... ");
+    arange(example, 20);
+    for(i=0;i<20;i++)
+        output[i]=1;
+
+    // make a set of stuck values at the end of length 10
+    for(i=10;i<20;i++)
+        example[i]=5.0;
+    stuck(output, example, 20, 1.0, 0);
+
+    if(all(output, 20))
+        return 0;
+    for(i=0;i<20;i++) {
+        if(i<10) {
+            if(output[i]!=1)
+                return 0;
+        }
+        else {
+            if(output[i]!=0)
+                return 0;
+        }
+    }
+    return 1;
+}
+
+char test_stuck_neg_num()
+{
+    double example[10];
+    size_t i=0;
+    signed char output[10];
+    printf("test_stuck_neg_num... ");
+    arange(example, 10);
+    for(i=0;i<10;i++)
+        output[i]=1;
+
+    // make a set of "stuck" values at the beginning of length 3
+    for(i=0;i<3;i++)
+        example[i]=11.0;
+    // make a set of stuck values at the end of length 4
+    for(i=6;i<10;i++)
+        example[i]=11.0;
+    stuck(output, example, 10, 1.0, -4);
+
+    if(all(output,10))
+        return 0;
+    for(i=0;i<10;i++) {
+        if(i<6) {
+            if(output[i]!=1)
+                return 0;
+        }
+        else {
+            if(output[i]!=0)
+                return 0;
+        }
+    }
+    return 1;
 }
 
 char test_spike_simple()
@@ -453,6 +568,7 @@ char test_spike_l()
     }
     return 1;
 }
+
 char test_spike_long()
 {
     double dat[] = { -1 , 3 , 40 , -1 , 1 , -6 , -6 , 1 , 2 , 4 , 3 , 1 , -1 , 40 , 1 , 1 , 4 , 2 , 2 , 2 , 1 , 2 , 100 };
@@ -600,7 +716,6 @@ char check_expected(double *out, double *expected, size_t len, double atol, doub
         }
     }
     return 1;
-
 }
 
 signed char all(signed char *input, size_t len) 
