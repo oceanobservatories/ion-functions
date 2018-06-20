@@ -14,6 +14,7 @@ from ion_functions.data.vel_functions import nobska_mag_corr_east, nobska_mag_co
 from ion_functions.data.vel_functions import nortek_mag_corr_east, nortek_mag_corr_north, nortek_up_vel
 from ion_functions.data.vel_functions import velpt_mag_corr_east, velpt_mag_corr_north, velpt_up_vel
 from ion_functions.data.vel_functions import velpt_up_vel
+from ion_functions.data.vel_functions import vel3dk_transform
 from ion_functions.data.vel_functions import vel3dk_east, vel3dk_north
 from ion_functions.data.vel_functions import vel3dk_up
 from ion_functions.data.vel_functions import valid_lat, valid_lon
@@ -193,6 +194,93 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
         np.testing.assert_array_almost_equal(vn_cor, VN_EXPECTED)
         np.testing.assert_array_almost_equal(vu_cor, VU_EXPECTED)
 
+    def test_vel3dk_transform(self):
+        """
+        Tests the function vel3dk_transform which calculates east, north,
+        and up velocities uncorrected for magnetic declination for a vel3d-k
+        instrument using test data from the VELPTMN DPS. Inputs to this
+        function are beam velocities in units of m/sec and tilt angles
+        in units of degrees.
+
+        Implemented by:
+
+        2018-06-19: Russell Desiderio.
+
+        ********************* 2018-06-20 *************************************
+        THE STATIONARY TRANSFORM CASE HAS NOT BEEN CHECKED AND COULD VERY WELL
+        BE INCORRECT. TO DATE IT HAS NOT BEEN USED DURING OOI MCLANE PROFILES.
+        **********************************************************************
+
+        Notes:
+
+            The 2014 code from Nortek contained errors. The June 2018 code
+            modifications from Nortek corrected these errors. See the
+            documentation in the Notes section of the function
+            generate_beam_transforms in the module vel_functions.py.
+
+            Unit test values are calculated from modifications I made to the
+            Matlab code provided by Nortek in 2018; this Nortek code used
+            beam2xyz matrices whose entries had only 4 or 5 sigfigs, I figured
+            out the matrix entries exactly. Because of Nortek's history in
+            supplying code with errors, I independently derived the algorithm;
+            this does agree (to 4-5 sigfigs) with the code supplied by Nortek in
+            2018.
+
+        References:
+
+            OOI (2012). Data Product Specification for Mean Point Water
+                Velocity. Document Control Number 1341-00790.
+                https://alfresco.oceanobservatories.org/ (See: Company Home
+                >> OOI >> Controlled >> 1000 System Level >>
+                1341-00790_Data_Product_SPEC_VELPTMN_OOI.pdf)
+
+            VEL3D-K IDD (2014) (No DPS as of 2014-03-03)
+                https://confluence.oceanobservatories.org/display/
+                instruments/VEL3D-K__stc_imodem+-+Telemetered
+        """
+
+        beams = np.array([
+            [1, 2, 4, 0, 0],
+            [1, 2, 4, 0, 0],
+            [1, 2, 4, 0, 0],
+            [1, 2, 4, 0, 0],
+            [1, 2, 4, 0, 0],
+            [2, 3, 4, 0, 0],
+            [2, 3, 4, 0, 0],
+            [2, 3, 4, 0, 0],
+            [2, 3, 4, 0, 0],
+            [2, 3, 4, 0, 0]])
+
+        # change velocity units to m/s
+        vel0 = VEL0 * 10.**VSCALE
+        vel1 = VEL1 * 10.**VSCALE
+        vel2 = VEL2 * 10.**VSCALE
+        # change tilt units to degrees
+        hdg = 0.1 * HDG
+        ptch = 0.1 * PTCH
+        rll = 0.1 * RLL
+
+        ENU = vel3dk_transform(vel0, vel1, vel2, hdg, ptch, rll, beams)
+        ve_calcd = np.array(ENU[0, :])[0]
+        vn_calcd = np.array(ENU[1, :])[0]
+        vu_calcd = np.array(ENU[2, :])[0]
+
+        VE_expected = np.array([
+            0.97152370, -0.15048551,  0.43161923,  0.04983687,  0.22505532,
+            0.61535247, -1.49808509,  0.66066875, -0.49045816,  0.38834679])
+
+        VN_expected = np.array([
+            0.34746236,  0.27587512, -0.28755576,  0.42188307, -0.57203139,
+            -0.98769358, 1.39724668,  0.66724621, -1.76064247, -0.13929959])
+
+        VU_expected = np.array([
+            -0.27506406, 0.75059143,  0.58418777,  1.36163388,  0.85850869,
+            1.21113768,  0.38492693, -0.66162609,  0.75089539, -1.80239185])
+
+        np.testing.assert_array_almost_equal(ve_calcd, VE_expected, decimal=7)
+        np.testing.assert_array_almost_equal(vn_calcd, VN_expected, decimal=7)
+        np.testing.assert_array_almost_equal(vu_calcd, VU_expected, decimal=7)
+
     def test_vel3dk(self):
         """
         Tests functions vel3dk_east, vel3dk_north, and vel3dk_up
@@ -220,6 +308,9 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
                         for cloning the present routine to add unit tests checking
                         the actions of the DPAs when the beams variable contains
                         fill values (to fix redmine blocker #3178).
+        2018-06-19: Russell Desiderio. Changed unit test values to reflect the
+                    changes incorporated into the vel3dk DPA algorithm.
+
 
         References:
 
@@ -254,16 +345,16 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
             VEL0, VEL1, VEL2, HDG, PTCH, RLL, beams, VSCALE)
 
         VE_expected = np.array([
-            0.34404501, -0.01039404,  0.64049184, -0.17489265, -0.0739631,
-            -1.09305797, -0.47947474,  0.11710443,  1.97369869, -1.6466505])
+            0.82249603, -0.22633049,  0.49801448, -0.07904969,  0.38632842,
+            0.88336431, -1.84831136,  0.43001174,  0.06043974,  0.41225013])
 
         VN_expected = np.array([
-            0.91742235,  0.04629215,  0.06132321,  0.56597656, -0.35874325,
-            0.37553716, -1.87672302, -1.12589293,  0.0720366, -0.6617893])
+            0.62296765,  0.21800797, -0.14479311,  0.41739691, -0.47814240,
+            -0.75753862, 0.88334724,  0.83473984, -1.82667954, -0.01635351])
 
         vU_expected = np.array([
-            -0.42452079, 0.8123358, 0.443022, 1.29753572, 0.99032304,
-            1.21870746, 0.76989652, -0.19519593, -0.05982637, -0.51904823])
+            -0.27506406,  0.75059143,  0.58418777,  1.36163388,  0.85850869,
+            1.21113768,  0.38492693, -0.66162609,  0.75089539, -1.80239185])
 
         np.testing.assert_array_almost_equal(ve_calcd, VE_expected, decimal=7)
         np.testing.assert_array_almost_equal(vn_calcd, VN_expected, decimal=7)
@@ -283,6 +374,8 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
                     Written to test DPA modifications to clear redmine blocker #3178.
                     NOTE: fillvalues in column 4 will cause NaN output.
                           fillvalues in column 5 will not cause NaN output.
+        2018-06-20: Russell Desiderio. Revised check values because vel3dk code was
+                    corrected.
         """
 
         beams = np.array([
@@ -305,16 +398,16 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
             VEL0, VEL1, VEL2, HDG, PTCH, RLL, beams, VSCALE)
 
         VE_expected = np.array([
-            0.34404501, -0.01039404,  0.64049184, -0.17489265, np.nan,
-            -1.09305797, -0.47947474,  0.11710443,  1.97369869, -1.6466505])
+            0.82249603, -0.22633049,  0.49801448, -0.07904969,  np.nan,
+            0.88336431, -1.84831136,  0.43001174,  0.06043974,  0.41225013])
 
         VN_expected = np.array([
-            0.91742235,  0.04629215,  0.06132321,  0.56597656, np.nan,
-            0.37553716, -1.87672302, -1.12589293,  0.0720366, -0.6617893])
+            0.62296765,  0.21800797, -0.14479311,  0.41739691, np.nan,
+            -0.75753862, 0.88334724,  0.83473984, -1.82667954, -0.01635351])
 
         vU_expected = np.array([
-            -0.42452079, 0.8123358, 0.443022, 1.29753572, np.nan,
-            1.21870746, 0.76989652, -0.19519593, -0.05982637, -0.51904823])
+            -0.27506406,  0.75059143,  0.58418777,  1.36163388,  np.nan,
+            1.21113768,  0.38492693, -0.66162609,  0.75089539, -1.80239185])
 
         np.testing.assert_array_almost_equal(ve_calcd, VE_expected, decimal=7)
         np.testing.assert_array_almost_equal(vn_calcd, VN_expected, decimal=7)
@@ -334,6 +427,8 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
                     Written to test DPA modifications to clear redmine blocker #3178.
                     NOTE: fillvalues in column 4 will cause NaN output.
                           fillvalues in column 5 will not cause NaN output.
+        2018-06-20: Russell Desiderio. Revised check values because vel3dk code was
+                    corrected.
         """
 
         beams = np.array([
@@ -357,15 +452,15 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
 
         VE_expected = np.array([
             np.nan, np.nan,  np.nan, np.nan, np.nan,
-            np.nan, np.nan,  np.nan, 1.97369869, np.nan])
+            np.nan, np.nan,  np.nan, 0.06043974, np.nan])
 
         VN_expected = np.array([
             np.nan, np.nan,  np.nan, np.nan, np.nan,
-            np.nan, np.nan,  np.nan, 0.0720366, np.nan])
+            np.nan, np.nan,  np.nan, -1.82667954, np.nan])
 
         vU_expected = np.array([
             np.nan, np.nan,  np.nan, np.nan, np.nan,
-            np.nan, np.nan,  np.nan, -0.05982637, np.nan])
+            np.nan, np.nan,  np.nan, 0.75089539, np.nan])
 
         np.testing.assert_array_almost_equal(ve_calcd, VE_expected, decimal=7)
         np.testing.assert_array_almost_equal(vn_calcd, VN_expected, decimal=7)
@@ -796,4 +891,3 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
 
         np.testing.assert_allclose(u_calc, u_xpctd, rtol=0.0, atol=1.e-6)
         np.testing.assert_allclose(v_calc, v_xpctd, rtol=0.0, atol=1.e-6)
-

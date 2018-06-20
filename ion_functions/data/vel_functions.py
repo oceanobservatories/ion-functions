@@ -824,6 +824,13 @@ def vel3dk_east(
         vel0, vel1, vel2, heading, pitch, roll, beams, lat, lon,
         timestamp, Vscale, z=0, vel3=0):
     """
+
+        *** R.DESIDERIO: **** 2018-06-20 *************************************
+        THE STATIONARY TRANSFORM (4 BEAM-VELOCITY) CASE HAS NOT BEEN CHECKED
+        AND COULD VERY WELL BE INCORRECT. TO DATE IT HAS NOT BEEN USED DURING
+        OOI MCLANE PROFILES.
+        **********************************************************************
+
     Description:
 
         Computes Eastward Velocity L1 VELPTTU-VLE in True Earth coordinates
@@ -942,6 +949,13 @@ def vel3dk_north(
         timestamp, Vscale, z=0, vel3=0):
 
     """
+
+        *** R.DESIDERIO: **** 2018-06-20 *************************************
+        THE STATIONARY TRANSFORM (4 BEAM-VELOCITY) CASE HAS NOT BEEN CHECKED
+        AND COULD VERY WELL BE INCORRECT. TO DATE IT HAS NOT BEEN USED DURING
+        OOI MCLANE PROFILES.
+        **********************************************************************
+
     Description:
 
         Computes Northward Velocity L1 VELPTTU-VLN in True Earth coordinates
@@ -1057,6 +1071,13 @@ def vel3dk_north(
 def vel3dk_up(
         vel0, vel1, vel2, heading, pitch, roll, beams, Vscale, vel3=0):
     """
+
+        *** R.DESIDERIO: **** 2018-06-20 *************************************
+        THE STATIONARY TRANSFORM (4 BEAM-VELOCITY) CASE HAS NOT BEEN CHECKED
+        AND COULD VERY WELL BE INCORRECT. TO DATE IT HAS NOT BEEN USED DURING
+        OOI MCLANE PROFILES.
+        **********************************************************************
+
     Description:
 
         Computes Northward Velocity L1 VELPTTU-VLU in True Earth coordinates
@@ -1609,9 +1630,59 @@ def generate_beam_transforms():
         actual transformation functions. The dictionary keys are
         'upward', 'downward', or 'stationary'.
 
+        ********************* 2018-06-20 *************************************
+        THE STATIONARY TRANSFORM CASE HAS NOT BEEN CHECKED AND COULD VERY WELL
+        BE INCORRECT. TO DATE IT HAS NOT BEEN USED DURING OOI MCLANE PROFILES.
+        **********************************************************************
+
     Implemented by:
         2014-05-13: Stuart Pearce. Reimplementation of code from P.J.
             Rusello at Nortek
+        2018-06-18: Russell Desiderio. Corrected erroneous code from
+            Rusello. See Notes.
+
+    Notes:
+        In 2017 I (RDesiderio) noticed that the data from the VEL3D-K
+        instruments on the McLane profiler were aliased due to what
+        turned out to be an ambiguity velocity problem. In the course
+        of diagnosing this problem the data were sent to Nortek, who
+        sent back corrected data and the code used to calculate it.
+        This code significantly differs from the 2014 code that was
+        sent to Stuart Pearce for coding this DPA.
+
+        I have also derived what the code should be from knowing the
+        transducer geometry, the sign convention for radial beam velocities,
+        knowing that the instrument 'X' axis is the heading reference,
+        figuring out the correct sequence of undoing pitch and roll so that
+        the heading reference maintains its direction during these rotations,
+        and from observing the signs of the AQDII pitch and roll values when
+        the profiler was manually tilted by suspending it from a gantry
+        crane. The equations match the second (!) set sent by Nortek in
+        2017. (They had a sign error in the first set sent in 2017 which
+        resulted in downward measured 'current' velocities during downward
+        profiles; upward values are expected because the downward profiler
+        velocity was much faster than downwelling or upwelling water velocities).
+
+        The 2014 code from P.J. Rusello has 3 errors. They are:
+        (1) The transducer azimuthal angles increase in a clockwise direction
+            (1 -> 2 -> 3 -> 4), which results in a left-handed cartesian
+            coordinate system. In 2017 an email I received from Nortek stated
+            that these angles increase in the counter-clockwise direction
+            1 -> 4 -> 3 -> 2.
+        (2) The pitch values are negated. They should not be negated.
+        (3) The heading values are used as is. Because the heading
+            reference is the instrument 'X' axis and not the 'Y' axis,
+            90 degrees must be subtracted from the heading values.
+
+        Error (1) is corrected in the current function. Errors (2) and (3)
+        are corrected in the function generate_ENU_transform.
+
+        Coordinate systems: Because the AQDII measures heading as the direction
+        of the projection of the instrument 'X' axis on the horizontal plane,
+        I denote the XYZ coordinate system as the instrument coordinate system
+        and regard the xyz coordinate system as the transducer cartesian
+        coordinate system. Stuart's documentation refers to the xyz coordinate
+        system as instrument coordinates and XYZ as profiler coordinates.
 
     References:
         Lengthy discussions with Nortek and McLane representatives.  No
@@ -1634,18 +1705,21 @@ def generate_beam_transforms():
 
     # BEAMS dictionary is the rotations for each beam from cartesian
     # coordinates to spherical coordinates
+    #
+    ### RDesiderio: change code so that increasing azimuthal angle is in
+    ### the counter-clockwise direction 1 -> 4 -> 3 -> 2.
     BEAMS = {
         1: (sin(radians(47.5)) * cos(radians(0.0)),
             0.0,  # sin(47.5 deg)*sin(0 deg) = 0
             cos(radians(47.5))),
-        2: (0.0,  # sin(25 deg)*cos(90 deg) = 0
-            sin(radians(25.0)) * sin(radians(90.0)),
+        2: (0.0,  # sin(25 deg)*cos(270 deg) = 0
+            sin(radians(25.0)) * sin(radians(270.0)),
             cos(radians(25.0))),
         3: (sin(radians(47.5)) * cos(radians(180.0)),
             0.0,  # sin(47.5 deg)*sin(180 deg) = 0
             cos(radians(47.5))),
-        4: (0.0,  # sin(25 deg)*cos(270 deg) = 0
-            sin(radians(25.0)) * sin(radians(270.0)),
+        4: (0.0,  # sin(25 deg)*cos(90 deg) = 0
+            sin(radians(25.0)) * sin(radians(90.0)),
             cos(radians(25.0)))}
 
     # the cartesian to beam transforms
@@ -1719,6 +1793,7 @@ def get_XYZ_transform(beamlist):
     ##     Rusello at Nortek
     if beamlist == [1, 2, 3, 4]:
         t_beam2XYZ = XYZ_TRANSFORMS['stationary']
+        print 'WARNING: STATIONARY VEL3D-K TRANSFORMS ARE NOT VETTED.'
     elif beamlist == [1, 2, 4, 0]:
         t_beam2XYZ = XYZ_TRANSFORMS['upward']
     elif beamlist == [2, 3, 4, 0]:
@@ -1750,21 +1825,24 @@ def generate_ENU_transform(heading, pitch, roll):
     Implemented by:
         2014-05-13: Stuart Pearce. Reimplementation of code from P.J.
             Rusello at Nortek
+        2018-06-18: Russell Desiderio. Corrected erroneous code from 2014
+            (in this function, heading and pitch). See Notes for the function
+            generate_beam_transforms.
 
     References:
         Lengthy discussions with Nortek and McLane representatives.  No
         DPS as of yet.
 
-        Definitions of rotation matrices taken from Freescale Technical
-        Note Implementing a Tilt-Compensated eCompass using
-        Accelerometer and Magnetometer Sensors
-        http://cache.freescale.com/files/sensors/doc/app_note/AN4248.pdf
     """
-
-    heading = np.radians(heading)
+    ### RDesiderio: Because the heading measured by the AQDII is with reference
+    ### to the instrument 'X' axis relative to magnetic north, the measured
+    ### values need to be corrected by subtracting 90 degrees.
+    heading = np.radians(heading - 90)
     # need to make pitch and roll angles negative so that rotation matrices
     # effectively unpitch and unroll the data
-    pitch = np.radians(-1.0 * pitch)
+    ### RDesiderio: the de facto definition of pitch for this instrument
+    ### requires an additional negation resulting in no net negation.
+    pitch = np.radians(pitch)
     roll = np.radians(-1.0 * roll)
 
     # "un"-roll transform matrix
@@ -1795,8 +1873,9 @@ def vel3dk_transform(
         vel0, vel1, vel2, heading, pitch, roll, beams, vel3=0):
     """
     Description:
-        Transforms beam velocities to Earth coordinate velocities for an
-        OOI VEL3D-K instrument.
+        Transforms beam velocities to Earth coordinate velocities
+        (uncorrected for magnetic declination) for an OOI
+        VEL3D-K instrument.
 
         Takes 3 or 4 beam velocities in m/s from a VEL3D-K
         (Aquadopp II on a McLane Profiler(MMP)), a beam configuration
@@ -1811,9 +1890,9 @@ def vel3dk_transform(
         where
 
         ENU = A matrix of velocity data in Earth coordinates (East,
-            North, Up) with East velocities in the first row, North
-            velocities in the second row and Upward velocities in the
-            3rd row.
+            North, Up) uncorrected for magnetic declination with East
+            velocities in the first row, North velocities in the second
+            row and Upward velocities in the 3rd row.
         vel0, 1, 2, 3 = AquadoppII beam velocities as integers to be
             scaled by 10^Vscale. vel3 is optional depending on the
             number of beams used as listed in beams.
@@ -1840,6 +1919,9 @@ def vel3dk_transform(
             for those corresponding data products. Actionable fill values
             are those that are situated in the 1st 4 columns; fill values
             in the 5th column are ignored because the 5th column is deleted.
+        2018-06-19: Russell Desiderio. Added to the documentation that the
+            products of this function are ENU velocities uncorrected for
+            magnetic declination.
 
     References:
         Lengthy discussions with Nortek and McLane representatives.  No
@@ -1999,6 +2081,7 @@ def vel_mag_correction(u, v, lat, lon, ntp_timestamp, z=0.0, zflag=-1):
     """
     # retrieve the magnetic declination
     theta = magnetic_declination(lat, lon, ntp_timestamp, z, zflag)
+    #print theta
 
     # apply the magnetic declination correction
     magvar = np.vectorize(magnetic_correction)
