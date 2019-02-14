@@ -1,3 +1,7 @@
+# Development Release 2.4.1 2019-02-14
+
+Issue #13461 - corrected VEL3D-K data product algorithm.
+
 # Development Release 2.4.0 2018-05-18
 
 Issue #13276 - make stuck test handle invalid arguments
