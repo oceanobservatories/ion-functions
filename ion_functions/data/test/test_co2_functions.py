@@ -21,42 +21,41 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
     def setUp(self):
         ###### Test data for PCO2W ######
         raw_strings = np.array([
-            '*7E2705CBACEE7F007D007D0B2A00BF080500E00187034A008200790B2D00BE080600DE0C1406C98C',
-            '*7E2704CBACEECB008000880B2900B2080600D300FB0263007F00890B2B00B4080700CE0C5106C884',
-            '*7E2704CBACEF43007E00890B27014408070189045B0875007E00870B2B0140080201860C5506C601',
-            '*7E2704CBACEFBB007E00820B2A042B0803051F16182785008000850B2A043C080405390C5506C5A9',
-            '*7E2704CBACF033007F00840B28054D080606831CCC330A007F00850B290551080406800C5606C556',
-            '*7E2704CBACF0AB007E00770B2804DE080605F31A672E9F008100790B2F04E0080705F70C5606C5EB',
-            '*7E2704CBACF1230081007C0B2B00BF080800DB01BF0390007C00790B3000C7080B00EA0C5606C80A',
-            '*7E2704CBACF19B008000750B2B01D20807023008310E94007E00730B2A01D2080502290C5706C0A2',
-            '*7E2704CBACF213008000740B2A01D50808042F08501FC6007D00780B3201D8080A04350C5706C0A5',
-            '*7E2704CBACF28B007F00710B2F0174080203570615189B008100730B2A0174080A03580C5706C125',
-            '*7E2704CBACF303007E006B0B2C019B080803CC07001CBA007F006F0B300199080803D00C5706C4E3'
+            '*BC2705D5A7C0E10082005A0CA9090E07CB08E82DCA4B1C0082005A0CA9090E07CD08EC0C3208C38A',
+            '*BC2704D5A7E2B1007E005A0CB1022F07C40443099F226D007F005A0CAF022F07C404400C3F08BE2E',
+            '*BC2704D5A7FEC90080005A0CAD028707CC03160B711800008300580CAC028607CC03160C4007389C',
+            '*BC2704D5A8006F0083005B0CA1028D07DE02F70BA016AF0081005A0CA2028D07E202F70C4007A16D',
+            '*BC2704D5A802150080005A0C98028D07E902DE0BAE15BF0081005A0C98028E07EB02DF0C40080C6B',
+            '*BC2704D5A803BB007F00590C98028307EB02EA0B6B161B008100580C94028107EE02EB0C41085372',
+            '*BC2704D5A80560007F005A0C9A027407E403050B26171F0083005C0C99027607E903060C4008862B',
+            '*BC2704D5A80707007F005A0CA0027007DE03210AF9182A008000590CA0026D07DE03240C400895E4',
+            '*BC2704D5A808AD0082005B0CA2026607D203470AC019A00080005C0CA6026607D403490C3F0899FF',
+            '*BC2704D5A80A54007F00560CAB025407CC03860A701BCF0083005C0CAA025707D003840C3F089BE2',
+            '*BC2704D5A80BF90080005A0CB3024907C603B60A2D1D99008100580CAF024707C603B90C3F089C58',
+            '*BC2704D5A80E140080005B0CB3023807C0041009CA20C40082005A0CB3023807C004110C3F08A0D4',
+            '*BC2704D5A8102F007F00580CB9022D07BA04350999222D0080005A0CB4022E07BC04370C3E08B067',
+            '*BC2704D5A812E70081005B0CBE022107B00479094A24AD0080005A0CBC022007B8047B0C3E08CEE4',
         ])
 
         # reagent constants (instrument and reagent bag specific)
-        self.ea434 = np.ones(11) * 19706.
-        self.ea620 = np.ones(11) * 34.
-        self.eb434 = np.ones(11) * 3073.
-        self.eb620 = np.ones(11) * 44327.
-        self.calt = np.ones(11) * 16.5
-        self.cala = np.ones(11) * 0.0459
-        self.calb = np.ones(11) * 0.6257
-        self.calc = np.ones(11) * -1.5406
+        self.calt = np.ones(14) * 4.6539
+        self.cala = np.ones(14) * 0.0422
+        self.calb = np.ones(14) * 0.6761
+        self.calc = np.ones(14) * -1.5798
 
         # expected outputs
-        self.therm = np.array([18.8526, 18.8765, 18.9245, 18.9485,
-                               18.9485, 18.9485, 18.8765, 19.0686,
-                               19.0686, 19.0446, 18.9725])
-        self.pco2 = np.array([fill_value, 294.1720, 311.3361, 319.0101,
-                              319.8925, 319.8950, 305.8104, 317.9661,
-                              284.3676, 280.2324, 280.0354])
+        self.therm = np.array([7.3151, 7.4258, 16.2306, 13.8108, 11.3900,
+                               9.8019, 8.6674, 8.3345, 8.2458, 8.2014,
+                               8.1792, 8.0905, 7.7359, 7.0716])
+        self.pco2 = np.array([fill_value, 609.8626, 394.3221, 351.6737, 321.4986,
+                              324.0670, 339.4317, 358.3335, 388.1735, 436.8431,
+                              481.1713, 566.8172, 607.5355, 685.8555])
 
         # parse the data strings
-        self.mtype = np.zeros(11, dtype=np.int)
-        self.light = np.zeros((11, 14), dtype=np.int)
-        self.traw = np.zeros(11, dtype=np.int)
-        for i in range(11):
+        self.mtype = np.zeros(14)
+        self.light = np.zeros((14, 14))
+        self.traw = np.zeros(14)
+        for i in range(14):
             # parse the raw strings into subelements, such as the driver would
             # provide.
             s = raw_strings[i]
@@ -72,8 +71,8 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
                 a434blnk = self.light[i, 6]
                 a620blnk = self.light[i, 7]
 
-        self.a434blnk = np.ones(11) * a434blnk
-        self.a620blnk = np.ones(11) * a620blnk
+        self.a434blnk = np.ones(14) * a434blnk
+        self.a620blnk = np.ones(14) * a620blnk
 
     def test_pco2_pco2wat(self):
         """
@@ -99,7 +98,7 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
         ### bulk case ###
         tout = co2func.pco2_thermistor(self.traw)
         pco2out = co2func.pco2_pco2wat(self.mtype, self.light, self.traw,
-                                       self.ea434, self.eb434, self.ea620, self.eb620,
+                                       fill_value, fill_value, fill_value, fill_value,
                                        self.calt, self.cala, self.calb, self.calc,
                                        self.a434blnk, self.a620blnk)
 
@@ -111,8 +110,7 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
         for mtype in self.mtype:
             tout = co2func.pco2_thermistor(self.traw[indx])
             pco2out = co2func.pco2_pco2wat(mtype, self.light[indx, :], self.traw[indx],
-                                           self.ea434[indx], self.eb434[indx],
-                                           self.ea620[indx], self.eb620[indx],
+                                           fill_value, fill_value, fill_value, fill_value,
                                            self.calt[indx], self.cala[indx],
                                            self.calb[indx], self.calc[indx],
                                            self.a434blnk[indx], self.a620blnk[indx])
