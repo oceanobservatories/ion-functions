@@ -793,7 +793,7 @@ def fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT, heading,
     # distance vector between IMU and sonic sampling volume
     Rvec = np.array([0.0, 0.0, z_imu_2_smplvol])
 
-    fs = 10.0                      # sampling frequency, Hz
+    fs = 10                         # sampling frequency, Hz
     #fltr_cutoff_freq = 10.0        # cutoff frequency to generate filter coeffs
     # 16-oct-2014 e-mail from Jim Edson (DPS author): use
     fltr_cutoff_freq = 12.0
@@ -1215,17 +1215,20 @@ def fdc_despikesimple(data):
         # of datasets.
 
         # calculate the median and stdev as column vectors for broadcasting
-        M = np.atleast_2d(sp.stats.nanmedian(data, axis=-1)).T
+        M = np.atleast_2d(np.nanmedian(data, axis=-1)).T
+
         # original code used matlab std function, which has a "N-1" in denominator -
         # so, ddof=1.
         Sn = np.nanstd(data, axis=-1, ddof=1, keepdims=True) * n_std
-        mask = np.logical_and(data < M + Sn, data > M - Sn)
+        mask = np.logical_and(data <= M + Sn, data >= M - Sn)
+
         # the interp1d function is vectorized for the second argument 2D array ONLY IF
         # the first argument 1D array is unchanging - which it's not.
         # therefore, here a for loop is required.
         for ii in range(array_size[0]):
             f = interpolate.interp1d(t[mask[ii, :]], data[ii, mask[ii, :]], kind=ntrpmeth,
                                      bounds_error=False, fill_value=np.nan)
+
             data[ii, :] = f(t)
 
         ## as coded in DPS
@@ -1489,6 +1492,9 @@ def fdc_quantize_data(*args):
     # is expected to be 40 minutes = 2400 seconds; use a lower value as
     # the time discriminant.
     time_gap = 1800.0
+    # expected time difference between data readings within a 20 minute
+    # sample is 0.1 seconds (10Hz)
+    default_time_delta = 0.1
 
     data = np.atleast_2d(args)  # data is a 2D array
 
@@ -1522,7 +1528,9 @@ def fdc_quantize_data(*args):
             filldata = np.tile(data[:, idx-1:idx], (1, n_nsrt))
             # correct the timestamps of the filldata.
             delta_time = np.median(np.diff(data[0, idx-chunklengths[ii]:idx]))
-            filldata[0, :] = filldata[0, :] + np.arange(1.0, n_nsrt+1) * delta_time
+            if np.isnan(delta_time):
+                delta_time = default_time_delta
+            filldata[0, :] = filldata[0, :] + np.arange(1.0, n_nsrt + 1) * delta_time
             # and insert filldata into the data array
             data = np.hstack((data[:, 0:idx], filldata, data[:, idx:]))
         elif chunklengths[ii] == npts:

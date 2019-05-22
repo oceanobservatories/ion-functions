@@ -1,3 +1,7 @@
+# Development Release 2.4.3 2019-06-03
+
+Issue #13402 - fixed assorted bugs in FDCHP data product algorithms
+
 # Release 2.4.2 2019-02-14
 
 Issue #13461 - corrected VEL3D-K data product algorithm.
