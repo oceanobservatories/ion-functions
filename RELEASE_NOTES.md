@@ -1,3 +1,7 @@
+# Release 2.4.5 2020-03-31
+
+Issue #13402 - fixed assorted bugs in FDCHP data product algorithms
+
 # Release 2.4.4 2019-11-07
 
 Issue #14302 - ADCPTE101 - failure to generate data products
