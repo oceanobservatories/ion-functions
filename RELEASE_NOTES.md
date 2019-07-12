@@ -1,3 +1,8 @@
+# Development Release 2.4.4 2019-08-28
+
+Issue #14398 - QARTOD proof of concept
+- Add qartod_functions module with ioos QARTOD tests
+
 # Release 2.4.3 2019-08-19
 
 Issue #11399 - Expose,use depth from pressure function
