@@ -515,3 +515,38 @@ def bilinear_interpolation(x, y, points):
 
 def error(x, y):
     return np.abs(x - y) / np.abs(y)
+
+
+def select_non_zero_arg(a1, a2=None, a1_scale_factor=None, a2_scale_factor=None):
+    """
+    Description:
+
+        Test arrays a1 and a2 for non-zero values and return the non-zero array.
+        If needed, multiply the returned array by a scale factor so that it
+        will be in the expected units.
+
+    Implemented by:
+
+        2019-07-17: Mark Steiner. Initial code.
+
+    Usage:
+
+        out_value = select_non_zero_arg(a1, a2=None, a1_scale_factor=None, a2_scale_factor=None)
+
+            where
+
+        out_value = the scaled array containing at least one non-zero element.
+        a1 = an input array to be tested for non-zero elements.
+        a2 = an input array to be tested for non-zero elements.
+        a1_scale_factor = scale factor to apply to a1
+        a2_scale_factor = scale factor to apply to a2
+
+    References:
+
+        None.
+    """
+    if np.any(a1):
+        return a1 * a1_scale_factor if np.any(a1_scale_factor) else a1
+    if np.any(a2):
+        return a2 * a2_scale_factor if np.any(a2_scale_factor) else a2
+    return a1
