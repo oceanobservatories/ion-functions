@@ -24,6 +24,7 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
             2014-02-06: Christopher Wingard. Initial Code.
             2015-06-12: Russell Desiderio. Changed raw beam data to type int. This
                         change did not affect any previously written unit tests.
+            2019-08-13: Adds 3-beam solution testing for the beam2ins function
 
         """
         # set test inputs -- values from DPS
@@ -42,6 +43,11 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
         self.b3 = self.b3.astype(int)
         self.b4 = self.b4.astype(int)
         #
+        self.pg1 = np.array([[100, 100, 100,  24, 100, 100,  24, 100, 100, 100]])
+        self.pg2 = np.array([[100, 100, 100, 100, 100, 100, 100,  24, 100, 100]])
+        self.pg3 = np.array([[100, 100, 100, 100, 100, 100, 100, 100,  24, 100]])
+        self.pg4 = np.array([[100, 100, 100,  24, 100, 100, 100, 100, 100,  24]])
+
         self.echo = np.array([[0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250]])
         self.sfactor = 0.45
         # units of compass data are in centidegrees.
@@ -115,14 +121,17 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
         """
         # single record case
         got_uu_cor = af.adcp_beam_eastward(self.b1, self.b2, self.b3, self.b4,
+                                           self.pg1, self.pg2, self.pg3, self.pg4,
                                            self.heading, self.pitch, self.roll, self.orient,
                                            self.lat, self.lon, self.depth, self.ntp)
         got_vv_cor = af.adcp_beam_northward(self.b1, self.b2, self.b3, self.b4,
+                                            self.pg1, self.pg2, self.pg3, self.pg4,
                                             self.heading, self.pitch, self.roll, self.orient,
                                             self.lat, self.lon, self.depth, self.ntp)
         got_ww = af.adcp_beam_vertical(self.b1, self.b2, self.b3, self.b4,
+                                       self.pg1, self.pg2, self.pg3, self.pg4,
                                        self.heading, self.pitch, self.roll, self.orient)
-        got_ee = af.adcp_beam_error(self.b1, self.b2, self.b3, self.b4)
+        got_ee = af.adcp_beam_error(self.b1, self.b2, self.b3, self.b4, self.pg1, self.pg2, self.pg3, self.pg4,)
 
         # test results
         np.testing.assert_array_almost_equal(got_uu_cor, self.uu_cor, 4)
