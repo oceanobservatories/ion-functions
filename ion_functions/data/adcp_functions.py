@@ -44,8 +44,8 @@ ADCP_FILLVALUE = -32768
                           calculates ECHOINT-B4_L1.
 
       **** Base functions used by above functions
-      adcp_beam2ins -- applies the beam to instrument transform using a 4
-            beam solution for instruments programmed in beam coordinates
+      adcp_beam2ins -- applies the beam to instrument transform using either a 4
+            or 3 beam solution for instruments programmed in beam coordinates
       adcp_ins2earth -- applies the instrument to Earth transform for all
             instruments originally programmed in beam coordinates.
       magnetic_correction -- corrects horizontal velocities for the magnetic
@@ -89,7 +89,8 @@ def adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
                     (c) removed the depth dependence from the magnetic declination.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
@@ -117,7 +118,7 @@ def adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon
         lon = instrument's deployment longitude [decimal degrees]
         dt = sample date and time value [seconds since 1900-01-01]
     """
-    # force shapes of inputs to arrays of the correct dimensions
+    # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
     lon = np.atleast_1d(lon)
     dt = np.atleast_1d(dt)
@@ -166,7 +167,8 @@ def adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lo
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
                     (c) removed the depth dependence from the magnetic declination.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
@@ -194,7 +196,7 @@ def adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lo
         lon = instrument's deployment longitude [decimal degrees]
         dt = sample date and time value [seconds since 1900-01-01]
     """
-    # force shapes of inputs to arrays of the correct dimensions
+    # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
     lon = np.atleast_1d(lon)
     dt = np.atleast_1d(dt)
@@ -241,7 +243,8 @@ def adcp_beam_vertical(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
         2015-06-10: Russell Desiderio.
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
@@ -292,6 +295,8 @@ def adcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
         2013-04-10: Christopher Wingard. Initial code.
         2015-06-10: Russell Desiderio.
                     Moved the conditioning of input beam velocities to adcp_beam2inst.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
@@ -541,7 +546,8 @@ def vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lo
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
                     (c) removed the depth dependence from the magnetic declination.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
@@ -569,7 +575,7 @@ def vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lo
         lon = instrument's deployment longitude [decimal degrees]
         dt = sample date and time value [seconds since 1900-01-01]
     """
-    # force shapes of inputs to arrays of the correct dimensions
+    # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
     lon = np.atleast_1d(lon)
     dt = np.atleast_1d(dt)
@@ -610,7 +616,8 @@ def vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, l
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
                     (c) removed the depth dependence from the magnetic declination.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
@@ -638,7 +645,7 @@ def vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, l
         lon = instrument's deployment longitude [decimal degrees]
         dt = sample date and time value [seconds since 1900-01-01]
     """
-    # force shapes of inputs to arrays of the correct dimensions
+    # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
     lon = np.atleast_1d(lon)
     dt = np.atleast_1d(dt)
@@ -670,7 +677,7 @@ def vadcp_beam_vertical_est(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
         (VELTURB-VLU-4BM) from the beam coordinate transformed velocity profiles as
         defined in the Data Product Specification for Turbulent Velocity
         Profile and Echo Intensity - DCN 1341-00760. This provides the
-        traditional estimate of the vertical velocity component from a 4 beam
+        traditional estimate of the vertical velocity component from a 4 or 3 beam
         solution, where each beam is facing outward at an angle (20 degrees)
         relative to the vertical.
 
@@ -681,7 +688,8 @@ def vadcp_beam_vertical_est(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
         2015-06-22: Russell Desiderio. Renamed this data product.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
@@ -719,7 +727,7 @@ def vadcp_beam_vertical_est(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
     return w
 
 
-def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, h, p, r, vf):
+def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5, h, p, r, vf):
     """
     Description:
 
@@ -738,26 +746,27 @@ def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, h, p, r, vf
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
         2015-06-22: Russell Desiderio. Renamed this data product.
         2015-06-25: Russell Desiderio. Incorporated b5 int fillvalue -> Nan.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        ww_true = vadcp_beam_vertical_true(b1, b2, b3, b4, b5, h, p, r, vf)
+        w = vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5, h, p, r, vf)
 
             where
 
-        ww_true = true vertical velocity profiles in Earth coordinates
-                  (VELTURB-VLU-5BM_L1) [m s-1]
+        w = true vertical velocity profiles in Earth coordinates (VELTURB-VLU-5BM_L1) [m s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
-        b5 = "beam 5" velocity profiles in beam coordinates (VELTURB-B5_L0) [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
+        b5 = beam 5 velocity profiles in beam coordinates (VELTURB-B5_L0) [mm s-1]
         pg1 = percent good estimate for beam 1 [percent]
         pg2 = percent good estimate for beam 2 [percent]
         pg3 = percent good estimate for beam 3 [percent]
         pg4 = percent good estimate for beam 4 [percent]
+        pg5 = percent good estimate for beam 4 [percent]
         h = instrument's uncorrected magnetic heading [cdegrees]
         p = instrument pitch [cdegrees]
         r = instrument roll [cdegrees]
@@ -767,11 +776,13 @@ def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, h, p, r, vf
     # compute the beam to instrument transform
     x, y, _, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
-    # check b5 for the presence of fill values
+    # check percent good data for beam 5, reset to fill if less than 25%
+    b5 = np.ma.filled(np.ma.masked_where(pg5 < 25, b5), ADCP_FILLVALUE)
+
+    # check b5 for the presence of fill values and replace with NaN
     b5 = replace_fill_with_nan(ADCP_FILLVALUE, b5)
 
     # compute the instrument to earth beam transform
-    # fill values in the adcp orientation parameters are checked for inside adcp_ins2earth
     _, _, w = adcp_ins2earth(x, y, b5, h, p, r, vf)
 
     # scale upward velocity to m/s
@@ -796,7 +807,8 @@ def vadcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
         2014-06-25: Christopher Wingard. Initial code, based on existing ADCP
         2015-06-10: Russell Desiderio.
                     Moved the conditioning of input beam velocities to adcp_beam2inst.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
@@ -889,7 +901,8 @@ def adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
 
         2013-04-10: Christopher Wingard. Initial code.
         2015-06-24: Russell Desiderio. Incorporated int fillvalue -> Nan.
-        2019-08-13: Christopher Wingard. Add functionality to compute a 3-beam solution
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
