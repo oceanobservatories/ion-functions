@@ -1440,3 +1440,38 @@ def adcp_bin_depths_meters(dist_first_bin, bin_size, num_bins, sensor_depth, adc
     bin_depths_pd8 = sensor_depth + z_sign * (dist_first_bin + bin_size * bin_numbers)
 
     return bin_depths_pd8
+
+
+def depth_from_pressure_dbar(pressure, latitude, pressure_scale_factor=None):
+    """
+    Description:
+
+        Calculates depth from pressure. This function was extracted from
+        the adcp_bin_depths_dapa function.
+
+    Implemented by:
+
+        2019-06-29: Mark Steiner. Initial code.
+
+    Usage:
+
+        depth = depth_from_pressure_dbar(pressure, latitude, pressure_scale_factor)
+
+            where
+
+        depths =  [meters]
+
+        pressure = pressure [dbar]
+        latitude = latitude of the instrument [degrees]
+        pressure_scale_factor = scale factor to convert pressure to dbar [unitless]
+
+    """
+    # check for CI fill values.
+    pressure = replace_fill_with_nan(None, pressure)
+
+    # Apply scale factor to convert pressure to decibar
+    pressure_dbar = pressure * pressure_scale_factor if pressure_scale_factor else pressure;
+
+    # Calculate sensor depth using TEOS-10 toolbox z_from_p function
+    # note change of sign to make the sensor_depth variable positive
+    return -z_from_p(pressure_dbar, latitude)
