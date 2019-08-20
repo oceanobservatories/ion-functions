@@ -1,3 +1,7 @@
+# Release 2.4.3 2019-08-19
+
+Issue #11399 - Expose,use depth from pressure function
+
 # Release 2.4.2 2019-02-14
 
 Issue #13461 - corrected VEL3D-K data product algorithm.
