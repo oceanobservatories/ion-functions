@@ -521,9 +521,10 @@ def select_non_zero_arg(a1, a2=None, a1_scale_factor=None, a2_scale_factor=None)
     """
     Description:
 
-        Test arrays a1 and a2 for non-zero values and return the non-zero array.
-        If needed, multiply the returned array by a scale factor so that it
-        will be in the expected units.
+        Test arrays a1 and a2 for non-zero values and return the non-zero
+        array, preferring a1 if both are present. If needed, multiply the
+        returned array by a scale factor so that it will be in the expected
+        units.
 
     Implemented by:
 
