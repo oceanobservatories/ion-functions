@@ -1,3 +1,8 @@
+# Release 2.4.4 2019-11-07
+
+Issue #14302 - ADCPTE101 - failure to generate data products
+- Adds ability to compute a 3-beam solution when converting from beam to Earth coordinates
+
 # Release 2.4.3 2019-08-19
 
 Issue #11399 - Expose,use depth from pressure function
