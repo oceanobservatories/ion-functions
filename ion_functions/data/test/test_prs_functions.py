@@ -326,7 +326,7 @@ class TestPRSFunctionsUnit(BaseUnitTestCase):
         # also test potentially pathological case mimicked with an unphysical coverage:
         dday_coverage = 1.1  # 110%
         xpctd_timestamps = np.arange(1.0, 10.0) * 86400  # same as above
-        xpctd_data = np.zeros(9.0) + np.nan
+        xpctd_data = np.zeros(9) + np.nan
         xpctd_bincount = np.array([2880, 5760, 3600, 2160, 2160, 3600, 5760, 5760, 2880])  # as above
         # calc is a tuple of three elements
         calc = prsfunc.anchor_bin_detided_data_to_24h(time15s, data, dday_coverage)
@@ -351,13 +351,13 @@ class TestPRSFunctionsUnit(BaseUnitTestCase):
         data = np.arange(10.0)
         window_size = 4
         calc = prsfunc.calculate_sliding_means(data, window_size)
-        np.testing.assert_array_equal(calc, xpctd)
+        np.testing.assert_allclose(calc, xpctd, rtol=0.0, atol=1.e-12)
 
         xpctd = np.array([np.nan, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, np.nan])
         data = np.arange(10.0)
         window_size = 3
         calc = prsfunc.calculate_sliding_means(data, window_size)
-        np.testing.assert_array_equal(calc, xpctd)
+        np.testing.assert_allclose(calc, xpctd, rtol=0.0, atol=1.e-12)
 
     def test_calculate_sliding_slopes(self):
         """

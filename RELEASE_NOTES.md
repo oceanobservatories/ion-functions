@@ -1,3 +1,7 @@
+# Development Release 2.4.5 2019-11-25
+
+# Updates to use numpy=1.16
+
 # Release 2.4.4 2019-11-07
 
 Issue #14302 - ADCPTE101 - failure to generate data products
