@@ -44,7 +44,7 @@ polycals_extension = Extension("ion_functions.data.polycals", polycals_sources,
                                include_dirs=[np.get_include(), "extensions/"], libraries=["m"])
 
 setup(name='ion-functions',
-      version='2.4.5',
+      version='2.4.6',
       description='Python Function collection for ION',
       long_description=open('README.md').read(),
       license='LICENSE.txt',
