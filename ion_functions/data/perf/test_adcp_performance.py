@@ -83,7 +83,6 @@ class TestADCPPerformance(PerformanceTestCase):
         vf = np.repeat(self.orient, 10000)
         lat = np.repeat(self.lat, 10000)
         lon = np.repeat(self.lon, 10000)
-        z = np.repeat(self.depth, 10000)
         dt = np.repeat(self.ntp, 10000)
 
         self.profile(stats, af.adcp_beam_eastward, b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
@@ -107,7 +106,6 @@ class TestADCPPerformance(PerformanceTestCase):
         vf = np.repeat(self.orient, 10000)
         lat = np.repeat(self.lat, 10000)
         lon = np.repeat(self.lon, 10000)
-        z = np.repeat(self.depth, 10000)
         dt = np.repeat(self.ntp, 10000)
 
         self.profile(stats, af.adcp_beam_northward, b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)

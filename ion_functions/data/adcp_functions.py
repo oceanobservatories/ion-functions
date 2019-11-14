@@ -766,7 +766,7 @@ def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5, h, p, 
         pg2 = percent good estimate for beam 2 [percent]
         pg3 = percent good estimate for beam 3 [percent]
         pg4 = percent good estimate for beam 4 [percent]
-        pg5 = percent good estimate for beam 4 [percent]
+        pg5 = percent good estimate for beam 5 [percent]
         h = instrument's uncorrected magnetic heading [cdegrees]
         p = instrument pitch [cdegrees]
         r = instrument roll [cdegrees]
