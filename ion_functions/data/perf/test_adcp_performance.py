@@ -25,19 +25,23 @@ class TestADCPPerformance(PerformanceTestCase):
 
     def setUp(self):
         # set test inputs -- values from DPS
-        self.b1 = np.array([-0.0300, -0.2950, -0.5140, -0.2340, -0.1880,
-                            0.2030, -0.3250,  0.3050, -0.2040, -0.2940]) * 1000
-        self.b2 = np.array([0.1800, -0.1320,  0.2130,  0.3090,  0.2910,
-                            0.0490,  0.1880,  0.3730, -0.0020, 0.1720]) * 1000
-        self.b3 = np.array([-0.3980, -0.4360, -0.1310, -0.4730, -0.4430,
-                            0.1880, -0.1680,  0.2910, -0.1790, 0.0080]) * 1000
-        self.b4 = np.array([-0.2160, -0.6050, -0.0920, -0.0580,  0.4840,
-                            -0.0050,  0.3380,  0.1750, -0.0800, -0.5490]) * 1000
-        self.echo = np.array([0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250])
+        # set test inputs -- values from DPS (reset to integers, matches format from instrument)
+        self.b1 = np.array([[-30, -295, -514, -234, -188, 203, -325, 305, -204, -294]])
+        self.b2 = np.array([[180, -132, 213, 309, 291, 49, 188, 373, 2, 172]])
+        self.b3 = np.array([[-398, -436, -131, -473, -443, 188, -168, 291, -179, 8]])
+        self.b4 = np.array([[-216, -605, -92, -58, 484, -5, 338, 175, -80, -549]])
+
+        self.pg1 = np.array([[100, 100, 100,  24, 100, 100,  24, 100, 100, 100]])
+        self.pg2 = np.array([[100, 100, 100, 100, 100, 100, 100,  24, 100, 100]])
+        self.pg3 = np.array([[100, 100, 100, 100, 100, 100, 100, 100,  24, 100]])
+        self.pg4 = np.array([[100, 100, 100,  24, 100, 100, 100, 100, 100,  24]])
+
+        self.echo = np.array([[0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250]])
+
         self.sfactor = 0.45
-        self.heading = 98.4100 / 100.
-        self.pitch = 0.6900 / 100.
-        self.roll = -2.5400 / 100.
+        self.heading = 9841  # units are centidegrees
+        self.pitch = 69  # units are centidegrees
+        self.roll = -254  # units are centidegrees
         self.orient = 1
         self.lat = 50.0000
         self.lon = -145.0000
@@ -68,16 +72,20 @@ class TestADCPPerformance(PerformanceTestCase):
         b3 = np.tile(self.b3, (10000, 1))
         b4 = np.tile(self.b4, (10000, 1))
 
+        pg1 = np.tile(self.pg1, (10000, 1))
+        pg2 = np.tile(self.pg2, (10000, 1))
+        pg3 = np.tile(self.pg3, (10000, 1))
+        pg4 = np.tile(self.pg4, (10000, 1))
+
         h = np.repeat(self.heading, 10000)
         p = np.repeat(self.pitch, 10000)
         r = np.repeat(self.roll, 10000)
         vf = np.repeat(self.orient, 10000)
         lat = np.repeat(self.lat, 10000)
         lon = np.repeat(self.lon, 10000)
-        z = np.repeat(self.depth, 10000)
         dt = np.repeat(self.ntp, 10000)
 
-        self.profile(stats, af.adcp_beam_eastward, b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt)
+        self.profile(stats, af.adcp_beam_eastward, b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
     def test_adcp_beam_northward(self):
         stats = []
@@ -87,16 +95,20 @@ class TestADCPPerformance(PerformanceTestCase):
         b3 = np.tile(self.b3, (10000, 1))
         b4 = np.tile(self.b4, (10000, 1))
 
+        pg1 = np.tile(self.pg1, (10000, 1))
+        pg2 = np.tile(self.pg2, (10000, 1))
+        pg3 = np.tile(self.pg3, (10000, 1))
+        pg4 = np.tile(self.pg4, (10000, 1))
+
         h = np.repeat(self.heading, 10000)
         p = np.repeat(self.pitch, 10000)
         r = np.repeat(self.roll, 10000)
         vf = np.repeat(self.orient, 10000)
         lat = np.repeat(self.lat, 10000)
         lon = np.repeat(self.lon, 10000)
-        z = np.repeat(self.depth, 10000)
         dt = np.repeat(self.ntp, 10000)
 
-        self.profile(stats, af.adcp_beam_northward, b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt)
+        self.profile(stats, af.adcp_beam_northward, b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
     def test_adcp_beam_vertical(self):
         stats = []
@@ -106,12 +118,17 @@ class TestADCPPerformance(PerformanceTestCase):
         b3 = np.tile(self.b3, (10000, 1))
         b4 = np.tile(self.b4, (10000, 1))
 
+        pg1 = np.tile(self.pg1, (10000, 1))
+        pg2 = np.tile(self.pg2, (10000, 1))
+        pg3 = np.tile(self.pg3, (10000, 1))
+        pg4 = np.tile(self.pg4, (10000, 1))
+
         h = np.repeat(self.heading, 10000)
         p = np.repeat(self.pitch, 10000)
         r = np.repeat(self.roll, 10000)
         vf = np.repeat(self.orient, 10000)
 
-        self.profile(stats, af.adcp_beam_vertical, b1, b2, b3, b4, h, p, r, vf)
+        self.profile(stats, af.adcp_beam_vertical, b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf)
 
     def test_adcp_beam_error(self):
         stats = []
@@ -121,7 +138,12 @@ class TestADCPPerformance(PerformanceTestCase):
         b3 = np.tile(self.b3, (10000, 1))
         b4 = np.tile(self.b4, (10000, 1))
 
-        self.profile(stats, af.adcp_beam_error, b1, b2, b3, b4)
+        pg1 = np.tile(self.pg1, (10000, 1))
+        pg2 = np.tile(self.pg2, (10000, 1))
+        pg3 = np.tile(self.pg3, (10000, 1))
+        pg4 = np.tile(self.pg4, (10000, 1))
+
+        self.profile(stats, af.adcp_beam_error, b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
     def test_adcp_earth_eastward(self):
         stats = []

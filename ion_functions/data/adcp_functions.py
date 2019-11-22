@@ -44,8 +44,8 @@ ADCP_FILLVALUE = -32768
                           calculates ECHOINT-B4_L1.
 
       **** Base functions used by above functions
-      adcp_beam2ins -- applies the beam to instrument transform using a 4
-            beam solution for instruments programmed in beam coordinates
+      adcp_beam2ins -- applies the beam to instrument transform using either a 4
+            or 3 beam solution for instruments programmed in beam coordinates
       adcp_ins2earth -- applies the instrument to Earth transform for all
             instruments originally programmed in beam coordinates.
       magnetic_correction -- corrects horizontal velocities for the magnetic
@@ -65,7 +65,7 @@ ADCP_FILLVALUE = -32768
 
 # Wrapper functions to create the VELPROF L1 data products for instruments
 # programmed in beam coordinates by RSN (ADCPS-I,K and ADCPT-B,D,E)
-def adcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
+def adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
     """
     Description:
 
@@ -89,20 +89,26 @@ def adcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
                     (c) removed the depth dependence from the magnetic declination.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        uu_cor = adcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt)
+        u_cor = adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
             where
 
-        uu_corr = east velocity profiles in Earth coordinates corrected for the
+        u_cor = eastward velocity profiles in Earth coordinates corrected for the
                   magnetic declination (VELPROF-VLE_L1) [m s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
         h = instrument's uncorrected magnetic heading [cdegrees]
         p = instrument pitch [cdegrees]
         r = instrument roll [cdegrees]
@@ -110,37 +116,33 @@ def adcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
             1 = upward looking)
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
-        z = instrument's pressure sensor reading (depth) [daPa]
         dt = sample date and time value [seconds since 1900-01-01]
     """
-    # force shapes of inputs to arrays of the correct dimensions
-    #z = np.atleast_1d(z) / 1000.  # scale daPa depth input to dbar
-    #z = z * 1.019716  # use a simple approximation to calculate depth in m
+    # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
     lon = np.atleast_1d(lon)
     dt = np.atleast_1d(dt)
 
     # compute the beam to instrument transform
-    u, v, w, eee = adcp_beam2ins(b1, b2, b3, b4)
-    #print eee
+    x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
     # compute the instrument to earth beam transform
-    uu, vv, _ = adcp_ins2earth(u, v, w, h, p, r, vf)
+    u, v, _ = adcp_ins2earth(x, y, z, h, p, r, vf)
 
     # compute the magnetic variation, and ...
     theta = magnetic_declination(lat, lon, dt)
 
     # ... correct for it
-    uu_cor, _ = magnetic_correction(theta, uu, vv)
+    u_cor, _ = magnetic_correction(theta, u, v)
 
     # scale velocity to m/s
-    uu_cor = uu_cor / 1000.  # mm/s -> m/s
+    u_cor = u_cor / 1000.  # mm/s -> m/s
 
-    # return the Eastward Velocity Profile
-    return uu_cor
+    # return the eastward velocity profile
+    return u_cor
 
 
-def adcp_beam_northward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
+def adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
     """
     Description:
 
@@ -165,20 +167,26 @@ def adcp_beam_northward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
                     (c) removed the depth dependence from the magnetic declination.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        vv_cor = adcp_beam_northward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt)
+        v_cor = adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
             where
 
-        vv_corr = north velocity profiles in Earth coordinates corrected for the
+        v_cor = northward velocity profiles in Earth coordinates corrected for the
                   magnetic declination (VELPROF-VLN_L1) [m s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
         h = instrument's uncorrected magnetic heading [cdegrees]
         p = instrument pitch [cdegrees]
         r = instrument roll [cdegrees]
@@ -186,36 +194,33 @@ def adcp_beam_northward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
             1 = upward looking)
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
-        z = instrument's pressure sensor reading (depth) [daPa]
         dt = sample date and time value [seconds since 1900-01-01]
     """
-    # force shapes of inputs to arrays of the correct dimensions
-    #z = np.atleast_1d(z) / 1000.  # scale daPa depth input to dbar
-    #z = z * 1.019716  # use a simple approximation to calculate depth in m
+    # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
     lon = np.atleast_1d(lon)
     dt = np.atleast_1d(dt)
 
     # compute the beam to instrument transform
-    u, v, w, _ = adcp_beam2ins(b1, b2, b3, b4)
+    x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
     # compute the instrument to earth beam transform
-    uu, vv, _ = adcp_ins2earth(u, v, w, h, p, r, vf)
+    u, v, _ = adcp_ins2earth(x, y, z, h, p, r, vf)
 
     # compute the magnetic variation, and ...
     theta = magnetic_declination(lat, lon, dt)
 
     # ... correct for it
-    _, vv_cor = magnetic_correction(theta, uu, vv)
+    _, v_cor = magnetic_correction(theta, u, v)
 
     # scale velocity to m/s
-    vv_cor = vv_cor / 1000.  # mm/s -> m/s
+    v_cor = v_cor / 1000.  # mm/s -> m/s
 
-    # return the Northward Velocity Profile
-    return vv_cor
+    # return the northward velocity profile
+    return v_cor
 
 
-def adcp_beam_vertical(b1, b2, b3, b4, h, p, r, vf):
+def adcp_beam_vertical(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
     """
     Description:
 
@@ -238,19 +243,25 @@ def adcp_beam_vertical(b1, b2, b3, b4, h, p, r, vf):
         2015-06-10: Russell Desiderio.
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        ww_cor = adcp_beam_vertical(b1, b2, b3, b4, h, p, r, vf)
+        w = adcp_beam_vertical(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf)
 
             where
 
-        ww_cor = vertical velocity profiles (VELPROF-VLU_L1) [m s-1]
+        w = vertical velocity profiles (VELPROF-VLU_L1) [m s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
         h = instrument's uncorrected magnetic heading [cdegrees]
         p = instrument pitch [cdegrees]
         r = instrument roll [cdegrees]
@@ -258,19 +269,19 @@ def adcp_beam_vertical(b1, b2, b3, b4, h, p, r, vf):
             1 = upward looking)
     """
     # compute the beam to instrument transform
-    u, v, w, _ = adcp_beam2ins(b1, b2, b3, b4)
+    x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
     # compute the instrument to earth beam transform
-    _, _, ww = adcp_ins2earth(u, v, w, h, p, r, vf)
+    _, _, w = adcp_ins2earth(x, y, z, h, p, r, vf)
 
-    # scale upward velocity to m/s
-    ww = ww / 1000.  # mm/s -> m/s
+    # scale the vertical velocity to m/s
+    w = w / 1000.  # mm/s -> m/s
 
-    # return the Upward Velocity Profile
-    return ww
+    # return the vertical velocity profile
+    return w
 
 
-def adcp_beam_error(b1, b2, b3, b4):
+def adcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
     """
     Description:
 
@@ -284,22 +295,28 @@ def adcp_beam_error(b1, b2, b3, b4):
         2013-04-10: Christopher Wingard. Initial code.
         2015-06-10: Russell Desiderio.
                     Moved the conditioning of input beam velocities to adcp_beam2inst.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        ww_cor = adcp_beam_error(b1, b2, b3, b4)
+        e = adcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
             where
 
-        e = Error velocity profiles (VELPROF-ERR_L1) [m s-1]
+        e = error velocity profiles (VELPROF-ERR_L1) [m s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
     """
     # compute the beam to instrument transform
-    _, _, _, e = adcp_beam2ins(b1, b2, b3, b4)
+    _, _, _, e = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
     # scale error velocity to m/s
     e = e / 1000.   # mm/s
@@ -513,7 +530,7 @@ def adcp_earth_error(e):
 
 # Compute the VELTURB_L1 data products for the VADCP instrument deployed by RSN.
 @deprecated
-def vadcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
+def vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
     """
     Description:
 
@@ -529,20 +546,26 @@ def vadcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
                     (c) removed the depth dependence from the magnetic declination.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        uu_cor = vadcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt)
+        u_cor = vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
             where
 
-        uu_cor = east velocity profiles in Earth coordinates corrected for the
+        u_cor = eastward velocity profiles in Earth coordinates corrected for the
                   magnetic declination (VELTURB-VLE_L1) [m s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
         h = instrument's uncorrected magnetic heading [cdegrees]
         p = instrument pitch [cdegrees]
         r = instrument roll [cdegrees]
@@ -550,37 +573,34 @@ def vadcp_beam_eastward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
             1 = upward looking)
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
-        z = instrument's pressure sensor reading (depth) [daPa]
         dt = sample date and time value [seconds since 1900-01-01]
     """
-    # force shapes of inputs to arrays of the correct dimensions
-    #z = np.atleast_1d(z) / 1000.  # scale daPa depth input to dbar
-    #z = z * 1.019716  # use a simple approximation to calculate depth in m
+    # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
     lon = np.atleast_1d(lon)
     dt = np.atleast_1d(dt)
 
     # compute the beam to instrument transform
-    u, v, w, _ = adcp_beam2ins(b1, b2, b3, b4)
+    x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
     # compute the instrument to earth beam transform
-    uu, vv, _ = adcp_ins2earth(u, v, w, h, p, r, vf)
+    u, v, _ = adcp_ins2earth(x, y, z, h, p, r, vf)
 
     # compute the magnetic variation, and ...
     theta = magnetic_declination(lat, lon, dt)
 
     # ... correct for it
-    uu_cor, _ = magnetic_correction(theta, uu, vv)
+    u_cor, _ = magnetic_correction(theta, u, v)
 
     # scale velocity to m/s
-    uu_cor = uu_cor / 1000.  # mm/s -> m/s
+    u_cor = u_cor / 1000.  # mm/s -> m/s
 
-    # return the Eastward Velocity Profile
-    return uu_cor
+    # return the eastward velocity profile
+    return u_cor
 
 
 @deprecated
-def vadcp_beam_northward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
+def vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
     """
     Description:
 
@@ -596,20 +616,26 @@ def vadcp_beam_northward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
                     (c) removed the depth dependence from the magnetic declination.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        vv_cor = vadcp_beam_northward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt)
+        v_cor = vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
             where
 
-        vv_cor = north velocity profiles in Earth coordinates corrected for the
+        v_cor = northward velocity profiles in Earth coordinates corrected for the
                   magnetic declination (VELTURB-VLN_L1) [m s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
         h = instrument's uncorrected magnetic heading [cdegrees]
         p = instrument pitch [cdegrees]
         r = instrument roll [cdegrees]
@@ -617,36 +643,33 @@ def vadcp_beam_northward(b1, b2, b3, b4, h, p, r, vf, lat, lon, z, dt):
             1 = upward looking)
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
-        z = instrument's pressure sensor reading (depth) [dm]
         dt = sample date and time value [seconds since 1900-01-01]
     """
-    # force shapes of inputs to arrays of the correct dimensions
-    #z = np.atleast_1d(z) / 1000.  # scale daPa depth input to dbar
-    #z = z * 1.019716  # use a simple approximation to calculate depth in m
+    # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
     lon = np.atleast_1d(lon)
     dt = np.atleast_1d(dt)
 
     # compute the beam to instrument transform
-    u, v, w, _ = adcp_beam2ins(b1, b2, b3, b4)
+    x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
     # compute the instrument to earth beam transform
-    uu, vv, _ = adcp_ins2earth(u, v, w, h, p, r, vf)
+    u, v, _ = adcp_ins2earth(x, y, z, h, p, r, vf)
 
     # compute the magnetic variation, and ...
     theta = magnetic_declination(lat, lon, dt)
 
-    # ... corect for it
-    _, vv_cor = magnetic_correction(theta, uu, vv)
+    # ... correct for it
+    _, v_cor = magnetic_correction(theta, u, v)
 
     # scale velocity to m/s
-    vv_cor = vv_cor / 1000.  # mm/s -> m/s
+    v_cor = v_cor / 1000.  # mm/s -> m/s
 
-    # return the Northward Velocity Profile
-    return vv_cor
+    # return the northward velocity profile
+    return v_cor
 
 
-def vadcp_beam_vertical_est(b1, b2, b3, b4, h, p, r, vf):
+def vadcp_beam_vertical_est(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
     """
     Description:
 
@@ -654,7 +677,7 @@ def vadcp_beam_vertical_est(b1, b2, b3, b4, h, p, r, vf):
         (VELTURB-VLU-4BM) from the beam coordinate transformed velocity profiles as
         defined in the Data Product Specification for Turbulent Velocity
         Profile and Echo Intensity - DCN 1341-00760. This provides the
-        traditional estimate of the vertical velocity component from a 4 beam
+        traditional estimate of the vertical velocity component from a 4 or 3 beam
         solution, where each beam is facing outward at an angle (20 degrees)
         relative to the vertical.
 
@@ -665,20 +688,26 @@ def vadcp_beam_vertical_est(b1, b2, b3, b4, h, p, r, vf):
                     (a) moved the conditioning of input beam velocities to adcp_beam2inst.
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
         2015-06-22: Russell Desiderio. Renamed this data product.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        ww_est = vadcp_beam_vertical_est(b1, b2, b3, b4, h, p, r, vf)
+        w = vadcp_beam_vertical_est(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf)
 
             where
 
-        ww_est = estimated vertical velocity profiles in Earth coordinates
+        w = estimated vertical velocity profiles in Earth coordinates
                  (VELTURB-VLU-4BM_L1) [m s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
         h = instrument's uncorrected magnetic heading [cdegrees]
         p = instrument pitch [cdegrees]
         r = instrument roll [cdegrees]
@@ -686,19 +715,19 @@ def vadcp_beam_vertical_est(b1, b2, b3, b4, h, p, r, vf):
             1 = upward looking)
     """
     # compute the beam to instrument transform
-    u, v, w, _ = adcp_beam2ins(b1, b2, b3, b4)
+    x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
     # compute the instrument to earth beam transform
-    _, _, ww = adcp_ins2earth(u, v, w, h, p, r, vf)
+    _, _, w = adcp_ins2earth(x, y, z, h, p, r, vf)
 
     # scale upward velocity to m/s
-    ww = ww / 1000.  # mm/s -> m/s
+    w = w / 1000.  # mm/s -> m/s
 
     # return the estimated Upward Velocity Profile
-    return ww
+    return w
 
 
-def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, h, p, r, vf):
+def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5, h, p, r, vf):
     """
     Description:
 
@@ -717,21 +746,27 @@ def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, h, p, r, vf):
                     (b) moved the conditioning of compass readings to adcp_inst2earth.
         2015-06-22: Russell Desiderio. Renamed this data product.
         2015-06-25: Russell Desiderio. Incorporated b5 int fillvalue -> Nan.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        ww_true = vadcp_beam_vertical_true(b1, b2, b3, b4, b5, h, p, r, vf)
+        w = vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5, h, p, r, vf)
 
             where
 
-        ww_true = true vertical velocity profiles in Earth coordinates
-                  (VELTURB-VLU-5BM_L1) [m s-1]
+        w = true vertical velocity profiles in Earth coordinates (VELTURB-VLU-5BM_L1) [m s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
-        b5 = "beam 5" velocity profiles in beam coordinates (VELTURB-B5_L0) [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
+        b5 = beam 5 velocity profiles in beam coordinates (VELTURB-B5_L0) [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
+        pg5 = percent good estimate for beam 5 [percent]
         h = instrument's uncorrected magnetic heading [cdegrees]
         p = instrument pitch [cdegrees]
         r = instrument roll [cdegrees]
@@ -739,25 +774,26 @@ def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, h, p, r, vf):
             1 = upward looking)
     """
     # compute the beam to instrument transform
-    # fill values in the 4 beams are checked for inside adcp_beam2ins
-    u, v, _, _ = adcp_beam2ins(b1, b2, b3, b4)
+    x, y, _, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
-    # check b5 for the presence of fill values
+    # check percent good data for beam 5, reset to fill if less than 25%
+    b5 = np.ma.filled(np.ma.masked_where(pg5 < 25, b5), ADCP_FILLVALUE)
+
+    # check b5 for the presence of fill values and replace with NaN
     b5 = replace_fill_with_nan(ADCP_FILLVALUE, b5)
 
     # compute the instrument to earth beam transform
-    # fill values in the adcp orientation parameters are checked for inside adcp_ins2earth
-    _, _, ww = adcp_ins2earth(u, v, b5, h, p, r, vf)
+    _, _, w = adcp_ins2earth(x, y, b5, h, p, r, vf)
 
     # scale upward velocity to m/s
-    ww = ww / 1000.  # mm/s -> m/s
+    w = w / 1000.  # mm/s -> m/s
 
     # return the true Upward Velocity Profile
-    return ww
+    return w
 
 
 @deprecated
-def vadcp_beam_error(b1, b2, b3, b4):
+def vadcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
     """
     Description:
 
@@ -771,10 +807,12 @@ def vadcp_beam_error(b1, b2, b3, b4):
         2014-06-25: Christopher Wingard. Initial code, based on existing ADCP
         2015-06-10: Russell Desiderio.
                     Moved the conditioning of input beam velocities to adcp_beam2inst.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        e = vadcp_beam_northward(b1, b2, b3, b4)
+        e = vadcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
             where
 
@@ -784,9 +822,13 @@ def vadcp_beam_error(b1, b2, b3, b4):
         b2 = "beam 2" velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
         b3 = "beam 3" velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
         b4 = "beam 4" velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
     """
     # compute the beam to instrument transform
-    _, _, _, e = adcp_beam2ins(b1, b2, b3, b4)
+    _, _, _, e = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
     # scale error velocity to m/s
     e = e / 1000.   # mm/s
@@ -846,7 +888,7 @@ def adcp_backscatter(raw, sfactor):
 
 
 ##### ADCP Beam to Earth Transforms and Magnetic Variation Corrections
-def adcp_beam2ins(b1, b2, b3, b4):
+def adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
     """
     Description:
 
@@ -859,37 +901,77 @@ def adcp_beam2ins(b1, b2, b3, b4):
 
         2013-04-10: Christopher Wingard. Initial code.
         2015-06-24: Russell Desiderio. Incorporated int fillvalue -> Nan.
+        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                    and cleans up syntax used in the function.
 
     Usage:
 
-        u, v, w, e = adcp_beam2ins(b1, b2, b3, b4)
+        x, y, z, e = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
 
             where
 
-        u = "east" velocity profiles in instrument coordinates [mm s-1]
-        v = "north" velocity profiles in instrument coordinates [mm s-1]
-        w = "vertical" velocity profiles in instrument coordinates [mm s-1]
-        e = "error" velocity profiles [mm s-1]
+        x = x axis velocity profiles in instrument coordinates [mm s-1]
+        y = y axis velocity profiles in instrument coordinates [mm s-1]
+        z = z axis velocity profiles in instrument coordinates [mm s-1]
+        e = error velocity profiles [mm s-1]
 
-        b1 = "beam 1" velocity profiles in beam coordinates [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates [mm s-1]
+        b1 = beam 1 velocity profiles in beam coordinates [mm s-1]
+        b2 = beam 2 velocity profiles in beam coordinates [mm s-1]
+        b3 = beam 3 velocity profiles in beam coordinates [mm s-1]
+        b4 = beam 4 velocity profiles in beam coordinates [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
+
 
     References:
 
-        OOI (2012). Data Product Specification for Velocity Profile and Echo
-            Intensity. Document Control Number 1341-00750.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00050_Data_Product_SPEC_VELPROF_OOI.pdf)
+        OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
+            1341-00750. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Cyberinfrastructure >>
+            Data Product Specifications >> 1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf)
+
+        OOI (2013). Data Product Specification for Turbulent Velocity Profile and Echo Intensity. Document Control
+            Number 1341-00760. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
+            Cyberinfrastructure >> Data Product Specifications >>  1341-00760_Data_Product_VELTURB_ECHOINT.pdf)
+
+        Teledyne RD Instruments (2008). ADCP Coordinate Transformation, Formulas and Calculations.
     """
+    # raw beam velocities, set to correct shape
     b1 = np.atleast_2d(b1)
     b2 = np.atleast_2d(b2)
     b3 = np.atleast_2d(b3)
     b4 = np.atleast_2d(b4)
 
-    b1, b2, b3, b4 = replace_fill_with_nan(ADCP_FILLVALUE, b1, b2, b3, b4)
+    # percentage of good pings for each beam per depth cell, set to correct shape
+    pg1 = np.atleast_2d(pg1)
+    pg2 = np.atleast_2d(pg2)
+    pg3 = np.atleast_2d(pg3)
+    pg4 = np.atleast_2d(pg4)
+
+    # using the vendor specified percent good floor of 25%, create masked arrays with fill values set to compute
+    # a 3-beam solution, if applicable.
+    ma1 = np.ma.masked_where(pg1 < 25, b1)
+    bm1 = ma1.filled((b2 - b3 - b4) * -1)
+    ma2 = np.ma.masked_where(pg2 < 25, b2)
+    bm2 = ma2.filled((b1 - b3 - b4) * -1)
+    ma3 = np.ma.masked_where(pg3 < 25, b3)
+    bm3 = ma3.filled(b1 + b2 - b4)
+    ma4 = np.ma.masked_where(pg4 < 25, b4)
+    bm4 = ma4.filled(b1 + b2 - b3)
+
+    # sum across the masked arrays to determine if more than 1 beam is bad per depth cell, if so we cannot compute a
+    # 3-beam solution and need to set the fill value to a NaN.
+    mad = np.ma.dstack((ma1, ma2, ma3, ma4))    # stack the masked arrays in depth
+    mas = np.ma.count_masked(mad, axis=2)       # count the number of depth cells masked in the depth stacked array
+
+    # using the above, reset the raw beams. fill with 3-beam if applicable, otherwise use a NaN
+    bm1 = np.ma.filled(np.ma.masked_where(mas > 1, bm1), ADCP_FILLVALUE)
+    bm2 = np.ma.filled(np.ma.masked_where(mas > 1, bm2), ADCP_FILLVALUE)
+    bm3 = np.ma.filled(np.ma.masked_where(mas > 1, bm3), ADCP_FILLVALUE)
+    bm4 = np.ma.filled(np.ma.masked_where(mas > 1, bm4), ADCP_FILLVALUE)
+
+    bm1, bm2, bm3, bm4 = replace_fill_with_nan(ADCP_FILLVALUE, bm1, bm2, bm3, bm4)
 
     theta = 20.0 / 180.0 * np.pi
     a = 1.0 / (2.0 * np.sin(theta))
@@ -897,12 +979,12 @@ def adcp_beam2ins(b1, b2, b3, b4):
     c = 1.0   # +1.0 for convex transducer head, -1 for concave
     d = a / np.sqrt(2.0)
 
-    u = c * a * (b1 - b2)
-    v = c * a * (b4 - b3)
-    w = b * (b1 + b2 + b3 + b4)
-    e = d * (b1 + b2 - b3 - b4)
+    x = c * a * (bm1 - bm2)
+    y = c * a * (bm4 - bm3)
+    z = b * (bm1 + bm2 + bm3 + bm4)
+    e = d * (bm1 + bm2 - bm3 - bm4)
 
-    return (u, v, w, e)
+    return x, y, z, e
 
 
 def adcp_ins2earth(u, v, w, heading, pitch, roll, vertical):
