@@ -125,6 +125,8 @@ class TestPRSFunctionsUnit(BaseUnitTestCase):
     matpath = 'ion_functions/data/matlab_scripts/botpt/'
     dict_depth = sio.loadmat(matpath + 'botsflu_15secbin_depth_00001.mat')
     depth15s = 0.00001 * dict_depth['depth_00001']
+    # try to save memory
+    dict_depth = None
     depth15s = depth15s.reshape((-1))
 
     # first, convert missing pressure values from 0 to nan
@@ -139,6 +141,8 @@ class TestPRSFunctionsUnit(BaseUnitTestCase):
     # add each depth as a scalar to its own row vector copy of vvar
     # matlab way of doing this: botpres = bsxfun(@plus, depth15s, vvar)
     botpres = depth15s[:, np.newaxis] + vvar
+    # try to save memory
+    depth15s = None
     # botpres is 2D; flatten into a vector
     botpres = botpres.flatten()  # default is row-major, as desired
     # convert to pressure by inverting the DPS method, and ignoring atm pressure.
