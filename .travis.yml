@@ -11,6 +11,7 @@ before_install:
   - chmod +x miniconda.sh
   - ./miniconda.sh -b
   - export PATH=/home/travis/miniconda2/bin:$PATH
+  - export TRAVIS_WORKER_DOCKER_MEMORY=0
   - conda update --yes conda
 
 # Install packages
