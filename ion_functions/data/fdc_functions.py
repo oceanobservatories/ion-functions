@@ -809,7 +809,7 @@ def fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT, heading,
     # data before calculating the mean of the products of the elements of two vectors.
     edge_sec = 30
     # number of edge data values to remove, based on sampling frequency
-    edge = fs * edge_sec
+    edge = int(fs * edge_sec)
     # set up sonic temperature for buoyancy flux calculation;
     # the temperature processing can be vectorized outside the loop
     Ts_L1 = sonicT[:, edge:-edge]
@@ -1215,7 +1215,7 @@ def fdc_despikesimple(data):
         # of datasets.
 
         # calculate the median and stdev as column vectors for broadcasting
-        M = np.atleast_2d(sp.stats.nanmedian(data, axis=-1)).T
+        M = np.atleast_2d(np.nanmedian(data, axis=-1)).T
         # original code used matlab std function, which has a "N-1" in denominator -
         # so, ddof=1.
         Sn = np.nanstd(data, axis=-1, ddof=1, keepdims=True) * n_std
