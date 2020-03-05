@@ -26,7 +26,7 @@ except ImportError:
 def is_fill(arr):
     return np.atleast_1d(arr)[-1] == -9999. # Not the normal fill value, it's hardcoded to the QC params
 def is_none(arr):
-    return arr is None or (np.atleast_1d(arr)[-1] == None)
+    return arr is None or (np.atleast_1d(arr).flatten()[-1] == None)
 
 def dataqc_globalrangetest_minmax(dat, dat_min, dat_max, strict_validation=False):
     '''
