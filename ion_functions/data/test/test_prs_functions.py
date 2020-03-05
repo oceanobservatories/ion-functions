@@ -138,15 +138,17 @@ class TestPRSFunctionsUnit(BaseUnitTestCase):
     # use the same permutation for each depth value;
     # add each depth as a scalar to its own row vector copy of vvar
     # matlab way of doing this: botpres = bsxfun(@plus, depth15s, vvar)
-    botpres = depth15s[:, np.newaxis] + vvar
+    # the next two lines cost less memory than botpres = depth15s[:, np.newaxis] + vvar
+    botpres = depth15s
+    botpres = botpres[:, np.newaxis] + vvar
     # botpres is 2D; flatten into a vector
     botpres = botpres.flatten()  # default is row-major, as desired
     # convert to pressure by inverting the DPS method, and ignoring atm pressure.
-    botpres = botpres / -0.67
+    botpres /= -0.67
     # pressure values were formerly imported as unsigned integers in units of
     # 0.0001 psi. if the rounding operation below is omitted, one of the unit
     # tests (10minrate) will fail. True in Jan 2015 and May 2017.
-    botpres = np.around(botpres, decimals=4)
+    np.around(botpres, decimals=4, out=botpres)
 
     # generate OOI 20 Hz time stamps.
     # hard code first timestamp:
@@ -154,7 +156,7 @@ class TestPRSFunctionsUnit(BaseUnitTestCase):
     delta_epoch = 2208988800.0  # [sec]
     starttime = 1296518392.525 + delta_epoch  # seconds since 1900-01-01
     ss1900 = np.arange(botpres.size) * 0.05  # each step is 1/20 sec
-    ss1900 = ss1900 + starttime
+    ss1900 += starttime
 
     #### May 2017
     #### Input Nans are now trapped out by the DPA, so the next 3 executable

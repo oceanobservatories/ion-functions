@@ -1,5 +1,7 @@
 # Release 2.4.5 2020-03-31
 
+Issue #13402 - reduce test_prs_functions memory footprint so tests run
+
 Issue #13402 - fixed assorted bugs in FDCHP data product algorithms
 
 # Release 2.4.4 2019-11-07
