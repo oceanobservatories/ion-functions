@@ -1,6 +1,9 @@
 # Release 2.4.5 2020-03-31
 
-Issue #13402 - reduce test_prs_functions memory footprint so tests run
+Issue #13402 - fix assorted bugs in FDCHP data product algorithms
+- Update FDCHP functions for changes to numpy/scipy libraries
+- Update FDCHP and PRS tests for library changes
+- Reduce PRS function/test footprint so tests can run without MemoryError
 
 Issue #13402 - fixed assorted bugs in FDCHP data product algorithms
 
