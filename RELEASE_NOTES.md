@@ -5,8 +5,6 @@ Issue #13402 - fix assorted bugs in FDCHP data product algorithms
 - Update FDCHP and PRS tests for library changes
 - Reduce PRS function/test footprint so tests can run without MemoryError
 
-Issue #13402 - fixed assorted bugs in FDCHP data product algorithms
-
 # Release 2.4.4 2019-11-07
 
 Issue #14302 - ADCPTE101 - failure to generate data products
