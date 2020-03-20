@@ -821,16 +821,17 @@ def anchor_bin_raw_data_to_15s(time, data):
     data[np.isnan(data)] = -999.0  # use any negative value
     mask = (data > 0.0)
     time = time[mask]
-    data = data[mask]
 
     # anchor time-centered bins by determining the start time to be half a bin
     # before the first 'anchor timestamp', which will be an integral number of
     # bin_durations after midnight.
     start_time = np.floor((time[0] - half_bin)/bin_duration) * bin_duration + half_bin
     # calculate elapsed time from start in units of bin_duration.
-    time_elapsed = (time - start_time)/bin_duration
+    elapsed_time = time
+    elapsed_time -= start_time
+    elapsed_time /= bin_duration
     # assign each timestamp a bin number index based on its elapsed time.
-    bin_number = np.floor(time_elapsed).astype(int)
+    bin_number = np.floor(elapsed_time).astype(int)
     # the number of elements in each bin is given by
     bin_count = np.bincount(bin_number).astype(float)
     # create a logical mask of non-zero bin_count values
@@ -842,6 +843,7 @@ def anchor_bin_raw_data_to_15s(time, data):
     # keep only the bins with values
     bin_timestamps = bin_timestamps[mask_nonzero]
 
+    data = data[mask]
     # sum the values in each time bin, and put into the variable binned_data
     binned_data = np.bincount(bin_number, data)
     # divide the values in non-empty bins by the number of values in each bin

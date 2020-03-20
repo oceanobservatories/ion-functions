@@ -1,3 +1,10 @@
+# Release 2.4.5 2020-03-31
+
+Issue #13402 - fix assorted bugs in FDCHP data product algorithms
+- Update FDCHP functions for changes to numpy/scipy libraries
+- Update FDCHP and PRS tests for library changes
+- Reduce PRS function/test footprint so tests can run without MemoryError
+
 # Release 2.4.4 2019-11-07
 
 Issue #14302 - ADCPTE101 - failure to generate data products

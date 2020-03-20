@@ -793,7 +793,7 @@ def fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT, heading,
     # distance vector between IMU and sonic sampling volume
     Rvec = np.array([0.0, 0.0, z_imu_2_smplvol])
 
-    fs = 10.0                      # sampling frequency, Hz
+    fs = 10                         # sampling frequency, Hz
     #fltr_cutoff_freq = 10.0        # cutoff frequency to generate filter coeffs
     # 16-oct-2014 e-mail from Jim Edson (DPS author): use
     fltr_cutoff_freq = 12.0
@@ -809,7 +809,7 @@ def fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT, heading,
     # data before calculating the mean of the products of the elements of two vectors.
     edge_sec = 30
     # number of edge data values to remove, based on sampling frequency
-    edge = fs * edge_sec
+    edge = int(fs * edge_sec)
     # set up sonic temperature for buoyancy flux calculation;
     # the temperature processing can be vectorized outside the loop
     Ts_L1 = sonicT[:, edge:-edge]
@@ -1215,11 +1215,11 @@ def fdc_despikesimple(data):
         # of datasets.
 
         # calculate the median and stdev as column vectors for broadcasting
-        M = np.atleast_2d(sp.stats.nanmedian(data, axis=-1)).T
+        M = np.atleast_2d(np.nanmedian(data, axis=-1)).T
         # original code used matlab std function, which has a "N-1" in denominator -
         # so, ddof=1.
         Sn = np.nanstd(data, axis=-1, ddof=1, keepdims=True) * n_std
-        mask = np.logical_and(data < M + Sn, data > M - Sn)
+        mask = np.logical_and(data <= M + Sn, data >= M - Sn)
         # the interp1d function is vectorized for the second argument 2D array ONLY IF
         # the first argument 1D array is unchanging - which it's not.
         # therefore, here a for loop is required.
