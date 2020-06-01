@@ -123,14 +123,14 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_
     eb578 = np.reshape(eb578, (nRec, 1)).astype(np.float)
 
     if np.isscalar(ind_slp) is True:
-        ind_slp = np.tile(ind_slp, (nRec, 1)).astype(np.float)
+        ind_slp = np.tile(ind_slp, (nRec)).astype(np.float)
     else:
-        ind_slp = np.reshape(ind_slp, (nRec, 1)).astype(np.float)
+        ind_slp = np.reshape(ind_slp, (nRec)).astype(np.float)
 
     if np.isscalar(ind_off) is True:
-        ind_off = np.tile(ind_off, (nRec, 1)).astype(np.float)
+        ind_off = np.tile(ind_off, (nRec)).astype(np.float)
     else:
-        ind_off = np.reshape(ind_off, (nRec, 1)).astype(np.float)
+        ind_off = np.reshape(ind_off, (nRec)).astype(np.float)
 
     if np.isscalar(psal) is True:
         psal = np.tile(psal, (nRec, 1)).astype(np.float)
@@ -262,6 +262,6 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_
     # pH corrections due to indicator impurity if the calculated pH is greater
     # than 8.2.
     phFlag = ph >= 8.2
-    ph[phFlag] = ph[phFlag] * ind_slp + ind_off
+    ph[phFlag] = ph[phFlag] * ind_slp[phFlag] + ind_off[phFlag]
 
     return ph

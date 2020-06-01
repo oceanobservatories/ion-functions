@@ -1,3 +1,7 @@
+# Release 2.4.6 2020-06-03
+
+Issue #14537 - Updates to use numpy=1.16
+
 # Release 2.4.5 2020-03-31
 
 Issue #13402 - fix assorted bugs in FDCHP data product algorithms
