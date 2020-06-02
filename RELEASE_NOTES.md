@@ -1,4 +1,4 @@
-# Release 2.4.6 2020-06-03
+# Release 2.4.6 2020-06-09
 
 Issue #14537 - Updates to use numpy=1.16
 
