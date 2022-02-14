@@ -315,7 +315,7 @@ def do2_SVU(calphase, temp, csv, conc_coef=np.array([0.0, 1.0])):
     return DO
 
 
-def do2_salinity_correction(DO, P, T, SP, lat, lon, pref=0):
+def do2_salinity_correction(DO, P, T, SP, lat, lon, sref=0, pref=0):
     """
     Description:
 
@@ -325,7 +325,7 @@ def do2_salinity_correction(DO, P, T, SP, lat, lon, pref=0):
 
     Usage:
 
-        DOc = do2_salinity_correction(DO,P,T,SP,lat,lon, pref=0)
+        DOc = do2_salinity_correction(DO,P,T,SP,lat,lon, sref=0, pref=0)
 
             where
 
@@ -340,24 +340,27 @@ def do2_salinity_correction(DO, P, T, SP, lat, lon, pref=0):
         SP = PRACSAL practical salinity [unitless]. (see
             1341-00040_Data_Product_Spec_PRACSAL)
         lat, lon = latitude and longitude of the instrument [degrees].
+        sref = reference salinity, the value of the preset `Salinity` 
+            setting in the Aanderaa optode configuration.  Typically set
+            to 0 or 35.  The default is 0.
         pref = pressure reference level for potential density [dbar].
             The default is 0 dbar.
 
     Example:
-        DO = 433.88488978325478
-        do_t = 1.97
-        P = 5.4000000000000004
-        T = 1.97
-        SP = 33.716000000000001
-        lat,lon = -52.82, 87.64
+        DO = 433.88488978325478  # Uncompensated Oxygen from an optode
+        P = 5.40    # Pressure in dbar from co-located CTD
+        T = 1.97    # Temperature in deg C from co-located CTD
+        SP = 33.716 # Practical Salinity derived from co-located CTD
+        lat,lon = -52.82, 87.64 # Latitude and Longitude
 
-        DOc = do2_salinity_correction(DO,P,T,SP,lat,lon, pref=0)
-        print DO
+        DOc = do2_salinity_correction(DO,P,T,SP,lat,lon)
+        print DOc
         > 335.967894709
 
     Implemented by:
         2013-04-26: Stuart Pearce. Initial Code.
         2015-08-04: Russell Desiderio. Added Garcia-Gordon reference.
+        2021-12-16: Stuart Pearce. Added salinity reference parameter.
 
     References:
         OOI (2012). Data Product Specification for Oxygen Concentration
@@ -383,7 +386,7 @@ def do2_salinity_correction(DO, P, T, SP, lat, lon, pref=0):
     DO = ne.evaluate('(1 + (0.032*P)/1000) * DO')
 
     # Salinity correction (Garcia and Gordon, 1992, combined fit):
-    S0 = 0
+    # S0 = 0  # deprecated, replaced by the sref input parameter
     ts = ne.evaluate('log((298.15-T)/(273.15+T))')
     B0 = -6.24097e-3
     B1 = -6.93498e-3
@@ -391,7 +394,7 @@ def do2_salinity_correction(DO, P, T, SP, lat, lon, pref=0):
     B3 = -4.29155e-3
     C0 = -3.11680e-7
     Bts = ne.evaluate('B0 + B1*ts + B2*ts**2 + B3*ts**3')
-    DO = ne.evaluate('exp((SP-S0)*Bts + C0*(SP**2-S0**2)) * DO')
+    DO = ne.evaluate('exp((SP-sref)*Bts + C0*(SP**2-sref**2)) * DO')
     return DO
 
 
