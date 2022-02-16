@@ -1,3 +1,7 @@
+# Release 2.4.7 2022-02-23
+
+Issue #15167 - Glider Oxygen data fix
+
 # Release 2.4.6 2020-06-09
 
 Issue #14537 - Updates to use numpy=1.16
