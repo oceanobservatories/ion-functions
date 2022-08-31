@@ -1,3 +1,11 @@
+# Release 2.5.1 2025-02-25
+
+Issue #15165 - Use new botpt predicted tide tables
+
+# Release 2.5.0 2023-12-07
+
+Issue #15438 - Endurance seafloor moored VEL3D velocities are 10x too large
+
 # Release 2.4.9 2023-03-15
 
 Issue #15558 - Add PCO2W/PHSEN voltage calculations 
