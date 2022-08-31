@@ -357,7 +357,7 @@ def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, zwindsp=0.0):
 """
 
 
-def met_current_direction(vle_water, vln_water, use_velptmn_with_metbk=0):
+def met_current_direction(vle_water=None, vln_water=None, use_velptmn_with_metbk=0):
     """
     Description:
 
@@ -416,7 +416,7 @@ def met_current_direction(vle_water, vln_water, use_velptmn_with_metbk=0):
     return current_dir
 
 
-def met_current_speed(vle_water, vln_water, use_velptmn_with_metbk=0):
+def met_current_speed(vle_water=None, vln_water=None, use_velptmn_with_metbk=0):
     """
     Description:
 
@@ -3978,10 +3978,16 @@ def vet_velptmn_data(vle, vln, use_velptmn):
     if np.atleast_1d(use_velptmn).shape[0] == 1:
         use_velptmn = np.tile(use_velptmn, vle.shape[0])
 
-    # to prevent what turned out to be very much unanticipated "call-by-reference"-ish
-    # ramifications in the unit tests
-    vle_out = np.copy(vle)
-    vln_out = np.copy(vln)
+    if vle is None or vln is None:
+        # If velpt data is unavailable, set to nan. Similar to the nanmask'ed assignment below
+        vle_out = np.full(use_velptmn.shape[0], np.nan)
+        vln_out = np.full(use_velptmn.shape[0], np.nan)
+    else:
+        # to prevent what turned out to be very much unanticipated "call-by-reference"-ish
+        # ramifications in the unit tests
+        vle_out = np.copy(vle)
+        vln_out = np.copy(vln)
+
     # replace aliased current values with nans.
     nanmask = use_velptmn == 0
     vle_out[nanmask] = np.nan
