@@ -29,6 +29,7 @@ class TestPHPerformance(PerformanceTestCase):
         self.eb578 = 38913.
         self.ind_slp = 1.
         self.ind_off = 0.
+        self.sami_bits = 12
 
         # raw data strings provided by the DPS
         raw_strings = np.array([
@@ -75,7 +76,8 @@ class TestPHPerformance(PerformanceTestCase):
 
         # create 12000 data points
         traw = np.repeat(self.traw, 2000)
-        self.profile(stats, ph_thermistor, traw)
+        sami_bits = np.repeat(self.sami_bits, 2000)
+        self.profile(stats, ph_thermistor, traw, sami_bits)
 
     def test_ph_434_intensity(self):
         stats = []

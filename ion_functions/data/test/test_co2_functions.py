@@ -73,6 +73,7 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
 
         self.a434blnk = np.ones(14) * a434blnk
         self.a620blnk = np.ones(14) * a620blnk
+        self.sami_bits = np.ones(14) * 12
 
     def test_pco2_pco2wat(self):
         """
@@ -96,7 +97,7 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
         # calculate pco2.
 
         ### bulk case ###
-        tout = co2func.pco2_thermistor(self.traw)
+        tout = co2func.pco2_thermistor(self.traw, self.sami_bits)
         pco2out = co2func.pco2_pco2wat(self.mtype, self.light, self.traw,
                                        fill_value, fill_value, fill_value, fill_value,
                                        self.calt, self.cala, self.calb, self.calc,
@@ -108,7 +109,7 @@ class Testpco2FunctionsUnit(BaseUnitTestCase):
         ### single record case ###
         indx = 0
         for mtype in self.mtype:
-            tout = co2func.pco2_thermistor(self.traw[indx])
+            tout = co2func.pco2_thermistor(self.traw[indx], self.sami_bits)
             pco2out = co2func.pco2_pco2wat(mtype, self.light[indx, :], self.traw[indx],
                                            fill_value, fill_value, fill_value, fill_value,
                                            self.calt[indx], self.cala[indx],

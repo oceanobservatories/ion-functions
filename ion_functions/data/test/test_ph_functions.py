@@ -39,6 +39,7 @@ class TestpHFunctionsUnit(BaseUnitTestCase):
         self.eb578 = 38502.
         self.ind_slp = 0.9698
         self.ind_off = 0.2484
+        self.sami_bits = 12
         self.salinity = np.array([30., 30., 30., 30., 30.,
                                   32., 32., 32., 32., 32.,
                                   35., 35., 35., 35., 35.])
@@ -235,7 +236,7 @@ class TestpHFunctionsUnit(BaseUnitTestCase):
             bout[iRec] = ph.ph_battery(self.braw[iRec])
             a434[iRec, :] = ph.ph_434_intensity(self.light[iRec, :])
             a578[iRec, :] = ph.ph_578_intensity(self.light[iRec, :])
-            tout[iRec] = ph.ph_thermistor(self.traw[iRec])
+            tout[iRec] = ph.ph_thermistor(self.traw[iRec], self.sami_bits)
             pout[iRec] = ph.ph_calc_phwater(self.ref[iRec, :], self.light[iRec, :],
                                             tout[iRec], self.ea434, self.eb434,
                                             self.ea578, self.eb578, self.ind_slp,
@@ -252,7 +253,7 @@ class TestpHFunctionsUnit(BaseUnitTestCase):
         in a single block.
         """
         bout = ph.ph_battery(self.braw)
-        tout = ph.ph_thermistor(self.traw)
+        tout = ph.ph_thermistor(self.traw, self.sami_bits)
         a434 = ph.ph_434_intensity(self.light)  # no unit tests, just checking to see if they work
         print a434
         a578 = ph.ph_578_intensity(self.light)
