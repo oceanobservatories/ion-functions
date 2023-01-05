@@ -550,3 +550,58 @@ def select_non_zero_arg(a1, a2=None, a1_scale_factor=None, a2_scale_factor=None)
     if np.any(a2):
         return a2 * a2_scale_factor if np.any(a2_scale_factor) else a2
     return a1
+
+
+def select_arg_within_tolerance_of_std(a1, a2=None, std=None, tol=0.25,
+                                       a1_scale_factor=1, a2_scale_factor=1,
+                                       std_scale_factor=1):
+    """
+    Description:
+        Test arrays a1 and a2 for non-zero values and return the non-zero array
+        having an average within the specified tolerance of the standard.
+        If needed, multiply the input arrays by a scale factors so that they
+        will be in the expected units and comparable.
+
+    Implemented by:
+
+        2023-01-23: Mark Steiner. Initial code.
+
+    Usage:
+
+        out_value = select_arg_within_tolerance_of_std(a1, a2=None, std=None, tol=0.25,
+                                       a1_scale_factor=1, a2_scale_factor=1,
+                                       std_scale_factor=1):
+
+            where
+
+        out_value = the scaled array containing at least one non-zero element
+              and having an average within tolerance.
+        a1 = an input array to be tested for non-zero elements and within tolerance.
+        a2 = an input array to be tested for non-zero elements and within tolerance.
+        std = the standard to which a1 and a2 are compared
+        tol = the relative tolerance that the returned array must be within
+              when compared to the standard.
+        a1_scale_factor = scale factor to apply to a1
+        a2_scale_factor = scale factor to apply to a2
+        std_scale_factor = scale factor to apply to std
+
+    References:
+
+        None.
+    """
+    a1s = a1 * a1_scale_factor if np.any(a1) and np.any(a1_scale_factor) else a1
+    a2s = a2 * a2_scale_factor if np.any(a2) and np.any(a2_scale_factor) else a2
+
+    if not np.any(a2s) or not np.any(std) or not np.any(tol):
+        return a1s
+    if not np.any(a1s):
+        return a2s
+
+    stds = std * std_scale_factor if np.any(std_scale_factor) else std
+    avg_tol = np.average(tol)
+
+    if np.average(error(a1s, stds)) < avg_tol:
+        return a1s
+    if np.average(error(a2s, stds)) < avg_tol:
+        return a2s
+    return a1s
