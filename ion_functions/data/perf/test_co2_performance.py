@@ -17,6 +17,7 @@ class TestCO2Performance(PerformanceTestCase):
         self.cala = 0.0459
         self.calb = 0.6257
         self.calc = -1.5406
+        self.sami_bits = 12
 
         self.light = np.zeros(14, dtype=np.int)
         self.mtype = int(s[5:7], 16)
@@ -125,7 +126,8 @@ class TestCO2Performance(PerformanceTestCase):
         # create 10000 data points
         data = np.ones(a_deca, dtype='int16')
         traw = data * self.traw
-        self.profile(stats, pco2_thermistor, traw)
+        sami_bits = data * self.sami_bits
+        self.profile(stats, pco2_thermistor, traw, sami_bits)
 
     def test_pco2_calc_pco2(self):
         stats = []

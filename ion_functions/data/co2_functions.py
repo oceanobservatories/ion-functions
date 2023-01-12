@@ -120,7 +120,7 @@ def pco2_blank(raw_blank):
     return blank
 
 
-def pco2_thermistor(traw):
+def pco2_thermistor(traw, sami_bits):
     """
     Description:
 
@@ -131,15 +131,17 @@ def pco2_thermistor(traw):
 
         2013-04-20: Christopher Wingard. Initial code.
         2014-02-19: Christopher Wingard. Updated comments.
+        2023-01-12: Mark Steiner. Add sami_bits arg to handle hardware upgrades
 
     Usage:
 
-        therm = pco2_thermistor(traw)
+        therm = pco2_thermistor(traw, sami_bits)
 
             where
 
         therm = converted thermistor temperature [degC]
         traw = raw thermistor temperature (CO2THRM_L0) [counts]
+        sami_bits = number of bits on the SAMI hardware
 
     References:
 
@@ -149,8 +151,16 @@ def pco2_thermistor(traw):
             OOI >> Controlled >> 1000 System Level >>
             1341-00490_Data_Product_SPEC_PCO2WAT_OOI.pdf)
     """
+    # reset inputs to arrays
+    traw = np.atleast_1d(traw)
+    sami_bits = np.atleast_1d(sami_bits)
+
     # convert raw thermistor readings from counts to degrees Centigrade
-    Rt = ne.evaluate('log((traw / (4096. - traw)) * 17400.)')
+    # conversion depends on whether the SAMI is older 12 bit or newer 14 bit hardware
+    if sami_bits[0] == 14:
+        Rt = ne.evaluate('log((traw / (16384. - traw)) * 17400.)')
+    else:
+        Rt = ne.evaluate('log((traw / (4096. - traw)) * 17400.)')
     InvT = ne.evaluate('0.0010183 + 0.000241 * Rt + 0.00000015 * Rt**3')
     therm = ne.evaluate('(1 / InvT) - 273.15')
     return therm
@@ -255,6 +265,7 @@ def pco2_calc_pco2(light, therm, ea434, eb434, ea620, eb620,
                     incorrectly calculated the blank correction. Applies additional
                     corrections to calculations to avoid errors thrown when running a
                     blank measurement.
+        2023-01-12: Mark Steiner. Arg therm in degrees C instead of counts
 
     Usage:
 
@@ -265,7 +276,7 @@ def pco2_calc_pco2(light, therm, ea434, eb434, ea620, eb620,
 
         pco2 = measured pco2 in seawater (PCO2WAT_L1) [uatm]
         light = array of light measurements
-        therm = PCO2W thermistor temperature (CO2THRM_L0) [counts]
+        therm = PCO2W thermistor temperature (CO2THRM_L1) [degrees C]
         ea434 = Reagent specific calibration coefficient
         eb434 = Reagent specific calibration coefficient
         ea620 = Reagent specific calibration coefficient
@@ -300,9 +311,6 @@ def pco2_calc_pco2(light, therm, ea434, eb434, ea620, eb620,
     # Extract variables from light array
     Ratio434 = light[:, 6]     # 434nm Ratio
     Ratio620 = light[:, 7]     # 620nm Ratio
-
-    # Convert thermistor counts to degrees C
-    therm = pco2_thermistor(therm)
 
     # correct the absorbance ratios using the blanks
     AR434 = (Ratio434 / a434blank)

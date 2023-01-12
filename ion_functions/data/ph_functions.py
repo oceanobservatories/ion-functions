@@ -39,13 +39,21 @@ def ph_578_intensity(light):
 
 # functions to convert thermistor and battery measurements from counts to
 # applicable engineering units
-def ph_thermistor(traw):
+def ph_thermistor(traw, sami_bits):
     """
     Function to convert the thermistor data (ABSTHRM_L0) from counts to degrees
     Centigrade for the pH instrument.
     """
+    # reset inputs to arrays
+    traw = np.atleast_1d(traw)
+    sami_bits = np.atleast_1d(sami_bits)
+
     # convert raw thermistor readings from counts to degrees Centigrade
-    Rt = ne.evaluate('(traw / (4096.0 - traw)) * 17400.0')
+    # conversion depends on whether the SAMI is older 12 bit or newer 14 bit hardware
+    if sami_bits[0] == 14:
+        Rt = ne.evaluate('(traw / (16384.0 - traw)) * 17400.0')
+    else:
+        Rt = ne.evaluate('(traw / (4096.0 - traw)) * 17400.0')
     lRt = np.log(Rt) 
     InvT = ne.evaluate('0.0010183 + 0.000241 * lRt + 0.00000015 * lRt**3')
     therm = ne.evaluate('(1.0 / InvT) - 273.15')
