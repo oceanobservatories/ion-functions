@@ -61,13 +61,19 @@ def ph_thermistor(traw, sami_bits):
     return therm
 
 
-def ph_battery(braw):
+def ph_battery(braw, sami_bits):
     """
-    Function to convert the battery voltage from counts to Volts from the pH
-    instrument.
+    Function to convert the battery voltage from counts to Volts from the pH instrument.
     """
+    # reset inputs to arrays
+    braw = np.atleast_1d(braw)
+    sami_bits = np.atleast_1d(sami_bits)
+
     # convert raw battery readings from counts to Volts
-    volts = ne.evaluate('braw * 15. / 4096.')
+    if sami_bits[0] == 14:
+        volts = ne.evaluate('braw * 3. / 4000.')
+    else:
+        volts = ne.evaluate('braw * 15. / 4096.')
     return volts
 
 
