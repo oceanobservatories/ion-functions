@@ -166,6 +166,39 @@ def pco2_thermistor(traw, sami_bits):
     return therm
 
 
+def pco2_battery(braw, sami_bits):
+    """
+    Description:
+
+        Convert the battery voltage data from counts to volts from the
+        pCO2 instrument.
+
+    Implemented by:
+
+        2023-02-23: Mark Steiner. Initial code.
+
+    Usage:
+
+        volts = pco2_battery_voltage(vraw, sami_bits)
+
+            where
+
+        volts = converted battery voltage [degC]
+        braw = raw battery voltage [counts]
+        sami_bits = number of bits on the SAMI hardware
+    """
+    # reset inputs to arrays
+    braw = np.atleast_1d(braw)
+    sami_bits = np.atleast_1d(sami_bits)
+
+    # convert raw battery readings from counts to Volts
+    if sami_bits[0] == 14:
+        volts = ne.evaluate('braw * 3. / 4000.')
+    else:
+        volts = ne.evaluate('braw * 15. / 4096.')
+    return volts
+
+
 def pco2_pco2wat(mtype, light, therm, ea434, eb434, ea620, eb620,
                  calt, cala, calb, calc, a434blank, a620blank):
     """
