@@ -1,6 +1,7 @@
 # Release 2.4.9 2023-03-15
 
 Issue #15558 - Add PCO2W/PHSEN voltage calculations 
+
 Issue #15072 - Address ADCP in the Sky
 
 # Release 2.4.8 2023-01-18
