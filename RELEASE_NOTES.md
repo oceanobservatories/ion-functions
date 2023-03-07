@@ -1,3 +1,12 @@
+# Release 2.4.9 2023-03-15
+
+Issue #15558 - Add PCO2W/PHSEN voltage calculations 
+Issue #15072 - Address ADCP in the Sky
+
+# Release 2.4.8 2023-01-18
+
+Issue #15346 - Change in PCO2W/PHSEN (SAMI) data output due to new Rev K board
+
 # Release 2.4.7 2022-02-23
 
 Issue #15167 - Glider Oxygen data fix
