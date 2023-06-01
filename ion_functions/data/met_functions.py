@@ -4154,7 +4154,7 @@ def make_hourly_data(*args):
     idx_to_skip = [17, 16]
 
     nargs = len(args)
-    idx = range(nargs)
+    idx = list(range(nargs))
     if nargs >= number_of_bulk_vars:
         for ii in idx_to_skip:
             del idx[ii]
@@ -4191,7 +4191,7 @@ def make_hourly_data(*args):
     #     use the midpoint of the bins as the timestamp, instead of the average
     #     of the timestamps within the bin as calculated in the above loop; this
     #     would give significantly different values only if there are missing data.
-    bin_time_sec = time_sec[0] + 1800.0 + 3600.0 * np.array(range(len(mask)))
+    bin_time_sec = time_sec[0] + 1800.0 + 3600.0 * np.array(list(range(len(mask))))
     # delete bins with no entries as before
     bin_time_sec = bin_time_sec[mask]
 

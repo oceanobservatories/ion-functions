@@ -257,7 +257,7 @@ class TestFdcFunctionsUnit(BaseUnitTestCase):
         # number of array values to truncate on either side
         edge = self.daqrate * self.chop
         # however, the test sets do not necessarily start out with 12000 points - so:
-        idx = range(edge, 12000-edge)
+        idx = list(range(edge, 12000-edge))
 
         # step through each single dataset to test functions;
         # also, accumulate single dataset products for multiple dataset test:

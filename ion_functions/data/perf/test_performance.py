@@ -33,12 +33,12 @@ class TimeIt(object):
 @attr('PERF')
 class PerformanceTestCase(TestCase):
     def profile(self, stats, func, *args, **kwargs):
-        for i in xrange(10):
+        for i in range(10):
             with TimeIt(stats):
                 func(*args, **kwargs)
-            print 'Run %i: %s' % (i, stats[i])
+            print('Run %i: %s' % (i, stats[i]))
             if stats[i] > 10:
                 raise AssertionError('Performance standard failed. Method exceeded 10 seconds')
 
-        print 'Mean: ', np.average(np.array(stats))
+        print('Mean: ', np.average(np.array(stats)))
 

@@ -1793,7 +1793,7 @@ def get_XYZ_transform(beamlist):
     ##     Rusello at Nortek
     if beamlist == [1, 2, 3, 4]:
         t_beam2XYZ = XYZ_TRANSFORMS['stationary']
-        print 'WARNING: STATIONARY VEL3D-K TRANSFORMS ARE NOT VETTED.'
+        print('WARNING: STATIONARY VEL3D-K TRANSFORMS ARE NOT VETTED.')
     elif beamlist == [1, 2, 4, 0]:
         t_beam2XYZ = XYZ_TRANSFORMS['upward']
     elif beamlist == [2, 3, 4, 0]:
