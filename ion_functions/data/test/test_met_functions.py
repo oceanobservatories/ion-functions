@@ -1532,7 +1532,7 @@ class TestMetFunctionsUnit(BaseUnitTestCase):
         """
         # read in the input L0 test data ...
         file = os.path.join(os.getcwd(),
-                            'ion_functions/data/matlab_scripts/metbk/metbk_test_dat.txt')
+                            '../matlab_scripts/metbk/metbk_test_dat.txt')
         with open(file, 'r') as f:
             lines = f.readlines()
 

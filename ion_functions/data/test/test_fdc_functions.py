@@ -41,7 +41,7 @@ class TestFdcFunctionsUnit(BaseUnitTestCase):
 
         # test data e-mailed by Jim Edson:
         # read in the input L0 test data ...
-        file = os.path.join(os.getcwd(), 'ion_functions/data/matlab_scripts/fdchp/fdchp_test_dp.dat')
+        file = '../matlab_scripts/fdchp/fdchp_test_dp.dat'
         with open(file, 'r') as f:
             lines = f.readlines()
 
