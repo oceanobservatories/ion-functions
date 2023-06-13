@@ -12,7 +12,7 @@ from ion_functions.test.base_test import BaseUnitTestCase
 from ion_functions.data import ctd_functions as ctdfunc
 import numpy as np
 import inspect
-from pygsw import vectors as gsw
+# from pygsw import vectors as gsw
 #import sys
 
 

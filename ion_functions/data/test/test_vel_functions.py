@@ -24,7 +24,7 @@ from ion_functions.data.vel_functions import fsi_acm_sio_east, fsi_acm_sio_north
 from ion_functions.data.vel_functions import fsi_acm_up_profiler_ascending
 from ion_functions.data.vel_functions import fsi_acm_up_profiler_descending
 from ion_functions.data.vel_functions import fsi_acm_nautical_heading, fsi_acm_compass_cal
-from exceptions import ValueError
+# from exceptions import ValueError
 
 # these test data definitions are used in the test methods
 # for both the Nobska and Nortek instruments

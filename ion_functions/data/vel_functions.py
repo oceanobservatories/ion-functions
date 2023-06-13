@@ -24,7 +24,7 @@ from ion_functions.data.generic_functions import magnetic_declination, magnetic_
 #               -Stuart Pearce
 #               (this message should be removed if/when the lats & lons
 #               are checked in the QAQC functions)
-from exceptions import ValueError
+# from exceptions import ValueError
 
 ### Constants (VEL3D-K) ###
 # XYZ_TRANSFORMS is a dictionary constant that is generated when the

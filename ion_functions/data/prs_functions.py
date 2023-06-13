@@ -923,7 +923,8 @@ def anchor_bin_detided_data_to_24h(time, data, dday_coverage):
     # bin_count is used as a divisor to calculate mean values at each bin
     #    bins with bincounts below the threshold value will have a nan value.
     #    bins with bincounts equal to or above the threshold value are non_Nan.
-    bin_count[bin_count/max_count < dday_coverage] = np.nan
+    bin_mean = bin_count//max_count
+    bin_count[bin_mean < dday_coverage] = np.nan
     #    use nans to prevent dividing by zero in case dday_coverage=0
     bin_count[bin_count == 0] = np.nan
 
@@ -1033,8 +1034,8 @@ def calculate_sliding_means(data, window_size):
     means = np.convolve(data, kk, 'same')
     # nan out data with boundary effects at edges.
     # integer arithmetic will 'truncate' 5/2 to 2 and -5/2 to -3.
-    means[:window_size/2] = np.nan
-    means[-((window_size-1)/2):] = np.nan
+    means[:window_size//2] = np.nan
+    means[-((window_size-1)//2):] = np.nan
 
     # matlab and numpy behave differently for even window sizes, so roll the python
     # result to mimic matlab
@@ -1091,7 +1092,7 @@ def calculate_sliding_slopes(data, window_size, coverage_threshold):
     """
     # ODD WINDOW SIZES are expected; if even, increment by one
     window_size = window_size + 1 - np.mod(window_size, 2)
-    half_window = window_size / 2  # this will 'floor' when window_size is odd as desired
+    half_window = window_size // 2  # this will 'floor' when window_size is odd as desired
 
     # pad front end of data with Nans (because data product and 'for loop' are backwards-looking)
     npts = 2 * half_window + data.size

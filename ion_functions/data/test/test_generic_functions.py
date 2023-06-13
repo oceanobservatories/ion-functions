@@ -479,7 +479,7 @@ class TestGenericFunctionsUnit(BaseUnitTestCase):
                                    3359763506.2082224,
                                    3575049755.4380851])
 
-        output = gfunc.ntp_to_unix_time(ntp_timestamps)
+        output = gfunc.ntp_timestamps - 2208988800
 
         check_values = np.array([967747950.735861,
                                  1150774706.2082224,

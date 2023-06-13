@@ -8,8 +8,8 @@
 
 # Import Numexpr and the TEOS-10 GSW libraries
 import numexpr
-from pygsw import vectors as gsw
-
+#from pygsw import vectors as gsw
+import gsw
 
 def ctd_sbe16plus_tempwat(t0, a0, a1, a2, a3):
     """
@@ -698,7 +698,7 @@ def ctd_pracsal(c, t, p):
     C10 = c * 10.0
 
     # Calculate the Practical Salinity (PSS-78) [unitless]
-    SP = gsw.sp_from_c(C10, t, p)
+    SP = gsw.SP_from_C(C10, t, p)
     return SP
 
 
@@ -740,5 +740,7 @@ def ctd_density(SP, t, p, lat, lon):
             1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf)
     """
     # Calculate the density [kg m-3]
-    rho = gsw.ctd_density(SP, t, p, lat, lon)
+    sa = gsw.SA_from_SP(SP, p, lon, lat)  # absolute salinity
+    ct = gsw.CT_from_t(sa, t, p)  # conservative temperature
+    rho = gsw.rho(sa, ct, p)  # density
     return rho

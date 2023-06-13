@@ -8,7 +8,8 @@
 """
 import numpy as np
 import numexpr as ne
-import pygsw.vectors as gsw
+# import pygsw.vectors as gsw
+import gsw
 
 from ion_functions.data.generic_functions import replace_fill_with_nan
 
@@ -375,8 +376,8 @@ def do2_salinity_correction(DO, P, T, SP, lat, lon, sref=0, pref=0):
     """
 
     # density calculation from GSW toolbox
-    SA = gsw.sa_from_sp(SP, P, lon, lat)
-    CT = gsw.ct_from_t(SA, T, P)
+    SA = gsw.SA_from_SP(SP, P, lon, lat)
+    CT = gsw.CT_from_t(SA, T, P)
     pdens = gsw.rho(SA, CT, pref)  # potential referenced to p=0
 
     # Convert from volume to mass units:
@@ -577,7 +578,7 @@ def dofst_calc(do_raw, offset, Soc, A, B, C, E, P, T, SP, lat, lon):
         Table 1, 1st column.
    """
     # Get potential density using the TEOS-10 toolbox
-    SA = gsw.sa_from_sp(SP, P, lon, lat)
+    SA = gsw.SA_from_SP(SP, P, lon, lat)
     pot_rho_t = gsw.pot_rho_t_exact(SA, T, P, 0)
 
     # Oxygen saturation value using Garcia and Gordon (1992) fit to Benson and Krause data

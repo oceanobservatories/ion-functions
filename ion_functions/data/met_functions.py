@@ -8,7 +8,8 @@
 
 import numpy as np
 import numexpr as ne
-from pygsw import vectors as gsw
+# from pygsw import vectors as gsw
+import gsw
 
 from ion_functions.data.generic_functions import magnetic_declination, magnetic_correction
 
@@ -862,7 +863,7 @@ def met_salsurf(cond, tC_sea, ztmpwat):
     C10 = cond * 10.0
 
     # Calculate the Practical Salinity (PSS-78) [unitless]
-    SP = gsw.sp_from_c(C10, tC_sea, ztmpwat)
+    SP = gsw.SP_from_C(C10, tC_sea, ztmpwat)
     return SP
 
 
