@@ -5,7 +5,6 @@
 @author Christopher Wingard
 @brief Module containing Ocean Bottom Seismometer instrument related functions
 """
-import numexpr as ne
 
 
 def obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.):
@@ -19,6 +18,7 @@ def obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.):
     Implemented by:
 
         2014-07-09: Christopher Wingard. Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
 
     Usage:
 
@@ -44,7 +44,7 @@ def obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.):
     sense = 2. * sensitivity
 
     # ... and calculate the broadband ground velocity
-    grndvel = ne.evaluate("raw * (gain / sense)")
+    grndvel = raw * (gain / sense)
     return grndvel
 
 
@@ -59,6 +59,7 @@ def obs_bb_ground_acceleration(raw, gain=3.2, sensitivity=0.508):
     Implemented by:
 
         2014-07-09: Christopher Wingard. Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
 
     Usage:
 
@@ -84,7 +85,7 @@ def obs_bb_ground_acceleration(raw, gain=3.2, sensitivity=0.508):
     sense = 2. * sensitivity
 
     # ... and calculate the broadband ground acceleration
-    grndacc = ne.evaluate("raw * (gain / sense)")
+    grndacc = raw * (gain / sense)
     return grndacc
 
 
@@ -99,6 +100,7 @@ def obs_sp_ground_velocity(raw, gain=2.84, sensitivity=1200.):
     Implemented by:
 
         2014-07-09: Christopher Wingard. Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
 
     Usage:
 
@@ -124,5 +126,5 @@ def obs_sp_ground_velocity(raw, gain=2.84, sensitivity=1200.):
     sense = 2. * sensitivity
 
     # ... and calculate the short period ground velocity
-    sgrdvel = ne.evaluate("raw * (gain / sense)")
+    sgrdvel = raw * (gain / sense)
     return sgrdvel

@@ -805,7 +805,11 @@ class TestSFLFunctionsUnit(BaseUnitTestCase):
     ### time-vectorized
     npts = 5
     args = [ptcn, u0, y1, y2, y3, c1, c2, c3, d1, d2, t1, t2, t3, t4, poff, slope, offset]
-    args = [np.tile(x, npts) for x in args]
+    newargs = []
+    for x in args:
+        newargs.append(np.tile(x, npts))
+    args = newargs
+    # args = [np.tile(x, npts) for x in args]
     [ptcn, u0, y1, y2, y3, c1, c2, c3, d1, d2, t1, t2, t3, t4, poff, slope, offset] = args
 
     p_dec_wave = np.tile(p_dec_wave, (npts, 1))

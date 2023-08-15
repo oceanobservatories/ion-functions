@@ -7,7 +7,6 @@
 """
 
 import numpy as np
-import numexpr as ne
 from ion_functions.utils import fill_value
 
 
@@ -120,7 +119,7 @@ def pco2_blank(raw_blank):
     return blank
 
 
-def pco2_thermistor(traw, sami_bits):
+def pco2_thermistor(traw, sami_bits=12):
     """
     Description:
 
@@ -132,6 +131,8 @@ def pco2_thermistor(traw, sami_bits):
         2013-04-20: Christopher Wingard. Initial code.
         2014-02-19: Christopher Wingard. Updated comments.
         2023-01-12: Mark Steiner. Add sami_bits arg to handle hardware upgrades
+        2023-08-15: Samuel Dahlberg. Renamed local variables to follow naming convention.
+                    Replaced use of Numexpr with Numpy.
 
     Usage:
 
@@ -158,11 +159,11 @@ def pco2_thermistor(traw, sami_bits):
     # convert raw thermistor readings from counts to degrees Centigrade
     # conversion depends on whether the SAMI is older 12 bit or newer 14 bit hardware
     if sami_bits[0] == 14:
-        Rt = ne.evaluate('log((traw / (16384. - traw)) * 17400.)')
+        rt = np.log((traw / (16384.0 - traw)) * 17400.0)
     else:
-        Rt = ne.evaluate('log((traw / (4096. - traw)) * 17400.)')
-    InvT = ne.evaluate('0.0010183 + 0.000241 * Rt + 0.00000015 * Rt**3')
-    therm = ne.evaluate('(1 / InvT) - 273.15')
+        rt = np.log((traw / (4096. - traw)) * 17400.)
+    inv_t = 0.0010183 + 0.000241 * rt + 0.00000015 * rt**3
+    therm = (1. / inv_t) - 273.15
     return therm
 
 
@@ -193,9 +194,9 @@ def pco2_battery(braw, sami_bits):
 
     # convert raw battery readings from counts to Volts
     if sami_bits[0] == 14:
-        volts = ne.evaluate('braw * 3. / 4000.')
+        volts = braw * 3. / 4000.
     else:
-        volts = ne.evaluate('braw * 15. / 4096.')
+        volts = braw * 15. / 4096.
     return volts
 
 
@@ -299,6 +300,7 @@ def pco2_calc_pco2(light, therm, ea434, eb434, ea620, eb620,
                     corrections to calculations to avoid errors thrown when running a
                     blank measurement.
         2023-01-12: Mark Steiner. Arg therm in degrees C instead of counts
+        2023-08-15: Samuel Dahlberg. Changed local variable names to follow naming convention.
 
     Usage:
 
@@ -342,31 +344,31 @@ def pco2_calc_pco2(light, therm, ea434, eb434, ea620, eb620,
     e3 = 0.2105
 
     # Extract variables from light array
-    Ratio434 = light[:, 6]     # 434nm Ratio
-    Ratio620 = light[:, 7]     # 620nm Ratio
+    ratio434 = light[:, 6]     # 434nm Ratio
+    ratio620 = light[:, 7]     # 620nm Ratio
 
     # correct the absorbance ratios using the blanks
-    AR434 = (Ratio434 / a434blank)
-    AR620 = (Ratio620 / a620blank)
+    ar434 = (ratio434 / a434blank)
+    ar4620 = (ratio620 / a620blank)
 
     # map out blank measurements and spoof the ratios to avoid throwing an error
-    m = np.where(AR434 == AR620)[0]
-    AR434[m] = 0.99999
-    AR620[m] = 0.99999
+    m = np.where(ar434 == ar4620)[0]
+    ar434[m] = 0.99999
+    ar4620[m] = 0.99999
 
     # Calculate the final absorbance ratio
-    A434 = -1 * np.log10(AR434)  # 434 absorbance
-    A620 = -1 * np.log10(AR620)  # 620 absorbance
-    Ratio = A620 / A434          # Absorbance ratio
+    a434 = -1 * np.log10(ar434)  # 434 absorbance
+    a620 = -1 * np.log10(ar4620)  # 620 absorbance
+    ratio = a620 / a434          # Absorbance ratio
 
     # calculate pCO2
-    V1 = Ratio - e1
-    V2 = e2 - e3 * Ratio
-    RCO21 = -1 * np.log10(V1 / V2)
-    RCO22 = (therm - calt) * 0.008 + RCO21
-    Tcoeff = 0.0075778 - 0.0012389 * RCO22 - 0.00048757 * RCO22**2
-    Tcor_RCO2 = RCO21 + Tcoeff * (therm - calt)
-    pco2 = 10.**((-1. * calb + (calb**2 - (4. * cala * (calc - Tcor_RCO2)))**0.5) / (2. * cala))
+    v1 = ratio - e1
+    v2 = e2 - e3 * ratio
+    rco21 = -1 * np.log10(v1 / v2)
+    rco22 = (therm - calt) * 0.008 + rco21
+    t_coeff = 0.0075778 - 0.0012389 * rco22 - 0.00048757 * rco22**2
+    t_cor_rco2 = rco21 + t_coeff * (therm - calt)
+    pco2 = 10.**((-1. * calb + (calb**2 - (4. * cala * (calc - t_cor_rco2)))**0.5) / (2. * cala))
     pco2[m] = fill_value  # reset the blanks captured earlier to a fill value
 
     return np.real(pco2)
@@ -386,6 +388,7 @@ def pco2_ppressure(xco2, p, std=1013.25):
     Implemented by:
 
         2014-10-27: Christopher Wingard. Initial python code.
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr.
 
     Usage:
 
@@ -408,7 +411,7 @@ def pco2_ppressure(xco2, p, std=1013.25):
             OOI >> Controlled >> 1000 System Level >>
             1341-00260_Data_Product_SPEC_PCO2ATM_PCO2SSW_OOI.pdf)
     """
-    ppres = ne.evaluate('xco2 * p / std')
+    ppres = xco2 * p / std
     return ppres
 
 

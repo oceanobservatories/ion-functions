@@ -6,9 +6,8 @@
 @brief Module containing CTD related data-calculations.
 """
 
-# Import Numexpr and the TEOS-10 GSW libraries
-import numexpr
-#from pygsw import vectors as gsw
+# Import Numpy and the GSW library
+import numpy as np
 import gsw
 
 def ctd_sbe16plus_tempwat(t0, a0, a1, a2, a3):
@@ -28,6 +27,7 @@ def ctd_sbe16plus_tempwat(t0, a0, a1, a2, a3):
         2013-04-12: Christopher Wingard. Minor edits
         2013-05-10: Christopher Wingard. Minor edits to comments.
         2014-01-31: Russell Desiderio. Standardized comment format.
+        2023-08-15: Samuel Dahlberg. Removed use of numexpr
 
     Usage:
 
@@ -50,9 +50,9 @@ def ctd_sbe16plus_tempwat(t0, a0, a1, a2, a3):
             1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf)
     """
 
-    mv = numexpr.evaluate('(t0 - 524288) / 1.6e7')
-    r = numexpr.evaluate('(mv * 2.9e9 + 1.024e8)/(2.048e4 - mv * 2.0e5)')
-    t = numexpr.evaluate('1 / (a0 + a1 * log(r) + a2 * log(r)**2 + a3 * log(r)**3) - 273.15')
+    mv = (t0 - 524288) / 1.6e7
+    r = (mv * 2.9e9 + 1.024e8)/(2.048e4 - mv * 2.0e5)
+    t = 1 / (a0 + a1 * np.log(r) + a2 * np.log(r)**2 + a3 * np.log(r)**3) - 273.15
     return t
 
 
@@ -70,6 +70,7 @@ def ctd_sbe37im_tempwat_instrument_recovered(t0, a0, a1, a2, a3):
     Implemented by:
 
         2016-06-16: Russell Desiderio. Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of numexpr
 
     Usage:
 
@@ -94,7 +95,7 @@ def ctd_sbe37im_tempwat_instrument_recovered(t0, a0, a1, a2, a3):
             1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf)
     """
 
-    t = numexpr.evaluate('1 / (a0 + a1 * log(t0) + a2 * log(t0)**2 + a3 * log(t0)**3) - 273.15')
+    t = 1 / (a0 + a1 * np.log(t0) + a2 * np.log(t0)**2 + a3 * np.log(t0)**3) - 273.15
     return t
 
 
@@ -551,6 +552,7 @@ def ctd_sbe37im_condwat_instrument_recovered(c0, t1, p1, g, h, i, j, cpcor, ctco
     Implemented by:
 
         2016-06-16: Russell Desiderio. Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of numexpr
 
     Usage:
 
@@ -580,7 +582,7 @@ def ctd_sbe37im_condwat_instrument_recovered(c0, t1, p1, g, h, i, j, cpcor, ctco
             1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf)
     """
     # convert raw conductivity measurement to frequency
-    f = numexpr.evaluate('(c0 / 256.0) / 1000.0 * sqrt(1.0 + wbotc * t1)')
+    f = (c0 / 256.0) / 1000.0 * np.sqrt(1.0 + wbotc * t1)
 
     # calculate conductivity [S m-1]
     c = (g + h * f**2 + i * f**3 + j * f**4) / (1 + ctcor * t1 + cpcor * p1)
@@ -675,6 +677,7 @@ def ctd_pracsal(c, t, p):
         2013-03-13: Christopher Wingard. Initial code.
         2013-05-10: Christopher Wingard. Minor edits to comments.
         2014-01-31: Russell Desiderio. Standardized comment format.
+        2023-08-15: Samuel Dahlberg. Replaced incompatible pygsw with GSW library.
 
     Usage:
 
@@ -718,6 +721,7 @@ def ctd_density(SP, t, p, lat, lon):
             ctd_functions
         2013-05-10: Christopher Wingard. Minor edits to comments.
         2014-01-31: Russell Desiderio. Standardized comment format.
+        2023-08-15: Samuel Dahlberg. Replaced incompatible pygsw with GSW library.
 
     Usage:
 

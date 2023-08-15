@@ -7,7 +7,6 @@
     Two Wavelength (FLORD) instrument family related functions
 """
 import numpy as np
-import numexpr as ne
 
 
 def flo_bback_total(beta, degC, psu, theta, wlngth, xfactor):
@@ -186,6 +185,7 @@ def flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta=0.039):
     Implemented by:
 
         2013-07-15: Christopher Wingard. Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of numexpr
 
     Usage:
 
@@ -238,31 +238,28 @@ def flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta=0.039):
     # Eq.(14,22,23,88,107) that were fitted to polynominal equation. dlnawds is
     # a partial derivative of the natural logarithm of water activity with
     # regards to salinity.
-    dlnawds = ne.evaluate('(-5.58651e-4 + 2.40452e-7 * degC - 3.12165e-9 * degC**2 + 2.40808e-11 * degC**3) +'
-                          '1.5 * (1.79613e-5 - 9.9422e-8 * degC + 2.08919e-9 * degC**2 - 1.39872e-11 * degC**3) *'
-                          'psu**0.5 + 2 * (-2.31065e-6 - 1.37674e-9 * degC - 1.93316e-11 * degC**2) * psu')
+    dlnawds = (-5.58651e-4 + 2.40452e-7 * degC - 3.12165e-9 * degC**2 + 2.40808e-11 * degC**3) + \
+            1.5 * (1.79613e-5 - 9.9422e-8 * degC + 2.08919e-9 * degC**2 - 1.39872e-11 * degC**3) * \
+            psu**0.5 + 2 * (-2.31065e-6 - 1.37674e-9 * degC - 1.93316e-11 * degC**2) * psu
 
     # density derivative of refractive index from PMH model
-    dfri = ne.evaluate('(nsw**2 - 1.0) * (1.0 + 2.0/3.0 * (nsw**2 + 2.0)'
-                       '* (nsw/3.0 - 1.0/3.0 / nsw)**2)')
+    dfri = (nsw**2 - 1.0) * (1.0 + 2.0/3.0 * (nsw**2 + 2.0) * (nsw/3.0 - 1.0/3.0 / nsw)**2)
 
     # volume scattering at 90 degrees due to the density fluctuation
-    beta_df = ne.evaluate('pi**2 / 2.0 * (wlngth*1e-9)**-4 * Kbz * degK * icomp '
-                          '* dfri**2 * (6.0 + 6.0 * delta) / (6.0 - 7.0 * delta)')
+    beta_df = pi**2 / 2.0 * (wlngth*1e-9)**-4 * Kbz * degK * icomp * dfri**2 * (6.0 + 6.0 * delta) / (6.0 - 7.0 * delta)
 
     # volume scattering at 90 degree due to the concentration fluctuation
-    flu_con = ne.evaluate('psu * M0 * dnds**2 / rho / -dlnawds / Na')
-    beta_cf = ne.evaluate('2.0 * pi**2 * (wlngth * 1e-9)**-4 * nsw**2 * flu_con'
-                          '* (6.0 + 6.0 * delta) / (6.0 - 7.0 * delta)')
+    flu_con = psu * M0 * dnds**2 / rho / -dlnawds / Na
+    beta_cf = 2.0 * pi**2 * (wlngth * 1e-9)**-4 * nsw**2 * flu_con * (6.0 + 6.0 * delta) / (6.0 - 7.0 * delta)
 
     # total volume scattering at 90 degree
     beta90sw = beta_df + beta_cf
 
     # total scattering coefficient of seawater (m-1)
-    bsw = ne.evaluate('8.0 * pi / 3.0 * beta90sw * ((2.0 + delta) / (1.0 + delta))')
+    bsw = 8.0 * pi / 3.0 * beta90sw * ((2.0 + delta) / (1.0 + delta))
 
     # total volume scattering coefficient of seawater (m-1 sr-1)
-    betasw = ne.evaluate('beta90sw * (1.0 + ((1.0 - delta) / (1.0 + delta)) * cos(rad)**2)')
+    betasw = beta90sw * (1.0 + ((1.0 - delta) / (1.0 + delta)) * np.cos(rad)**2)
 
     return betasw, bsw
 
@@ -276,10 +273,15 @@ def flo_refractive_index(wlngth, degC, psu):
     @retval nsw absolute refractive index of seawater
     @retval dnds partial derivative of seawater refractive index with regards to
         seawater.
+
+    Implemented by:
+
+        2014-02-21: Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of numexpr
+
     """
     # refractive index of air is from Ciddor (1996, Applied Optics).
-    n_air = ne.evaluate('1.0 + (5792105.0 / (238.0185 - 1 / (wlngth/1e3)**2)'
-                        '+ 167917.0 / (57.362 - 1 / (wlngth/1e3)**2)) / 1e8')
+    n_air = 1.0 + (5792105.0 / (238.0185 - 1 / (wlngth/1e3)**2) + 167917.0 / (57.362 - 1 / (wlngth/1e3)**2)) / 1e8
 
     # refractive index of seawater is from Quan and Fry (1994, Applied Optics)
     n0 = 1.31405
@@ -292,13 +294,12 @@ def flo_refractive_index(wlngth, degC, psu):
     n7 = -0.00423
     n8 = -4382.0
     n9 = 1.1455e6
-    nsw = ne.evaluate('n0 + (n1 + n2 * degC + n3 * degC**2) * psu + n4 * degC**2'
-                      '+ (n5 + n6 * psu + n7 * degC) / wlngth + n8 / wlngth**2'
-                      '+ n9 / wlngth**3')
+    nsw = n0 + (n1 + n2 * degC + n3 * degC**2) * psu + n4 * degC**2 + (n5 + n6 * psu + n7 * degC) / \
+          wlngth + n8 / wlngth**2 + n9 / wlngth**3
 
     # pure seawater
-    nsw = ne.evaluate('nsw * n_air')
-    dnds = ne.evaluate('(n1 + n2 * degC + n3 * degC**2 + n6 / wlngth) * n_air')
+    nsw = nsw * n_air
+    dnds = (n1 + n2 * degC + n3 * degC**2 + n6 / wlngth) * n_air
 
     return nsw, dnds
 
@@ -309,19 +310,23 @@ def flo_isotherm_compress(degC, psu):
     @param degC in situ water temperature
     @param psu in site practical salinity
     @retval iso_comp seawater isothermal compressibility
+
+    Implemented by:
+
+        2014-02-21: Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of numexpr
+
     """
     # pure water secant bulk Millero (1980, Deep-sea Research)
-    kw = ne.evaluate('19652.21 + 148.4206 * degC - 2.327105 * degC**2'
-                     '+ 1.360477e-2 * degC**3 - 5.155288e-5 * degC**4')
+    kw = 19652.21 + 148.4206 * degC - 2.327105 * degC**2 + 1.360477e-2 * degC**3 - 5.155288e-5 * degC**4
 
     # seawater secant bulk
-    a0 = ne.evaluate('54.6746 - 0.603459 * degC + 1.09987e-2 * degC**2'
-                     '- 6.167e-5 * degC**3')
-    b0 = ne.evaluate('7.944e-2 + 1.6483e-2 * degC - 5.3009e-4 * degC**2')
-    ks = ne.evaluate('kw + a0 * psu + b0 * psu**1.5')
+    a0 = 54.6746 - 0.603459 * degC + 1.09987e-2 * degC**2 - 6.167e-5 * degC**3
+    b0 = 7.944e-2 + 1.6483e-2 * degC - 5.3009e-4 * degC**2
+    ks = kw + a0 * psu + b0 * psu**1.5
 
     # calculate seawater isothermal compressibility from the secant bulk
-    iso_comp = ne.evaluate('1 / ks * 1e-5')  # unit is Pa
+    iso_comp = 1 / ks * 1e-5  # unit is Pa
 
     return iso_comp
 
@@ -332,6 +337,12 @@ def flo_density_seawater(degC, psu):
     @param degC in situ water temperature
     @param psu in site practical salinity
     @retval rho_sw density of seawater
+
+    Implemented by:
+
+        2014-02-21: Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of numexpr
+
     """
     # density of water and seawater,unit is Kg/m^3, from UNESCO,38,1981
     a0 = 8.24493e-1
@@ -351,13 +362,11 @@ def flo_density_seawater(degC, psu):
     b5 = 6.536332e-9
 
     # density for pure water
-    rho_w = ne.evaluate('b0 + b1 * degC + b2 * degC**2 + b3 * degC**3'
-                        '+ b4 * degC**4 + b5 * degC**5')
+    rho_w = b0 + b1 * degC + b2 * degC**2 + b3 * degC**3 + b4 * degC**4 + b5 * degC**5
 
     # density for pure seawater
-    rho_sw = ne.evaluate('rho_w + ((a0 + a1 * degC + a2 * degC**2'
-                         '+ a3 * degC**3 + a4 * degC**4) * psu'
-                         '+ (a5 + a6 * degC + a7 * degC**2) * psu**1.5 + a8 * psu**2)')
+    rho_sw = rho_w + ((a0 + a1 * degC + a2 * degC**2 + a3 * degC**3 + a4 * degC**4) *
+                      psu + (a5 + a6 * degC + a7 * degC**2) * psu**1.5 + a8 * psu**2)
 
     return rho_sw
 
@@ -372,6 +381,7 @@ def flo_scale_and_offset(counts_output, counts_dark, scale_factor):
     Implemented by:
 
         2014-01-30: Craig Risien. Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of numexpr
 
     Usage:
 
@@ -389,7 +399,7 @@ def flo_scale_and_offset(counts_output, counts_dark, scale_factor):
 
         N/A
     """
-    value = ne.evaluate('(counts_output - counts_dark) * scale_factor')
+    value = (counts_output - counts_dark) * scale_factor
     return value
 
 

@@ -5,7 +5,7 @@
 @author Christopher Wingard
 @brief Module containing Hydrophone instrument family related functions
 """
-import numexpr as ne
+
 import numpy as np
 
 
@@ -21,6 +21,8 @@ def hyd_bb_acoustic_pwaves(wav, gain):
     Implemented by:
 
         2014-05-16: Christopher Wingard. Initial Code
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+                    Changed local variable names to follow naming convention.
 
     Usage:
 
@@ -43,21 +45,21 @@ def hyd_bb_acoustic_pwaves(wav, gain):
     """
     # shape inputs to correct dimensions
     wav = np.atleast_2d(wav)
-    nRec = wav.shape[0]
+    n_rec = wav.shape[0]
 
     if np.isscalar(gain) is True:
-        gain = np.tile(gain, (nRec, 1))
+        gain = np.tile(gain, (n_rec, 1))
     else:
-        gain = np.reshape(gain, (nRec, 1))
+        gain = np.reshape(gain, (n_rec, 1))
 
     # Convert the gain from dB to a linear value
-    gain = ne.evaluate("10**(gain/20.)")
+    gain = 10**(gain/20.)
 
     # convert the broadband acoustic pressure wave data to Volts
-    volts = ne.evaluate("wav * 3.")
+    volts = wav * 3.
 
     # and correct for the gain
-    tsv = ne.evaluate("volts / gain")
+    tsv = volts / gain
     return tsv
 
 
@@ -72,6 +74,7 @@ def hyd_lf_acoustic_pwaves(raw, gain=3.2):
     Implemented by:
 
         2014-07-09: Christopher Wingard. Initial Code.
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
 
     Usage:
 
@@ -94,5 +97,5 @@ def hyd_lf_acoustic_pwaves(raw, gain=3.2):
     """
     # apply the gain correction to convert the signal from counts to V
     gain = gain * 1.0e-6
-    hydaplf = ne.evaluate("raw * gain")
+    hydaplf = raw * gain
     return hydaplf

@@ -7,7 +7,6 @@
     Pressure family.
 """
 import pkg_resources
-import numexpr as ne
 import numpy as np
 import scipy.io as spio
 from scipy import signal
@@ -178,7 +177,7 @@ def prs_bottilt_tmag(x_tilt, y_tilt):
             >> Controlled >> 1000 System Level >>
             1341-00060_Data_Product_SPEC_BOTTILT_OOI.pdf)
      """
-    tmag = ne.evaluate('sqrt(x_tilt**2 + y_tilt**2)')
+    tmag = np.sqrt(x_tilt**2 + y_tilt**2)
     return tmag
 
 
@@ -924,7 +923,8 @@ def anchor_bin_detided_data_to_24h(time, data, dday_coverage):
     #    bins with bincounts below the threshold value will have a nan value.
     #    bins with bincounts equal to or above the threshold value are non_Nan.
     bin_mean = bin_count//max_count
-    bin_count[bin_mean < dday_coverage] = np.nan
+    if np.isscalar(dday_coverage):
+        bin_count[bin_mean < dday_coverage] = np.nan
     #    use nans to prevent dividing by zero in case dday_coverage=0
     bin_count[bin_count == 0] = np.nan
 
@@ -1044,7 +1044,7 @@ def calculate_sliding_means(data, window_size):
     return means
 
 
-def calculate_sliding_slopes(data, window_size, coverage_threshold):
+def calculate_sliding_slopes(data, window_size, coverage_threshold=0.0):
     """
     Description:
 

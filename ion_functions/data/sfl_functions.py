@@ -7,7 +7,6 @@
 """
 
 import numpy as np
-import numexpr as ne
 from scipy.interpolate import RectBivariateSpline
 
 from ion_functions.data.generic_functions import replace_fill_with_nan
@@ -515,7 +514,7 @@ def chloride_activity(temperature, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3, chlori
     # replicate its default value into a vector with
     # the same number of elements as temperature;
     # do so without using a conditional
-    nreps = nvalues / np.array([chloride]).shape[-1]
+    nreps = nvalues // np.array([chloride]).shape[-1]
     chloride = np.tile(chloride, nreps)
 
     # calculate the 4 coefficients needed to calculate the chloride activity from temperature
@@ -1336,6 +1335,7 @@ def sfl_sflpres_rtime(p_psia):
                     and -WAVE.
         2015-07-22: Russell Desiderio. There are no type integer input arguments,
                                        don't need replace_fill_with_nan call.
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
 
     Usage:
 
@@ -1354,7 +1354,7 @@ def sfl_sflpres_rtime(p_psia):
         >> Controlled >> 1000 System Level >>
         1341-00230_Data_Product_SPEC_SFLPRES_OOI.pdf)
     """
-    rtime = ne.evaluate('p_psia * 0.689475728')
+    rtime = p_psia * 0.689475728
     return rtime
 
 
@@ -1377,6 +1377,7 @@ def sfl_sflpres_tide(p_dec_tide, b, m, slope=1.0, offset=0.0):
 
         2014-09-23: Christopher Wingard. Initial code
         2015-07-22: Russell Desiderio. Added call to replace_fill_with_nan.
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
 
     Usage:
 
@@ -1402,8 +1403,8 @@ def sfl_sflpres_tide(p_dec_tide, b, m, slope=1.0, offset=0.0):
     # replace type integer fill values with nans
     p_dec_tide = replace_fill_with_nan(None, p_dec_tide)
 
-    psia = ne.evaluate('slope * ((p_dec_tide - b) / m) + offset')
-    tide = ne.evaluate('0.689475728 * psia')
+    psia = slope * ((p_dec_tide - b) / m) + offset
+    tide = 0.689475728 * psia
     return tide
 
 
@@ -1428,6 +1429,8 @@ def sfl_sflpres_wave(ptcn, p_dec_wave, u0, y1, y2, y3, c1, c2, c3, d1, d2,
         2014-09-23: Christopher Wingard. Initial code
         2015-07-20: Russell Desiderio. Modified code to accept p_dec_wave as 2D array.
         2015-07-22: Russell Desiderio. Added call to replace_fill_with_nan.
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+
 
     Usage:
 
@@ -1473,17 +1476,17 @@ def sfl_sflpres_wave(ptcn, p_dec_wave, u0, y1, y2, y3, c1, c2, c3, d1, d2,
 
     # compute the pressure temperature compensation frequency (PTCF) and
     # pressure frequency (PF) from raw inputs
-    PTCF = ne.evaluate('ptcn / 256.0')
-    PF = ne.evaluate('p_dec_wave / 256.0')
+    PTCF = ptcn / 256.0
+    PF = p_dec_wave / 256.0
 
     # use calibration coefficients to compute scale factors.
-    U = ne.evaluate('((1.0 / PTCF) * 1000000) - u0')
-    C = ne.evaluate('c1 + (c2 * U) + (c3 * U**2)')
-    D = ne.evaluate('d1 + d2')
-    T0 = ne.evaluate('(t1 + t2 * U + t3 * U**2 + t4 * U**3) / 1000000')
+    U = ((1.0 / PTCF) * 1000000) - u0
+    C = c1 + (c2 * U) + (c3 * U**2)
+    D = d1 + d2
+    T0 = (t1 + t2 * U + t3 * U**2 + t4 * U**3) / 1000000
     # broadcast T0 to the shape of PF
     T0 = np.tile(T0, (n_values_in_burst, 1)).T
-    W = ne.evaluate('1.0 - (T0**2 * PF**2)')
+    W = 1.0 - (T0**2 * PF**2)
     # broadcast C, D, and poff to the shape of W
     C = np.tile(C, (n_values_in_burst, 1)).T
     D = np.tile(D, (n_values_in_burst, 1)).T
@@ -1494,8 +1497,8 @@ def sfl_sflpres_wave(ptcn, p_dec_wave, u0, y1, y2, y3, c1, c2, c3, d1, d2,
         offset = np.tile(offset, (n_values_in_burst, 1)).T
 
     # compute the wave pressure data in dbar
-    psia = ne.evaluate('slope * ((C * W * (1.0 - D * W)) + poff) + offset')
-    wave = ne.evaluate('0.689475728 * psia')
+    psia = slope * ((C * W * (1.0 - D * W)) + poff) + offset
+    wave = 0.689475728 * psia
     return wave
 
 

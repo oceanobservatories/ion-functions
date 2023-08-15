@@ -7,8 +7,6 @@
 """
 
 import numpy as np
-import numexpr as ne
-# from pygsw import vectors as gsw
 import gsw
 
 from ion_functions.data.generic_functions import magnetic_declination, magnetic_correction
@@ -230,7 +228,7 @@ def met_barpres(mbar):
         OOI (2012). Data Product Specification for L1 Bulk Meterological Data
             Products. Document Control Number 1341-00360.
             https://alfresco.oceanobservatories.org/ (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
+            Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
     """
     Pa = mbar * 100.
@@ -268,7 +266,7 @@ def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, zwindsp=0.0):
         OOI (2012). Data Product Specification for L1 Bulk Meterological Data
             Products. Document Control Number 1341-00360.
             https://alfresco.oceanobservatories.org/ (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
+            Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
 
         The magnetic_declination function and the magnetic_correction function are
@@ -319,7 +317,7 @@ def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, zwindsp=0.0):
         OOI (2012). Data Product Specification for L1 Bulk Meterological Data
             Products. Document Control Number 1341-00360.
             https://alfresco.oceanobservatories.org/ (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
+            Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
 
         The magnetic_declination function and the magnetic_correction function are
@@ -395,7 +393,7 @@ def met_current_direction(vle_water, vln_water, use_velptmn_with_metbk=0):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # replace aliased current values with nans.
@@ -439,6 +437,7 @@ def met_current_speed(vle_water, vln_water, use_velptmn_with_metbk=0):
         2014-08-27: Russell Desiderio. Added documentation, changed variable names.
         2015-07-10: Russell Desiderio. Added data quality flags (use_velptmn_with_metbk)
                     to argument list. See Notes to the function met_relwind_speed.
+        2023-08-15: Samuel Dahlberg. Removed use of numexpr
 
     Usage:
 
@@ -465,13 +464,13 @@ def met_current_speed(vle_water, vln_water, use_velptmn_with_metbk=0):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # replace aliased current values with nans.
     vle_water, vln_water = vet_velptmn_data(vle_water, vln_water, use_velptmn_with_metbk)
 
-    current_spd = ne.evaluate("sqrt(vle_water**2 + vln_water**2)")
+    current_spd = np.sqrt(vle_water**2 + vln_water**2)
     return current_spd
 
 
@@ -517,7 +516,7 @@ def met_relwind_direction(vle_wind, vln_wind, vle_water=None, vln_water=None, us
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # if this function is called without using surface current data, return nan
@@ -610,7 +609,7 @@ def met_relwind_speed(vle_wind, vln_wind, vle_water=None, vln_water=None, use_ve
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # If the surface current velocities are missing or invalid, the actual windspeed
@@ -729,7 +728,7 @@ def met_netsirr(shortwave_down):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # net down = total down - reflected up
@@ -768,7 +767,7 @@ def met_netsirr_hourly(shortwave_down, timestamp):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     shortwave_down, timestamp = condition_data(shortwave_down, timestamp)
@@ -809,7 +808,7 @@ def met_rainrte(cumulative_precipitation, timestamp):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     cumulative_precipitation, timestamp = condition_data(cumulative_precipitation, timestamp)
@@ -838,6 +837,7 @@ def met_salsurf(cond, tC_sea, ztmpwat):
 
         2014-06-25: Christopher Wingard. Initial code.
         2014-08-26: Russell Desiderio. Changed variable names.
+        2023-08-15: Samuel Dahlberg. Replaced incompatible pygsw with GSW library.
 
     Usage:
 
@@ -856,7 +856,7 @@ def met_salsurf(cond, tC_sea, ztmpwat):
 
         OOI (2012). Data Product Specification for Salinity. Document Control
             Number 1341-00040. https://alfresco.oceanobservatories.org/ (See: 
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
+            Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf)
     """
     # Convert L1 Conductivity from S/m to mS/cm
@@ -895,7 +895,7 @@ def met_spechum(tC_air, pr_air, relhum):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # calculate saturated vapor pressure es in mbar
@@ -990,7 +990,7 @@ def met_buoyfls(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1074,7 +1074,7 @@ def met_buoyflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1156,7 +1156,7 @@ def met_frshflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1240,7 +1240,7 @@ def met_heatflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1327,7 +1327,7 @@ def met_latnflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1412,7 +1412,7 @@ def met_mommflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1491,7 +1491,7 @@ def met_netlirr(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1573,7 +1573,7 @@ def met_rainflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1654,7 +1654,7 @@ def met_sensflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1733,7 +1733,7 @@ def met_sphum2m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     zrefht = 2.0  # [m]
@@ -1812,7 +1812,7 @@ def met_stablty(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -1887,7 +1887,7 @@ def met_tempa2m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     zrefht = 2.0  # [m]
@@ -1967,7 +1967,7 @@ def met_tempskn(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -2046,7 +2046,7 @@ def met_wind10m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     zrefht = 10.0  # [m]
@@ -2148,7 +2148,7 @@ def met_heatflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -2240,7 +2240,7 @@ def met_latnflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -2329,7 +2329,7 @@ def met_netlirr_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -2412,7 +2412,7 @@ def met_sensflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # package input arguments.
@@ -2539,7 +2539,7 @@ def calc_rain_rate(cumulative_precipitation, timestamp):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # trap out scalar case; return a value of 0
@@ -2663,7 +2663,7 @@ def net_longwave_up(tC_water, total_longwave_down):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
         """
     sigma = 5.67e-8  # Stefan-Boltzmann constant [W/(m^2 K^4)]
@@ -2834,7 +2834,7 @@ def rain_heat_flux(rainrate, Tsea, Tair, relhum, pr_air):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
 
     Derivation:
@@ -3026,7 +3026,7 @@ def sea_spechum(tC_sea, p_air):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
     """
     # calculate saturated vapor pressure es in mbar
@@ -3192,7 +3192,7 @@ def seasurface_skintemp_correct(*args):
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
 
         OOI (2014). 1341-00370_BULKFLX Artifacts. https://alfresco.oceanobservatories.org/
@@ -3329,7 +3329,7 @@ def warmlayer(rain_rate, timestamp, lon, ztmpwat, tC_sea, wnd, zwindsp, tC_air, 
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
 
         OOI (2014). 1341-00370_BULKFLX Artifacts. https://alfresco.oceanobservatories.org/
@@ -3605,7 +3605,7 @@ def coare35vn(tC_sea, wnd, zwindsp, tC_air, ztmpair, relhum, zhumair, pr_air,
         OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
             Document Control Number 1341-00370.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
+            OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
 
         OOI (2014). 1341-00370_BULKFLX Artifacts. https://alfresco.oceanobservatories.org/
