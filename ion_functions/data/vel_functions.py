@@ -648,7 +648,7 @@ def nobska_scale_up_vel(w):
     return w / 100.0
 
 
-def nortek_mag_corr_east(u, v, lat, lon, timestamp, z=0.0):
+def nortek_mag_corr_east(u, v, lat, lon, timestamp, z=0.0, status_code=0):
     """
     Description:
 
@@ -682,6 +682,8 @@ def nortek_mag_corr_east(u, v, lat, lon, timestamp, z=0.0):
             [secs since 1900-01-01].
         z = depth of instrument relative to sealevel [meters].
             Positive values only. Default value is 0.
+        status_code = status code variable from system packet.
+            Scale velocity by 0.1 if bit 1 of status_code is 1
 
     2015-06-08: Russell Desiderio. Changed DPA to reflect correct units
                                    of input velocities. see Notes.
@@ -712,11 +714,13 @@ def nortek_mag_corr_east(u, v, lat, lon, timestamp, z=0.0):
     # correct for magnetic declination
     u_cor = vel_mag_correction(u, v, lat, lon, timestamp, z)[0]
 
+    u_cor = nortek_scale_velocity(u_cor, status_code)
+
     # return true compass referenced East velocity in m/s
     return u_cor
 
 
-def nortek_mag_corr_north(u, v, lat, lon, timestamp, z=0.0):
+def nortek_mag_corr_north(u, v, lat, lon, timestamp, z=0.0, status_code=0):
     """
     Description:
 
@@ -750,6 +754,8 @@ def nortek_mag_corr_north(u, v, lat, lon, timestamp, z=0.0):
             [secs since 1900-01-01].
         z = depth of instrument relative to sealevel [meters].
             Positive values only. Default value is 0.
+        status_code = status code variable from system packet.
+            Scale velocity by 0.1 if bit 1 of status_code is 1
 
     2015-06-08: Russell Desiderio. Changed DPA to reflect correct units
                                    of input velocities. see Notes.
@@ -780,11 +786,13 @@ def nortek_mag_corr_north(u, v, lat, lon, timestamp, z=0.0):
     # correct for magnetic declination
     v_cor = vel_mag_correction(u, v, lat, lon, timestamp, z)[1]
 
+    v_cor = nortek_scale_velocity(v_cor, status_code)
+
     # return true compass referenced North velocity in m/s
     return v_cor
 
 
-def nortek_up_vel(w):
+def nortek_up_vel(w, status_code=0):
     """
     Description:
 
@@ -816,7 +824,16 @@ def nortek_up_vel(w):
             >> OOI >> Controlled >> 1000 System Level >>
             1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf)
     """
-    return w / 1000.0
+    return nortek_scale_velocity(w / 1000.0, status_code)
+
+
+def nortek_scale_velocity(velocity, status_code=0):
+    """
+    scale velocity by 0.1 if bit 1 of status_code is 1
+    """
+    status_code = np.rint(status_code).astype(dtype=int)
+    scale_factor = np.where(np.bitwise_and(status_code, 0x2).astype(dtype=bool), 0.1, 1.0)
+    return velocity * scale_factor
 
 
 def vel3dk_east(
