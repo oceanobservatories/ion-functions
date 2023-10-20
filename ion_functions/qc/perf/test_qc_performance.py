@@ -16,7 +16,7 @@ class TestQCPerformance(PerformanceTestCase):
         stats = []
         sample_set = np.empty(a_year, dtype=np.float)
         sample_set.fill(17.)
-        indexes = [i for i in xrange(a_year) if not i%20]
+        indexes = [i for i in range(a_year) if not i%20]
         sample_set[indexes] = 40
         mins = np.empty(a_year, dtype=np.float)
         maxs = np.empty(a_year, dtype=np.float)
@@ -30,7 +30,7 @@ class TestQCPerformance(PerformanceTestCase):
 
         sample_set = np.empty(a_year, dtype=np.float)
         sample_set.fill(3)
-        indexes = [i for i in xrange(a_day * 2) if not i%20]
+        indexes = [i for i in range(a_day * 2) if not i%20]
         sample_set[indexes] = 40
 
         self.profile(stats, spiketest, sample_set, 0.1)

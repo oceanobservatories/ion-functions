@@ -8,7 +8,6 @@
 
 # imports
 import numpy as np
-import numexpr as ne
 import scipy as sp
 
 
@@ -19,7 +18,7 @@ def ph_434_intensity(light):
     instrument light measurements. Coded to accept either a single record or an
     array of records.
     """
-    light = np.atleast_3d(light).astype(np.float)
+    light = np.atleast_3d(light).astype(float)
     new = np.reshape(light, (-1, 23, 4))
     si434 = new[:, :, 1]
     return si434  # signal intensity, 434 nm (PH434SI_L0)
@@ -31,7 +30,7 @@ def ph_578_intensity(light):
     instrument light measurements. Coded to accept either a single record or an
     array of records.
     """
-    light = np.atleast_3d(light).astype(np.float)
+    light = np.atleast_3d(light).astype(float)
     new = np.reshape(light, (-1, 23, 4))
     si578 = new[:, :, 3]
     return si578  # signal intensity, 578 nm (PH578SI_L0)
@@ -39,10 +38,16 @@ def ph_578_intensity(light):
 
 # functions to convert thermistor and battery measurements from counts to
 # applicable engineering units
-def ph_thermistor(traw, sami_bits):
+def ph_thermistor(traw, sami_bits=12):
     """
     Function to convert the thermistor data (ABSTHRM_L0) from counts to degrees
     Centigrade for the pH instrument.
+
+    Implemented by:
+
+        2014-05-01: Christopher Wingard: Initial code.
+        2023-08-15: Samuel Dahlberg: Removed use of numexpr. Added default to sami_bits.
+
     """
     # reset inputs to arrays
     traw = np.atleast_1d(traw)
@@ -50,18 +55,17 @@ def ph_thermistor(traw, sami_bits):
 
     # convert raw thermistor readings from counts to degrees Centigrade
     # conversion depends on whether the SAMI is older 12 bit or newer 14 bit hardware
-    if sami_bits[0] == 14:
-        Rt = ne.evaluate('(traw / (16384.0 - traw)) * 17400.0')
+    if sami_bits == 14:
+        rt = np.log((traw / (16384.0 - traw)) * 17400.0)
     else:
-        Rt = ne.evaluate('(traw / (4096.0 - traw)) * 17400.0')
-    lRt = np.log(Rt) 
-    InvT = ne.evaluate('0.0010183 + 0.000241 * lRt + 0.00000015 * lRt**3')
-    therm = ne.evaluate('(1.0 / InvT) - 273.15')
+        rt = np.log((traw / (4096.0 - traw)) * 17400.0)
+    inv = 0.0010183 + 0.000241 * rt + 0.00000015 * rt**3
+    therm = (1.0 / inv) - 273.15
 
     return therm
 
 
-def ph_battery(braw, sami_bits):
+def ph_battery(braw, sami_bits=12):
     """
     Function to convert the battery voltage from counts to Volts from the pH instrument.
     """
@@ -71,9 +75,9 @@ def ph_battery(braw, sami_bits):
 
     # convert raw battery readings from counts to Volts
     if sami_bits[0] == 14:
-        volts = ne.evaluate('braw * 3. / 4000.')
+        volts = braw * 3. / 4000.
     else:
-        volts = ne.evaluate('braw * 15. / 4096.')
+        volts = braw * 15. / 4096.
     return volts
 
 

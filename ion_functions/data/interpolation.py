@@ -82,7 +82,7 @@ def polyval_calibration(coefficients, x):
     retval = np.empty_like(x)
     # Translate the record array into a numpy array of floats
     coefficients = coefficients.view('float32').reshape(coefficients.shape + (-1,))
-    for i in xrange(x.shape[0]):
+    for i in range(x.shape[0]):
         c_i = coefficients[i]
         r = np.polyval(c_i, [x[i]])
         retval[i] = r

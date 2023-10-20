@@ -7,8 +7,7 @@
 @brief Module containing Dissolved Oxygen family functions
 """
 import numpy as np
-import numexpr as ne
-import pygsw.vectors as gsw
+import gsw
 
 from ion_functions.data.generic_functions import replace_fill_with_nan
 
@@ -107,7 +106,7 @@ def dosta_phase_volt_to_degree(phase_volt):
     return phase_degree
 
 
-def dosta_Topt_volt_to_degC(T_optode_volt):
+def dosta_Topt_volt_to_degC(t_optode_volt):
     """
     Description:
         Computes T_optode [degC], the DOSTA foil temperature as measured by its internal thermistor,
@@ -126,6 +125,7 @@ def dosta_Topt_volt_to_degC(T_optode_volt):
 
     Implemented by:
         2015-08-04: Russell Desiderio. Initial Code.
+        2023-08-15: Samuel Dahlberg. Changed local variable names to follow naming convention.
 
     Notes:
 
@@ -142,8 +142,8 @@ def dosta_Topt_volt_to_degC(T_optode_volt):
     """
     # These coefficients to convert analog T_optode from volts to degC are universal
     # for all Aanderaa optodes. Obtained from Shawn Sneddon at Xylem-Aanderaa.
-    T_optode_degC = -5.0 + 8.0 * T_optode_volt
-    return T_optode_degC
+    t_optode_degc = -5.0 + 8.0 * t_optode_volt
+    return t_optode_degc
 
 
 def o2_counts_to_uM(o2_counts):
@@ -235,6 +235,7 @@ def do2_SVU(calphase, temp, csv, conc_coef=np.array([0.0, 1.0])):
                     entries in Omaha cal sheets won't result in DPA exceptions being raised).
                     So. Also changed default value for conc_coef in argument list to be
                     the 1D array [0.0, 1.0].
+        2023-08-15: Samuel Dahlberg. Changed local variable names to follow naming convention.
 
     Notes:
 
@@ -304,15 +305,15 @@ def do2_SVU(calphase, temp, csv, conc_coef=np.array([0.0, 1.0])):
     csv = np.atleast_2d(csv)
 
     # Calculate DO using Stern-Volmer:
-    Ksv = csv[:, 0] + csv[:, 1]*temp + csv[:, 2]*(temp**2)
-    P0 = csv[:, 3] + csv[:, 4]*temp
-    Pc = csv[:, 5] + csv[:, 6]*calphase
-    DO = ((P0/Pc) - 1) / Ksv
+    ksv = csv[:, 0] + csv[:, 1]*temp + csv[:, 2]*(temp**2)
+    p0 = csv[:, 3] + csv[:, 4]*temp
+    pc = csv[:, 5] + csv[:, 6]*calphase
+    do = ((p0/pc) - 1) / ksv
 
     # apply refurbishment calibration
     # conc_coef can be a 2D array of either 1 row or DO.size rows.
-    DO = conc_coef[:, 0] + conc_coef[:, 1] * DO
-    return DO
+    do = conc_coef[:, 0] + conc_coef[:, 1] * do
+    return do
 
 
 def do2_salinity_correction(DO, P, T, SP, lat, lon, sref=0, pref=0):
@@ -361,6 +362,8 @@ def do2_salinity_correction(DO, P, T, SP, lat, lon, sref=0, pref=0):
         2013-04-26: Stuart Pearce. Initial Code.
         2015-08-04: Russell Desiderio. Added Garcia-Gordon reference.
         2021-12-16: Stuart Pearce. Added salinity reference parameter.
+        2023-08-15: Samuel Dahlberg. Removed use of Numexpr.
+                    Replaced deprecated pygsw library with gsw.
 
     References:
         OOI (2012). Data Product Specification for Oxygen Concentration
@@ -375,26 +378,26 @@ def do2_salinity_correction(DO, P, T, SP, lat, lon, sref=0, pref=0):
     """
 
     # density calculation from GSW toolbox
-    SA = gsw.sa_from_sp(SP, P, lon, lat)
-    CT = gsw.ct_from_t(SA, T, P)
+    SA = gsw.SA_from_SP(SP, P, lon, lat)
+    CT = gsw.CT_from_t(SA, T, P)
     pdens = gsw.rho(SA, CT, pref)  # potential referenced to p=0
 
     # Convert from volume to mass units:
-    DO = ne.evaluate('1000*DO/pdens')
+    DO = 1000* DO / pdens
 
     # Pressure correction:
-    DO = ne.evaluate('(1 + (0.032*P)/1000) * DO')
+    DO = (1 + (0.032 * P) / 1000) * DO
 
     # Salinity correction (Garcia and Gordon, 1992, combined fit):
     # S0 = 0  # deprecated, replaced by the sref input parameter
-    ts = ne.evaluate('log((298.15-T)/(273.15+T))')
+    ts = np.log((298.15 - T) / (273.15 + T))
     B0 = -6.24097e-3
     B1 = -6.93498e-3
     B2 = -6.90358e-3
     B3 = -4.29155e-3
     C0 = -3.11680e-7
-    Bts = ne.evaluate('B0 + B1*ts + B2*ts**2 + B3*ts**3')
-    DO = ne.evaluate('exp((SP-sref)*Bts + C0*(SP**2-sref**2)) * DO')
+    Bts = B0 + B1*ts + B2*ts**2 + B3*ts**3
+    DO = np.exp((SP - sref) * Bts + C0 * (SP**2 - sref**2)) * DO
     return DO
 
 
@@ -519,7 +522,7 @@ def do2_dofst_frequency(frequency, Foffset, Soc, A, B, C, E, P, T, SP, lat, lon)
 
 
 # DOFST main sub-function
-def dofst_calc(do_raw, offset, Soc, A, B, C, E, P, T, SP, lat, lon):
+def dofst_calc(do_raw, offset, Soc, A, B, C, E, P, T, SP, lat, lon, freq=True):
     """
     Description:
 
@@ -547,6 +550,7 @@ def dofst_calc(do_raw, offset, Soc, A, B, C, E, P, T, SP, lat, lon):
         SP = PRACSAL practical salinity [unitless]. (see
             1341-00040_Data_Product_Spec_PRACSAL)
         lat, lon = latitude and longitude of the instrument [degrees].
+        freq = boolean flag to indicate whether this unit reports data in frequency (True) or voltage counts (False)
 
     Example:
         do_raw = 4354  # frequency in Hz
@@ -564,6 +568,7 @@ def dofst_calc(do_raw, offset, Soc, A, B, C, E, P, T, SP, lat, lon):
     Implemented by:
         2013-08-20: Stuart Pearce. Initial Code.
         2015-08-04: Russell Desiderio. Added Garcia-Gordon reference.
+        2023-08-15: Samuel Dahlberg. Added freq variable for compatibility with CGSN.
 
     References:
          OOI (2013). Data Product Specification for Fast Dissolved
@@ -577,7 +582,7 @@ def dofst_calc(do_raw, offset, Soc, A, B, C, E, P, T, SP, lat, lon):
         Table 1, 1st column.
    """
     # Get potential density using the TEOS-10 toolbox
-    SA = gsw.sa_from_sp(SP, P, lon, lat)
+    SA = gsw.SA_from_SP(SP, P, lon, lat)
     pot_rho_t = gsw.pot_rho_t_exact(SA, T, P, 0)
 
     # Oxygen saturation value using Garcia and Gordon (1992) fit to Benson and Krause data
@@ -599,6 +604,10 @@ def dofst_calc(do_raw, offset, Soc, A, B, C, E, P, T, SP, lat, lon):
         A0 + A1*Ts + A2*Ts**2 + A3*Ts**3 + A4*Ts**4 + A5*Ts**5 +
         SP * (B0 + B1*Ts + B2*Ts**2 + B3*Ts**3) +
         C0*SP**2)
+
+    if not freq:
+        # convert voltage counts to volts
+        do_raw = do_raw / 13107.
 
     # Intermediate step: Dissolved Oxygen concentration in [mL/L]
     DO_int = Soc * (do_raw + offset) * Oxsol * (1.0 + A*T + B*T**2 + C*T**3) * np.exp((E * P)/temp_K)

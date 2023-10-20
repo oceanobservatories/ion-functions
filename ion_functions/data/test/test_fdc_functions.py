@@ -41,7 +41,7 @@ class TestFdcFunctionsUnit(BaseUnitTestCase):
 
         # test data e-mailed by Jim Edson:
         # read in the input L0 test data ...
-        file = os.path.join(os.getcwd(), 'ion_functions/data/matlab_scripts/fdchp/fdchp_test_dp.dat')
+        file = os.path.join(os.getcwd(),'../matlab_scripts/fdchp/fdchp_test_dp.dat')
         with open(file, 'r') as f:
             lines = f.readlines()
 
@@ -257,7 +257,7 @@ class TestFdcFunctionsUnit(BaseUnitTestCase):
         # number of array values to truncate on either side
         edge = self.daqrate * self.chop
         # however, the test sets do not necessarily start out with 12000 points - so:
-        idx = range(edge, 12000-edge)
+        idx = list(range(edge, 12000-edge))
 
         # step through each single dataset to test functions;
         # also, accumulate single dataset products for multiple dataset test:

@@ -20,7 +20,7 @@ class TestOPTAAPerformance(PerformanceTestCase):
         self.S = 35.0
         # tbin values are used in an interpolation algorithm; make sure
         # their values are monotonic
-        self.tbins = np.array(range(n_tbins))
+        self.tbins = np.array(list(range(n_tbins)))
 
         ### test data for OPTATTN
         self.c_sig = np.tile([150., 225., 200., 350., 450., 495.], (1, wvl_tile))

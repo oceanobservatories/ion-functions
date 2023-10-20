@@ -1387,7 +1387,7 @@ class TestMetFunctionsUnit(BaseUnitTestCase):
         convert_to_ntp = lambda x: (
             dt.datetime.strptime(x, '%m/%d/%Y') -
             dt.datetime(1900, 1, 1)).total_seconds()
-        date_ts = map(convert_to_ntp, date_str)
+        date_ts = list(map(convert_to_ntp, date_str))
 
         lat = np.array([
             43.34, 43.34, 43.34, 43.34,
@@ -1532,7 +1532,7 @@ class TestMetFunctionsUnit(BaseUnitTestCase):
         """
         # read in the input L0 test data ...
         file = os.path.join(os.getcwd(),
-                            'ion_functions/data/matlab_scripts/metbk/metbk_test_dat.txt')
+                            '../matlab_scripts/metbk/metbk_test_dat.txt')
         with open(file, 'r') as f:
             lines = f.readlines()
 

@@ -7,7 +7,6 @@
 """
 
 import numpy as np
-import numexpr as ne
 from numpy import sin, cos, radians
 
 from ion_functions.data.generic_functions import magnetic_declination, magnetic_correction
@@ -24,7 +23,7 @@ from ion_functions.data.generic_functions import magnetic_declination, magnetic_
 #               -Stuart Pearce
 #               (this message should be removed if/when the lats & lons
 #               are checked in the QAQC functions)
-from exceptions import ValueError
+# from exceptions import ValueError
 
 ### Constants (VEL3D-K) ###
 # XYZ_TRANSFORMS is a dictionary constant that is generated when the
@@ -558,7 +557,7 @@ def nobska_mag_corr_east(u, v, lat, lon, timestamp, z=0):
 
     # correct for magnetic declination
     u_cor = vel_mag_correction(u, v, lat, lon, timestamp, z)[0]
-    u_cor = ne.evaluate('u_cor / 100.')  # convert from cm/s to m/s
+    u_cor = u_cor / 100.  # convert from cm/s to m/s
 
     # return true compass referenced East velocity in m/s
     return u_cor
@@ -616,7 +615,7 @@ def nobska_mag_corr_north(u, v, lat, lon, timestamp, z=0):
 
     # correct for magnetic declination
     v_cor = vel_mag_correction(u, v, lat, lon, timestamp, z)[1]
-    v_cor = ne.evaluate('v_cor / 100.')  # convert from cm/s to m/s
+    v_cor = v_cor / 100.  # convert from cm/s to m/s
 
     # return true compass referenced North velocity in m/s
     return v_cor
@@ -1810,7 +1809,7 @@ def get_XYZ_transform(beamlist):
     ##     Rusello at Nortek
     if beamlist == [1, 2, 3, 4]:
         t_beam2XYZ = XYZ_TRANSFORMS['stationary']
-        print 'WARNING: STATIONARY VEL3D-K TRANSFORMS ARE NOT VETTED.'
+        print('WARNING: STATIONARY VEL3D-K TRANSFORMS ARE NOT VETTED.')
     elif beamlist == [1, 2, 4, 0]:
         t_beam2XYZ = XYZ_TRANSFORMS['upward']
     elif beamlist == [2, 3, 4, 0]:

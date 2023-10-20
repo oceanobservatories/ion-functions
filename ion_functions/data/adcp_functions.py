@@ -62,6 +62,94 @@ ADCP_FILLVALUE = -32768
 
 """
 
+def adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
+    """
+    Description:
+
+        Compute Earth referenced velocity data from beam coordinate transformed velocity profiles as defined in the
+        Data Product Specification for Velocity Profile and Echo Intensity - DCN 1341-00750.
+
+    Implemented by:
+
+        2013-04-10: Christopher Wingard. Initial code.
+        2014-02-03: Christopher Wingard. Formatting and adjusting to use magnetic declination values calculated using
+                    WMM 2010.
+        2014-04-04: Russell Desiderio. Optimized code performance by replacing the for loops previously used to
+                    calculate 2D and 3D vectorized coordinate transformations with calls to np.einsum (numpy Einstein
+                    summation function).
+        2014-06-25: Christopher Wingard. Edited to account for units of heading, pitch, roll and depth
+        2015-06-10: Russell Desiderio.
+                    (a) moved the conditioning of input beam velocities to adcp_beam2inst.
+                    (b) moved the conditioning of compass readings to adcp_inst2earth.
+                    (c) removed the depth dependence from the magnetic declination.
+        2019-03-11: Christopher Wingard. Removed multiple wrapper functions and set this single function to stand-alone
+                    returning all velocity components. Function can also be used for all VADCP processing with the
+                    vertical velocity component representing an estimate of the vertical velocity.
+        2023-08-15: Samuel Dahlberg. Brought over from original Pyseas code to bring in compatibility with CGSN.
+
+    Usage:
+
+        u, v, w, e = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
+
+            where
+
+        u = east velocity profiles in Earth coordinates corrected for the magnetic declination [m s-1]
+        v = north velocity profiles in Earth coordinates corrected for the magnetic declination [m s-1]
+        w = vertical velocity profiles in Earth coordinates [m s-1]
+        e = error velocity profiles in Earth coordinates  [m s-1]
+
+        b1 = "beam 1" velocity profiles in beam coordinates [mm s-1]
+        b2 = "beam 2" velocity profiles in beam coordinates [mm s-1]
+        b3 = "beam 3" velocity profiles in beam coordinates [mm s-1]
+        b4 = "beam 4" velocity profiles in beam coordinates [mm s-1]
+        pg1 = percent good estimate for beam 1 [percent]
+        pg2 = percent good estimate for beam 2 [percent]
+        pg3 = percent good estimate for beam 3 [percent]
+        pg4 = percent good estimate for beam 4 [percent]
+        h = instrument's uncorrected magnetic heading [cdegrees]
+        p = instrument pitch [cdegrees]
+        r = instrument roll [cdegrees]
+        vf = instrument's vertical orientation (0 = downward looking and 1 = upward looking)
+        lat = instrument's deployment latitude [decimal degrees]
+        lon = instrument's deployment longitude [decimal degrees]
+        dt = sample date and time value [seconds since 1970-01-01] (Unix Time Format)
+
+    References:
+
+        OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
+            1341-00750. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Cyberinfrastructure >>
+            Data Product Specifications >> 1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf)
+
+        OOI (2013). Data Product Specification for Turbulent Velocity Profile and Echo Intensity. Document Control
+            Number 1341-00760. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
+            Cyberinfrastructure >> Data Product Specifications >>  1341-00760_Data_Product_VELTURB_ECHOINT.pdf)
+    """
+    # force shapes of inputs to arrays of the correct dimensions
+    lat = np.atleast_1d(lat)
+    lon = np.atleast_1d(lon)
+    dt = np.atleast_1d(dt)
+
+    # compute the beam to instrument transform
+    x, y, z, e = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
+
+    # compute the instrument to earth beam transform
+    u, v, w = adcp_ins2earth(x, y, z, h, p, r, vf)
+
+    # compute the magnetic variation, and ...
+    theta = magnetic_declination(lat, lon, dt)
+
+    # ... correct for it.
+    u_cor, v_cor = magnetic_correction(theta, u, v)
+
+    # scale velocities to m/s from mm/s
+    u_cor = u_cor / 1000.
+    v_cor = v_cor / 1000.
+    w = w / 1000.
+    e = e / 1000.
+
+    # return the velocity profiles
+    return u_cor, v_cor, w, e
+
 
 # Wrapper functions to create the VELPROF L1 data products for instruments
 # programmed in beam coordinates by RSN (ADCPS-I,K and ADCPT-B,D,E)
@@ -91,6 +179,11 @@ def adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon
                     (c) removed the depth dependence from the magnetic declination.
         2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
                     and cleans up syntax used in the function.
+        2023-08-15: Samuel Dahlberg.
+                    (a) Moved all adcp velocity processing to new adcp_beam_velocity function, turning
+                    adcp_beam_eastward into a wrapper function that calls adcp_beam_velocity.
+                    (b) converts inputted ntp epoch timestamp into unix epoch timestamp for compatibility with
+                    adcp_beam_velocity.
 
     Usage:
 
@@ -116,27 +209,14 @@ def adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon
             1 = upward looking)
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1900-01-01]
+        dt = sample date and time value [seconds since 1900-01-01] (NTP Time Format)
     """
-    # force shapes of some inputs to arrays of the correct dimensions
-    lat = np.atleast_1d(lat)
-    lon = np.atleast_1d(lon)
-    dt = np.atleast_1d(dt)
 
-    # compute the beam to instrument transform
-    x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
+    # Convert the given ntp epoch timestamp in unix epoch timestamp.
+    dt_unix = dt - 2208988800
 
-    # compute the instrument to earth beam transform
-    u, v, _ = adcp_ins2earth(x, y, z, h, p, r, vf)
-
-    # compute the magnetic variation, and ...
-    theta = magnetic_declination(lat, lon, dt)
-
-    # ... correct for it
-    u_cor, _ = magnetic_correction(theta, u, v)
-
-    # scale velocity to m/s
-    u_cor = u_cor / 1000.  # mm/s -> m/s
+    # call central adcp_beam_velocity function to get specific eastward velocity profile
+    u_cor, _, _, _ = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt_unix)
 
     # return the eastward velocity profile
     return u_cor
@@ -169,6 +249,11 @@ def adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lo
                     (c) removed the depth dependence from the magnetic declination.
         2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
                     and cleans up syntax used in the function.
+        2023-08-15: Samuel Dahlberg.
+                    (a) Moved all adcp velocity processing to new adcp_beam_velocity function, turning
+                    adcp_beam_northward into a wrapper function that calls adcp_beam_velocity.
+                    (b) converts inputted ntp epoch timestamp into unix epoch timestamp for compatibility with
+                    adcp_beam_velocity.
 
     Usage:
 
@@ -194,27 +279,14 @@ def adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lo
             1 = upward looking)
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1900-01-01]
+        dt = sample date and time value [seconds since 1900-01-01] (NTP Time Format)
     """
-    # force shapes of some inputs to arrays of the correct dimensions
-    lat = np.atleast_1d(lat)
-    lon = np.atleast_1d(lon)
-    dt = np.atleast_1d(dt)
 
-    # compute the beam to instrument transform
-    x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
+    # Convert the given ntp epoch timestamp in unix epoch timestamp.
+    dt_unix = dt - 2208988800
 
-    # compute the instrument to earth beam transform
-    u, v, _ = adcp_ins2earth(x, y, z, h, p, r, vf)
-
-    # compute the magnetic variation, and ...
-    theta = magnetic_declination(lat, lon, dt)
-
-    # ... correct for it
-    _, v_cor = magnetic_correction(theta, u, v)
-
-    # scale velocity to m/s
-    v_cor = v_cor / 1000.  # mm/s -> m/s
+    # call central adcp_beam_velocity function to get specific eastward velocity profile
+    _, v_cor, _, _ = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt_unix)
 
     # return the northward velocity profile
     return v_cor
@@ -731,12 +803,11 @@ def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5, h, p, 
     """
     Description:
 
-        Wrapper function to compute the "true" Upward Velocity Profile
-        (VELTURB-VLU-5BM) from the beam coordinate transformed velocity profiles as
-        defined in the Data Product Specification for Turbulent Velocity
-        Profile and Echo Intensity - DCN 1341-00760. This is assumed to provide
-        a better estimate of the true vertical velocity component, since beam 5
-        is pointing directly up.
+        Computes the "true" Upward Velocity Profile (VELTURB-VLU-5BM) from the beam
+        coordinate transformed velocity profiles as defined in the Data Product
+        Specification for Turbulent Velocity Profile and Echo Intensity - DCN 1341-00760.
+        This is assumed to provide a better estimate of the true vertical velocity component,
+        since beam 5 is pointing directly up.
 
     Implemented by:
 
@@ -838,7 +909,7 @@ def vadcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
 
 
 # Calculates ECHOINT_L1 for all tRDI ADCPs
-def adcp_backscatter(raw, sfactor):
+def adcp_backscatter(raw, sfactor=0.45):
     """
     Description:
 
@@ -852,6 +923,7 @@ def adcp_backscatter(raw, sfactor):
 
         2014-04-21: Christopher Wingard. Initial code.
         2015-06-25: Russell Desiderio. Incorporated int fillvalue -> Nan.
+        2023-08-15: Samuel Dahlberg. Added default value to sfactor.
 
     Usage:
 
@@ -1007,6 +1079,7 @@ def adcp_ins2earth(u, v, w, heading, pitch, roll, vertical):
                     (-999999999), when these fill values are replaced with nans, the nans
                     will propagate through to the data product output.
         2015-06-24: Russell Desiderio. Incorporated int fillvalue -> Nan.
+        2023-08-15: Samuel Dahlberg. Changed local variable names to follow naming convention.
 
     Usage:
 
@@ -1054,22 +1127,22 @@ def adcp_ins2earth(u, v, w, heading, pitch, roll, vertical):
 
     # better way to calculate roll from the vertical orientation toggle;
     # this will propagate R as nans if the vertical variable is missing from the data.
-    R = roll + vertical * 180.0
+    r = roll + vertical * 180.0
 
     # roll
-    Rrad = np.radians(R)
-    cos_R = np.cos(Rrad)
-    sin_R = np.sin(Rrad)
+    r_rad = np.radians(r)
+    cos_r = np.cos(r_rad)
+    sin_r = np.sin(r_rad)
     # heading
-    Hrad = np.radians(heading)
-    cos_H = np.cos(Hrad)
-    sin_H = np.sin(Hrad)
+    h_rad = np.radians(heading)
+    cos_h = np.cos(h_rad)
+    sin_h = np.sin(h_rad)
     # pitch
     t1rad = np.radians(pitch)
     t2rad = np.radians(roll)
-    Prad = np.arctan(np.tan(t1rad) * np.cos(t2rad))
-    cos_P = np.cos(Prad)
-    sin_P = np.sin(Prad)
+    p_rad = np.arctan(np.tan(t1rad) * np.cos(t2rad))
+    cos_p = np.cos(p_rad)
+    sin_p = np.sin(p_rad)
 
     # determine array size
     n_packets = u.shape[0]
@@ -1081,18 +1154,18 @@ def adcp_ins2earth(u, v, w, heading, pitch, roll, vertical):
 
     # the rollaxis calls reorient the matrices so that their lead index is
     # the data packet index
-    M1 = np.array([[cos_H, sin_H, zeros],
-                   [-sin_H, cos_H, zeros],
+    m1 = np.array([[cos_h, sin_h, zeros],
+                   [-sin_h, cos_h, zeros],
                    [zeros, zeros, ones]])
-    M1 = np.rollaxis(M1, 2)
-    M2 = np.array([[ones, zeros, zeros],
-                   [zeros, cos_P, -sin_P],
-                   [zeros, sin_P, cos_P]])
-    M2 = np.rollaxis(M2, 2)
-    M3 = np.array([[cos_R, zeros, sin_R],
+    m1 = np.rollaxis(m1, 2)
+    m2 = np.array([[ones, zeros, zeros],
+                   [zeros, cos_p, -sin_p],
+                   [zeros, sin_p, cos_p]])
+    m2 = np.rollaxis(m2, 2)
+    m3 = np.array([[cos_r, zeros, sin_r],
                    [zeros, ones, zeros],
-                   [-sin_R, zeros, cos_R]])
-    M3 = np.rollaxis(M3, 2)
+                   [-sin_r, zeros, cos_r]])
+    m3 = np.rollaxis(m3, 2)
 
     # construct input array of coordinates (velocities) to be transformed.
     # the basis set is 3D (E,N,U) so that the middle dimension is sized at 3.
@@ -1106,11 +1179,11 @@ def adcp_ins2earth(u, v, w, heading, pitch, roll, vertical):
 
     # the Einstein summation is here configured to do the matrix
     # multiplication MM(i,l) = M1(i,j) * M2(j,k) * M3(k,l) on each slice h.
-    MM = np.einsum('hij,hjk,hkl->hil', M1, M2, M3)
+    mm = np.einsum('hij,hjk,hkl->hil', m1, m2, m3)
 
     # the Einstein summation is here configured to do the matrix
     # multiplication uvw_earth(i,m) = MM(i,l) * uvw(l,m) on each slice h.
-    uvw_earth = np.einsum('hil,hlm->him', MM, uvw)
+    uvw_earth = np.einsum('hil,hlm->him', mm, uvw)
 
     # NOTE:
     # these last two executable statements run about a factor of 2
@@ -1123,7 +1196,7 @@ def adcp_ins2earth(u, v, w, heading, pitch, roll, vertical):
     vv = uvw_earth[:, 1, :]
     ww = uvw_earth[:, 2, :]
 
-    return (uu, vv, ww)
+    return uu, vv, ww
 
 
 def magnetic_correction(theta, u, v):
@@ -1149,6 +1222,7 @@ def magnetic_correction(theta, u, v):
                     found in ion_functions.data.generic_functions.
         2015-04-10: Russell Desiderio. Corrected a typo:
                     uv = np.atleast_2d(u)  ->  u = np.atleast_2d(u)
+        2023-08-15: Samuel Dahlberg. Changed local variable names to follow naming convention.
 
     Usage:
 
@@ -1185,15 +1259,15 @@ def magnetic_correction(theta, u, v):
     u = np.atleast_2d(u)
     v = np.atleast_2d(v)
 
-    theta_rad = np.radians(theta)
-    cosT = np.cos(theta_rad)
-    sinT = np.sin(theta_rad)
+    r_theta = np.radians(theta)
+    cos_t = np.cos(r_theta)
+    sin_t = np.sin(r_theta)
 
-    M = np.array([[cosT, sinT],
-                  [-sinT, cosT]])
+    m = np.array([[cos_t, sin_t],
+                  [-sin_t, cos_t]])
 
     # roll axes so that the lead index represents data packet #.
-    M = np.rollaxis(M, 2)
+    m = np.rollaxis(m, 2)
 
     # the coordinate system is 2D, so the middle dimension is sized at 2.
     uv = np.zeros((u.shape[0], 2, u.shape[1]))
@@ -1204,7 +1278,7 @@ def magnetic_correction(theta, u, v):
 
     # the Einstein summation is here configured to do the matrix
     # multiplication uv_cor(i,k) = M(i,j) * uv(j,k) on each slice h.
-    uv_cor = np.einsum('hij,hjk->hik', M, uv)
+    uv_cor = np.einsum('hij,hjk->hik', m, uv)
 
     # the magnetically corrected u values are:
     u_cor = uv_cor[:, 0, :]
@@ -1322,6 +1396,63 @@ def adcp_bin_depths_dapa(dist_first_bin, bin_size, num_bins, pressure, adcp_orie
     return adcp_bin_depths_meters(dist_first_bin, bin_size, num_bins, sensor_depth, adcp_orientation)
 
 
+def adcp_bin_depths(blanking_distance, bin_size, number_bins, orientation, depth):
+    """
+    Description:
+
+        Calculates the center bin depths for ADCP data as defined in the Data Product Specification for Velocity
+        Profile and Echo Intensity - DCN 1341-00750.
+
+    Implemented by:
+
+        2015-01-29: Craig Risien. Initial code.
+        2015-06-26: Russell Desiderio. Fixed the handling of the pressure variables. Time-vectorized the code by
+                    finessing the conditional.
+        2015-06-30: Russell Desiderio. Incorporated int fillvalue -> Nan.
+        2019-03-11: Christopher Wingard. Removed older OOI CI constraints and made ADCP data type agnostic, requiring
+                    depth in meters as an input.
+        2023-08-15: Samuel Dahlberg. Brought over from original Pyseas code to bring in compatibility with CGSN.
+
+    Usage:
+
+        bin_depths = adcp_bin_depths(blanking_distance, bin_size, number_bins, orientation, depth, latitude)
+
+            where
+
+        bin_depths =  [meters]
+
+        blanking_distance = distance to the first ADCP bin [centimeters]
+        bin_size = size, or cell length, of each ADCP bin [centimeters]
+        number_bins = number of ADCP bins [unitless]
+        orientation = 1=upward looking or 0=downward looking [unitless]
+        depth = depth of the sensor head [m]
+
+    References:
+
+        OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
+            1341-00750. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Cyberinfrastructure >>
+            Data Product Specifications >> 1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf)
+    """
+    # Convert from cm to meters
+    blanking_distance = blanking_distance / 100.0
+    bin_size = bin_size / 100.0
+
+    # Following the PD0 convention, where:
+    #     orientation = 0 is downward looking, bin depths are added to sensor depth
+    #                 = 1 is upward looking, bin depths are subtracted from sensor depth
+    if orientation == 0:
+        z_sign = 1
+    elif orientation == 1:
+        z_sign = -1
+
+    # Calculate bin depths
+    depth = np.atleast_2d(depth).T
+    number_bins = np.atleast_2d(number_bins)
+    bin_depths = depth + z_sign * (blanking_distance + bin_size * number_bins)
+
+    return bin_depths
+
+
 def z_from_p(p, lat, geo_strf_dyn_height=0, sea_surface_geopotential=0):
     """Calculates height from sea pressure using the computationally-efficient
     75-term expression for density in terms of SA, CT and p (Roquet et al.,
@@ -1396,14 +1527,14 @@ def z_from_p(p, lat, geo_strf_dyn_height=0, sea_surface_geopotential=0):
 
     """
 
-    X = np.sin(np.deg2rad(lat))
-    sin2 = X ** 2
-    B = 9.780327 * (1.0 + (5.2792e-3 + (2.32e-5 * sin2)) * sin2)
+    x = np.sin(np.deg2rad(lat))
+    sin2 = x ** 2
+    b = 9.780327 * (1.0 + (5.2792e-3 + (2.32e-5 * sin2)) * sin2)
     gamma = 2.26e-07
-    A = -0.5 * gamma * B
-    C = enthalpy_SSO_0_p(p) - geo_strf_dyn_height
+    a = -0.5 * gamma * b
+    c = enthalpy_SSO_0_p(p) - geo_strf_dyn_height
 
-    return -2 * C / (B + np.sqrt(B ** 2 - 4 * A * C))
+    return -2 * c / (b + np.sqrt(b ** 2 - 4 * a * c))
 
 
 def enthalpy_SSO_0_p(p):

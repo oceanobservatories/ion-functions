@@ -10,6 +10,7 @@
 from nose.plugins.attrib import attr
 from ion_functions.test.base_test import BaseUnitTestCase
 
+import os
 import numpy as np
 import scipy.io as sio
 import datetime as dt
@@ -122,7 +123,7 @@ class TestPRSFunctionsUnit(BaseUnitTestCase):
     BEGIN generating BOTSFLU 20 hz unit test pressure data
     """
     # depth [units = 0.00001 m]
-    matpath = 'ion_functions/data/matlab_scripts/botpt/'
+    matpath = os.path.join(os.getcwd(),'../matlab_scripts/botpt/')
     dict_depth = sio.loadmat(matpath + 'botsflu_15secbin_depth_00001.mat')
     depth15s = 0.00001 * dict_depth['depth_00001']
     depth15s = depth15s.reshape((-1))    

@@ -184,7 +184,7 @@ def dataqc_localrangetest(dat, z, datlim, datlimz, strict_validation=False):
 
         # check if all inputs are numeric and real
         for k, arg in {'dat': dat, 'z': z, 'datlim': datlim,
-                       'datlimz': datlimz}.iteritems():
+                       'datlimz': datlimz}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
             if not utils.isnumeric(arg).all():
                 raise ValueError('\'{0}\' must be numeric'.format(k))
 
@@ -337,7 +337,7 @@ def dataqc_spiketest(dat, acc, N=5, L=5, strict_validation=False):
         if not utils.isvector(dat):
             raise ValueError('\'dat\' must be a vector')
 
-        for k, arg in {'acc': acc, 'N': N, 'L': L}.iteritems():
+        for k, arg in {'acc': acc, 'N': N, 'L': L}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
             if not utils.isnumeric(arg).all():
                 raise ValueError('\'{0}\' must be numeric'.format(k))
 
@@ -408,18 +408,18 @@ def dataqc_polytrendtest(dat, t, ord_n=1, nstd=3, strict_validation=False):
     t = np.atleast_1d(t)
 
     if strict_validation:
-        for k, arg in {'dat': dat, 't': t, 'ord_n': ord_n, 'nstd': nstd}.iteritems():
+        for k, arg in {'dat': dat, 't': t, 'ord_n': ord_n, 'nstd': nstd}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
             if not utils.isnumeric(arg).all():
                 raise ValueError('\'{0}\' must be numeric'.format(k))
 
             if not utils.isreal(arg).all():
                 raise ValueError('\'{0}\' must be real'.format(k))
 
-        for k, arg in {'dat': dat, 't': t}.iteritems():
+        for k, arg in {'dat': dat, 't': t}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
             if not utils.isvector(arg):
                 raise ValueError('\'{0}\' must be a vector'.format(k))
 
-        for k, arg in {'ord_n': ord_n, 'nstd': nstd}.iteritems():
+        for k, arg in {'ord_n': ord_n, 'nstd': nstd}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
             if not utils.isscalar(arg):
                 raise ValueError('\'{0}\' must be a scalar'.format(k))
 
@@ -498,7 +498,7 @@ def dataqc_stuckvaluetest(x, reso, num=10, strict_validation=False):
         if not utils.isreal(dat).all():
             raise ValueError('\'x\' must be real')
 
-        for k, arg in {'reso': reso, 'num': num}.iteritems():
+        for k, arg in {'reso': reso, 'num': num}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
             if not utils.isnumeric(arg).all():
                 raise ValueError('\'{0}\' must be numeric'.format(k))
 

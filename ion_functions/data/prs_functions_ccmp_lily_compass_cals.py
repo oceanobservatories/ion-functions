@@ -14,7 +14,7 @@
 # Created March 18, 2014 by Russell Desiderio.
 
 # sensor reading to be corrected (degrees)
-x = range(361)
+x = list(range(361))
 
 # calibration (correction) values by serial number
 

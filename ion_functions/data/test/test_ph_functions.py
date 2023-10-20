@@ -233,7 +233,7 @@ class TestpHFunctionsUnit(BaseUnitTestCase):
         for iRec in range(nRec):
             # compute the battery voltage, final temperature in deg_C and pH,
             # record by record.
-            bout[iRec] = ph.ph_battery(self.braw[iRec])
+            bout[iRec] = ph.ph_battery(self.braw[iRec], [15])
             a434[iRec, :] = ph.ph_434_intensity(self.light[iRec, :])
             a578[iRec, :] = ph.ph_578_intensity(self.light[iRec, :])
             tout[iRec] = ph.ph_thermistor(self.traw[iRec], self.sami_bits)
@@ -252,12 +252,10 @@ class TestpHFunctionsUnit(BaseUnitTestCase):
         Test ability of ph_calc_phwater to process multiple pH measurements
         in a single block.
         """
-        bout = ph.ph_battery(self.braw)
+        bout = ph.ph_battery(self.braw, [15])
         tout = ph.ph_thermistor(self.traw, self.sami_bits)
         a434 = ph.ph_434_intensity(self.light)  # no unit tests, just checking to see if they work
-        print a434
         a578 = ph.ph_578_intensity(self.light)
-        print a578
 
         # reset calibration values to an array, replicating how ION will pass
         # the data when processing blocks of values.
