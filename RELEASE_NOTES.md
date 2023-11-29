@@ -1,3 +1,7 @@
+# Release 2.5.0 2023-12-07
+
+Issue #15438 - Endurance seafloor moored VEL3D velocities are 10x too large
+
 # Release 2.4.9 2023-03-15
 
 Issue #15558 - Add PCO2W/PHSEN voltage calculations 
