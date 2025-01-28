@@ -396,10 +396,11 @@ def prs_botsflu_predtide(time):
     # calculate tide vector index as a function of timestamp
     idx = np.around((time - time0) / time_interval)
     tide = tidevector[idx.astype(int)]
+
     return tide
 
 
-def prs_botsflu_meandepth(timestamp, botpres):
+def prs_botsflu_meandepth(timestamp, botpres, predtide):
     """
     Description:
 
@@ -419,6 +420,7 @@ def prs_botsflu_meandepth(timestamp, botpres):
         meandepth = BOTSFLU-MEANDEPTH_L2 [m]
         timestamp = OOI system timestamps [sec since 01-01-1900]
         botpres = BOTPRES_L1 [psia]
+        predtide = predicted tide [m]
 
     Notes:
 
@@ -432,12 +434,12 @@ def prs_botsflu_meandepth(timestamp, botpres):
         OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
             (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
     """
-    _, meandepth, _ = calc_meandepth_plus(timestamp, botpres)
+    _, meandepth, _ = calc_meandepth_plus(timestamp, botpres, predtide)
 
     return meandepth
 
 
-def prs_botsflu_5minrate(timestamp, botpres):
+def prs_botsflu_5minrate(timestamp, botpres, predtide):
     """
     Description:
 
@@ -450,13 +452,14 @@ def prs_botsflu_5minrate(timestamp, botpres):
 
     Usage
 
-        botsflu_5minrate = pprs_botsflu_5minrate(timestamp, botpres)
+        botsflu_5minrate = pprs_botsflu_5minrate(timestamp, botpres, predtide)
 
             where
 
         botsflu_5minrate = BOTSFLU-5MINRATE_L2 [cm/min]
         timestamp = CI system timestamps [sec since 01-01-1900]
         botpres = BOTPRES_L1 [psia]
+        predtide = predicted tide [m]
 
     Notes:
 
@@ -468,7 +471,7 @@ def prs_botsflu_5minrate(timestamp, botpres):
             (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
     """
     # calculate de-tided depth and the positions of non-zero bins in the original data.
-    _, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres)
+    _, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres, predtide)
 
     # initialize data product including elements representing data gap positions
     botsflu_5minrate = np.zeros(mask_nonzero.size) + np.nan
@@ -494,7 +497,7 @@ def prs_botsflu_5minrate(timestamp, botpres):
     return botsflu_5minrate
 
 
-def prs_botsflu_10minrate(timestamp, botpres):
+def prs_botsflu_10minrate(timestamp, botpres, predtide):
     """
     Description:
 
@@ -514,6 +517,7 @@ def prs_botsflu_10minrate(timestamp, botpres):
         botsflu_10minrate = BOTSFLU-10MINRATE_L2 [cm/hr]
         timestamp = OOI system timestamps [sec since 01-01-1900]
         botpres = BOTPRES_L1 [psia]
+        predtide = predicted tide [m]
 
     Notes:
 
@@ -525,7 +529,7 @@ def prs_botsflu_10minrate(timestamp, botpres):
             (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
     """
     # calculate de-tided depth and the positions of non-zero bins in the original data.
-    _, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres)
+    _, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres, predtide)
 
     # initialize data product including elements representing data gap positions
     botsflu_10minrate = np.zeros(mask_nonzero.size) + np.nan
@@ -601,7 +605,7 @@ def prs_botsflu_time24h(time15s):
     return time24h
 
 
-def prs_botsflu_daydepth(timestamp, botpres, dday_coverage=0.90):
+def prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage=0.90):
     """
     Description:
 
@@ -614,7 +618,9 @@ def prs_botsflu_daydepth(timestamp, botpres, dday_coverage=0.90):
         2017-05-05: Russell Desiderio. Changed time24h time base to span the entire
                                        dataset including data gaps.
         2017-05-11: Russell Desiderio. Incorporated daydepth coverage threshold.
-
+        2020-06-01: Mark Steiner.      Require predtide as an argument and refactor daydepth
+                                       calculation into prs_botsflu_4wkrate_from_daydepth
+                                       to expand API
 
     Usage
 
@@ -627,6 +633,7 @@ def prs_botsflu_daydepth(timestamp, botpres, dday_coverage=0.90):
         botpres = BOTPRES_L1 [psia]
         dday_coverage = fractional coverage threshold, below which daydepth values
                         are assigned Nan values.
+        predtide = predicted tide [m]
 
     Notes:
 
@@ -643,18 +650,53 @@ def prs_botsflu_daydepth(timestamp, botpres, dday_coverage=0.90):
             (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
     """
     # calculate 15sec bin timestamps and de-tided depth.
-    time15s, meandepth, _ = calc_meandepth_plus(timestamp, botpres)
-
-    # bin the 15sec data into 24 hour bins so that the timestamps are at midnight.
-    # to calculate daydepth, don't need the time24h timestamps.
-
-    _, daydepth, _ = anchor_bin_detided_data_to_24h(time15s, meandepth, dday_coverage)
+    time15s, meandepth, _ = calc_meandepth_plus(timestamp, botpres, predtide)
 
     # downstream data products no longer require the mask_nonzero variable
+    return prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage)
+
+
+def prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage=0.90):
+    """
+    Description:
+
+        Calculates the BOTSFLU data product DAYDEPTH_L2 from the 15 second-binned meandepth
+
+    Implemented by:
+
+        2020-06-01: Mark Steiner. Extracted directly from the previous version of prs_botsflu_daydepth
+                                  written by Russell Desiderio 2017-05-11 to expand the API and
+                                  facilitate the calculation of this data product directly from the meandepth
+
+    Usage
+
+        daydepth = prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage)
+
+            where
+
+        daydepth = BOTSFLU-DAYDEPTH_L2 [m]
+        time15s = TIME15S [sec since 01-01-1900]
+        meandepth = BOTSFLU-MEANDEPTH_L2 [m]
+        dday_coverage = fractional coverage threshold, below which daydepth values
+                        are assigned Nan values.
+
+    Notes:
+
+        The timebase data product associated with this data product is TIME24H.
+
+    References:
+
+        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
+            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    """
+    # bin the 15sec data into 24 hour bins so that the timestamps are at midnight.
+    # to calculate daydepth, don't need the time24h timestamps.
+    _, daydepth, _ = anchor_bin_detided_data_to_24h(time15s, meandepth, dday_coverage)
+
     return daydepth
 
 
-def prs_botsflu_4wkrate(timestamp, botpres, dday_coverage=0.9, rate_coverage=0.75):
+def prs_botsflu_4wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75):
     """
     Description:
 
@@ -669,16 +711,20 @@ def prs_botsflu_4wkrate(timestamp, botpres, dday_coverage=0.9, rate_coverage=0.7
                                        the last masking operation that removed the
                                        values at bins that had zero data.
         2017-05-12: Russell Desiderio. Incorporated daydepth and rate coverage thresholds.
+        2020-06-01: Mark Steiner.      Require predtide as an argument and refactor rate calculation
+                                       into prs_botsflu_4wkrate_from_daydepth to expand API
 
     Usage
 
-        botsflu_4wkrate = pprs_botsflu_4wkrate(timestamp, botpres, dday_coverage, rate_coverage)
+        botsflu_4wkrate = prs_botsflu_4wkrate(timestamp, botpres,
+                                              predtide, dday_coverage, rate_coverage)
 
             where
 
         botsflu_4wkrate = BOTSFLU-4WKRATE_L2 [cm/yr]
         timestamp = CI system timestamps [sec since 01-01-1900]
         botpres = BOTPRES_L1 [psia]
+        predtide = predicted tide [m]
         dday_coverage = fractional daydepth coverage threshold, below which daydepth
                         values are assigned Nan values.
         rate_coverage = fractional rate coverage threshold, below which 4wkrate data
@@ -694,8 +740,45 @@ def prs_botsflu_4wkrate(timestamp, botpres, dday_coverage=0.9, rate_coverage=0.7
             (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
     """
     # calculate daydepth
-    daydepth = prs_botsflu_daydepth(timestamp, botpres, dday_coverage)
+    daydepth = prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage)
 
+    return prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage)
+
+
+def prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage=0.75):
+    """
+    Description:
+
+        Calculates the BOTSFLU data product 4WKRATE_L2, the mean rate of seafloor
+        change as calculated by 4-week backwards-looking linear regressions.
+
+    Implemented by:
+
+        2020-06-01: Mark Steiner. This code was extracted directly from the previous version of the
+                                  prs_botsflu_4wkrate function written by Russell Desiderio (2017-05-12)
+                                  to expand the API and facilitate the generation of this data product
+                                  directly from the daydepth
+
+    Usage
+
+        botsflu_4wkrate = prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage)
+
+            where
+
+        botsflu_4wkrate = BOTSFLU-4WKRATE_L2 [cm/yr]
+        daydepth = BOTSFLU-DAYDEPTH_L2 [m]
+        rate_coverage = fractional rate coverage threshold, below which 4wkrate data
+                        product values are assigned Nan values.
+
+    Notes:
+
+        The timebase data product associated with this data product is TIME24H.
+
+    References:
+
+        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
+            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    """
     # 4 weeks of data
     window_size = 29
     botsflu_4wkrate = calculate_sliding_slopes(daydepth, window_size, rate_coverage)
@@ -707,7 +790,7 @@ def prs_botsflu_4wkrate(timestamp, botpres, dday_coverage=0.9, rate_coverage=0.7
     return botsflu_4wkrate
 
 
-def prs_botsflu_8wkrate(timestamp, botpres, dday_coverage=0.9, rate_coverage=0.75):
+def prs_botsflu_8wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75):
     """
     Description:
 
@@ -722,16 +805,20 @@ def prs_botsflu_8wkrate(timestamp, botpres, dday_coverage=0.9, rate_coverage=0.7
                                        the last masking operation that removed the
                                        values at bins that had zero data.
         2017-05-12: Russell Desiderio. Incorporated daydepth and rate coverage thresholds.
+        2020-06-01: Mark Steiner.      Require predtide as an argument and refactor rate calculation
+                                       into prs_botsflu_8wkrate_from_daydepth to expand API
 
     Usage
 
-        botsflu_8wkrate = pprs_botsflu_8wkrate(timestamp, botpres, dday_coverage, rate_coverage)
+        botsflu_8wkrate = pprs_botsflu_8wkrate(timestamp, botpres,
+                                               predtide, dday_coverage, rate_coverage)
 
             where
 
         botsflu_8wkrate = BOTSFLU-8WKRATE_L2 [cm/yr]
         timestamp = OOI system timestamps [sec since 01-01-1900]
         botpres = BOTPRES_L1 [psia]
+        predtide = predicted tide [m]
         dday_coverage = fractional daydepth coverage threshold, below which daydepth
                         values are assigned Nan values.
         rate_coverage = fractional rate coverage threshold, below which 8wkrate data
@@ -747,9 +834,46 @@ def prs_botsflu_8wkrate(timestamp, botpres, dday_coverage=0.9, rate_coverage=0.7
             (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
     """
     # calculate daydepth
-    daydepth = prs_botsflu_daydepth(timestamp, botpres, dday_coverage)
+    daydepth = prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage)
 
-   # 8 weeks of data
+    return prs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage)
+
+
+def prs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage=0.75):
+    """
+    Description:
+
+        Calculates the BOTSFLU data product 8WKRATE_L2, the mean rate of seafloor
+        change as calculated by 8-week backwards-looking linear regressions.
+
+    Implemented by:
+
+        2020-06-01: Mark Steiner. This code was extracted directly from the previous version of the
+                                  prs_botsflu_8wkrate function written by Russell Desiderio (2017-05-12)
+                                  to expand the API and facilitate the generation of this data product
+                                  directly from the daydepth
+
+    Usage
+
+        botsflu_8wkrate = pprs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage)
+
+            where
+
+        botsflu_8wkrate = BOTSFLU-8WKRATE_L2 [cm/yr]
+        daydepth = BOTSFLU-DAYDEPTH_L2 [m]
+        rate_coverage = fractional rate coverage threshold, below which 8wkrate data
+                        product values are assigned Nan values.
+
+    Notes:
+
+        The timebase data product associated with this data product is TIME24H.
+
+    References:
+
+        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
+            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    """
+    # 8 weeks of data
     window_size = 57
     botsflu_8wkrate = calculate_sliding_slopes(daydepth, window_size, rate_coverage)
     #  convert units:
@@ -939,7 +1063,7 @@ def anchor_bin_detided_data_to_24h(time, data, dday_coverage):
     return bin_timestamps, daydepth, raw_bincount
 
 
-def calc_meandepth_plus(timestamp, botpres):
+def calc_meandepth_plus(timestamp, botpres, predtide):
     """
     Description:
 
@@ -953,7 +1077,7 @@ def calc_meandepth_plus(timestamp, botpres):
 
     Usage
 
-        time15s, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres)
+        time15s, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres, predtide)
 
             where
 
@@ -962,6 +1086,7 @@ def calc_meandepth_plus(timestamp, botpres):
         mask_nonzero = boolean of positions of non-empty bins in the original data
         timestamp = OOI system timestamps [sec since 01-01-1900]
         botpres = BOTPRES_L1 [psia]
+        predtide = predicted tide [m]
 
     Notes:
 
@@ -990,10 +1115,9 @@ def calc_meandepth_plus(timestamp, botpres):
     bin_duration = 15.0  # seconds
 
     time15s, meanpres, mask_nonzero = anchor_bin_raw_data_to_15s(timestamp, botpres)
-    # look up tide data
-    tide = prs_botsflu_predtide(time15s)
+
     # de-tide
-    meandepth = ((meanpres - atm_press_psi) * psi_2_depth) + tide
+    meandepth = ((meanpres - atm_press_psi) * psi_2_depth) + predtide
 
     # downstream data products require the time15s and mask_nonzero variables,
     # so pass these as output arguments so that they won't have to be recalculated.
@@ -1370,7 +1494,7 @@ def anchor_bin(time, data, bin_duration, mode):
         return bin_timestamps, binned_data, mask_nonzero
 
 
-def calc_daydepth_plus(timestamp, botpres):
+def calc_daydepth_plus(timestamp, botpres, predtide):
     """
     Description:
 
@@ -1384,7 +1508,7 @@ def calc_daydepth_plus(timestamp, botpres):
 
     Usage
 
-        daydepth, mask_nonzero = calc_daydepth_plus(timestamp, botpres)
+        daydepth, mask_nonzero = calc_daydepth_plus(timestamp, botpres, predtide)
 
             where
 
@@ -1392,6 +1516,7 @@ def calc_daydepth_plus(timestamp, botpres):
         mask_nonzero = boolean of positions of non-empty 24 hr bins
         timestamp = OOI system timestamps [sec since 01-01-1900]
         botpres = BOTPRES_L1 [psia]
+        predtide = predicted tide [m]
 
     Notes:
 
@@ -1401,7 +1526,7 @@ def calc_daydepth_plus(timestamp, botpres):
             (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
     """
     # calculate 15sec bin timestamps and de-tided depth.
-    time15s, meandepth, _ = calc_meandepth_plus(timestamp, botpres)
+    time15s, meandepth, _ = calc_meandepth_plus(timestamp, botpres, predtide)
 
     # bin the 15sec data into 24 hour bins so that the timestamps are at midnight.
     # to calculate daydepth, don't need the time24h timestamps.

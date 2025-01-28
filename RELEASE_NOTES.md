@@ -1,3 +1,7 @@
+# Release 2.5.1 2025-02-25
+
+Issue #15165 - Use new botpt predicted tide tables
+
 # Release 2.5.0 2023-12-07
 
 Issue #15438 - Endurance seafloor moored VEL3D velocities are 10x too large
