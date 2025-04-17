@@ -1,0 +1,20 @@
+site_name: Ocean Observatories Initiative Ion Functions
+theme:
+  name: "material"
+
+plugins:
+  - mkdocstrings
+
+nav:
+  - Ion Functions Overview: index.md
+  - Reference: reference.md
+  - QC/Testing: qc-tests.md
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
