@@ -9,13 +9,15 @@
 # Theory
 Absolute pressure is one of the variables directly measured by CTD instruments and is calculated from the raw hexadecimal data provided by the instrument. The SBE 16plusV2 model will output "raw frequencies and voltages in hexadecimal" as it is referred to in the Sea-Bird manuals. The 37IM model will output "engineering units in Hex". This requires that the L0 pressure data product, which is a hexadecimal string, be converted to decimal and scaled according to the CTD manual (different for each CTD make/model). Conversion and scaling (described herein) results in sea pressure in decibars (dbar). Note that the data product is named Pressure (Depth) because, though depth is not calculated, 1 dbar in pressure is approximately equal to one meter in depth.
 
-It is worth noting that sea pressure is not exactly the same as the hydrostatic pressure of the water column. The CTD's internal pressure sensor measures absolute pressure: the pressure of the water column (hydrostatic pressure) plus the current atmospheric pressure at the sea surface. Sea pressure is calculated by the CTD's internal software by subtracting one standard atmosphere from the measured absolute pressure. Because the actual atmospheric pressure is not necessarily exactly one standard atmosphere, sea pressure is not necessarily identical to the hydrostatic pressure. Also, Sea-Bird uses a slightly different constant for one atmosphere: according to their manuals, the CTDs internal software converts absolute pressure to sea pressure by subtracting $14.7 psi * 0.689476 dbar/psi = 10.1352972 dbar$. This is different from the TEOS-10 standard atmospheric pressure of 101325 Pa or 10.1325 dbar. Sea pressure is the pressure measurement that is provided by the CTD (in hex and with some scaling) when the output format is set to deliver the data in "engineering units", as it is for the 37 IM CTDs. Therefore to back calculate absolute pressure in psia from dbar for the 37 IM data, use the Sea-Bird-specified conversion: 
+It is worth noting that sea pressure is not exactly the same as the hydrostatic pressure of the water column. The CTD's internal pressure sensor measures absolute pressure: the pressure of the water column (hydrostatic pressure) plus the current atmospheric pressure at the sea surface. Sea pressure is calculated by the CTD's internal software by subtracting one standard atmosphere from the measured absolute pressure. Because the actual atmospheric pressure is not necessarily exactly one standard atmosphere, sea pressure is not necessarily identical to the hydrostatic pressure. 
+Also, Sea-Bird uses a slightly different constant for one atmosphere: according to their manuals, the CTDs internal software converts absolute pressure to sea pressure by subtracting \\(14.7 \\text{psi} * 0.689476 \\text{dbar}/\\text{psi} = 10.1352972 \\text{dbar}\\). 
+This is different from the TEOS-10 standard atmospheric pressure of \\(101325 \\text{Pa}\\) or \\(10.1325 \\text{dbar}\\). Sea pressure is the pressure measurement that is provided by the CTD (in hex and with some scaling) when the output format is set to deliver the data in "engineering units", as it is for the 37 IM CTDs. Therefore to back calculate absolute pressure in psia from dbar for the 37 IM data, use the Sea-Bird-specified conversion: 
 $$
-    P37IM (psia) = [P37IM (dbar) / 0.689476] + 14.7
+    \\text{P37IM} (\\text{psia}) = \\frac{\\text{P37IM} (\\text{dbar})}{0.689476} + 14.7
 $$
 The conversion between psia and dbar for the 16plusV2 follows the TEOS-10 conventions using a "standard atmosphere":
 $$
-    P16plusV2 (dbar) = [0.689475729 * P16plusV2 (psia)] - 10.1325
+    \\text{P16plusV2} (\\text{dbar}) = 0.689475729 * \\text{P16plusV2} (\\text{psia}) - 10.1325
 $$
 Note that the raw data from the GPCTD make/model—the CTDs on board the gliders and autonomous underwater vehicles (AUVs)—are processed onboard the vehicles with proprietary software from the vehicle vendors. These data are presented already in decimal format in appropriate units (°C, Siemens/meter, decibars), therefore processing raw hexadecimal data from the CTDGP is not included in the algorithm described in this document. 
 
@@ -24,9 +26,14 @@ Note that the raw data from the GPCTD make/model—the CTDs on board the gliders
 
 Trying some LaTeX formatting.
 
-When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\) and they are
 $$
 x = {-b \pm \sqrt{b^2-4ac} \over 2a}.
+$$
+
+And another example:
+$$
+\cos x=\sum_{k=0}^{\infty}\\frac{(-1)^k}{(2k)!}x^{2k}
 $$
 """
 

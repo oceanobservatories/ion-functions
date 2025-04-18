@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-"""
-@package ion_functions.data.pco2_functions
-@file ion_functions/data/pco2_functions.py
-@author Christopher Wingard
-@brief Module containing CO2 instrument family related functions
-"""
+# @package ion_functions.data.pco2_functions
+# @file ion_functions/data/pco2_functions.py
+# @author Christopher Wingard
+# @brief Module containing CO2 instrument family related functions
 
 import numpy as np
+
 from ion_functions.utils import fill_value
 
 

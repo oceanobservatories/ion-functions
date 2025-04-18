@@ -1,13 +1,19 @@
 site_name: Ocean Observatories Initiative Ion Functions
 theme:
   name: "material"
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
 
 plugins:
   - mkdocstrings
 
 nav:
   - Ion Functions Overview: index.md
-  - Reference: reference.md
+  - Reference:
+    - CTD Functions: ctd_functions.md
+    - CO2 Functions: co2_functions.md
   - QC/Testing: qc-tests.md
 
 markdown_extensions:
@@ -15,6 +21,5 @@ markdown_extensions:
       generic: true
 
 extra_javascript:
-  - javascripts/config.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
