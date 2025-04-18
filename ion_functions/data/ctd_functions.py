@@ -20,21 +20,6 @@ $$
     \\text{P16plusV2} (\\text{dbar}) = 0.689475729 * \\text{P16plusV2} (\\text{psia}) - 10.1325
 $$
 Note that the raw data from the GPCTD make/model—the CTDs on board the gliders and autonomous underwater vehicles (AUVs)—are processed onboard the vehicles with proprietary software from the vehicle vendors. These data are presented already in decimal format in appropriate units (°C, Siemens/meter, decibars), therefore processing raw hexadecimal data from the CTDGP is not included in the algorithm described in this document. 
-
-
-# MathJax Test
-
-Trying some LaTeX formatting.
-
-When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\) and they are
-$$
-x = {-b \pm \sqrt{b^2-4ac} \over 2a}.
-$$
-
-And another example:
-$$
-\cos x=\sum_{k=0}^{\infty}\\frac{(-1)^k}{(2k)!}x^{2k}
-$$
 """
 
 import gsw
@@ -45,39 +30,51 @@ import numpy as np
 
 def ctd_sbe16plus_tempwat(t0, a0, a1, a2, a3):
     """
-    Description:
+    OOI Level 1 Water Temperature data product, which is calculated using
+    data from the Sea-Bird Electronics conductivity, temperature and depth
+    (CTD) family of instruments.
 
-        OOI Level 1 Water Temperature data product, which is calculated using
-        data from the Sea-Bird Electronics conductivity, temperature and depth
-        (CTD) family of instruments.
+    This data product is derived from SBE 16Plus instruments and applies to
+    CTDBP instruments, all series, and CTDPF instruments, series A and B.
 
-        This data product is derived from SBE 16Plus instruments and applies to
-        CTDBP instruments, all series, and CTDPF instruments, series A and B.
+    Parameters
+    ----------
+    t : float
+        sea water temperature (TEMPWAT_L1) [deg_C]
+    t0 : float 
+        raw temperature (TEMPWAT_L0) [counts]
+    a0 : float 
+        temperature calibration coefficients
+    a1 : float 
+        temperature calibration coefficients
+    a2 : float 
+        temperature calibration coefficients
+    a3 : float 
+        temperature calibration coefficients
 
-    Implemented by:
+    Returns
+    -------
+    float
+        Level 1 Water Temperature
+    
+    Examples
+    --------
 
+        >>> ctd_sbe16plus_tempwat(123456, 1.0, 2.0, 3.0, 4.0)
+        0.123456
+
+    Notes
+    --------
+        Implemented by:
         2013-04-12: Luke Campbell. Initial Code
         2013-04-12: Christopher Wingard. Minor edits
         2013-05-10: Christopher Wingard. Minor edits to comments.
         2014-01-31: Russell Desiderio. Standardized comment format.
         2023-08-15: Samuel Dahlberg. Removed use of numexpr
-
-    Usage:
-
-        t = ctd_sbe16plus_tempwat(t0, a0, a1, a2, a3)
-
-            where
-
-        t = sea water temperature (TEMPWAT_L1) [deg_C]
-        t0 = raw temperature (TEMPWAT_L0) [counts]
-        a0 = temperature calibration coefficients
-        a1 = temperature calibration coefficients
-        a2 = temperature calibration coefficients
-        a3 = temperature calibration coefficients
-
-    References:
-
-        OOI (2012). Data Product Specification for Water Temperature. Document
+    
+    References
+    ---------
+        [1] OOI (2012). Data Product Specification for Water Temperature. Document
             Control Number 1341-00010. https://alfresco.oceanobservatories.org/
             (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
             1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf)
