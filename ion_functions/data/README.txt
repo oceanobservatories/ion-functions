@@ -97,28 +97,6 @@ DO2: Dissolved Oxygen
             DOCONCS_L1 = do2_SVU(DOCONCS-DEG_L0, T_optode_degC, ...)
             DOXYGEN_L2 = do2_salinity_correction(DOCONCS_L1, ...)
 
-FDC: Direct Covariance Flux
-
-    * fdc_functions.py -- Covers calculation of the FDCHP data products. More
-      extensive documentation will be found at module top of fdc_functions.py.
-
-      This module includes the following functions:
-
-      Functions to compute the L1 FDCHP data products:
-        fdc_tmpatur:        TMPATUR
-        fdc_windtur_north:  WINDTUR-VLN
-        fdc_windtur_up:     WINDTUR-VLU
-        fdc_windtur_west:   WINDTUR-VLW
-
-      Functions to compute the L2 FDCHP data products:
-        fdc_fluxhot:            FLUXHOT
-        fdc_fluxmom_alongwind:  FLUXMOM-U
-        fdc_fluxmom_crosswind:  FLUXMOM-V
-
-      Functions to compute the auxiliary time base data products:
-        fdc_time_L1:  TIME_L1-AUX
-        fdc_time_L2:  TIME_L2-AUX
-
 FLO: Fluorometer
 
     * flo_functions.py -- Covers calculation of the L1 CDOMFLO, L1 CHLAFLO, and
