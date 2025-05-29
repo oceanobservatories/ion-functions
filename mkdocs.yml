@@ -1,13 +1,29 @@
 site_name: Ocean Observatories Initiative Ion Functions
+repo_url: https://github.com/joffreyp/ion-functions/tree/feature/documentation
+repo_name: ion-functions
 theme:
   name: "material"
+  logo: assets/NSF-OOI-RGB.png
   features:
     - navigation.sections
-    - navigation.expand
+    # - navigation.expand
     - navigation.path
+    - navigation.instant
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+  icon:
+    repo: fontawesome/brands/github
 
 plugins:
-  - mkdocstrings
+  - mkdocstrings:
+          handlers:
+            python:
+              options:
+                docstring_style: numpy
+  - search
 
 nav:
   - Ion Functions Overview: index.md
