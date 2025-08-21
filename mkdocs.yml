@@ -9,8 +9,10 @@ theme:
     # - navigation.expand
     - navigation.path
     - navigation.instant
-    - toc.integrate
+    - navigation.prune
     - navigation.top
+    - toc.integrate
+    - toc.follow
     - search.suggest
     - search.highlight
     - search.share
@@ -28,8 +30,25 @@ plugins:
 nav:
   - Ion Functions Overview: index.md
   - Reference:
+    - ADCP Functions: adcp_functions.md
     - CTD Functions: ctd_functions.md
     - CO2 Functions: co2_functions.md
+    - DOSTA Functions: do2_functions.md
+    - Fluorometer Functions: flo_functions.md
+    - Hydrophone Functions: hyd_functions.md
+    - Optical Backscatter Functions: obs_functions.md
+    - Met Functions: met_functions.md
+    - Disolved Gas Concentration Functions: msp_functions.md
+    - Disolved Nitrate Functions: nit_functions.md
+    - Ocean Bottom Seismometer Functions: obs_functions.md
+    - OPTAA Functions: opt_functions.md
+    - pH Functions: ph_functions.md
+    # - Polycal Functions: polycals.md # Doesn't work with MkDocs right now!
+    - Seafloor Pressure Functions: prs_functions.md
+    - Seafloor Hydrothermal Vent Chemistry Functions: sfl_functions.md
+    - Velocity Functions: vel_functions.md
+    - Surface Wave Spectra Functions: wav_functions.md
+    - Utility Functions: utility_functions.md
   - QC/Testing: qc-tests.md
 
 markdown_extensions:

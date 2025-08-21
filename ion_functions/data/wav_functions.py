@@ -1,10 +1,20 @@
 #!/usr/bin/env python
+# @package ion_functions.data.wav_functions
+# @file ion_functions/data/wav_functions.py
+# @author Russell Desiderio
+# @brief Module containing WAVSS wave statistics data-calculations.
+
+""" 
+# Overview
+Module containing WAVSS surface wave spectrum data-calculations.
+This module implements the algorithms for calculating the
+frequency values for directional and non-directional wave spectral bins,
+the time values associated with buoy displacement measurements, and the
+mean wave direction corrected for magnetic declination from the OOI L0
+WAVSTAT data product.
 """
-@package ion_functions.data.wav_functions
-@file ion_functions/data/wav_functions.py
-@author Russell Desiderio
-@brief Module containing WAVSS wave statistics data-calculations.
-"""
+
+
 import numpy as np
 
 from ion_functions.data.generic_functions import magnetic_declination

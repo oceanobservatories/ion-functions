@@ -1,73 +1,80 @@
 #!/usr/bin/env python
+# @package ion_functions.data.met_functions
+# @file ion_functions/data/met_functions.py
+# @author Russell Desiderio
+# @brief Module containing functions for the met family of instruments
+
 """
-@package ion_functions.data.met_functions
-@file ion_functions/data/met_functions.py
-@author Russell Desiderio
-@brief Module containing functions for the met family of instruments
+# Overview
+Module containing functions for the met family of instruments.
+This module implements the algorithms for calculating bulk meteorological
+data products from the OOI L0 METBK data products.
 """
 
-import numpy as np
+
 import gsw
+import numpy as np
 
-from ion_functions.data.generic_functions import magnetic_declination, magnetic_correction
+from ion_functions.data.generic_functions import (
+    magnetic_correction,
+    magnetic_declination,
+)
 
-### July 2015
-""" use_velptmn_with_metbk """
-# Until VELPT current meters are
-#     (1) co-located with the METBK instrumentation to measure surface currents and
-#     (2) without ferrous interference aliasing the VELPT compass measurements,
-# VELPT current measurements should not be used to calculate relative wind speed (with
-# respect to water), which is the fundamental windspeed variable used in the METBK
-# calculations. Almost all of the METBK L2 data products require the relative wind speed
-# as a calling argument.
-#
-# The DPA to calculate relative wind speed over water is currently set to return actual
-# wind speed (as if the current velocities were measured to be 0) for all cases of input
-# current velocity values (absent, present, nan).
-#
-# A subset of the Endurance moorings are the only ones that have VELPT instruments
-# mounted to measure surface currents. However, their compass readings are inaccurate due
-# to the mounted instruments' proximity to iron ballast in the mooring.
-#
-# It is anticipated that these moorings will be modified to eliminate this magnetic
-# interference. To use the velptmn measurements for METBK calculations on these moorings,
-# a 5th variable, use_velptmn_with_metbk, has been added to the argument list of the
-# function met_relwind_speed. Implementation of the use_velptmn_with_metbk variable will
-# require that it be treated as a "platform/instrument instance specific metadata parameter
-# changeable in time". It has been coded to accept time-vectorized input.
-#
-### Further documentation is contained in the Notes to function met_relwind_speed in this module.
+"""Module containing functions for the met family of instruments
 
-"""
-    METBK SENSOR HEIGHTS
 
-    Note that the sensor heights may depend on the type of mooring:
-"""
-# these 4 sensor height variables were time-vectorized in the July 2015 revision.
-#     zwindsp = height of the wind measurement [m]
-#     ztmpair = height of air temperature measurement [m]
-#     zhumair = height of air humidity measurement [m]
-#     ztmpwat = depth of bulk sea surface water measurements [m]
+Until VELPT current meters are
+    (1) co-located with the METBK instrumentation to measure surface currents and
+    (2) without ferrous interference aliasing the VELPT compass measurements,
+VELPT current measurements should not be used to calculate relative wind speed (with
+respect to water), which is the fundamental windspeed variable used in the METBK
+calculations. Almost all of the METBK L2 data products require the relative wind speed
+as a calling argument.
 
-#     zvelptm = depth of surface current measurement [m]:
-#         this parameter is specified as metadata in the DPS;
-#         however, it is not used in the code.
+The DPA to calculate relative wind speed over water is currently set to return actual
+wind speed (as if the current velocities were measured to be 0) for all cases of input
+current velocity values (absent, present, nan).
 
-#     zinvpbl = planetary boundary layer/inversion height: this is
-#               set to a default value of 600m in the code, as is
-#               used in the DPS. this variable was written to accept
-#               time-vectorized input in the initial METBK code.
+A subset of the Endurance moorings are the only ones that have VELPT instruments
+mounted to measure surface currents. However, their compass readings are inaccurate due
+to the mounted instruments' proximity to iron ballast in the mooring.
 
-"""
+It is anticipated that these moorings will be modified to eliminate this magnetic
+interference. To use the velptmn measurements for METBK calculations on these moorings,
+a 5th variable, use_velptmn_with_metbk, has been added to the argument list of the
+function met_relwind_speed. Implementation of the use_velptmn_with_metbk variable will
+require that it be treated as a "platform/instrument instance specific metadata parameter
+changeable in time". It has been coded to accept time-vectorized input.
+
+__ Further documentation is contained in the  met_relwind_speed function documentation. __
+
+## METBK SENSOR HEIGHTS
+
+Note that the sensor heights may depend on the type of mooring:
+
+these 4 sensor height variables were time-vectorized in the July 2015 revision.
+    zwindsp = height of the wind measurement [m]
+    ztmpair = height of air temperature measurement [m]
+    zhumair = height of air humidity measurement [m]
+    ztmpwat = depth of bulk sea surface water measurements [m]
+
+    zvelptm = depth of surface current measurement [m]:
+        this parameter is specified as metadata in the DPS;
+        however, it is not used in the code.
+
+    zinvpbl = planetary boundary layer/inversion height: this is
+              set to a default value of 600m in the code, as is
+              used in the DPS. this variable was written to accept
+              time-vectorized input in the initial METBK code.
+
     Set algorithm switches used in METBK bulk flux calculations
-"""
-# The jcool and jwarm switches should be set to 1, always!
+
+The jcool and jwarm switches should be set to 1, always!
 JCOOLFL = 1      # 1=do coolskin calc
 JWARMFL = 1      # 1=do warmlayer calc
-#JWAVEFL         # only the windspeed parametrization of the charnok
+JWAVEFL         # only the windspeed parametrization of the charnok
                  # variable is coded; therefore this switch is not used.
 
-"""
     LISTING OF SUBROUTINES BY ORDER IN THIS MODULE
         Grouped by sections; alphabetical within each section.
 
@@ -178,14 +185,6 @@ JWARMFL = 1      # 1=do warmlayer calc
         make_hourly_data
         warmlayer_time_keys
 #...................................................................................
-
-"""
-
-####################################################################################
-####################################################################################
-####################################################################################
-
-"""
 #...................................................................................
 #...................................................................................
     Functions to compute the L1 BULKMET (METBK) data products:
@@ -745,7 +744,7 @@ def met_netsirr_hourly(shortwave_down, timestamp):
         Calculates NETSIRR_HOURLY_L2, the OOI core data product net shortwave radiation
         (wavelengths between 0.3 and 3.0 um) in the downward direction, for the METBK
         instrument on an hourly time base. This data product does not require the
-        coolskin\warmlayer algorithms.
+        coolskin/warmlayer algorithms.
 
     Implemented by:
 

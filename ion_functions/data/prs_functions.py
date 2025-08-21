@@ -1,58 +1,59 @@
 #!/usr/bin/env python
+# @package ion_functions.data.prs_functions
+# @file ion_functions/data/prs_functions.py
+# @author Russell Desiderio, Chris Wingard
+# @brief Module containing calculations related to instruments in the Seafloor
+#     Pressure family.
+
 """
-@package ion_functions.data.prs_functions
-@file ion_functions/data/prs_functions.py
-@author Russell Desiderio, Chris Wingard
-@brief Module containing calculations related to instruments in the Seafloor
-    Pressure family.
+# Overview
+
+Listing of BOTPT functions, in order encountered.
+
+Functions calculating data products.
+
+    BOTTILT:
+
+    prs_bottilt_ccmp -- computes the BOTTILT-CCMP_L1 data product
+    prs_bottilt_tmag -- computes the BOTTILT-TMAG_L1 data product
+    prs_bottilt_tdir -- computes the BOTTILT-TDIR_L1 data product
+
+    BOTSFLU:
+
+    prs_botsflu_time15s -- computes the TIME15S-AUX auxiliary data product
+    prs_botsflu_meanpres -- computes the BOTSFLU-MEANPRES_L2 data product
+    prs_botsflu_predtide -- computes the BOTSFLU-PREDTIDE_L2 data product
+    prs_botsflu_meandepth -- computes the BOTSFLU-MEANDEPTH_L2 data product
+    prs_botsflu_5minrate -- computes the BOTSFLU-5MINRATE_L2 data product
+    prs_botsflu_10minrate -- computes the BOTSFLU-10MINRATE_L2 data product
+    prs_botsflu_time24h -- computes the TIME24H-AUX auxiliary data product
+    prs_botsflu_daydepth -- computes the BOTSFLU-DAYDEPTH_L2 data product
+    prs_botsflu_4wkrate -- computes the BOTSFLU-4WKRATE_L2 data product
+    prs_botsflu_8wkrate -- computes the BOTSFLU-8WKRATE_L2 data product
+
+Worker functions called by functions calculating data products.
+
+    BOTSFLU:
+
+    anchor_bin_raw_data_to_15s
+    anchor_bin_detided_data_to_24h
+    calc_meandepth_plus
+    calculate_sliding_means
+    calculate_sliding_slopes
+
+Functions calculating event notifications; they return either True or False.
+
+    BOTSFLU:
+
+    prs_tsunami_detection -- event notification specified by DPS
+    prs_eruption_imminent -- event notification specified by DPS
+    prs_eruption_occurred -- event notification specified by DPS
 """
-import pkg_resources
+
 import numpy as np
+import pkg_resources
 import scipy.io as spio
 from scipy import signal
-
-"""
-    Listing of BOTPT functions, in order encountered.
-
-    Functions calculating data products.
-
-      BOTTILT:
-
-        prs_bottilt_ccmp -- computes the BOTTILT-CCMP_L1 data product
-        prs_bottilt_tmag -- computes the BOTTILT-TMAG_L1 data product
-        prs_bottilt_tdir -- computes the BOTTILT-TDIR_L1 data product
-
-      BOTSFLU:
-
-        prs_botsflu_time15s -- computes the TIME15S-AUX auxiliary data product
-        prs_botsflu_meanpres -- computes the BOTSFLU-MEANPRES_L2 data product
-        prs_botsflu_predtide -- computes the BOTSFLU-PREDTIDE_L2 data product
-        prs_botsflu_meandepth -- computes the BOTSFLU-MEANDEPTH_L2 data product
-        prs_botsflu_5minrate -- computes the BOTSFLU-5MINRATE_L2 data product
-        prs_botsflu_10minrate -- computes the BOTSFLU-10MINRATE_L2 data product
-        prs_botsflu_time24h -- computes the TIME24H-AUX auxiliary data product
-        prs_botsflu_daydepth -- computes the BOTSFLU-DAYDEPTH_L2 data product
-        prs_botsflu_4wkrate -- computes the BOTSFLU-4WKRATE_L2 data product
-        prs_botsflu_8wkrate -- computes the BOTSFLU-8WKRATE_L2 data product
-
-    Worker functions called by functions calculating data products.
-
-      BOTSFLU:
-
-        anchor_bin_raw_data_to_15s
-        anchor_bin_detided_data_to_24h
-        calc_meandepth_plus
-        calculate_sliding_means
-        calculate_sliding_slopes
-
-    Functions calculating event notifications; they return either True or False.
-
-      BOTSFLU:
-
-        prs_tsunami_detection -- event notification specified by DPS
-        prs_eruption_imminent -- event notification specified by DPS
-        prs_eruption_occurred -- event notification specified by DPS
-"""
 
 
 def prs_bottilt_ccmp(scmp, sn):

@@ -1,17 +1,30 @@
 #!/usr/bin/env python
+
+# @package ion_functions.data.sfl_functions
+# @file ion_functions/data/sfl_functions.py
+# @author Christopher Wingard, Russell Desiderio
+# @brief Module containing Seafloor Properties related data-calculations.
+
 """
-@package ion_functions.data.sfl_functions
-@file ion_functions/data/sfl_functions.py
-@author Christopher Wingard, Russell Desiderio
-@brief Module containing Seafloor Properties related data-calculations.
+#Overview
+Module containing Seafloor Hydrothermal Vent Fluid In-situ Chemistry derived properties.
+This module implements the algorithms for calculating the
+TRHPHCC_L2 (Chloride Concentration),
+THSPHHC_L2 (Hydrogen Concentration),
+THSPHHS_L2 (Hydrogen Sulfide Concentration),
+THSPHPH-PH_L2 (pH with chloride and AgCl reference electrode),
+THSPHPH-PH-ACL_L2 (pH with AgCl reference electrode only),
+THSPHPH-PH-NOREF_L2 (pH with chloride only),
+THSPHPH-PH-NOREF-ACL_L2 (pH with neither chloride nor AgCl reference electrode).
 """
 
 import numpy as np
 from scipy.interpolate import RectBivariateSpline
 
 from ion_functions.data.generic_functions import replace_fill_with_nan
+
 # used by def sfl_trhph_chloride
-from ion_functions.data.sfl_functions_surface import tdat, sdat, cdat
+from ion_functions.data.sfl_functions_surface import cdat, sdat, tdat
 
 # .............................................................................
 # THSPH data products: THSPHHC, THSPHHS, THSPHPH (4 PH products) ..............

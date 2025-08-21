@@ -1,9 +1,14 @@
 #!/usr/bin/env python
+# @package ion_functions.data.hyd_functions
+# @file ion_functions/data/hyd_functions.py
+# @author Christopher Wingard
+# @brief Module containing Hydrophone instrument family related functions
+
 """
-@package ion_functions.data.hyd_functions
-@file ion_functions/data/hyd_functions.py
-@author Christopher Wingard
-@brief Module containing Hydrophone instrument family related functions
+# Overview
+Module containing Hydrophone instrument family related functions.
+This module implements the algorithms for calculating broadband and low frequency
+acoustic pressure waves from the OOI L0 HYDBB and HYDLF data products.
 """
 
 import numpy as np

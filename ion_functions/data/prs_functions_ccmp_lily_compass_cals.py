@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-"""
-@package ion_functions.data.prs_functions_ccmp_lily_compass_cals
-@file ion_functions/data/prs_functions_ccmp_lily_compass_cals.py
-@author Russell Desiderio
-@brief Module containing BOTTILT-CCMP correction coefficients.
-"""
+
+# @package ion_functions.data.prs_functions_ccmp_lily_compass_cals
+# @file ion_functions/data/prs_functions_ccmp_lily_compass_cals.py
+# @author Russell Desiderio
+# @brief Module containing BOTTILT-CCMP correction coefficients.
+
 
 # Returns the corrected compass direction based on the sensor compass direction
 # and the sensor serial number. Dictionary is used in the

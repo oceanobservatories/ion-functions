@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-'''
-@package ion_functions/data/interpolation.py
-@brief Functions for interpolation
-'''
+
+# @package ion_functions/data/interpolation.py
+# @brief Functions for interpolation
+
 
 import numpy as np
+
 
 def secondary_interpolation(x, range0, range1, starts, ends):
     """

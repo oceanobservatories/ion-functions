@@ -6,7 +6,24 @@
 # @brief Module containing CTD related data-calculations.
 
 """
+# Outline
+The CTD instruments measure temperature, conductivity, and pressure (depth), 
+density, and practical salinity of the water column. The data products derived
+from these measurements are:
+- TEMPWAT_L1: Water Temperature
+- PRESWAT_L1: Pressure (Depth)
+- CONDWAT_L1: Conductivity
+- PRACSAL_L2: Practical Salinity
+- DENSITY_L2: Density
+
+General theoretical background for each is provided in the Theory section, while 
+algorithm implementation specifics for each data product are provided in the 
+corresponding function docstring.
+
+
 # Theory
+
+## Pressure
 Absolute pressure is one of the variables directly measured by CTD instruments and is calculated from the raw hexadecimal data provided by the instrument. The SBE 16plusV2 model will output "raw frequencies and voltages in hexadecimal" as it is referred to in the Sea-Bird manuals. The 37IM model will output "engineering units in Hex". This requires that the L0 pressure data product, which is a hexadecimal string, be converted to decimal and scaled according to the CTD manual (different for each CTD make/model). Conversion and scaling (described herein) results in sea pressure in decibars (dbar). Note that the data product is named Pressure (Depth) because, though depth is not calculated, 1 dbar in pressure is approximately equal to one meter in depth.
 
 It is worth noting that sea pressure is not exactly the same as the hydrostatic pressure of the water column. The CTD's internal pressure sensor measures absolute pressure: the pressure of the water column (hydrostatic pressure) plus the current atmospheric pressure at the sea surface. Sea pressure is calculated by the CTD's internal software by subtracting one standard atmosphere from the measured absolute pressure. Because the actual atmospheric pressure is not necessarily exactly one standard atmosphere, sea pressure is not necessarily identical to the hydrostatic pressure. 
@@ -20,7 +37,38 @@ $$
     \\text{P16plusV2} (\\text{dbar}) = 0.689475729 * \\text{P16plusV2} (\\text{psia}) - 10.1325
 $$
 Note that the raw data from the GPCTD make/model—the CTDs on board the gliders and autonomous underwater vehicles (AUVs)—are processed onboard the vehicles with proprietary software from the vehicle vendors. These data are presented already in decimal format in appropriate units (°C, Siemens/meter, decibars), therefore processing raw hexadecimal data from the CTDGP is not included in the algorithm described in this document. 
-"""
+
+
+## Conductivity
+
+Water conductivity is one of the variables directly measured by CTD instruments and is calculated
+from the raw hexadecimal data provided by the instrument. The \\text{SBE 16plusV2}\\ model outputs
+raw frequencies and voltages in hexadecimal. The \\text{37IM}\\ model outputs engineering units in Hex.
+This requires that the \\text{L0}\\ conductivity data
+product output from the CTD driver be converted from hexadecimal string to decimal
+and scaled according to the CTD manual (different for each CTD make/model). Conversion and
+scaling (described below) results in conductivity in \\text{S/m}\\ based on factory calibration of
+conductivity. Note that conductivity calibration scales with pressure and are handled in the
+Conductivity Compensation DPS (DCN 1341-10030). See Sea-Bird App Note 10 (2008) for more
+details. This is because conductivity cells measure the conductance of a specific geometry of
+seawater within the conductivity cell and the ratio of the length of the cell to the cross sectional
+area will be deformed slightly with changes to the ambient pressure surrounding the cell.
+
+### Mathematical Theory
+The CTD is received by OOI calibrated from Sea-Bird before its initial deployment. Post-initial
+deployment calibration checks and/or recalibrations will be performed at Sea-Bird. The factory-calibrated
+conductivity is converted to a hexadecimal string aboard the CTD instrument. 
+This hexadecimal string, after it is separated from the rest of the data stream by the
+CTD driver, is the L0 conductivity data product. The parsing instructions for the instrument
+hexadecimal string can be found in Appendix A.
+The L1 conductivity data product algorithm takes the L0 conductivity data product and converts it
+into Siemens per meter (\\text{S/m}\\). Once the hexadecimal conductivity string is converted to decimal,
+several simple calculations are necessary to produce the correct decimal floating representation
+of the data in Siemens per meter (\\text{S/m}\\). The conversion differs by CTD make/model.
+
+ """
+
+
 
 import gsw
 

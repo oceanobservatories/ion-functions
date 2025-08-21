@@ -1,18 +1,17 @@
 #!/usr/bin/env python
-"""
-@package ion_functions.data.prs_functions_ccmp
-@file ion_functions/data/prs_functions_ccmp.py
-@author Christopher Wingard
-@brief Module containing BOTTILT-CCMP correction coefficients.
-"""
+# @package ion_functions.data.prs_functions_ccmp
+# @file ion_functions/data/prs_functions_ccmp.py
+# @author Christopher Wingard
+# @brief Module containing BOTTILT-CCMP correction coefficients.
 
-# Returns the corrected compass direction based on the sensor compass direction
-# and the sensor serial number. Dictionary is used in the
-# ion_functions/data/prs_functions module. Values are from the DPS (DCN
-# 1341-00060):
-#
-# Created June 10, 2013 by Christopher Wingard.
+"""Module containing BOTTILT-CCMP correction coefficients.
+Returns the corrected compass direction based on the sensor compass direction
+and the sensor serial number. Dictionary is used in the
+ion_functions/data/prs_functions module. Values are from the DPS (DCN
+1341-00060):
 
+Created June 10, 2013 by Christopher Wingard.
+"""
 # initialize dictionary
 cmp_lookup = {}
 

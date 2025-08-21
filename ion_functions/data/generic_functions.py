@@ -1,20 +1,28 @@
 #!/usr/bin/env python
-"""
-@package ion_functions.data.generic_functions
-@file ion_functions/data/generic_functions.py
-@author Christopher Wingard, Stuart Pearce, Russell Desiderio
-@brief Module containing generic data-calculation functions.  Primarily
-    used for calculating values in Parameter Functions
+
+# @package ion_functions.data.generic_functions
+# @file ion_functions/data/generic_functions.py
+# @author Christopher Wingard, Stuart Pearce, Russell Desiderio
+# @brief Module containing generic data-calculation functions.  Primarily
+#     used for calculating values in Parameter Functions
+
+""" Utility functions for data processing and calculations.
+
+This module contains utility functions that are used across various data
+processing algorithms. These functions include data type conversions, magnetic
+declination calculations, and interpolation methods.
+
 """
 
 # Common imports
 import datetime
-import pyIGRF as igrf
-import numpy as np
-import numexpr as ne
-import pkg_resources
 import time
 from numbers import Integral
+
+import numexpr as ne
+import numpy as np
+import pkg_resources
+import pyIGRF as igrf
 
 # CyberInfrastructure fill value for all integer data types
 SYSTEM_FILLVALUE = -999999999

@@ -1,36 +1,34 @@
 #!/usr/bin/env python
-"""
-@package ion_functions.data.opt_functions_tscor
-@file ion_functions/data/opt_functions_tscor.py
-@author Christopher Wingard
-@brief Module containing OPTAA related temperature and salinity correction
-    coefficients.
+# @package ion_functions.data.opt_functions_tscor
+# @file ion_functions/data/opt_functions_tscor.py
+# @author Christopher Wingard
+# @brief Module containing OPTAA related temperature and salinity correction
+#     coefficients.
+"""Returns the Temperature and Salinity (T/S) correction coefficients as a
+dictionary for use in the ion_functions/data/opt_functions module. Values are
+from published literature and are available in:
+
+  WET Labs, Inc. 2009. AC Meter Protocol Document, Revision P.
+
+The original file is composed of 4 columns corresponding to the wavelength
+(nm) and the wavelength dependent temperature correction coefficients,
+salinity correction coefficients for the 'c' channel, and salinity correction
+coefficients for the 'a' channel, respectively. The dictionary uses the
+wavelength as the key.
+
+Created April 25, 2013 by Christopher Wingard from vendor provided TS4.cor
+file, available in ion_functions/data/matlab_scripts/optaa.
+  awk '{
+       printf("tscor[%4.1f] = [%.5f, %.6f, %.6f]\n", $1, $2, $3, $4)
+   }' TS4.cor > temp.txt
+
+Modified April 29, 2014 by Russell Desiderio: padded dictionary at both ends
+   with nan values so that acs (OPTAA) wavelength values outside of the
+   wavelength range of the empirically determined temperature and salinity
+   correction coefficients will not cause a dictionary look-up error.
 """
 
 import numpy as np
-
-# Returns the Temperature and Salinity (T/S) correction coefficients as a
-# dictionary for use in the ion_functions/data/opt_functions module. Values are
-# from published literature and are available in:
-#
-#   WET Labs, Inc. 2009. AC Meter Protocol Document, Revision P.
-#
-# The original file is composed of 4 columns corresponding to the wavelength
-# (nm) and the wavelength dependent temperature correction coefficients,
-# salinity correction coefficients for the 'c' channel, and salinity correction
-# coefficients for the 'a' channel, respectively. The dictionary uses the
-# wavelength as the key.
-#
-# Created April 25, 2013 by Christopher Wingard from vendor provided TS4.cor
-# file, available in ion_functions/data/matlab_scripts/optaa.
-#   awk '{
-#        printf("tscor[%4.1f] = [%.5f, %.6f, %.6f]\n", $1, $2, $3, $4)
-#    }' TS4.cor > temp.txt
-#
-# Modified April 29, 2014 by Russell Desiderio: padded dictionary at both ends
-#    with nan values so that acs (OPTAA) wavelength values outside of the
-#    wavelength range of the empirically determined temperature and salinity
-#    correction coefficients will not cause a dictionary look-up error.
 
 no_value = np.nan
 

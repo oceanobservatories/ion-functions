@@ -1,11 +1,17 @@
 #!/usr/bin/env python
-"""
-@package ion_functions.data.obs_functions
-@file ion_functions/data/obs_functions.py
-@author Christopher Wingard
-@brief Module containing Ocean Bottom Seismometer instrument related functions
-"""
+# @package ion_functions.data.obs_functions
+# @file ion_functions/data/obs_functions.py
+# @author Christopher Wingard
+# @brief Module containing Ocean Bottom Seismometer instrument related functions
 
+
+"""
+Module containing Ocean Bottom Seismometer instrument related functions
+This module implements the algorithms for calculating the
+Broadband Ground Velocity (GRNDVEL), Broadband Ground Acceleration (GRNDACC),
+Short Period Ground Velocity (SGRDVEL) and Short Period Ground Acceleration (SGRDACC)
+from the OOI L0 OBSBB and OBSSP data products.
+"""
 
 def obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.):
     """

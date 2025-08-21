@@ -1,15 +1,24 @@
 #!/usr/bin/env python
+
+# @package ion_functions.data.vel_functions
+# @file ion_functions/data/vel_functions.py
+# @author Stuart Pearce, Russell Desiderio
+# @brief Module containing velocity family instrument related functions
+
 """
-@package ion_functions.data.vel_functions
-@file ion_functions/data/vel_functions.py
-@author Stuart Pearce, Russell Desiderio
-@brief Module containing velocity family instrument related functions
+# Overview
+Module containing velocity family instrument related functions.
+This module implements the algorithms for calculating the horizontal 
+and vertical velocity components from the OOI L0 VEL3D data product.
 """
 
 import numpy as np
-from numpy import sin, cos, radians
+from numpy import cos, radians, sin
 
-from ion_functions.data.generic_functions import magnetic_declination, magnetic_correction
+from ion_functions.data.generic_functions import (
+    magnetic_correction,
+    magnetic_declination,
+)
 
 # NOTE:
 #    The previous version of this module had each function return an

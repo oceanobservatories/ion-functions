@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-"""
-@package ion_functions.data.sfl_functions_surface
-@file ion_functions/data/sfl_functions_surface.py
-@author Christopher Wingard
-@brief Module containing the temperature, conductivity and chloride calibration
-    surface from Larson et al 2007.
-"""
+
+# @package ion_functions.data.sfl_functions_surface
+# @file ion_functions/data/sfl_functions_surface.py
+# @author Christopher Wingard
+# @brief Module containing the temperature, conductivity and chloride calibration
+#     surface from Larson et al 2007.
+
 import numpy as np
 
 # recreate the 3 arrays of temperature (tdat), conductivty (sdat) and chloride

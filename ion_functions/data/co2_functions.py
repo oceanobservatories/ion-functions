@@ -4,6 +4,14 @@
 # @author Christopher Wingard
 # @brief Module containing CO2 instrument family related functions
 
+"""
+# Overview
+Module containing CO2 instrument family related functions.
+This module implements the algorithms for calculating pCO2 in seawater (PCO2WAT),
+extracting absorbance ratios from light measurements, and converting raw
+thermistor and battery voltage readings from the OOI L0 PCO2 data product.
+"""
+
 import numpy as np
 
 from ion_functions.utils import fill_value

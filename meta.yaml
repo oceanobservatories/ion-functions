@@ -1,0 +1,35 @@
+{% set name = "ion-functions" %}
+{% set version = "2.5.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  #  git_url: https://github.com/oceanobservatories/{{ name }}
+  #  git_rev: v{{ version}}
+  path: .
+
+requirements:
+  build:
+    - python <3
+    - setuptools
+    - setuptools_cython
+    - cython
+    - numpy ==1.16
+  run:
+    - python
+    - numpy ==1.16
+    - numexpr
+    - scipy
+    - geomag
+    - pygsw
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record record.txt
+
+about:
+  home: http://oceanobservatories.org
+  license: apache 2.0
+  summary: Functions for OOI

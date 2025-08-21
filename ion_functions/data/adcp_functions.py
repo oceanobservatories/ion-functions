@@ -1,15 +1,31 @@
 #!/usr/bin/env python
+
+# @package ion_functions.data.adcp_functions
+# @file ion_functions/data/adcp_functions.py
+# @author Christopher Wingard, Russell Desiderio, Craig Risien
+# @brief Module containing ADCP related data-calculations.
+
 """
-@package ion_functions.data.adcp_functions
-@file ion_functions/data/adcp_functions.py
-@author Christopher Wingard, Russell Desiderio, Craig Risien
-@brief Module containing ADCP related data-calculations.
+# Overview
+
+Module containing ADCP related data-calculations.
+This module implements the algorithms for calculating
+ADCP velocity profiles and echo intensity from
+ADCP beam coordinate transformed velocity profiles.
+This module also implements the algorithms for calculating
+ADCP velocity bin depths for the pd0 and pd8 output formats.
+This module is used by the OOI Cyberinfrastructure
+to calculate the L1 and L2 data products
+from the L0 data products # for the ADCP family of instruments.
 """
+
 import numpy as np
 
 from ion_functions import deprecated
-from ion_functions.data.generic_functions import magnetic_declination
-from ion_functions.data.generic_functions import replace_fill_with_nan
+from ion_functions.data.generic_functions import (
+    magnetic_declination,
+    replace_fill_with_nan,
+)
 
 # instrument fill value unprocessed by CI
 # (bad beam velocity sentinel output by tRDI ADCP instruments)
@@ -1539,7 +1555,7 @@ def z_from_p(p, lat, geo_strf_dyn_height=0, sea_surface_geopotential=0):
 
 def enthalpy_SSO_0_p(p):
     """
-    This documentation and code is copy\pasted from the matlab coding of this function.
+    This documentation and code is copy-pasted from the matlab coding of this function.
 
     %==========================================================================
     %  This function calculates enthalpy at the Standard Ocean Salinity, SSO,

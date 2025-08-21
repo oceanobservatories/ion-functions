@@ -1,10 +1,18 @@
 #!/usr/bin/env python
+
+# @package ion_functions.data.flo_functions
+# @file ion_functions/data/flo_functions.py
+# @author Christopher Wingard, Craig Risien, Russell Desiderio
+# @brief Module containing Fluorometer Three Wavelength (FLORT) and Fluorometer
+#     Two Wavelength (FLORD) instrument family related functions
+
 """
-@package ion_functions.data.flo_functions
-@file ion_functions/data/flo_functions.py
-@author Christopher Wingard, Craig Risien, Russell Desiderio
-@brief Module containing Fluorometer Three Wavelength (FLORT) and Fluorometer
-    Two Wavelength (FLORD) instrument family related functions
+# Overview
+Module containing Fluorometer Three Wavelength (FLORT) and Fluorometer
+Two Wavelength (FLORD) instrument family related functions.
+This module implements the algorithms for calculating the OOI Level 2 Optical
+Backscatter data product (FLUBSCT_L2) from the WET Labs, Inc. ECO
+fluorometer family of instruments (FLORD, FLORT, FLNTU).
 """
 import numpy as np
 

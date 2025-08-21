@@ -1,9 +1,15 @@
 #!/usr/bin/env python
+# @package ion_functions.data.nit_functions
+# @file ion_functions/data/nit_functions.py
+# @author Craig Risien
+# @brief Module containing NIT related data-calculations.
+
 """
-@package ion_functions.data.nit_functions
-@file ion_functions/data/nit_functions.py
-@author Craig Risien
-@brief Module containing NIT related data-calculations.
+# Overview
+Module containing NIT related data-calculations.
+This module implements the algorithm for calculating the
+Dissolved Nitrate Concentration, Temperature and Salinity Corrected (NITRTSC)
+from the OOI L0 NITROPT data product.
 """
 
 import numpy as np

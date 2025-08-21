@@ -1,12 +1,18 @@
 #!/usr/bin/env python
-"""
-@package ion_functions.data.ph_functions
-@file ion_functions/data/ph_functions.py
-@author Christopher Wingard
-@brief Module containing pH family instrument related functions
+# @package ion_functions.data.ph_functions
+# @file ion_functions/data/ph_functions.py
+# @author Christopher Wingard
+# @brief Module containing pH family instrument related functions
+
+""" 
+# Overview
+
+Module containing pH family instrument related functions.
+This module implements the algorithms for calculating the
+pH of seawater (PHWATER) and extracting light intensity values
+from the OOI L0 PHSEN data product.
 """
 
-# imports
 import numpy as np
 import scipy as sp
 

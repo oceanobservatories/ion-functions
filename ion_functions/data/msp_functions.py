@@ -1,11 +1,10 @@
 #!/usr/bin/env python
+# @package ion_functions.data.msp_functions
+# @file ion_functions/data/msp_functions.py
+# @author Craig Risien
+# @brief Module containing MASSP instrument related functions and wrapper functions
+
 """
-@package ion_functions.data.msp_functions
-@file ion_functions/data/msp_functions.py
-@author Craig Risien
-@brief Module containing MASSP instrument related functions and wrapper functions
-
-
 MASSP L1 Data Products
 
 Data Product Specification for Dissolved Gas Concentrations (DISSGAS) from the

@@ -1,13 +1,21 @@
 #!/usr/bin/env python
 
+# @package ion_functions.data.do2_functions
+# @file ion_functions/data/do2_functions.py
+# @author Stuart Pearce, Russell Desiderio
+# @brief Module containing Dissolved Oxygen family functions
+
 """
-@package ion_functions.data.do2_functions
-@file ion_functions/data/do2_functions.py
-@author Stuart Pearce, Russell Desiderio
-@brief Module containing Dissolved Oxygen family functions
+# Overview
+Module containing Dissolved Oxygen instrument family related functions.
+This module implements the algorithms for calculating dissolved oxygen
+concentration in seawater (DOXYGEN), converting raw voltage and counts
+readings from the OOI L0 DOCONCS data product, and calculating
+DOSTA (Aanderaa Optode) data products.
 """
-import numpy as np
+
 import gsw
+import numpy as np
 
 from ion_functions.data.generic_functions import replace_fill_with_nan
 

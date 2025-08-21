@@ -1,11 +1,23 @@
 #!/usr/bin/env python
-"""
-@package ion_functions.data.opt_functions
-@file ion_functions/data/opt_functions.py
-@author Christopher Wingard
-@brief Module containing OPTAA and PAR data product algorithms.
-"""
+# @package ion_functions.data.opt_functions
+# @file ion_functions/data/opt_functions.py
+# @author Christopher Wingard
+# @brief Module containing OPTAA and PAR data product algorithms.
 
+""" 
+# Overview
+Module containing OPTAA and PAR data product algorithms.
+This module implements the algorithms for calculating the
+Beam Attenuation Coefficient (OPTATTN_L2),
+Optical Absorption Coefficient (OPTABSN_L2),
+and the Photosynthetically Available Radiation (PAR_L2)
+from the WET Labs, Inc. ACS (OPTAA) and the
+Satlantic HyperOCR (PAR) data products.
+These algorithms are based on the OOI L0 OPTAA and PAR data products.
+This module also implements the algorithm for calculating the
+Dissolved Oxygen Concentration, Temperature and Salinity Corrected (DO2TS)
+from the OOI L0 DO2 data product.
+"""
 import numpy as np
 
 # load the temperature and salinity correction coefficients table
