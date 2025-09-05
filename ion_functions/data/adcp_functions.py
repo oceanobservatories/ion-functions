@@ -6,17 +6,57 @@
 # @brief Module containing ADCP related data-calculations.
 
 """
-# Overview
-
 Module containing ADCP related data-calculations.
-This module implements the algorithms for calculating
-ADCP velocity profiles and echo intensity from
-ADCP beam coordinate transformed velocity profiles.
-This module also implements the algorithms for calculating
-ADCP velocity bin depths for the pd0 and pd8 output formats.
-This module is used by the OOI Cyberinfrastructure
-to calculate the L1 and L2 data products
-from the L0 data products # for the ADCP family of instruments.
+This module implements the algorithms for calculating ADCP velocity profiles 
+and echo intensity from ADCP beam coordinate transformed velocity profiles.
+This module also implements the algorithms for calculating ADCP velocity bin 
+depths for the pd0 and pd8 output formats. This module is used by the OOI 
+Cyberinfrastructure to calculate the L1 and L2 data products from the L0 data 
+products for the ADCP family of instruments.
+
+## Overview of functions
+### For instruments programmed in beam coordinates:
+    (ADCPS-I,K;  ADCPT-B,D,E)
+
+* adcp_beam_eastward -- calculates VELPROF-VLE_L1
+* adcp_beam_northward -- calculates VELPROF-VLN_L1
+* adcp_beam_vertical -- calculates VELPROF-VLU_L1
+* adcp_beam_error -- calculates VELPROF-ERR_L1
+
+### For instruments programmed in earth coordinates:
+    (ADCPA;  ADCPS-J,L,N; ADCPT-C,F,G,M)
+
+* adcp_earth_eastward -- calculates VELPROF-VLE_L1
+* adcp_earth_northward -- calculates VELPROF-VLN_L1
+* adcp_earth_vertical -- calculates VELPROF-VLU_L1
+* adcp_earth_error -- calculates VELPROF-ERR_L1
+
+### For the VADCP programmed in beam coordinates:
+* vadcp_beam_eastward -- calculates VELTURB-VLE_L1
+* vadcp_beam_northward -- calculates VELTURB-VLN_L1
+* vadcp_beam_vertical_true -- calculates VELTURB-VLU-5BM_L1
+* vadcp_beam_vertical_est -- calculates VELTURB-VLU-4BM_L1
+* vadcp_beam_error -- calculates VELTURB-ERR_L1
+
+### For all tRDI ADCP instruments:
+* adcp_backscatter -- calculates ECHOINT-B1_L1, ECHOINT-B2_L1, ECHOINT-B3_L1, ECHOINT-B4_L1.
+
+### Base functions used by above functions
+* adcp_beam2ins -- applies the beam to instrument transform using either a 4
+    or 3 beam solution for instruments programmed in beam coordinates
+* adcp_ins2earth -- applies the instrument to Earth transform for all
+    instruments originally programmed in beam coordinates.
+* magnetic_correction -- corrects horizontal velocities for the magnetic
+        variation (declination) at the measurement location.
+
+### Supplementary functions to calculate velocity bin depths:
+* adcp_bin_depths -- calculates bin depths for the pd0 output format
+                        (virtually all tRDI ADCPs deployed by OOI); uses
+                        TEOS-10 functions p_from_z and enthalpy_SSO_0_p.
+* adcp_bin_depths_pd8 -- calculates bin depths for the pd8 output format,
+                            assuming that (1) the ADCP operator recorded the
+                            necessary input variables and (2) these are somehow
+                            entered into the CI system.
 """
 
 import numpy as np
@@ -31,114 +71,70 @@ from ion_functions.data.generic_functions import (
 # (bad beam velocity sentinel output by tRDI ADCP instruments)
 ADCP_FILLVALUE = -32768
 
-"""
-      **** For instruments programmed in beam coordinates:
-           (ADCPS-I,K;  ADCPT-B,D,E)
-      adcp_beam_eastward -- calculates VELPROF-VLE_L1
-      adcp_beam_northward -- calculates VELPROF-VLN_L1
-      adcp_beam_vertical -- calculates VELPROF-VLU_L1
-      adcp_beam_error -- calculates VELPROF-ERR_L1
-
-      **** For instruments programmed in earth coordinates:
-           (ADCPA;  ADCPS-J,L,N; ADCPT-C,F,G,M)
-      adcp_earth_eastward -- calculates VELPROF-VLE_L1
-      adcp_earth_northward -- calculates VELPROF-VLN_L1
-      adcp_earth_vertical -- calculates VELPROF-VLU_L1
-      adcp_earth_error -- calculates VELPROF-ERR_L1
-
-      **** For the VADCP programmed in beam coordinates:
-      vadcp_beam_eastward -- calculates VELTURB-VLE_L1
-      vadcp_beam_northward -- calculates VELTURB-VLN_L1
-      vadcp_beam_vertical_true -- calculates VELTURB-VLU-5BM_L1
-      vadcp_beam_vertical_est -- calculates VELTURB-VLU-4BM_L1
-      vadcp_beam_error -- calculates VELTURB-ERR_L1
-
-      **** For all tRDI ADCP instruments:
-      adcp_backscatter -- calculates ECHOINT-B1_L1,
-                          calculates ECHOINT-B2_L1,
-                          calculates ECHOINT-B3_L1,
-                          calculates ECHOINT-B4_L1.
-
-      **** Base functions used by above functions
-      adcp_beam2ins -- applies the beam to instrument transform using either a 4
-            or 3 beam solution for instruments programmed in beam coordinates
-      adcp_ins2earth -- applies the instrument to Earth transform for all
-            instruments originally programmed in beam coordinates.
-      magnetic_correction -- corrects horizontal velocities for the magnetic
-            variation (declination) at the measurement location.
-
-      **** Supplementary functions to calculate velocity bin depths:
-      adcp_bin_depths -- calculates bin depths for the pd0 output format
-                         (virtually all tRDI ADCPs deployed by OOI); uses
-                         TEOS-10 functions p_from_z and enthalpy_SSO_0_p.
-      adcp_bin_depths_pd8 -- calculates bin depths for the pd8 output format,
-                             assuming that (1) the ADCP operator recorded the
-                             necessary input variables and (2) these are somehow
-                             entered into the CI system.
-
-"""
-
 def adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
     """
-    Description:
+    Compute Earth referenced velocity data from beam coordinate transformed velocity profiles.
 
-        Compute Earth referenced velocity data from beam coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Velocity Profile and Echo Intensity - DCN 1341-00750.
+    This function returns all velocity components in Earth coordinates, corrected for magnetic declination.
+    It can be used for all VADCP processing, with the vertical velocity component representing an estimate
+    of the vertical velocity.
 
-    Implemented by:
+    Parameters
+    ----------
+    b1 : array_like
+        "beam 1" velocity profiles in beam coordinates [mm s-1].
+    b2 : array_like
+        "beam 2" velocity profiles in beam coordinates [mm s-1].
+    b3 : array_like
+        "beam 3" velocity profiles in beam coordinates [mm s-1].
+    b4 : array_like
+        "beam 4" velocity profiles in beam coordinates [mm s-1].
+    pg1 : float or array_like
+        Percent good estimate for beam 1 [%].
+    pg2 : float or array_like
+        Percent good estimate for beam 2 [%].
+    pg3 : float or array_like
+        Percent good estimate for beam 3 [%].
+    pg4 : float or array_like
+        Percent good estimate for beam 4 [%].
+    h : float or array_like
+        Instrument's uncorrected magnetic heading [cdegrees].
+    p : float or array_like
+        Instrument pitch [cdegrees].
+    r : float or array_like
+        Instrument roll [cdegrees].
+    vf : int or array_like
+        Instrument's vertical orientation (0 = downward looking, 1 = upward looking).
+    lat : float or array_like
+        Instrument's deployment latitude [decimal degrees].
+    lon : float or array_like
+        Instrument's deployment longitude [decimal degrees].
+    dt : float or array_like
+        Sample date and time value [seconds since 1970-01-01] (Unix Time Format).
 
-        2013-04-10: Christopher Wingard. Initial code.
-        2014-02-03: Christopher Wingard. Formatting and adjusting to use magnetic declination values calculated using
-                    WMM 2010.
-        2014-04-04: Russell Desiderio. Optimized code performance by replacing the for loops previously used to
-                    calculate 2D and 3D vectorized coordinate transformations with calls to np.einsum (numpy Einstein
-                    summation function).
-        2014-06-25: Christopher Wingard. Edited to account for units of heading, pitch, roll and depth
-        2015-06-10: Russell Desiderio.
-                    (a) moved the conditioning of input beam velocities to adcp_beam2inst.
-                    (b) moved the conditioning of compass readings to adcp_inst2earth.
-                    (c) removed the depth dependence from the magnetic declination.
-        2019-03-11: Christopher Wingard. Removed multiple wrapper functions and set this single function to stand-alone
-                    returning all velocity components. Function can also be used for all VADCP processing with the
-                    vertical velocity component representing an estimate of the vertical velocity.
-        2023-08-15: Samuel Dahlberg. Brought over from original Pyseas code to bring in compatibility with CGSN.
+    Returns
+    -------
+    u : ndarray
+        East velocity profiles in Earth coordinates, corrected for magnetic declination [m s-1].
+    v : ndarray
+        North velocity profiles in Earth coordinates, corrected for magnetic declination [m s-1].
+    w : ndarray
+        Vertical velocity profiles in Earth coordinates [m s-1].
+    e : ndarray
+        Error velocity profiles in Earth coordinates [m s-1].
 
-    Usage:
+    Examples
+    --------
+    >>> u, v, w, e = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
-        u, v, w, e = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
+    Notes
+    -----
+    Relies on the base functions [adcp_beam2ins][ion_functions.data.adcp_functions.adcp_beam2ins], [adcp_ins2earth][ion_functions.data.adcp_functions.adcp_ins2earth], and [magnetic_correction][ion_functions.data.adcp_functions.magnetic_correction].
 
-            where
-
-        u = east velocity profiles in Earth coordinates corrected for the magnetic declination [m s-1]
-        v = north velocity profiles in Earth coordinates corrected for the magnetic declination [m s-1]
-        w = vertical velocity profiles in Earth coordinates [m s-1]
-        e = error velocity profiles in Earth coordinates  [m s-1]
-
-        b1 = "beam 1" velocity profiles in beam coordinates [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
-        h = instrument's uncorrected magnetic heading [cdegrees]
-        p = instrument pitch [cdegrees]
-        r = instrument roll [cdegrees]
-        vf = instrument's vertical orientation (0 = downward looking and 1 = upward looking)
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1970-01-01] (Unix Time Format)
-
-    References:
-
-        OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
-            1341-00750. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Cyberinfrastructure >>
-            Data Product Specifications >> 1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Turbulent Velocity Profile and Echo Intensity. Document Control
-            Number 1341-00760. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            Cyberinfrastructure >> Data Product Specifications >>  1341-00760_Data_Product_VELTURB_ECHOINT.pdf)
+    References
+    ----------
+    .. [1] OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number 1341-00750.
+    .. [2] OOI (2013). Data Product Specification for Turbulent Velocity Profile and Echo Intensity. Document Control Number 1341-00760.
     """
     # force shapes of inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
@@ -171,61 +167,52 @@ def adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon
 # programmed in beam coordinates by RSN (ADCPS-I,K and ADCPT-B,D,E)
 def adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
     """
-    Description:
+    Wrapper function to compute the Eastward Velocity Profile (VELPROF-VLE) 
+    from beam coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Eastward Velocity Profile (VELPROF-VLE)
-        from beam coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Velocity Profile and Echo Intensity -
-        DCN 1341-00750.
+    Parameters
+    ----------
+    b1 : array_like
+        "beam 1" velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1].
+    b2 : array_like
+        "beam 2" velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1].
+    b3 : array_like
+        "beam 3" velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1].
+    b4 : array_like
+        "beam 4" velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1].
+    pg1 : float or array_like
+        Percent good estimate for beam 1 [%].
+    pg2 : float or array_like
+        Percent good estimate for beam 2 [%].
+    pg3 : float or array_like
+        Percent good estimate for beam 3 [%].
+    pg4 : float or array_like
+        Percent good estimate for beam 4 [%].
+    h : float or array_like
+        Instrument's uncorrected magnetic heading [cdegrees]
+    p : float or array_like
+        Instrument pitch [cdegrees]
+    r : float or array_like
+        Instrument roll [cdegrees]
+    vf : int or array_like
+        Instrument's vertical orientation (0 = downward looking, 1 = upward looking)
+    lat : float or array_like
+        Instrument's deployment latitude [decimal degrees]
+    lon : float or array_like
+        Instrument's deployment longitude [decimal degrees]
+    dt : float or array_like
+        Sample date and time value [seconds since 1900-01-01] (NTP Time Format)
 
-    Implemented by:
-
-        2013-04-10: Christopher Wingard. Initial code.
-        2014-02-03: Christopher Wingard. Formatting and adjusting to use
-                    magnetic declination values calculated use the WMM 2010.
-        2014-04-04: Russell Desiderio. Optimized code performance by replacing
-                    the for loops previously used to calculate 2D and 3D
-                    vectorized coordinate transformations with calls to
-                    np.einsum (numpy Einstein summation function).
-        2014-06-25: Christopher Wingard. Edited to account for units of
-                    heading, pitch, roll and depth
-        2015-06-10: Russell Desiderio.
-                    (a) moved the conditioning of input beam velocities to adcp_beam2inst.
-                    (b) moved the conditioning of compass readings to adcp_inst2earth.
-                    (c) removed the depth dependence from the magnetic declination.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
-        2023-08-15: Samuel Dahlberg.
-                    (a) Moved all adcp velocity processing to new adcp_beam_velocity function, turning
-                    adcp_beam_eastward into a wrapper function that calls adcp_beam_velocity.
-                    (b) converts inputted ntp epoch timestamp into unix epoch timestamp for compatibility with
-                    adcp_beam_velocity.
-
-    Usage:
-
-        u_cor = adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
-
-            where
-
-        u_cor = eastward velocity profiles in Earth coordinates corrected for the
-                  magnetic declination (VELPROF-VLE_L1) [m s-1]
-
-        b1 = beam 1 velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
-        b2 = beam 2 velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
-        b3 = beam 3 velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
-        b4 = beam 4 velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
-        h = instrument's uncorrected magnetic heading [cdegrees]
-        p = instrument pitch [cdegrees]
-        r = instrument roll [cdegrees]
-        vf = instrument's vertical orientation (0 = downward looking and
-            1 = upward looking)
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1900-01-01] (NTP Time Format)
+    Notes
+    -----
+    Uses the [adcp_beam_velocity][ion_functions.data.adcp_functions.adcp_beam_velocity] 
+    function to compute the eastward velocity component.
+    
+    Returns
+    -------
+    u_cor : array_like
+        Eastward velocity profiles in Earth coordinates corrected for the 
+        magnetic declination (VELPROF-VLE_L1) [m s-1]
     """
 
     # Convert the given ntp epoch timestamp in unix epoch timestamp.
@@ -240,62 +227,52 @@ def adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon
 
 def adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
     """
-    Description:
+    Wrapper function to compute the Northward Velocity Profile (VELPROF-VLN) 
+    from beam coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Northward Velocity Profile (VELPROF-VLN)
-        from beam coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Velocity Profile and Echo Intensity -
-        DCN 1341-00750.
+    Parameters
+    ----------
+    b1 : array_like
+        "beam 1" velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1].
+    b2 : array_like
+        "beam 2" velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1].
+    b3 : array_like
+        "beam 3" velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1].
+    b4 : array_like
+        "beam 4" velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1].
+    pg1 : float or array_like
+        Percent good estimate for beam 1 [%].
+    pg2 : float or array_like
+        Percent good estimate for beam 2 [%].
+    pg3 : float or array_like
+        Percent good estimate for beam 3 [%].
+    pg4 : float or array_like
+        Percent good estimate for beam 4 [%].
+    h : float or array_like
+        Instrument's uncorrected magnetic heading [cdegrees]
+    p : float or array_like
+        Instrument pitch [cdegrees]
+    r : float or array_like
+        Instrument roll [cdegrees]
+    vf : int or array_like
+        Instrument's vertical orientation (0 = downward looking, 1 = upward looking)
+    lat : float or array_like
+        Instrument's deployment latitude [decimal degrees]
+    lon : float or array_like
+        Instrument's deployment longitude [decimal degrees]
+    dt : float or array_like
+        Sample date and time value [seconds since 1900-01-01] (NTP Time Format)
 
-    Implemented by:
+    Notes
+    -----
+    Uses the [adcp_beam_velocity][ion_functions.data.adcp_functions.adcp_beam_velocity] 
+    function to compute the northward velocity component.
 
-        2013-04-10: Christopher Wingard. Initial code.
-        2014-02-03: Christopher Wingard. Formatting and adjusting to use
-                    magnetic declination values calculated use the WMM 2010.
-        2014-03-28: Russell Desiderio. Corrected documentation only.
-        2014-04-04: Russell Desiderio. Optimized code performance by replacing
-                    the for loops previously used to calculate 2D and 3D
-                    vectorized coordinate transformations with calls to
-                    np.einsum (numpy Einstein summation function).
-        2014-06-25: Christopher Wingard. Edited to account for units of
-                    heading, pitch, roll and depth
-        2015-06-10: Russell Desiderio.
-                    (a) moved the conditioning of input beam velocities to adcp_beam2inst.
-                    (b) moved the conditioning of compass readings to adcp_inst2earth.
-                    (c) removed the depth dependence from the magnetic declination.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
-        2023-08-15: Samuel Dahlberg.
-                    (a) Moved all adcp velocity processing to new adcp_beam_velocity function, turning
-                    adcp_beam_northward into a wrapper function that calls adcp_beam_velocity.
-                    (b) converts inputted ntp epoch timestamp into unix epoch timestamp for compatibility with
-                    adcp_beam_velocity.
-
-    Usage:
-
-        v_cor = adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
-
-            where
-
-        v_cor = northward velocity profiles in Earth coordinates corrected for the
-                  magnetic declination (VELPROF-VLN_L1) [m s-1]
-
-        b1 = beam 1 velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
-        b2 = beam 2 velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
-        b3 = beam 3 velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
-        b4 = beam 4 velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
-        h = instrument's uncorrected magnetic heading [cdegrees]
-        p = instrument pitch [cdegrees]
-        r = instrument roll [cdegrees]
-        vf = instrument's vertical orientation (0 = downward looking and
-            1 = upward looking)
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1900-01-01] (NTP Time Format)
+    Returns
+    -------
+    v_cor : array_like
+        Northward velocity profiles in Earth coordinates corrected for the 
+        magnetic declination (VELPROF-VLN_L1) [m s-1]
     """
 
     # Convert the given ntp epoch timestamp in unix epoch timestamp.
@@ -310,51 +287,40 @@ def adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lo
 
 def adcp_beam_vertical(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
     """
-    Description:
+    Wrapper function to compute the Upward Velocity Profile (VELPROF-VLU) 
+    from beam coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Upward Velocity Profile (VELPROF-VLU)
-        from beam coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Velocity Profile and Echo Intensity -
-        DCN 1341-00750.
+    Parameters
+    ----------
+    b1 : array_like
+        "beam 1" velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1].
+    b2 : array_like
+        "beam 2" velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1].
+    b3 : array_like
+        "beam 3" velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1].
+    b4 : array_like
+        "beam 4" velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1].
+    pg1 : float or array_like
+        Percent good estimate for beam 1 [%].
+    pg2 : float or array_like
+        Percent good estimate for beam 2 [%].
+    pg3 : float or array_like
+        Percent good estimate for beam 3 [%].
+    pg4 : float or array_like
+        Percent good estimate for beam 4 [%].
+    h : float or array_like
+        Instrument's uncorrected magnetic heading [cdegrees]
+    p : float or array_like
+        Instrument pitch [cdegrees]
+    r : float or array_like
+        Instrument roll [cdegrees]
+    vf : int or array_like
+        Instrument's vertical orientation (0 = downward looking, 1 = upward looking)
 
-    Implemented by:
-
-        2013-04-10: Christopher Wingard. Initial code.
-        2014-02-03: Christopher Wingard. Formatting and adjusting to use
-                    magnetic declination values calculated using the WMM 2010.
-        2014-04-04: Russell Desiderio. Optimized code performance by replacing
-                    the for loops previously used to calculate 2D and 3D
-                    vectorized coordinate transformations with calls to
-                    np.einsum (numpy Einstein summation function).
-        2014-06-25: Christopher Wingard. Edited to account for units of
-                    heading, pitch, roll and depth
-        2015-06-10: Russell Desiderio.
-                    (a) moved the conditioning of input beam velocities to adcp_beam2inst.
-                    (b) moved the conditioning of compass readings to adcp_inst2earth.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
-
-    Usage:
-
-        w = adcp_beam_vertical(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf)
-
-            where
-
-        w = vertical velocity profiles (VELPROF-VLU_L1) [m s-1]
-
-        b1 = beam 1 velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
-        b2 = beam 2 velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
-        b3 = beam 3 velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
-        b4 = beam 4 velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
-        h = instrument's uncorrected magnetic heading [cdegrees]
-        p = instrument pitch [cdegrees]
-        r = instrument roll [cdegrees]
-        vf = instrument's vertical orientation (0 = downward looking and
-            1 = upward looking)
+    Returns
+    -------
+    w : array_like
+        Vertical velocity profiles (VELPROF-VLU_L1) [m s-1]
     """
     # compute the beam to instrument transform
     x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
@@ -371,37 +337,32 @@ def adcp_beam_vertical(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
 
 def adcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
     """
-    Description:
+    Wrapper function to compute the Error Velocity Profile (VELPROF-ERR) 
+    from beam coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Error Velocity Profile (VELPROF-ERR)
-        from beam coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Velocity Profile and Echo Intensity -
-        DCN 1341-00750.
+    Parameters
+    ----------
+    b1 : array_like
+        beam 1 velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1].
+    b2 : array_like
+        beam 2 velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1].
+    b3 : array_like
+        beam 3 velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1].
+    b4 : array_like
+        beam 4 velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1].
+    pg1 : float or array_like
+        Percent good estimate for beam 1 [%].
+    pg2 : float or array_like
+        Percent good estimate for beam 2 [%].
+    pg3 : float or array_like
+        Percent good estimate for beam 3 [%].
+    pg4 : float or array_like
+        Percent good estimate for beam 4 [%].
 
-    Implemented by:
-
-        2013-04-10: Christopher Wingard. Initial code.
-        2015-06-10: Russell Desiderio.
-                    Moved the conditioning of input beam velocities to adcp_beam2inst.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
-
-    Usage:
-
-        e = adcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
-
-            where
-
-        e = error velocity profiles (VELPROF-ERR_L1) [m s-1]
-
-        b1 = beam 1 velocity profiles in beam coordinates (VELPROF-B1_L0) [mm s-1]
-        b2 = beam 2 velocity profiles in beam coordinates (VELPROF-B2_L0) [mm s-1]
-        b3 = beam 3 velocity profiles in beam coordinates (VELPROF-B3_L0) [mm s-1]
-        b4 = beam 4 velocity profiles in beam coordinates (VELPROF-B4_L0) [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
+    Returns
+    -------
+    e : array_like
+        Error velocity profiles (VELPROF-ERR_L1) [m s-1]
     """
     # compute the beam to instrument transform
     _, _, _, e = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
@@ -418,43 +379,29 @@ def adcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
 # ADCPS-J,L,N and ADCPT-C,F,G,M)
 def adcp_earth_eastward(u, v, z, lat, lon, dt):
     """
-    Description:
+    Wrapper function to compute the Eastward Velocity Profile (VELPROF-VLE)
+    from Earth coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Eastward Velocity Profile (VELPROF-VLE)
-        from Earth coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Velocity Profile and Echo Intensity -
-        DCN 1341-00750.
+    Parameters
+    ----------
+    u : array_like
+        Eastward velocity profiles (VELPROF-VLE_L0) [mm s-1]
+    v : array_like
+        Northward velocity profiles (VELPROF-VLN_L0) [mm s-1]
+    z : array_like
+        Instrument's pressure sensor reading (depth) [daPa]
+    lat : float or array_like
+        Instrument's deployment latitude [decimal degrees]
+    lon : float or array_like
+        Instrument's deployment longitude [decimal degrees]
+    dt : float or array_like
+        Sample date and time value [seconds since 1900-01-01]
 
-    Implemented by:
-
-        2013-04-10: Christopher Wingard. Initial code.
-        2014-02-03: Christopher Wingard. Formatting and adjusting to use
-                    magnetic declination values calculated use the WMM 2010.
-        2014-04-04: Russell Desiderio. Optimized code performance by replacing
-                    the for loops previously used to calculate 2D and 3D
-                    vectorized coordinate transformations with calls to
-                    np.einsum (numpy Einstein summation function).
-        2014-06-25: Christopher Wingard. Edited to account for units of
-                    heading, pitch, roll and depth
-        2015-06-10: Russell Desiderio.
-                    Removed the depth dependence from the magnetic declination.
-        2015-06-25: Russell Desiderio. Incorporated int fillvalue -> Nan.
-
-    Usage:
-
-        uu_cor = adcp_earth_eastward(u, v, z, lat, lon, dt)
-
-            where
-
-        uu_cor = eastward velocity profiles in Earth coordinates corrected for
-                 the magnetic declination (VELPROF-VLE_L1) [m s-1]
-
-        u = Eastward velocity profiles (VELPROF-VLE_L0) [mm s-1]
-        v = Northward velocity profiles (VELPROF-VLN_L0) [mm s-1]
-        z = instrument's pressure sensor reading (depth) [daPa]
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1900-01-01]
+    Returns
+    -------
+    uu_cor : array_like
+        Eastward velocity profiles in Earth coordinates corrected for the 
+        magnetic declination (VELPROF-VLE_L1) [m s-1]
     """
     # force shapes of inputs to arrays
     u = np.atleast_2d(u)
@@ -484,43 +431,29 @@ def adcp_earth_eastward(u, v, z, lat, lon, dt):
 
 def adcp_earth_northward(u, v, z, lat, lon, dt):
     """
-    Description:
+    Wrapper function to compute the Northward Velocity Profile (VELPROF-VLN) 
+    from Earth coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Northward Velocity Profile (VELPROF-VLN)
-        from Earth coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Velocity Profile and Echo Intensity -
-        DCN 1341-00750.
+    Parameters
+    ----------
+    u : array_like
+        Eastward velocity profiles (VELPROF-VLE_L0) [mm s-1]
+    v : array_like
+        Northward velocity profiles (VELPROF-VLN_L0) [mm s-1]
+    z : array_like
+        Instrument's pressure sensor reading (depth) [daPa]
+    lat : float or array_like
+        Instrument's deployment latitude [decimal degrees]
+    lon : float or array_like
+        Instrument's deployment longitude [decimal degrees]
+    dt : float or array_like
+        Sample date and time value [seconds since 1900-01-01]
 
-    Implemented by:
-
-        2013-04-10: Christopher Wingard. Initial code.
-        2014-02-03: Christopher Wingard. Formatting and adjusting to use
-                    magnetic declination values calculated use the WMM 2010.
-        2014-04-04: Russell Desiderio. Optimized code performance by replacing
-                    the for loops previously used to calculate 2D and 3D
-                    vectorized coordinate transformations with calls to
-                    np.einsum (numpy Einstein summation function).
-        2014-06-25: Christopher Wingard. Edited to account for units of
-                    heading, pitch, roll and depth
-        2015-06-10: Russell Desiderio.
-                    Removed the depth dependence from the magnetic declination.
-        2015-06-25: Russell Desiderio. Incorporated int fillvalue -> Nan.
-
-    Usage:
-
-        vv_cor = adcp_earth_northward(u, v, z, lat, lon, dt)
-
-            where
-
-        vv_cor = northward velocity profiles in Earth coordinates corrected for
-                 the magnetic declination (VELPROF-VLN_L1) [m s-1]
-
-        u = Eastward velocity profiles (VELPROF-VLE_L0) [mm s-1]
-        v = Northward velocity profiles (VELPROF-VLN_L0) [mm s-1]
-        z = instrument's pressure sensor reading (depth) [daPa]
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1900-01-01]
+    Returns
+    -------
+    vv_cor : array_like
+        Northward velocity profiles in Earth coordinates corrected for the 
+        magnetic declination (VELPROF-VLN_L1) [m s-1]
     """
     # force shapes of inputs to arrays
     u = np.atleast_2d(u)
@@ -550,28 +483,18 @@ def adcp_earth_northward(u, v, z, lat, lon, dt):
 
 def adcp_earth_vertical(w):
     """
-    Description:
+    Wrapper function to compute the Upward Velocity Profile (VELPROF-VLU) 
+    from Earth coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Upward Velocity Profile (VELPROF-VLU)
-        from Earth coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Velocity Profile and Echo Intensity -
-        DCN 1341-00750.
+    Parameters
+    ----------
+    w : array_like
+        Upward velocity profiles (VELPROF-VLU_L0) [mm s-1]
 
-    Implemented by:
-
-        2014-06-25: Christopher Wingard. Initial code.
-        2015-06-25: Russell Desiderio. Incorporated int fillvalue -> Nan.
-
-    Usage:
-
-        w_scl = adcp_earth_vertical(w)
-
-            where
-
-        w_scl = scaled upward velocity profiles in Earth coordinates
-                (VELPROF-VLN_L1) [m s-1]
-
-        w = upward velocity profiles (VELPROF-VLU_L0) [mm s-1]
+    Returns
+    -------
+    w_scl : array_like
+        Scaled upward velocity profiles in Earth coordinates (VELPROF-VLN_L1) [m s-1]
     """
     w = replace_fill_with_nan(ADCP_FILLVALUE, w)
 
@@ -584,28 +507,18 @@ def adcp_earth_vertical(w):
 
 def adcp_earth_error(e):
     """
-    Description:
+    Wrapper function to compute the Error Velocity Profile (VELPROF-ERR) 
+    from Earth coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Error Velocity Profile (VELPROF-ERR)
-        from Earth coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Velocity Profile and Echo Intensity -
-        DCN 1341-00750.
+    Parameters
+    ----------
+    e : array_like
+        Error velocity profiles (VELPROF-ERR_L0) [mm s-1]
 
-    Implemented by:
-
-        2014-06-25: Christopher Wingard. Initial code.
-        2015-06-25: Russell Desiderio. Incorporated int fillvalue -> Nan.
-
-    Usage:
-
-        e_scl = adcp_earth_vertical(w)
-
-            where
-
-        e_scl = scaled error velocity profiles in Earth coordinates
-                (VELPROF-ERR_L1) [m s-1]
-
-        e = error velocity profiles (VELPROF-ERR_L0) [mm s-1]
+    Returns
+    -------
+    e_scl : array_like
+        Scaled error velocity profiles in Earth coordinates (VELPROF-ERR_L1) [m s-1]
     """
     e = replace_fill_with_nan(ADCP_FILLVALUE, e)
 
@@ -620,48 +533,59 @@ def adcp_earth_error(e):
 @deprecated
 def vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
     """
-    Description:
+    Wrapper function to compute the Eastward Velocity Profile (VELTURB-VLE)
+    from beam coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Eastward Velocity Profile (VELTURB-VLE)
-        from beam coordinate transformed velocity profiles as defined in the
-        Data Product Specification for Turbulent Velocity Profile and Echo Intensity -
-        DCN 1341-00760.
+    Parameters
+    ----------
+    b1 : array_like
+        Beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1].
+    b2 : array_like
+        Beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1].
+    b3 : array_like
+        Beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1].
+    b4 : array_like
+        Beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1].
+    pg1 : array_like
+        Percent good estimate for beam 1 [percent].
+    pg2 : array_like
+        Percent good estimate for beam 2 [percent].
+    pg3 : array_like
+        Percent good estimate for beam 3 [percent].
+    pg4 : array_like
+        Percent good estimate for beam 4 [percent].
+    h : array_like
+        Instrument's uncorrected magnetic heading [cdegrees].
+    p : array_like
+        Instrument pitch [cdegrees].
+    r : array_like
+        Instrument roll [cdegrees].
+    vf : array_like or int
+        Instrument's vertical orientation (0 = downward looking, 1 = upward looking).
+    lat : array_like
+        Instrument's deployment latitude [decimal degrees].
+    lon : array_like
+        Instrument's deployment longitude [decimal degrees].
+    dt : array_like
+        Sample date and time value [seconds since 1900-01-01].
 
-    Implemented by:
+    Returns
+    -------
+    u_cor : ndarray
+        Eastward velocity profiles in Earth coordinates corrected for the 
+        magnetic declination (VELTURB-VLE_L1) [m s-1].
 
-        2014-06-25: Christopher Wingard. Initial code, based on existing ADCP
-        2015-06-10: Russell Desiderio.
-                    (a) moved the conditioning of input beam velocities to adcp_beam2inst.
-                    (b) moved the conditioning of compass readings to adcp_inst2earth.
-                    (c) removed the depth dependence from the magnetic declination.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
+    Notes
+    -----
+    - Input velocities are expected in mm/s and output is in m/s.
 
-    Usage:
+    References
+    ----------
+    - Data Product Specification for Turbulent Velocity Profile and Echo Intensity - DCN 1341-00760.
 
-        u_cor = vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
-
-            where
-
-        u_cor = eastward velocity profiles in Earth coordinates corrected for the
-                  magnetic declination (VELTURB-VLE_L1) [m s-1]
-
-        b1 = beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
-        h = instrument's uncorrected magnetic heading [cdegrees]
-        p = instrument pitch [cdegrees]
-        r = instrument roll [cdegrees]
-        vf = instrument's vertical orientation (0 = downward looking and
-            1 = upward looking)
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1900-01-01]
+    Examples
+    --------
+    >>> u_cor = vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
     """
     # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
@@ -690,48 +614,58 @@ def vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lo
 @deprecated
 def vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt):
     """
-    Description:
+    Wrapper function to compute the Northward Velocity Profile (VELTURB-VLN)
+    from beam coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Northward Velocity Profile
-        (VELTURB-VLN) from beam coordinate transformed velocity profiles as
-        defined in the Data Product Specification for Turbulent Velocity
-        Profile and Echo Intensity - DCN 1341-00760.
+    Parameters
+    ----------
+    b1 : array_like
+        Beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1].
+    b2 : array_like
+        Beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1].
+    b3 : array_like
+        Beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1].
+    b4 : array_like
+        Beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1].
+    pg1 : array_like
+        Percent good estimate for beam 1 [percent].
+    pg2 : array_like
+        Percent good estimate for beam 2 [percent].
+    pg3 : array_like
+        Percent good estimate for beam 3 [percent].
+    pg4 : array_like
+        Percent good estimate for beam 4 [percent].
+    h : array_like
+        Instrument's uncorrected magnetic heading [cdegrees].
+    p : array_like
+        Instrument pitch [cdegrees].
+    r : array_like
+        Instrument roll [cdegrees].
+    vf : array_like or int
+        Instrument's vertical orientation (0 = downward looking, 1 = upward looking).
+    lat : array_like
+        Instrument's deployment latitude [decimal degrees].
+    lon : array_like
+        Instrument's deployment longitude [decimal degrees].
+    dt : array_like
+        Sample date and time value [seconds since 1900-01-01].
 
-    Implemented by:
+    Returns
+    -------
+    v_cor : ndarray
+        Northward velocity profiles in Earth coordinates corrected for the magnetic declination (VELTURB-VLN_L1) [m s-1].
 
-        2014-06-25: Christopher Wingard. Initial code, based on existing ADCP
-        2015-06-10: Russell Desiderio.
-                    (a) moved the conditioning of input beam velocities to adcp_beam2inst.
-                    (b) moved the conditioning of compass readings to adcp_inst2earth.
-                    (c) removed the depth dependence from the magnetic declination.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
+    Notes
+    -----
+    - Input velocities are expected in mm/s and output is in m/s.
 
-    Usage:
+    References
+    ----------
+    - Data Product Specification for Turbulent Velocity Profile and Echo Intensity - DCN 1341-00760.
 
-        v_cor = vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
-
-            where
-
-        v_cor = northward velocity profiles in Earth coordinates corrected for the
-                  magnetic declination (VELTURB-VLN_L1) [m s-1]
-
-        b1 = beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
-        h = instrument's uncorrected magnetic heading [cdegrees]
-        p = instrument pitch [cdegrees]
-        r = instrument roll [cdegrees]
-        vf = instrument's vertical orientation (0 = downward looking and
-            1 = upward looking)
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1900-01-01]
+    Examples
+    --------
+    >>> v_cor = vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
     """
     # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
@@ -759,48 +693,50 @@ def vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, l
 
 def vadcp_beam_vertical_est(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
     """
-    Description:
+     Wrapper function to compute the estimated upward velocity profile 
+     (VELTURB-VLU-4BM) from beam coordinate transformed velocity profiles
+    using a 4- or 3-beam solution, where each beam is oriented facing outward 
+    at 20 degrees relative to vertical.
 
-        Wrapper function to compute the "estimated" Upward Velocity Profile
-        (VELTURB-VLU-4BM) from the beam coordinate transformed velocity profiles as
-        defined in the Data Product Specification for Turbulent Velocity
-        Profile and Echo Intensity - DCN 1341-00760. This provides the
-        traditional estimate of the vertical velocity component from a 4 or 3 beam
-        solution, where each beam is facing outward at an angle (20 degrees)
-        relative to the vertical.
+    Parameters
+    ----------
+    b1 : array_like
+        Beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1].
+    b2 : array_like
+        Beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1].
+    b3 : array_like
+        Beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1].
+    b4 : array_like
+        Beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1].
+    pg1 : array_like
+        Percent good estimate for beam 1 [percent].
+    pg2 : array_like
+        Percent good estimate for beam 2 [percent].
+    pg3 : array_like
+        Percent good estimate for beam 3 [percent].
+    pg4 : array_like
+        Percent good estimate for beam 4 [percent].
+    h : array_like
+        Instrument's uncorrected magnetic heading [cdegrees].
+    p : array_like
+        Instrument pitch [cdegrees].
+    r : array_like
+        Instrument roll [cdegrees].
+    vf : array_like or int
+        Instrument's vertical orientation (0 = downward looking, 1 = upward looking).
 
-    Implemented by:
+    Returns
+    -------
+    w : ndarray
+        Estimated vertical velocity profiles in Earth coordinates (VELTURB-VLU-4BM_L1) [m s-1].
 
-        2014-06-25: Christopher Wingard. Initial code, based on existing ADCP
-        2015-06-10: Russell Desiderio.
-                    (a) moved the conditioning of input beam velocities to adcp_beam2inst.
-                    (b) moved the conditioning of compass readings to adcp_inst2earth.
-        2015-06-22: Russell Desiderio. Renamed this data product.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
+    Notes
+    -----
+    - Input velocities are expected in mm/s and output is in m/s.
 
-    Usage:
-
-        w = vadcp_beam_vertical_est(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf)
-
-            where
-
-        w = estimated vertical velocity profiles in Earth coordinates
-                 (VELTURB-VLU-4BM_L1) [m s-1]
-
-        b1 = beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
-        h = instrument's uncorrected magnetic heading [cdegrees]
-        p = instrument pitch [cdegrees]
-        r = instrument roll [cdegrees]
-        vf = instrument's vertical orientation (0 = downward looking and
-            1 = upward looking)
+    References
+    ----------
+    Data Product Specification for Turbulent Velocity Profile and Echo Intensity - DCN 1341-00760.
     """
     # compute the beam to instrument transform
     x, y, z, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
@@ -816,49 +752,52 @@ def vadcp_beam_vertical_est(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf):
 
 
 def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5, h, p, r, vf):
-    """
-    Description:
+    """Computes the "true" Upward Velocity Profile (VELTURB-VLU-5BM) from the 
+    beam coordinate transformed velocity profiles.
+    This provides a better vertical velocity estimate since beam 5 is oriented vertically.
 
-        Computes the "true" Upward Velocity Profile (VELTURB-VLU-5BM) from the beam
-        coordinate transformed velocity profiles as defined in the Data Product
-        Specification for Turbulent Velocity Profile and Echo Intensity - DCN 1341-00760.
-        This is assumed to provide a better estimate of the true vertical velocity component,
-        since beam 5 is pointing directly up.
+    Parameters
+    ----------
+    b1 : array_like
+        Beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1].
+    b2 : array_like
+        Beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1].
+    b3 : array_like
+        Beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1].
+    b4 : array_like
+        Beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1].
+    b5 : array_like
+        Beam 5 velocity profiles in beam coordinates (VELTURB-B5_L0) [mm s-1].
+    pg1 : array_like
+        Percent good estimate for beam 1 [percent].
+    pg2 : array_like
+        Percent good estimate for beam 2 [percent].
+    pg3 : array_like
+        Percent good estimate for beam 3 [percent].
+    pg4 : array_like
+        Percent good estimate for beam 4 [percent].
+    pg5 : array_like
+        Percent good estimate for beam 5 [percent].
+    h : array_like
+        Instrument's uncorrected magnetic heading [cdegrees].
+    p : array_like
+        Instrument pitch [cdegrees].
+    r : array_like
+        Instrument roll [cdegrees].
+    vf : array_like or int
+        Instrument's vertical orientation (0 = downward looking, 1 = upward looking).
+    Returns
+    -------
+    w : ndarray
+        True vertical velocity profiles in Earth coordinates (VELTURB-VLU-5BM_L1) [m s-1].
 
-    Implemented by:
+    Notes
+    -----
+    - Input velocities are expected in mm/s and output is in m/s.
 
-        2014-06-25: Christopher Wingard. Initial code, based on existing ADCP
-        2015-06-10: Russell Desiderio.
-                    (a) moved the conditioning of input beam velocities to adcp_beam2inst.
-                    (b) moved the conditioning of compass readings to adcp_inst2earth.
-        2015-06-22: Russell Desiderio. Renamed this data product.
-        2015-06-25: Russell Desiderio. Incorporated b5 int fillvalue -> Nan.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
-
-    Usage:
-
-        w = vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5, h, p, r, vf)
-
-            where
-
-        w = true vertical velocity profiles in Earth coordinates (VELTURB-VLU-5BM_L1) [m s-1]
-
-        b1 = beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
-        b5 = beam 5 velocity profiles in beam coordinates (VELTURB-B5_L0) [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
-        pg5 = percent good estimate for beam 5 [percent]
-        h = instrument's uncorrected magnetic heading [cdegrees]
-        p = instrument pitch [cdegrees]
-        r = instrument roll [cdegrees]
-        vf = instrument's vertical orientation (0 = downward looking and
-            1 = upward looking)
+    References
+    ----------
+    - Data Product Specification for Turbulent Velocity Profile and Echo Intensity - DCN 1341-00760.
     """
     # compute the beam to instrument transform
     x, y, _, _ = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
@@ -882,37 +821,36 @@ def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5, h, p, 
 @deprecated
 def vadcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
     """
-    Description:
+    Wrapper function to compute the Error Velocity Profile (VELTURB-ERR)
+    from the beam coordinate transformed velocity profiles.
 
-        Wrapper function to compute the Error Velocity Profile (VELTURB-ERR)
-        from the beam coordinate transformed velocity profiles as defined in
-        the Data Product Specification for Turbulent Velocity Profile and Echo
-        Intensity - DCN 1341-00760.
+    Parameters
+    ----------
+    b1 : array_like
+        Beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1].
+    b2 : array_like
+        Beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1].
+    b3 : array_like
+        Beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1].
+    b4 : array_like
+        Beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1].
+    pg1 : array_like
+        Percent good estimate for beam 1 [%].
+    pg2 : array_like
+        Percent good estimate for beam 2 [%].
+    pg3 : array_like
+        Percent good estimate for beam 3 [%].
+    pg4 : array_like
+        Percent good estimate for beam 4 [%].
 
-    Implemented by:
+    Returns
+    -------
+    e : ndarray
+        Error velocity profiles (VELTURB-ERR_L1) [m s-1].
 
-        2014-06-25: Christopher Wingard. Initial code, based on existing ADCP
-        2015-06-10: Russell Desiderio.
-                    Moved the conditioning of input beam velocities to adcp_beam2inst.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
-
-    Usage:
-
-        e = vadcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
-
-            where
-
-        e = error velocity profiles (VELTURB-ERR_L1) [m s-1]
-
-        b1 = "beam 1" velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1]
-        b2 = "beam 2" velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1]
-        b3 = "beam 3" velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1]
-        b4 = "beam 4" velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
+    Examples
+    --------
+    >>> e = vadcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
     """
     # compute the beam to instrument transform
     _, _, _, e = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
@@ -927,43 +865,34 @@ def vadcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
 # Calculates ECHOINT_L1 for all tRDI ADCPs
 def adcp_backscatter(raw, sfactor=0.45):
     """
-    Description:
+    Converts the echo intensity data from counts to dB using a factory
+    specified scale factor.
 
-        Converts the echo intensity data from counts to dB using a factory
-        specified scale factor (nominally 0.45 dB/count for the Workhorse
-        family of ADCPs and 0.61 dB/count for the ExplorerDVL family). As
-        defined in the Data Product Specification for Velocity Profile and Echo
-        Intensity - DCN 1341-00750.
+    Parameters
+    ----------
+    raw : array_like
+        Raw echo intensity (ECHOINT_L0) [count].
+    sfactor : float or array_like, optional
+        Factory supplied scale factor, instrument and beam specific [dB/count].
+        Default is 0.45.
 
-    Implemented by:
+    Returns
+    -------
+    dB : array_like
+        Relative Echo Intensity (ECHOINT_L1) [dB].
 
-        2014-04-21: Christopher Wingard. Initial code.
-        2015-06-25: Russell Desiderio. Incorporated int fillvalue -> Nan.
-        2023-08-15: Samuel Dahlberg. Added default value to sfactor.
+    Notes
+    -----
+    * The ADCP outputs the raw echo intensity as a 1-byte integer, so the ADCP_FILLVALUE
+    cannot apply (requires 2 bytes).
+    * The default scale factor is nominally 0.45 dB/count for the Workhorse
+        family of ADCPs and 0.61 dB/count for the ExplorerDVL family.
 
-    Usage:
-
-        dB = adcp_backscatter(raw, sfactor)
-
-            where
-
-        dB = Relative Echo Intensity (ECHOINT_L1) [dB]
-
-        raw = raw echo intensity (ECHOINT_L0) [count]
-        sfactor = factory supplied scale factor, instrument and beam specific [dB/count]
-
-    Notes:
-
-        The ADCP outputs the raw echo intensity as a 1-byte integer, so the ADCP_FILLVALUE
-        cannot apply (requires 2 bytes).
-
-    References:
-
-        OOI (2012). Data Product Specification for Velocity Profile and Echo
-            Intensity. Document Control Number 1341-00750.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00050_Data_Product_SPEC_VELPROF_OOI.pdf)
+    References
+    ----------
+    OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity.
+        Document Control Number 1341-00750.
+        https://alfresco.oceanobservatories.org/
     """
     if np.isscalar(sfactor) is False:
         sfactor = sfactor.reshape(sfactor.shape[0], 1)
@@ -978,52 +907,45 @@ def adcp_backscatter(raw, sfactor=0.45):
 ##### ADCP Beam to Earth Transforms and Magnetic Variation Corrections
 def adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
     """
-    Description:
+    Converts the Beam Coordinate transformed velocity profiles to the instrument coordinate system.
 
-        This function converts the Beam Coordinate transformed velocity
-        profiles to the instrument coordinate system. The calculations are
-        defined in the Data Product Specification for Velocity Profile and Echo
-        Intensity - DCN 1341-00750.
+    Parameters
+    ----------
+    b1 : array_like
+        Beam 1 velocity profiles in beam coordinates (VELTURB-B1_L0) [mm s-1].
+    b2 : array_like
+        Beam 2 velocity profiles in beam coordinates (VELTURB-B2_L0) [mm s-1].
+    b3 : array_like
+        Beam 3 velocity profiles in beam coordinates (VELTURB-B3_L0) [mm s-1].
+    b4 : array_like
+        Beam 4 velocity profiles in beam coordinates (VELTURB-B4_L0) [mm s-1].
+    pg1 : array_like
+        Percent good estimate for beam 1 [%].
+    pg2 : array_like
+        Percent good estimate for beam 2 [%].
+    pg3 : array_like
+        Percent good estimate for beam 3 [%].
+    pg4 : array_like
+        Percent good estimate for beam 4 [%].
 
-    Implemented by:
+    Returns
+    -------
+    x : array_like
+        x axis velocity profiles in instrument coordinates [mm s-1].
+    y : array_like
+        y axis velocity profiles in instrument coordinates [mm s-1].
+    z : array_like
+        z axis velocity profiles in instrument coordinates [mm s-1].
+    e : array_like
+        Error velocity profiles [mm s-1].
 
-        2013-04-10: Christopher Wingard. Initial code.
-        2015-06-24: Russell Desiderio. Incorporated int fillvalue -> Nan.
-        2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
-                    and cleans up syntax used in the function.
-
-    Usage:
-
-        x, y, z, e = adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4)
-
-            where
-
-        x = x axis velocity profiles in instrument coordinates [mm s-1]
-        y = y axis velocity profiles in instrument coordinates [mm s-1]
-        z = z axis velocity profiles in instrument coordinates [mm s-1]
-        e = error velocity profiles [mm s-1]
-
-        b1 = beam 1 velocity profiles in beam coordinates [mm s-1]
-        b2 = beam 2 velocity profiles in beam coordinates [mm s-1]
-        b3 = beam 3 velocity profiles in beam coordinates [mm s-1]
-        b4 = beam 4 velocity profiles in beam coordinates [mm s-1]
-        pg1 = percent good estimate for beam 1 [percent]
-        pg2 = percent good estimate for beam 2 [percent]
-        pg3 = percent good estimate for beam 3 [percent]
-        pg4 = percent good estimate for beam 4 [percent]
-
-
-    References:
-
-        OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
-            1341-00750. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Cyberinfrastructure >>
-            Data Product Specifications >> 1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Turbulent Velocity Profile and Echo Intensity. Document Control
-            Number 1341-00760. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            Cyberinfrastructure >> Data Product Specifications >>  1341-00760_Data_Product_VELTURB_ECHOINT.pdf)
-
-        Teledyne RD Instruments (2008). ADCP Coordinate Transformation, Formulas and Calculations.
+    References
+    ----------
+    OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
+        1341-00750. https://alfresco.oceanobservatories.org/
+    OOI (2013). Data Product Specification for Turbulent Velocity Profile and Echo Intensity. Document Control
+        Number 1341-00760. https://alfresco.oceanobservatories.org/
+    Teledyne RD Instruments (2008). ADCP Coordinate Transformation, Formulas and Calculations.
     """
     # raw beam velocities, set to correct shape
     b1 = np.atleast_2d(b1)
@@ -1077,52 +999,38 @@ def adcp_beam2ins(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
 
 def adcp_ins2earth(u, v, w, heading, pitch, roll, vertical):
     """
-    Description:
+    Converts the Instrument Coordinate transformed velocity profiles to the Earth coordinate system.
 
-        This function converts the Instrument Coordinate transformed velocity
-        profiles to the Earth coordinate system. The calculation is defined in
-        the Data Product Specification for Velocity Profile and Echo Intensity
-        - DCN 1341-00750.
+    Parameters
+    ----------
+    u : array_like
+        East velocity profiles in instrument coordinates [mm s-1]
+    v : array_like
+        North velocity profiles in instrument coordinates [mm s-1]
+    w : array_like
+        Vertical velocity profiles in instrument coordinates [mm s-1]
+    heading : float or array_like
+        Instrument's uncorrected magnetic heading [centidegrees]
+    pitch : float or array_like
+        Instrument pitch [centidegrees]
+    roll : float or array_like
+        Instrument roll [centidegrees]
+    vertical : int or array_like
+        Instrument's vertical orientation (0 = downward looking, 1 = upward looking)
 
-    Implemented by:
+    Returns
+    -------
+    uu : array_like
+        "East" velocity profiles in earth coordinates [mm s-1]
+    vv : array_like
+        "North" velocity profiles in earth coordinates [mm s-1]
+    ww : array_like
+        "Vertical" velocity profiles in earth coordinates [mm s-1]
 
-        2013-04-10: Christopher Wingard. Initial code.
-        2014-04-04: Russell Desiderio. Optimized code performance by replacing the for
-                    loops previously used to calculate vectorized matrix multiplication
-                    products with calls to np.einsum (numpy Einstein summation function).
-        2015-06-24: Russell Desiderio. Changed implementation of 'vertical' in the roll
-                    calculation so that if these values are equal to the CI fill value
-                    (-999999999), when these fill values are replaced with nans, the nans
-                    will propagate through to the data product output.
-        2015-06-24: Russell Desiderio. Incorporated int fillvalue -> Nan.
-        2023-08-15: Samuel Dahlberg. Changed local variable names to follow naming convention.
-
-    Usage:
-
-        uu, vu, ww = adcp_ins2earth(u, v, w, heading, pitch, roll, vertical)
-
-            where
-
-        uu = "east" velocity profiles in earth coordinates [mm s-1]
-        vv = "north" velocity profiles in earth coordinates [mm s-1]
-        ww = "vertical" velocity profiles in earth coordinates [mm s-1]
-
-        u = east velocity profiles in instrument coordinates [mm s-1]
-        v = north velocity profiles in instrument coordinates [mm s-1]
-        w = vertical velocity profiles in instrument coordinates [mm s-1]
-        heading = instrument's uncorrected magnetic heading [centidegrees]
-        pitch = instrument pitch [centidegrees]
-        roll = instrument roll [centidegrees]
-        vertical = instrument's vertical orientation (0 = downward looking and
-            1 = upward looking)
-
-    References:
-
-        OOI (2012). Data Product Specification for Velocity Profile and Echo
-            Intensity. Document Control Number 1341-00750.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00050_Data_Product_SPEC_VELPROF_OOI.pdf)
+    References
+    ----------
+    OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
+        1341-00750. https://alfresco.oceanobservatories.org/
     """
     ### the input beam data for adcp_ins2earth are always called using the output
     ### of adcp_beam2ins, so the following lines are not needed.
@@ -1216,59 +1124,46 @@ def adcp_ins2earth(u, v, w, heading, pitch, roll, vertical):
 
 
 def magnetic_correction(theta, u, v):
+    
     """
-    Description:
+    Corrects velocity profiles for the magnetic variation (declination) at the 
+    measurement location.
+    The magnetic declination is obtained from the 2010 World Magnetic Model 
+    (WMM2010) provided by NOAA (see wmm_declination).
 
-        This function corrects velocity profiles for the magnetic variation
-        (declination) at the measurement location.  The magnetic declination
-        is obtained from the 2010 World Magnetic Model (WMM2010) provided by
-        NOAA (see wmm_declination).
+    Parameters
+    ----------
+    theta : float or array_like
+        Magnetic variation based on location (latitude, longitude, altitude) 
+        and date [degrees]
+    u : array_like
+        Uncorrected eastward velocity profiles in earth coordinates
+    v : array_like
+        Uncorrected northward velocity profiles in earth coordinates
 
-        This version handles 'vectorized' input variables without using for
-        loops. It was specifically written to handle the case of a 1D array of
-        theta values, theta=f(i), with corresponding sets of 'u' and 'v' values
-        such that u=f(i,j) and v=f(i,j), where there are j 'u' and 'v' values
-        for each theta(i).
+    Returns
+    -------
+    u_cor : array_like
+        Eastward velocity profiles, in earth coordinates, with the correction 
+        for magnetic variation applied.
+    v_cor : array_like
+        Northward velocity profiles, in earth coordinates, with the correction 
+        for magnetic variation applied.
 
-    Implemented by:
-
-        2014-04-04: Russell Desiderio. Initial code. This function is used to
-                    calculate magnetic corrections by the functions contained
-                    in this module instead of the function magnetic_correction
-                    found in ion_functions.data.generic_functions.
-        2015-04-10: Russell Desiderio. Corrected a typo:
-                    uv = np.atleast_2d(u)  ->  u = np.atleast_2d(u)
-        2023-08-15: Samuel Dahlberg. Changed local variable names to follow naming convention.
-
-    Usage:
-
-        u_cor, v_cor = magnetic_correction(theta, u, v)
-
-            where
-
-        u_cor = eastward velocity profiles, in earth coordinates, with
-            the correction for magnetic variation applied.
-        v_cor = northward velocity profiles, in earth coordinates,
-            with the correction for magnetic variation applied.
-
-        theta = magnetic variation based on location (latitude, longitude and
-            altitude) and date; units of theta are [degrees]
-        u = uncorrected eastward velocity profiles in earth coordinates
-        v = uncorrected northward velocity profiles in earth coordinates
-
-    References:
-
-        OOI (2012). Data Product Specification for Velocity Profile and Echo
-            Intensity. Document Control Number 1341-00750.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00750_Data_Product_SPEC_VELPROF_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Turbulent Velocity Profile
-            and Echo Intensity. Document Control Number 1341-00760.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00760_Data_Product_SPEC_VELPROF_OOI.pdf)
+    Notes
+    -----
+    This version handles 'vectorized' input variables without using for
+    loops. It was specifically written to handle the case of a 1D array of
+    theta values, theta=f(i), with corresponding sets of 'u' and 'v' values
+    such that u=f(i,j) and v=f(i,j), where there are j 'u' and 'v' values
+    for each theta(i).
+    
+    References
+    ----------
+    OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
+        1341-00750. https://alfresco.oceanobservatories.org/
+    OOI (2013). Data Product Specification for Turbulent Velocity Profile and Echo Intensity. Document Control
+        Number 1341-00760. https://alfresco.oceanobservatories.org/
     """
     # force shapes of inputs to arrays
     theta = np.atleast_1d(theta)
@@ -1308,43 +1203,32 @@ def magnetic_correction(theta, u, v):
 
 def adcp_bin_depths_bar(dist_first_bin, bin_size, num_bins, pressure, adcp_orientation, latitude):
     """
-    Description:
+    Calculates the center bin depths for PD0 and PD12 ADCP data.
 
-        Calculates the center bin depths for PD0 and PD12 ADCP data. As defined
-        in the Data Product Specification for Velocity Profile and Echo
-        Intensity - DCN 1341-00750.
+    Parameters
+    ----------
+    dist_first_bin : float or array_like
+        Distance to the first ADCP bin [centimeters]
+    bin_size : float or array_like
+        Depth of each ADCP bin [centimeters]
+    num_bins : int or array_like
+        Number of ADCP bins [unitless]
+    pressure : float or array_like
+        Pressure at the sensor head [bar]
+    adcp_orientation : int or array_like
+        1=upward looking or 0=downward looking [unitless]
+    latitude : float or array_like
+        Latitude of the instrument [degrees]
 
-    Implemented by:
+    Returns
+    -------
+    bin_depths : array_like
+        Bin depths [meters]
 
-        2015-01-29: Craig Risien. Initial code.
-        2015-06-26: Russell Desiderio. Fixed the handling of the pressure variables.
-                                       Time-vectorized the code by finessing the conditional.
-        2015-06-30: Russell Desiderio. Incorporated int fillvalue -> Nan.
-
-
-    Usage:
-
-        bin_depths = adcp_bin_depths(dist_first_bin, bin_size, num_bins, pressure,
-                                    adcp_orientation, latitude)
-
-            where
-
-        bin_depths =  [meters]
-
-        dist_first_bin = distance to the first ADCP bin [centimeters]
-        bin_size = depth of each ADCP bin [centimeters]
-        num_bins = number of ADCP bins [unitless]
-        pressure = pressure at the sensor head [bar]
-        adcp_orientation = 1=upward looking or 0=downward looking [unitless]
-        latitude = latitude of the instrument [degrees]
-
-    References:
-
-        OOI (2012). Data Product Specification for Velocity Profile and Echo
-            Intensity. Document Control Number 1341-00750.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00050_Data_Product_SPEC_VELPROF_OOI.pdf)
+    References
+    ----------
+    OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
+        1341-00750. https://alfresco.oceanobservatories.org/
     """
     # check for CI fill values.
     pressure = replace_fill_with_nan(None, pressure)
@@ -1361,43 +1245,32 @@ def adcp_bin_depths_bar(dist_first_bin, bin_size, num_bins, pressure, adcp_orien
 
 def adcp_bin_depths_dapa(dist_first_bin, bin_size, num_bins, pressure, adcp_orientation, latitude):
     """
-    Description:
+    Calculates the center bin depths for PD0 and PD12 ADCP data.
 
-        Calculates the center bin depths for PD0 and PD12 ADCP data. As defined
-        in the Data Product Specification for Velocity Profile and Echo
-        Intensity - DCN 1341-00750.
+    Parameters
+    ----------
+    dist_first_bin : float or array_like
+        Distance to the first ADCP bin [centimeters]
+    bin_size : float or array_like
+        Depth of each ADCP bin [centimeters]
+    num_bins : int or array_like
+        Number of ADCP bins [unitless]
+    pressure : float or array_like
+        Pressure at the sensor head [daPa]
+    adcp_orientation : int or array_like
+        1=upward looking or 0=downward looking [unitless]
+    latitude : float or array_like
+        Latitude of the instrument [degrees]
 
-    Implemented by:
+    Returns
+    -------
+    bin_depths : array_like
+        Bin depths [meters]
 
-        2015-01-29: Craig Risien. Initial code.
-        2015-06-26: Russell Desiderio. Fixed the handling of the pressure variables.
-                                       Time-vectorized the code by finessing the conditional.
-        2015-06-30: Russell Desiderio. Incorporated int fillvalue -> Nan.
-
-
-    Usage:
-
-        bin_depths = adcp_bin_depths(dist_first_bin, bin_size, num_bins, pressure,
-                                    adcp_orientation, latitude)
-
-            where
-
-        bin_depths =  [meters]
-
-        dist_first_bin = distance to the first ADCP bin [centimeters]
-        bin_size = depth of each ADCP bin [centimeters]
-        num_bins = number of ADCP bins [unitless]
-        pressure = pressure at the sensor head [daPa]
-        adcp_orientation = 1=upward looking or 0=downward looking [unitless]
-        latitude = latitude of the instrument [degrees]
-
-    References:
-
-        OOI (2012). Data Product Specification for Velocity Profile and Echo
-            Intensity. Document Control Number 1341-00750.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00050_Data_Product_SPEC_VELPROF_OOI.pdf)
+    References
+    ----------
+    OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
+        1341-00750. https://alfresco.oceanobservatories.org/
     """
     # check for CI fill values.
     pressure = replace_fill_with_nan(None, pressure)
@@ -1414,40 +1287,30 @@ def adcp_bin_depths_dapa(dist_first_bin, bin_size, num_bins, pressure, adcp_orie
 
 def adcp_bin_depths(blanking_distance, bin_size, number_bins, orientation, depth):
     """
-    Description:
+    Calculates the center bin depths for ADCP data.
 
-        Calculates the center bin depths for ADCP data as defined in the Data Product Specification for Velocity
-        Profile and Echo Intensity - DCN 1341-00750.
+    Parameters
+    ----------
+    blanking_distance : float or array_like
+        Distance to the first ADCP bin [centimeters]
+    bin_size : float or array_like
+        Size, or cell length, of each ADCP bin [centimeters]
+    number_bins : int or array_like
+        Number of ADCP bins [unitless]
+    orientation : int or array_like
+        1=upward looking or 0=downward looking [unitless]
+    depth : float or array_like
+        Depth of the sensor head [m]
 
-    Implemented by:
+    Returns
+    -------
+    bin_depths : array_like
+        Bin depths [meters]
 
-        2015-01-29: Craig Risien. Initial code.
-        2015-06-26: Russell Desiderio. Fixed the handling of the pressure variables. Time-vectorized the code by
-                    finessing the conditional.
-        2015-06-30: Russell Desiderio. Incorporated int fillvalue -> Nan.
-        2019-03-11: Christopher Wingard. Removed older OOI CI constraints and made ADCP data type agnostic, requiring
-                    depth in meters as an input.
-        2023-08-15: Samuel Dahlberg. Brought over from original Pyseas code to bring in compatibility with CGSN.
-
-    Usage:
-
-        bin_depths = adcp_bin_depths(blanking_distance, bin_size, number_bins, orientation, depth, latitude)
-
-            where
-
-        bin_depths =  [meters]
-
-        blanking_distance = distance to the first ADCP bin [centimeters]
-        bin_size = size, or cell length, of each ADCP bin [centimeters]
-        number_bins = number of ADCP bins [unitless]
-        orientation = 1=upward looking or 0=downward looking [unitless]
-        depth = depth of the sensor head [m]
-
-    References:
-
-        OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
-            1341-00750. https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Cyberinfrastructure >>
-            Data Product Specifications >> 1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf)
+    References
+    ----------
+    OOI (2012). Data Product Specification for Velocity Profile and Echo Intensity. Document Control Number
+        1341-00750. https://alfresco.oceanobservatories.org/
     """
     # Convert from cm to meters
     blanking_distance = blanking_distance / 100.0
@@ -1470,79 +1333,50 @@ def adcp_bin_depths(blanking_distance, bin_size, number_bins, orientation, depth
 
 
 def z_from_p(p, lat, geo_strf_dyn_height=0, sea_surface_geopotential=0):
-    """Calculates height from sea pressure using the computationally-efficient
-    75-term expression for density in terms of SA, CT and p (Roquet et al.,
-    2015). Dynamic height anomaly, geo_strf_dyn_height, if provided, must be
-    computed with its p_ref=0 (the surface). Also if provided, sea_surface_geopotental
-    is the geopotential at zero sea pressure.
-
-    Calls a function which calculates enthalpy assuming standard ocean salinity
-    and 0 degrees celsius.
+    """
+    Calculates height from sea pressure using the computationally-efficient 
+    75-term expression for density.
 
     Parameters
     ----------
-    p : pressure [dbar]
-    lat : latitude in decimal degrees north [-90..+90]
-    geo_strf_dyn_height : dynamic height anomaly [m^2/s^2]
-    sea_surface_geopotential : geopotential at zero sea pressure  [ m^2/s^2 ]
+    p : float or array_like
+        Pressure [dbar]
+    lat : float or array_like
+        Latitude in decimal degrees north [-90..+90]
+    geo_strf_dyn_height : float, optional
+        Dynamic height anomaly [m^2/s^2]
+    sea_surface_geopotential : float, optional
+        Geopotential at zero sea pressure [m^2/s^2]
 
     Returns
     -------
-    z : TEOS-10 height [m] : height is returned as a negative number; its
-                             absolute value is the depth below the sea surface.
-
-    #################################################################
-    #  Check values from TEOS-10 version 3.05 (matlab code):        #
-    #  from http://www.teos-10.org/pubs/gsw/html/gsw_z_from_p.html  #
-    #################################################################
-
-    p = [10, 50, 125, 250, 600, 1000]
-    lat = 4
-
-    z_from_p(p, lat) =
-    [  -9.9445834469453,  -49.7180897012550, -124.2726219409978,
-     -248.4700576548589, -595.8253480356214, -992.0919060719987]
+    z : array_like
+        TEOS-10 height [m] (negative below sea surface)
 
     Notes
     -----
-    At sea level z = 0, and since z (HEIGHT) is defined to be positive upwards,
-    it follows that while z is positive in the atmosphere, it is NEGATIVE in
-    the ocean.
+    - Dynamic height anomaly, geo_strf_dyn_height, if provided, must be
+    computed with its p_ref=0 (the surface). 
+    - Calls a function which calculates enthalpy assuming standard ocean salinity
+    and 0 degrees celsius.
+
+    Examples
+    --------
+
+    >>> p = [10, 50, 125, 250, 600, 1000]
+    >>> lat = 4
+    >>> z_from_p(p, lat) =
+    [  -9.9445834469453,  -49.7180897012550, -124.2726219409978,
+     -248.4700576548589, -595.8253480356214, -992.0919060719987]
 
     References
     ----------
-    IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of
-     seawater - 2010: Calculation and use of thermodynamic properties.
-     Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
-     UNESCO (English), 196 pp.  Available from the TEOS-10 web site.
-
-    McDougall, T.J., D.R. Jackett, D.G. Wright and R. Feistel, 2003:
-     Accurate and computationally efficient algorithms for potential
-     temperature and density of seawater.  J. Atmosph. Ocean. Tech., 20,
-     pp. 730-741.
-
+    IOC, SCOR and IAPSO, 2010: The international thermodynamic equation of seawater - 2010.
+    McDougall, T.J., et al., 2003: Accurate and computationally efficient algorithms for potential temperature and density of seawater.J. Atmosph. Ocean. Tech., 20, pp. 730-741.
     Moritz, 2000: Goedetic reference system 1980. J. Geodesy, 74, 128-133.
-
-    Roquet, F., G. Madec, T.J. McDougall, P.M. Barker, 2015: Accurate
-     polynomial expressions for the density and specifc volume of seawater
-     using the TEOS-10 standard. Ocean Modelling.
-
-    Saunders, P. M., 1981: Practical conversion of pressure to depth.
-     Journal of Physical Oceanography, 11, 573-574.
-
-    IMPLEMENTATION NOTES:
-
-        Russell Desiderio. 2015_07_01
-            versions 3.04 and 3.05 of the main function z_from_p are identical.
-
-            z_from_p calls the subroutine enthalpy_SSO_0_p; this subroutine
-            has been updated from ver 3.04 to 3.05.
-
-            the check values above for z_from_p have been updated to incorporate
-            this change using enthalpy_SSO_0_p ver 3.05.
-
+    Roquet, F., et al., 2015: Accurate polynomial expressions for the density and specifc volume of seawater using the TEOS-10 standard. Ocean Modelling.
+    Saunders, P. M., 1981: Practical conversion of pressure to depth. Journal of Physical Oceanography, 11, 573-574.
     """
-
     x = np.sin(np.deg2rad(lat))
     sin2 = x ** 2
     b = 9.780327 * (1.0 + (5.2792e-3 + (2.32e-5 * sin2)) * sin2)
@@ -1555,28 +1389,26 @@ def z_from_p(p, lat, geo_strf_dyn_height=0, sea_surface_geopotential=0):
 
 def enthalpy_SSO_0_p(p):
     """
-    This documentation and code is copy-pasted from the matlab coding of this function.
+    Calculates enthalpy at the Standard Ocean Salinity, SSO, and at a Conservative Temperature of zero degrees C, as a function of pressure.
 
-    %==========================================================================
-    %  This function calculates enthalpy at the Standard Ocean Salinity, SSO,
-    %  and at a Conservative Temperature of zero degrees C, as a function of
-    %  pressure, p, in dbar, using a streamlined version of the 76-term
-    %  computationally-efficient expression for specific volume, that is, a
-    %  streamlined version of the code "gsw_enthalpy(SA,CT,p)".
-    %
-    % VERSION NUMBER: 3.05 (27th January 2015)
-    %
-    % REFERENCES:
-    %  Roquet, F., G. Madec, T.J. McDougall, P.M. Barker, 2015: Accurate
-    %   polynomial expressions for the density and specifc volume of seawater
-    %   using the TEOS-10 standard. Ocean Modelling.
-    %
-    %==========================================================================
+    Parameters
+    ----------
+    p : float or array_like
+        Pressure [dbar]
 
-    IMPLEMENTATION NOTES:
+    Returns
+    -------
+    enthalpy_SSO_0 : array_like
+        Enthalpy at SSO and 0 deg C
 
-        Russell Desiderio. 2015_07_01. this subroutine has been updated
-                                       from ver 3.04 to 3.05.
+    Notes
+    -----
+    - The python implementation comes directly from the matlab coding of this function:
+        VERSION NUMBER: 3.05 (27th January 2015)
+
+    References
+    ----------
+    Roquet, F., et al., 2015: Accurate polynomial expressions for the density and specifc volume of seawater using the TEOS-10 standard. Ocean Modelling.
     """
     z = p * 1e-4
 
@@ -1594,39 +1426,30 @@ def enthalpy_SSO_0_p(p):
 
 def adcp_bin_depths_meters(dist_first_bin, bin_size, num_bins, sensor_depth, adcp_orientation):
     """
-    Description:
+    Calculates the center bin depths for PD0, PD8 and PD12 ADCP data.
 
-        Calculates the center bin depths for PD0, PD8 and PD12 ADCP data. As defined
-        in the Data Product Specification for Velocity Profile and Echo
-        Intensity - DCN 1341-00750.
+    Parameters
+    ----------
+    dist_first_bin : float or array_like
+        Distance to the first ADCP bin [centimeters]
+    bin_size : float or array_like
+        Depth of each ADCP bin [centimeters]
+    num_bins : int or array_like
+        Number of ADCP bins [unitless]
+    sensor_depth : float or array_like
+        Estimated depth at the sensor head [meters]
+    adcp_orientation : int or array_like
+        1=upward looking or 0=downward looking [unitless]
 
-    Implemented by:
+    Returns
+    -------
+    bin_depths_pd8 : array_like
+        Bin depths [meters]
 
-        2015-01-30: Craig Risien. Initial code.
-        2015-06-26: Russell Desiderio. Time-vectorized the code by finessing the conditionals.
-        2015-06-30: Russell Desiderio. Incorporated int fillvalue -> Nan.
-
-    Usage:
-
-        bin_depths_pd8 = adcp_bin_depths(dist_first_bin, bin_size, num_bins, sensor_depth,
-                                    adcp_orientation)
-
-            where
-
-        bin_depths_pd8 =  [meters]
-
-        dist_first_bin = distance to the first ADCP bin [centimeters]
-        bin_size = depth of each ADCP bin [centimeters]
-        num_bins = number of ADCP bins [unitless]
-        sensor_depth = estimated depth at the sensor head [meters]
-        adcp_orientation = 1=upward looking or 0=downward looking [unitless]
-
-    Notes:
-
-        The PD8 output format is a very sparse format. Other than num_bins, it does *not* record
-        any of the other input variables required by this DPA. Those must somehow be supplied "by
-        hand".
-
+    Notes
+    -----
+    The PD8 output format is a very sparse format. Other than num_bins, it does *not* record
+    any of the other input variables required by this DPA. Those must somehow be supplied "by hand".
     """
     # check for CI fill values.
     #
@@ -1673,27 +1496,21 @@ def adcp_bin_depths_meters(dist_first_bin, bin_size, num_bins, sensor_depth, adc
 
 def depth_from_pressure_dbar(pressure, latitude, pressure_scale_factor=None):
     """
-    Description:
+    Calculates depth from pressure.
 
-        Calculates depth from pressure. This function was extracted from
-        the adcp_bin_depths_dapa function.
+    Parameters
+    ----------
+    pressure : float or array_like
+        Pressure [dbar]
+    latitude : float or array_like
+        Latitude of the instrument [degrees]
+    pressure_scale_factor : float, optional
+        Scale factor to convert pressure to dbar [unitless]
 
-    Implemented by:
-
-        2019-06-29: Mark Steiner. Initial code.
-
-    Usage:
-
-        depth = depth_from_pressure_dbar(pressure, latitude, pressure_scale_factor)
-
-            where
-
-        depths =  [meters]
-
-        pressure = pressure [dbar]
-        latitude = latitude of the instrument [degrees]
-        pressure_scale_factor = scale factor to convert pressure to dbar [unitless]
-
+    Returns
+    -------
+    depth : array_like
+        Depths [meters]
     """
     # check for CI fill values.
     pressure = replace_fill_with_nan(None, pressure)

@@ -16,3 +16,5 @@ extensions/test
 *.so
 notebooks/
 .idea
+mkdocs-venv
+site
