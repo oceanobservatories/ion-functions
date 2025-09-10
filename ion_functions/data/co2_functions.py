@@ -36,7 +36,6 @@ def pco2_abs434_ratio(light):
     References
     ----------
     OOI (2012). Data Product Specification for Partial Pressure of CO2 in Seawater. Document Control Number 1341-00510.
-    https://alfresco.oceanobservatories.org/
     """
     light = np.atleast_2d(light)
     a434ratio = light[:, 6]
@@ -60,7 +59,6 @@ def pco2_abs620_ratio(light):
     References
     ----------
     OOI (2012). Data Product Specification for Partial Pressure of CO2 in Seawater. Document Control Number 1341-00510.
-    https://alfresco.oceanobservatories.org/
     """
     light = np.atleast_2d(light)
     a620ratio = light[:, 7]
@@ -84,7 +82,6 @@ def pco2_blank(raw_blank):
     References
     ----------
     OOI (2012). Data Product Specification for Partial Pressure of CO2 in Seawater. Document Control Number 1341-00510.
-    https://alfresco.oceanobservatories.org/
     """
     blank = raw_blank / 16384.
     return blank
@@ -109,7 +106,6 @@ def pco2_thermistor(traw, sami_bits=12):
     References
     ----------
     OOI (2012). Data Product Specification for Partial Pressure of CO2 in Seawater. Document Control Number 1341-00510.
-    https://alfresco.oceanobservatories.org/
     """
     # reset inputs to arrays
     traw = np.atleast_1d(traw)
@@ -201,7 +197,7 @@ def pco2_pco2wat(mtype, light, therm, ea434, eb434, ea620, eb620,
     References
     ----------
     OOI (2012). Data Product Specification for Partial Pressure of CO2 in Seawater. Document Control Number 1341-00510.
-    https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Controlled >> 1000 System Level >> 1341-00490_Data_Product_SPEC_PCO2WAT_OOI.pdf)
+    (See: Company Home >> OOI >> Controlled >> 1000 System Level >> 1341-00490_Data_Product_SPEC_PCO2WAT_OOI.pdf)
     """
     # reset inputs to arrays
     # measurements
@@ -274,7 +270,7 @@ def pco2_calc_pco2(light, therm, ea434, eb434, ea620, eb620,
     References
     ----------
     OOI (2012). Data Product Specification for Partial Pressure of CO2 in Seawater. Document Control Number 1341-00510.
-    https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Controlled >> 1000 System Level >> 1341-00490_Data_Product_SPEC_PCO2WAT_OOI.pdf)
+    (See: Company Home >> OOI >> Controlled >> 1000 System Level >> 1341-00490_Data_Product_SPEC_PCO2WAT_OOI.pdf)
     """
     # set constants -- original vendor formulation, reset below
     # ea434 = ea434 - 29.3 * calt
@@ -327,6 +323,7 @@ def pco2_ppressure(xco2, p, std=1013.25):
     the pCO2 air-sea (PCO2A) family of instruments. The calculation incorporates 
     the Gas Stream Pressure (PRESAIR) and the CO2 Mole Fraction in Air or Surface 
     Seawater (XCO2ATM or XCO2SSW, respectively).
+
     Parameters
     ----------
     xco2 : float or array-like
@@ -335,14 +332,16 @@ def pco2_ppressure(xco2, p, std=1013.25):
         Gas stream pressure [mbar] (PRESAIR_L0).
     std : float, optional
         Standard atmospheric pressure [mbar/atm], default is 1013.25.
+
     Returns
     -------
     ppres : float or array-like
         Partial pressure of CO2 in air or surface seawater [uatm] (PCO2ATM_L1 or PCO2SSW_L1).
+
     References
     ----------
     OOI (2012). Data Product Specification for Partial Pressure of CO2 in Air and Surface Seawater. Document Control Number 1341-00260.
-    https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Controlled >> 1000 System Level >> 1341-00260_Data_Product_SPEC_PCO2ATM_PCO2SSW_OOI.pdf)
+    (See: Company Home >> OOI >> Controlled >> 1000 System Level >> 1341-00260_Data_Product_SPEC_PCO2ATM_PCO2SSW_OOI.pdf)
     """
     ppres = xco2 * p / std
     return ppres
