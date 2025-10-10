@@ -235,107 +235,166 @@ def met_barpres(mbar):
     return Pa
 
 
-def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, zwindsp=0.0):
+def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_corr=[0.0, 1.0]):
     """
     Description:
 
-        Calculates WINDAVG-VLE_L1, the OOI Level 1 core data product for windspeed in the
-        true eastward direction, for the METBK instrument by correcting for magnetic declination.
+        Calculates WINDAVG-VLE_L1, the OOI Level 1 core data product for wind
+        speed in the true eastward direction, for the METBK instrument by
+        correcting for magnetic declination.
 
     Implemented by:
 
         2014-06-25: Christopher Wingard. Initial code.
         2014-08-26: Russell Desiderio. Added documentation.
+        2025-10-10: C. Wingard. Converted to wrapper function and added wind
+            speed correction factors.
 
     Usage:
 
-        uu_cor = windavg_mag_corr_east(uu, vv, lat, lon, timestamp[, zwindsp])
+        uu_cor = met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp,
+                                           zwindsp, spd_corr)
 
             where
 
-        uu_cor = WINDAVG-VLE_L1 [m/s], METBK eastward windspeed corrected for magnetic declination.
-        uu     = WINDAVG-VLE_L0 [m/s], METBK eastward windspeed, uncorrected.
-        vv     = WINDAVG-VLN_L0 [m/s], METBK northward windspeed, uncorrected.
-        lat    = instrument's deployment latitude [decimal degrees]
-        lon    = instrument's deployment longitude [decimal degrees]
+        uu_cor = WINDAVG-VLE_L1 [m/s], METBK eastward wind speed corrected for
+            magnetic declination.
+        uu = WINDAVG-VLE_L0 [m/s], METBK eastward wind speed, uncorrected.
+        vv = WINDAVG-VLN_L0 [m/s], METBK northward wind speed, uncorrected.
+        lat = instrument's deployment latitude [decimal degrees]
+        lon = instrument's deployment longitude [decimal degrees]
         timestamp = sample date and time value [seconds since 1900-01-01]
-        zwindsp  = [optional] height of windspeed sensor above sealevel [m].
+        zwindsp  = [optional] height of wind speed sensor above sea level [m].
+        spd_corr = [optional] list of scaling factors for wind speed correction.
 
     References:
 
-        OOI (2012). Data Product Specification for L1 Bulk Meterological Data
+        OOI (2012). Data Product Specification for L1 Bulk Meteorological Data
             Products. Document Control Number 1341-00360.
             https://alfresco.oceanobservatories.org/ (See:
             Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
-
-        The magnetic_declination function and the magnetic_correction function are
-        called from the ion_functions.data.generic_function module.
-            magnetic_declination calculates the value(s) for the declination;
-            magnetic_correction rotates the velocity vectors from the magnetic
-                compass headings to true compass headings.
     """
-    # calculate the magnetic declination using the WMM model
-    zflag = 1  # denotes that z is a height above sealevel.
-    mag_dec = magnetic_declination(lat, lon, timestamp, zwindsp, zflag)
-
-    # rotate the vectors from the magnetic to the true compass frame
-    magvar = np.vectorize(magnetic_correction)
-    uu_cor, vv_cor = magvar(mag_dec, uu, vv)
-
+    # calculate the magnetic declination using the WMM model and rotate the vectors
+    # from the magnetic to the true compass frame using met_wind_mag_corr
+    uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp, zwindsp, spd_corr)
     return uu_cor
 
 
-def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, zwindsp=0.0):
+def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_corr=[0.0, 1.0]):
     """
     Description:
 
-        Calculates WINDAVG-VLN_L1, the OOI Level 1 core data product for windspeed in the
-        true northward direction, for the METBK instrument by correcting for magnetic declination.
+        Calculates WINDAVG-VLN_L1, the OOI Level 1 core data product for wind
+        speed in the true northward direction, for the METBK instrument by
+        correcting for magnetic declination.
 
     Implemented by:
 
         2014-06-25: Christopher Wingard. Initial code.
         2014-08-26: Russell Desiderio. Added documentation.
+        2025-10-10: C. Wingard. Converted to wrapper function and added wind
+            speed correction factors.
 
     Usage:
 
-        vv_cor = windavg_mag_corr_north(uu, vv, lat, lon, timestamp[, zwindsp])
+        vv_cor = met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp,
+                                            zwindsp, spd_corr)
 
             where
 
-        vv_cor = WINDAVG-VLN_L1 [m/s], METBK northward windspeed corrected for magnetic declination.
-        uu     = WINDAVG-VLE_L0 [m/s], METBK eastward windspeed, uncorrected.
-        vv     = WINDAVG-VLN_L0 [m/s], METBK northward windspeed, uncorrected.
-        lat    = instrument's deployment latitude [decimal degrees]
-        lon    = instrument's deployment longitude [decimal degrees]
+        vv_cor = WINDAVG-VLN_L1 [m/s], METBK northward wind speed corrected for
+            magnetic declination.
+        uu = WINDAVG-VLE_L0 [m/s], METBK eastward wind speed, uncorrected.
+        vv = WINDAVG-VLN_L0 [m/s], METBK northward wind speed, uncorrected.
+        lat = instrument's deployment latitude [decimal degrees]
+        lon = instrument's deployment longitude [decimal degrees]
         timestamp = sample date and time value [seconds since 1900-01-01]
-        zwindsp = [optional] height of windspeed sensor above sealevel [m].
+        zwindsp = [optional] height of wind speed sensor above sea level [m].
+        spd_corr = [optional] list of scaling factors for wind speed correction.
 
     References:
 
+        OOI (2012). Data Product Specification for L1 Bulk Meteorological Data
+            Products. Document Control Number 1341-00360.
+            https://alfresco.oceanobservatories.org/ (See:
+            Company Home >> OOI >> Controlled >> 1000 System Level >>
+            1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
+    """
+    # calculate the magnetic declination using the WMM model and rotate the vectors
+    # from the magnetic to the true compass frame using met_wind_mag_corr
+    uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp, zwindsp, spd_corr)
+    return vv_cor
+
+
+def met_wind_mag_corr(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_corr=[0.0, 1.0]):
+    """
+    Description:
+
+        Calculates WINDAVG_L1 (both eastward and northward), the OOI Level 1
+        core data product for wind speed, for the METBK wind instrument by
+        correcting for the magnetic declination and correcting the "wind speed
+        under-reporting at higher wind speeds" issue.
+
+    Implemented by:
+        2025-10-10: C. Wingard. Initial code.
+
+    Usage:
+        uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp,
+                                           spd_corr, zwindsp)
+            where
+
+        uu_cor = WINDAVG-VLE_L1 [m/s], METBK eastward wind speed corrected for
+            magnetic declination and wind speed under-reporting.
+        vv_cor = WINDAVG-VLN_L1 [m/s], METBK northward wind speed corrected for
+            magnetic declination and wind speed under-reporting.
+        uu = WINDAVG-VLE_L0 [m/s], METBK eastward wind speed, uncorrected.
+        vv = WINDAVG-VLN_L0 [m/s], METBK northward wind speed, uncorrected.
+        lat = instrument's deployment latitude [decimal degrees]
+        lon = instrument's deployment longitude [decimal degrees]
+        timestamp = sample date and time value [seconds since 1900-01-01]
+        zwindsp = [optional] height of wind speed sensor above sea level [m].
+        spd_corr = [optional] list of scale factors for wind speed correction.
+            Default values are [0.0, 1.0], offset and slope, which apply no
+            correction.
+
+    References:
         OOI (2012). Data Product Specification for L1 Bulk Meterological Data
             Products. Document Control Number 1341-00360.
             https://alfresco.oceanobservatories.org/ (See:
             Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
-
-        The magnetic_declination function and the magnetic_correction function are
-        called from the ion_functions.data.generic_function module.
-            magnetic_declination calculates the value(s) for the declination;
-            magnetic_correction rotates the velocity vectors from the magnetic
-                compass headings to true compass headings.
     """
-    # calculate the magnetic declination using the WMM model
-    zflag = 1  # denotes that z is a height above sealevel.
+    # correct for magnetic declination using the WMM model
+    zflag = 1  # denotes that z is a height above sea level.
     mag_dec = magnetic_declination(lat, lon, timestamp, zwindsp, zflag)
 
     # rotate the vectors from the magnetic to the true compass frame
     magvar = np.vectorize(magnetic_correction)
     uu_cor, vv_cor = magvar(mag_dec, uu, vv)
 
-    return vv_cor
+    # convert the wind components to speed and direction
+    wspd = np.sqrt(uu_cor**2 + vv_cor**2)
+    wdir = np.arctan2(uu_cor, vv_cor)
+    wdir = np.where(wdir < 0, wdir + np.pi * 2, wdir)  # 0 to 360 degrees, but still in radians
 
+    # apply the wind speed correction factors (array specific and provided as calibration coefficients)
+    if len(spd_corr) == 2:
+        # Pioneer and Endurance arrays use a linear correction
+        wspd_cor = spd_corr[1] * wspd + spd_corr[0]
+    elif len(spd_corr) == 3:
+        # The Irminger Sea array uses a quadratic correction
+        wspd_cor = spd_corr[2] * wspd**2 + spd_corr[1] * wspd + spd_corr[0]
+    else:
+        raise ValueError('spd_corr must be a list of 2 or 3 values.')
+
+    # ensure there are no negative wind speeds after correction
+    wspd_cor = np.where(wspd_cor < 0, 0.0, wspd_cor)
+
+    # with the adjusted wind speed, re-calculate the eastward and northward wind components
+    uu_cor = wspd_cor * np.sin(wdir)  # eastward wind component
+    vv_cor = wspd_cor * np.cos(wdir)  # northward wind component
+    return uu_cor, vv_cor
 
 """
 #...................................................................................
@@ -352,10 +411,7 @@ def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, zwindsp=0.0):
     instrument suite (roughly each minute), EXCEPT for TIMEFLX-AUX (hourly).
 #...................................................................................
 #...................................................................................
-
 """
-
-
 def met_current_direction(vle_water, vln_water, use_velptmn_with_metbk=0):
     """
     Description:
