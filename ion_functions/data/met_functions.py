@@ -235,7 +235,7 @@ def met_barpres(mbar):
     return Pa
 
 
-def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_corr=[0.0, 1.0]):
+def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=0.0):
     """
     Description:
 
@@ -264,8 +264,10 @@ def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_corr
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
         timestamp = sample date and time value [seconds since 1900-01-01]
+        spd_corr = [optional] list of scale factors for wind speed correction.
+            Default values are [0.0, 1.0], offset and slope, which apply no
+            correction.
         zwindsp  = [optional] height of wind speed sensor above sea level [m].
-        spd_corr = [optional] list of scaling factors for wind speed correction.
 
     References:
 
@@ -277,11 +279,11 @@ def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_corr
     """
     # calculate the magnetic declination using the WMM model and rotate the vectors
     # from the magnetic to the true compass frame using met_wind_mag_corr
-    uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp, zwindsp, spd_corr)
+    uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr, zwindsp)
     return uu_cor
 
 
-def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_corr=[0.0, 1.0]):
+def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=0.0):
     """
     Description:
 
@@ -310,8 +312,10 @@ def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_cor
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
         timestamp = sample date and time value [seconds since 1900-01-01]
+        spd_corr = [optional] list of scale factors for wind speed correction.
+            Default values are [0.0, 1.0], offset and slope, which apply no
+            correction.
         zwindsp = [optional] height of wind speed sensor above sea level [m].
-        spd_corr = [optional] list of scaling factors for wind speed correction.
 
     References:
 
@@ -323,11 +327,11 @@ def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_cor
     """
     # calculate the magnetic declination using the WMM model and rotate the vectors
     # from the magnetic to the true compass frame using met_wind_mag_corr
-    uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp, zwindsp, spd_corr)
+    uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr, zwindsp)
     return vv_cor
 
 
-def met_wind_mag_corr(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_corr=[0.0, 1.0]):
+def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=0.0):
     """
     Description:
 
@@ -353,10 +357,10 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, zwindsp=0.0, spd_corr=[0.0, 1
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
         timestamp = sample date and time value [seconds since 1900-01-01]
-        zwindsp = [optional] height of wind speed sensor above sea level [m].
         spd_corr = [optional] list of scale factors for wind speed correction.
             Default values are [0.0, 1.0], offset and slope, which apply no
             correction.
+        zwindsp = [optional] height of wind speed sensor above sea level [m].
 
     References:
         OOI (2012). Data Product Specification for L1 Bulk Meterological Data
