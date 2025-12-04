@@ -369,7 +369,7 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=
             Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
             1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
     """
-    # correct for magnetic declination using the WMM model
+    # calculate the magnetic declination for the site
     zflag = 1  # denotes that z is a height above sea level.
     mag_dec = magnetic_declination(lat, lon, timestamp, zwindsp, zflag)
 
@@ -384,13 +384,13 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=
 
     # apply the wind speed correction factors (array specific and provided as calibration coefficients)
     if len(spd_corr) == 2:
-        # Pioneer and Endurance arrays use a linear correction
-        wspd_cor = spd_corr[1] * wspd + spd_corr[0]
-    elif len(spd_corr) == 3:
-        # The Irminger Sea array uses a quadratic correction
-        wspd_cor = spd_corr[2] * wspd**2 + spd_corr[1] * wspd + spd_corr[0]
+        # linear correction only (offset and slope, where the offset can be zero for a pure slope correction)
+        wspd_cor = spd_corr[0] + spd_corr[1] * wspd
+    elif len(spd_corr) == 4:
+        # piecewise linear correction (offset, slope, slope change, threshold)
+         wspd_cor = spd_corr[0] + spd_corr[1] * wspd + spd_corr[2] * np.maximum(wspd - spd_corr[3], 0)
     else:
-        raise ValueError('spd_corr must be a list of 2 or 3 values.')
+        raise ValueError('spd_corr must be a list of 2 or 4 values.')
 
     # ensure there are no negative wind speeds after correction
     wspd_cor = np.where(wspd_cor < 0, 0.0, wspd_cor)
