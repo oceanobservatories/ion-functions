@@ -363,7 +363,7 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=
         zwindsp = [optional] height of wind speed sensor above sea level [m].
 
     References:
-        OOI (2012). Data Product Specification for L1 Bulk Meterological Data
+        OOI (2012). Data Product Specification for L1 Bulk Meteorological Data
             Products. Document Control Number 1341-00360.
             https://alfresco.oceanobservatories.org/ (See:
             Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
@@ -382,13 +382,14 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=
     wdir = np.arctan2(uu_cor, vv_cor)
     wdir = np.where(wdir < 0, wdir + np.pi * 2, wdir)  # 0 to 360 degrees, but still in radians
 
-    # apply the wind speed correction factors (array specific and provided as calibration coefficients)
-    if len(spd_corr) == 2:
+    # apply the wind speed correction factors (array specific and provided as calibration coefficients).
+    # calibration coefficients are provided as an array of (n, 2) or (n, 4), where n is the number of records.
+    if spd_corr.shape[1] == 2:
         # linear correction only (offset and slope, where the offset can be zero for a pure slope correction)
-        wspd_cor = spd_corr[0] + spd_corr[1] * wspd
-    elif len(spd_corr) == 4:
+        wspd_cor = spd_corr[:, 0] + spd_corr[:, 1] * wspd
+    elif spd_corr.shape[1] == 4:
         # piecewise linear correction (offset, slope, slope change, threshold)
-         wspd_cor = spd_corr[0] + spd_corr[1] * wspd + spd_corr[2] * np.maximum(wspd - spd_corr[3], 0)
+         wspd_cor = spd_corr[:, 0] + spd_corr[:, 1] * wspd + spd_corr[:, 2] * np.maximum(wspd - spd_corr[:, 3], 0)
     else:
         raise ValueError('spd_corr must be a list of 2 or 4 values.')
 
