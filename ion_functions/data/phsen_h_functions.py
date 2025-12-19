@@ -196,7 +196,9 @@ def ph_total(vrs_ext, degc, psu, dbar, k0, k2, f):
     :param f: calibration coefficients (f0, f1, f2, f3, f4, f5) from the vendor documentation (as an array)
     :return: pH total
     """
-    fp = f[0] * dbar + f[1] * dbar ** 2 + f[2] * dbar ** 3 + f[3] * dbar ** 4 + f[4] * dbar ** 5 + f[5] * dbar ** 6
+    f = np.atleast_2d(f)
+
+    fp = f[:, 0] * dbar + f[:, 1] * dbar ** 2 + f[:, 2] * dbar ** 3 + f[:, 3] * dbar ** 4 + f[:, 4] * dbar ** 5 + f[:, 5] * dbar ** 6
 
     bar = dbar * 0.10  # convert pressure from dbar to bar
 

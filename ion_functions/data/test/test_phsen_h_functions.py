@@ -65,29 +65,29 @@ class TestPhsenHFunctions(BaseUnitTestCase):
             self.assertAlmostEqual(x, y, places=3)
 
 
-    # def test_conductivity_raw_conversion(self):
-    #     """
-    #     cond_counts, temperature, pressure, wbotc, g, h, i, j, ctcor, cpcor
-    #     """
+    def test_conductivity_raw_conversion(self):
+        """
+        cond_counts, temperature, pressure, wbotc, g, h, i, j, ctcor, cpcor
+        """
 #
-    #     cond_counts = 0
-    #     temperature = [20.4459, 20.4451, 20.4436, 20.4427]
-    #     pressure = [-0.105, -0.106, -0.104, -0.107]
-    #     wbotc = 0
-    #     g = 0
-    #     h = 0
-    #     i =
-    #     j =
-    #     ctcor =
-    #     cpcor =
+        cond_counts = np.array([6319.22, 6319.22, 6319.22, 6319.22])
+        temperature = np.array([20.4459, 20.4451, 20.4436, 20.4427])
+        pressure = np.array([-0.105, -0.106, -0.104, -0.107])
+        wbotc = -2.319375e-007
+        g = -9.996553e-001
+        h = 1.213221e-001
+        i = -1.856730e-004
+        j = 2.812110e-005
+        ctcor = 3.250000e-006
+        cpcor = -9.570000e-008
 #
-    #     expected = [2.711842, 2.715786, 2.715857, 2.715846]
+        expected = [2.711842, 2.715786, 2.715857, 2.715846]
 #
-    #     result = phsen_h_functions.pressure_raw_conversion(pres_counts, compensation_voltage, ptempa0, ptempa1, ptempa2,
-    #                                                        ptca0, ptca1, ptca2, ptcb0, ptcb1, ptcb2, pa0, pa1, pa2)
-    #     print(result)
-    #     for x, y in zip(result, expected):
-    #         self.assertAlmostEqual(x, y, places=3)
+        result = phsen_h_functions.conductivity_raw_conversion(cond_counts, temperature, pressure, wbotc, g, h, i, j,
+                                                               ctcor, cpcor)
+        print(result)
+        for x, y in zip(result, expected):
+            self.assertAlmostEqual(x, y, places=3)
 
 
     def test_internal_temperature(self):
@@ -194,7 +194,7 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         dbar = np.array([100, 100, 100])
         k0 = -1.361736
         k2 = -1.07686e-3
-        f = [-8.31842e-6, -7.47152e-9, 1.91485e-11, -1.39273e-14, 4.48185e-18, -5.42588e-22]
+        f = [[-8.31842e-6, -7.47152e-9, 1.91485e-11, -1.39273e-14, 4.48185e-18, -5.42588e-22]]
 
         expected = np.array([7.9394, 7.9394, 7.9394])
 
