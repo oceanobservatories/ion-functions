@@ -181,6 +181,19 @@ def convert_sbe63_thermistor(
     return temperature
 
 
+def convert_ph_voltage_counts(ph_counts):
+    """Convert pH voltage counts to a floating point value
+
+    :param ph_counts: pH voltage counts
+    :return: pH voltage
+    """
+    adc_vref = 2.5
+    gain = 1
+    adc_23bit = 8388608.0
+    ph_volts = adc_vref / gain * (ph_counts / adc_23bit - 1)
+    return ph_volts
+
+
 def ph_total(vrs_ext, degc, psu, dbar, k0, k2, f):
     """
     Calculate the total pH from the SeapHOx sensor. The total pH is calculated from the external voltage (vrs_ext),

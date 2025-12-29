@@ -175,6 +175,22 @@ class TestPhsenHFunctions(BaseUnitTestCase):
             self.assertAlmostEqual(x, y, places=4)
 
 
+    def test_convert_ph_voltage_counts(self):
+        """
+        instrument_output,
+        therm_ta0, therm_ta1, therm_ta2, therm_ta3
+        """
+
+        internal_ph_counts = np.array([5105334, 5105384, 5105350, 5105505, 5105347])
+
+        expected = np.array([-0.978492, -0.978477, -0.978487, -0.978441, -0.978488])
+
+        result = phsen_h_functions.convert_ph_voltage_counts(internal_ph_counts)
+        print(result)
+        for x, y in zip(result, expected):
+            self.assertAlmostEqual(x, y, places=4)
+
+
     def test_ph_total(self):
         """
         :param vrs_ext: external voltage from the FET sensor
