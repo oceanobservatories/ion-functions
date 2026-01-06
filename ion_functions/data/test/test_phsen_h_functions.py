@@ -154,6 +154,42 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=4)
 
+
+
+    def test_dissolved_oxygen_raw(self):
+        """
+        raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2, coeff_e, a0, a1, a2, b0, b1,
+                     therm_ta0, therm_ta1, therm_ta2, therm_ta3, thermistor_units="volts"
+        """
+
+        raw_oxygen_phase = np.array([31.06, 31.66, 32.59, 33.92, 34.82, 35.44, 40.8])
+        thermistor = np.array([0.6, 0.5, 0.4, 0.35, 0.3, 0.25, .86])
+        pressure = np.array([0, 0, 0, 0, 0, 0, 79.23])
+        salinity = np.array([0, 0, 0, 0, 0, 0, 33.13])
+
+        c0 = 1.0355e-1
+        c1 = 4.4295e-3
+        c2 = 6.0011e-5
+        coeff_e = 1.1e-2
+        a0 = 1.0513
+        a1 = -1.5e-3
+        a2 = 4.1907e-1
+        b0 = -2.5004e-1
+        b1 = 1.6524
+        therm_ta0 = 7.059180e-4
+        therm_ta1 = 2.504670e-4
+        therm_ta2 = 7.402389e-7
+        therm_ta3 = 9.756123e-8
+
+        expected = np.array([0.93, 0.688, 0.459, 0.304, 0.206, 0.137, 0.00])
+
+        result = phsen_h_functions.dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2,
+                                                    coeff_e, a0, a1, a2, b0, b1, therm_ta0, therm_ta1, therm_ta2,
+                                                    therm_ta3)
+        print(result)
+        for x, y in zip(result, expected):
+            self.assertAlmostEqual(x, y, places=2)
+
     def test_convert_sbe63_thermistor(self):
         """
         instrument_output,

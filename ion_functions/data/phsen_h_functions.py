@@ -9,6 +9,7 @@ calculated into L2 Data.
 
 import numpy as np
 from math import e
+import pygsw.vectors as gsw
 
 # Various unit conversions
 DBAR_TO_PSI = 1.450377
@@ -119,7 +120,7 @@ def internal_humidity(humidity_counts, temperature):
 
 
 def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2, coeff_e, a0, a1, a2, b0, b1,
-                     therm_ta0, therm_ta1, therm_ta2, therm_ta3, thermistor_units="volts"):
+                     therm_ta0, therm_ta1, therm_ta2, therm_ta3, lat, lon, thermistor_units="volts"):
 
     if thermistor_units == "volts":
         temperature = convert_sbe63_thermistor(thermistor, therm_ta0, therm_ta1, therm_ta2, therm_ta3)
@@ -157,7 +158,15 @@ def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c
     )
     # fmt: on
 
-    return ox_val
+    # Unit calculations to convert from ml/l to umol/kg
+    absolute_salinity = gsw.sa_from_sp(salinity, pressure, lon, lat)
+    conservative_temp = gsw.ct_from_t(salinity, temperature, pressure)
+    pref = 0
+    potential_density = gsw.rho(absolute_salinity, conservative_temp, pref)
+
+    oxygen_umolkg = (ox_val * OXYGEN_MLPERL_TO_UMOLPERKG) / potential_density
+
+    return oxygen_umolkg
 
 
 def convert_sbe63_thermistor(
