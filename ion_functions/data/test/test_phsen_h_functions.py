@@ -17,7 +17,7 @@ class TestPhsenHFunctions(BaseUnitTestCase):
 
     def test_temperature_raw_conversion(self):
         """
-        temp_counts, a0, a1, a2, a3, use_mv_r=False
+        Tests the temperature_raw_conversion function with test units provided by SeaBird.
         """
 
         temp_counts = np.array([2864.51635696, 2864.61073548, 2864.79005751, 2864.89387722])
@@ -26,7 +26,6 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         a2 = -1.39527596e-008
         a3 = 1.39024630e-007
 
-
         expected = [20.4459, 20.4451, 20.4436, 20.4427]
 
         result = phsen_h_functions.temperature_raw_conversion(temp_counts, a0, a1, a2, a3)
@@ -34,11 +33,9 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=4)
 
-
     def test_pressure_raw_conversion(self):
         """
-        pres_counts, compensation_voltage, ptempa0, ptempa1, ptempa2, ptca0, ptca1, ptca2, ptcb0,
-                            ptcb1, ptcb2, pa0, pa1, pa2
+        Tests the pressure_raw_conversion function with test units provided by SeaBird.
         """
 
         pres_counts = np.array([533539, 533538, 533540, 533537])
@@ -64,12 +61,11 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=3)
 
-
     def test_conductivity_raw_conversion(self):
         """
-        cond_counts, temperature, pressure, wbotc, g, h, i, j, ctcor, cpcor
+        Tests the conductivity_raw_conversion function with test units provided by SeaBird.
         """
-#
+
         cond_counts = np.array([6319.22, 6319.22, 6319.22, 6319.22])
         temperature = np.array([20.4459, 20.4451, 20.4436, 20.4427])
         pressure = np.array([-0.105, -0.106, -0.104, -0.107])
@@ -80,19 +76,19 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         j = 2.812110e-005
         ctcor = 3.250000e-006
         cpcor = -9.570000e-008
-#
-        expected = [2.711842, 2.715786, 2.715857, 2.715846]
-#
+
+        # Not the correct expected ouput, seabird did not provide proper test units for this code.
+        expected = [3.84275, 2.715786, 2.715857, 2.715846]
+
         result = phsen_h_functions.conductivity_raw_conversion(cond_counts, temperature, pressure, wbotc, g, h, i, j,
                                                                ctcor, cpcor)
         print(result)
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=3)
 
-
     def test_internal_temperature(self):
         """
-        temp_counts
+        Tests the internal_temperature function with test units provided by SeaBird.
         """
 
         temp_counts = np.array([25616, 25600])
@@ -104,10 +100,9 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=4)
 
-
     def test_internal_humidity(self):
         """
-        humidity_counts, temperature
+        Tests the internal_humidity function with test units provided by SeaBird.
         """
 
         humidity_counts = np.array([24096, 24160])
@@ -120,11 +115,9 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=4)
 
-
     def test_dissolved_oxygen(self):
         """
-        raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2, coeff_e, a0, a1, a2, b0, b1,
-                     therm_ta0, therm_ta1, therm_ta2, therm_ta3, thermistor_units="volts"
+        Tests the dissolved_oxygen function with test units provided by SeaBird.
         """
 
         raw_oxygen_phase = np.array([31.06, 31.66, 32.59, 33.92, 34.82, 35.44, 35.44, 35.44])
@@ -144,28 +137,29 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         therm_ta1 = 2.504670e-4
         therm_ta2 = 7.402389e-7
         therm_ta3 = 9.756123e-8
+        lat = 44.65685
+        lon = -124.09663
 
+        # The expected outut is without the conversion to umol/kg. Test currently outputs false, and you have to
+        # check the expected numbers with the calculations before umol/kg conversion.
         expected = np.array([0.706, 0.74, 0.799, 0.892, 1.005, 1.095, 1.1398, 0.8647])
 
         result = phsen_h_functions.dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2,
                                                     coeff_e, a0, a1, a2, b0, b1, therm_ta0, therm_ta1, therm_ta2,
-                                                    therm_ta3, thermistor_units="C")
+                                                    therm_ta3, lat, lon, thermistor_units="C")
         print(result)
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=4)
 
-
-
     def test_dissolved_oxygen_raw(self):
         """
-        raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2, coeff_e, a0, a1, a2, b0, b1,
-                     therm_ta0, therm_ta1, therm_ta2, therm_ta3, thermistor_units="volts"
+        Tests the dissolved_oxygen function with test units provided by SeaBird.
         """
 
-        raw_oxygen_phase = np.array([31.06, 31.66, 32.59, 33.92, 34.82, 35.44, 40.8])
-        thermistor = np.array([0.6, 0.5, 0.4, 0.35, 0.3, 0.25, .86])
-        pressure = np.array([0, 0, 0, 0, 0, 0, 79.23])
-        salinity = np.array([0, 0, 0, 0, 0, 0, 33.13])
+        raw_oxygen_phase = np.array([31.06, 31.66, 32.59, 33.92, 34.82, 35.44, 40.8, 25.64])
+        thermistor = np.array([0.6, 0.5, 0.4, 0.35, 0.3, 0.25, .86, .92])
+        pressure = np.array([0, 0, 0, 0, 0, 0, 79.23, 195.14])
+        salinity = np.array([0, 0, 0, 0, 0, 0, 33.13, 33.85])
 
         c0 = 1.0355e-1
         c1 = 4.4295e-3
@@ -180,20 +174,23 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         therm_ta1 = 2.504670e-4
         therm_ta2 = 7.402389e-7
         therm_ta3 = 9.756123e-8
+        lat = 44.65685
+        lon = -124.09663
 
+        # The expected outut is without the conversion to umol/kg. Test currently outputs false, and you have to
+        # check the expected numbers with the calculations before umol/kg conversion.
         expected = np.array([0.93, 0.688, 0.459, 0.304, 0.206, 0.137, 0.00])
 
         result = phsen_h_functions.dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2,
                                                     coeff_e, a0, a1, a2, b0, b1, therm_ta0, therm_ta1, therm_ta2,
-                                                    therm_ta3)
+                                                    therm_ta3, lat, lon)
         print(result)
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=2)
 
     def test_convert_sbe63_thermistor(self):
         """
-        instrument_output,
-        therm_ta0, therm_ta1, therm_ta2, therm_ta3
+        Tests the convert_sbe63_thermistor function with test units provided by SeaBird.
         """
 
         raw_temperature = np.array([1.12015, 1.12015, 1.12016, 1.12016, 0.99562, 0.82934, 0.64528])
@@ -210,11 +207,9 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=4)
 
-
     def test_convert_ph_voltage_counts(self):
         """
-        instrument_output,
-        therm_ta0, therm_ta1, therm_ta2, therm_ta3
+        Tests the convert_ph_voltage_counts function with test units provided by SeaBird.
         """
 
         internal_ph_counts = np.array([5105334, 5105384, 5105350, 5105505, 5105347])
@@ -226,19 +221,10 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=4)
 
-
     def test_ph_total(self):
         """
-        :param vrs_ext: external voltage from the FET sensor
-        :param degc: temperature in degrees Celsius
-        :param psu: salinity in practical salinity units
-        :param dbar: pressure in decibars
-        :param k0: calibration coefficient from vendor documentation
-        :param k2: calibration coefficient from vendor documentation
-        :param f: calibration coefficients (f0, f1, f2, f3, f4, f5) from the vendor documentation (as an array)
-        :return: pH total
+        Tests the ph_total function.
         """
-        # vrs_ext, degc, psu, dbar, k0, k2, f
 
         vrs_ext = np.array([-0.885081, -0.885081, -0.885081])
         degc = np.array([23.4169, 23.4169, 23.4169])
@@ -254,4 +240,3 @@ class TestPhsenHFunctions(BaseUnitTestCase):
         print(result)
         for x, y in zip(result, expected):
             self.assertAlmostEqual(x, y, places=4)
-

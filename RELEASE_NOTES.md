@@ -1,3 +1,9 @@
+# Release 2.5.5 2026-01-28
+
+Issue #16079 - New IonFunctions for phsen_h
+
+Issue #16168 - Metbk wind speed under-reporting changes
+
 # Release 2.5.5 2025-02-25
 
 Issue #16104 - PCO2W pressure calibration changes

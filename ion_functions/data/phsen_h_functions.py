@@ -3,8 +3,9 @@
 @package ion_functions.data.phsen_h_functions
 @file ion_functions/data/phsen_h_functions.py
 @author Samuel Dahlberg
-@brief Module containing Cabled PHSEN H data-calculations. Instrument data is presented in raw units, and must be
-calculated into L2 Data.
+@brief Module containing Cabled PHSEN H data-calculations. Instrument data for the format 0 output is presented in raw
+units, and must be calculated into L2 Data. Most functions with the exception of 'ph_total' were pulled from SeaBird's
+scientific github: https://github.com/Sea-BirdScientific/seabirdscientific/tree/main/src/seabirdscientific
 """
 
 import numpy as np
@@ -19,7 +20,7 @@ KELVIN_OFFSET_0C = 273.15
 KELVIN_OFFSET_25C = 298.15
 OXYGEN_MLPERL_TO_MGPERL = 1.42903
 OXYGEN_MLPERL_TO_UMOLPERKG = 44660
-# taken from https://blog.seabird.com/ufaqs/what-is-the-difference-in-temperature-expressions-between-ipts-68-and-its-90/
+# taken from https://blog.seabird.com/ufaqs/what-is-the-difference-in-temperature-expressions-between-ipts-68-and-its-90
 ITS90_TO_IPTS68 = 1.00024
 # micro moles of nitrate to milligrams of nitrogen per liter
 UMNO3_TO_MGNL = 0.014007
@@ -30,10 +31,24 @@ F = 96485.365
 
 
 def temperature_raw_conversion(temp_counts, a0, a1, a2, a3):
-    # The standard for the seaphox v2 is ITS90, C (degrees), and false on mv_r. These parameters will be removed since
-    # this is only being used on seaphox v2
-    # Source: https://github.com/Sea-BirdScientific/seabirdscientific/blob/808db391550ef574bc91240237b01cf46fb6e0e5/documentation/conversion-SeapHOxV2.ipynb
+    """
+        Description:
+            This function converts the raw data from the instrument in A/D counts into Degrees C, ITS-90
 
+        Implemented by:
+            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+
+        Usage:
+            temperature = temperature_raw_conversion(temp_counts, a0, a1, a2, a3)
+
+                where
+
+            temp_counts = temperature value to convert in A/D counts
+            a0 = calibration coefficient for the temperature sensor
+            a1 = calibration coefficient for the temperature sensor
+            a2 = calibration coefficient for the temperature sensor
+            a3 = calibration coefficient for the temperature sensor
+        """
 
     temperature_counts = temp_counts
 
@@ -47,8 +62,25 @@ def temperature_raw_conversion(temp_counts, a0, a1, a2, a3):
 
 def pressure_raw_conversion(pres_counts, compensation_voltage, ptempa0, ptempa1, ptempa2, ptca0, ptca1, ptca2, ptcb0,
                             ptcb1, ptcb2, pa0, pa1, pa2):
-    # The standard for the seaphox v2 is dbars. This parameter will be removed since this is only being used on seaphox v2
-    # Source: https://github.com/Sea-BirdScientific/seabirdscientific/blob/808db391550ef574bc91240237b01cf46fb6e0e5/documentation/conversion-SeapHOxV2.ipynb
+    """
+        Description:
+            This function Converts pressure counts to dbars
+
+        Implemented by:
+            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+
+        Usage:
+            pressure = pressure_raw_conversion(pres_counts, compensation_voltage, ptempa0, ptempa1, ptempa2, ptca0,
+            ptca1, ptca2, ptcb0, ptcb1, ptcb2, pa0, pa1, pa2)
+
+                where
+
+            pres_counts = pressure value to convert, in A/D counts
+            compensation_voltage = pressure temperature compensation voltage, in
+            counts or volts depending on the instrument
+            ptempa0, ptempa1, ptempa2, ptca0, ptca1, ptca2, ptcb0, ptcb1, ptcb2, pa0, pa1, pa2 = calibration
+            coefficients for the pressure sensor
+        """
 
     sea_level_pressure = 14.7
 
@@ -69,6 +101,25 @@ def pressure_raw_conversion(pres_counts, compensation_voltage, ptempa0, ptempa1,
 
 
 def conductivity_raw_conversion(cond_counts, temperature, pressure, wbotc, g, h, i, j, ctcor, cpcor):
+    """
+        Description:
+            Converts raw conductivity counts to S/m
+
+        Implemented by:
+            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+
+        Usage:
+            conductivity = conductivity_raw_conversion(cond_counts, temperature, pressure, wbotc, g, h, i, j,
+            ctcor, cpcor)
+
+                where
+
+            cond_counts = conductivity value to convert, in A/D counts
+            temperature = reference temperature, in degrees C
+            pressure = reference pressure, in dbar
+            g, h, i, j, ctcor, cpcor = calibration coefficients for the conductivity sensor
+        """
+
     f = cond_counts * np.sqrt(1 + wbotc * temperature) / 1000.0
     numerator = g + h * f ** 2 + i * f ** 3 + j * f ** 4
     denominator = 1 + ctcor * temperature + cpcor * pressure
@@ -77,11 +128,21 @@ def conductivity_raw_conversion(cond_counts, temperature, pressure, wbotc, g, h,
 
 
 def internal_temperature(temp_counts):
-    """Converts the raw internal temperature counts to degrees Celcius
-
-    :param temperature_counts: raw internal temperature counts
-    :return: internal temperature in Celsius
     """
+        Description:
+            Converts the raw internal temperature counts to degrees C
+
+        Implemented by:
+            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+
+        Usage:
+            int_temperature = internal_temperature(temp_counts)
+
+                where
+
+            temp_counts = raw internal temperature counts
+    """
+
     slope = 175.72
     offset = -46.85
     int_16bit = 2.0 ** 16
@@ -91,12 +152,22 @@ def internal_temperature(temp_counts):
 
 
 def internal_humidity(humidity_counts, temperature):
-    """Convert relative humidity counts to percent
-
-    :param humidity_counts: raw relative humidity counts
-    :param temperature: converted internal temperature in Celcius
-    :return: temperature compensated relative humidity in percent
     """
+        Description:
+            Converts relative humidity counts to percent
+
+        Implemented by:
+            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+
+        Usage:
+            int_humidity = internal_humidity(humidity_counts, temperature)
+
+                where
+
+            humidity_counts = raw relative humidity counts
+            temperature = converted internal temperature in degrees C
+    """
+
     slope = 125
     offset = -6
     int_16bit = 2.0 ** 16
@@ -121,6 +192,29 @@ def internal_humidity(humidity_counts, temperature):
 
 def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2, coeff_e, a0, a1, a2, b0, b1,
                      therm_ta0, therm_ta1, therm_ta2, therm_ta3, lat, lon, thermistor_units="volts"):
+    """
+        Description:
+            Converts raw oxygen phase value to ml/l
+
+        Implemented by:
+            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+
+        Usage:
+            DO = dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2, coeff_e,
+            a0, a1, a2, b0, b1, therm_ta0, therm_ta1, therm_ta2, therm_ta3, lat, lon, thermistor_units="volts")
+
+                where
+
+            raw_oxygen_phase = SBE63 phase value, in microseconds
+            thermistor = SBE63 thermistor data to use are reference
+            pressure =Converted pressure value from the attached CTD, in dbar
+            salinity = Converted salinity value from the attached CTD, in practical salinity PSU
+            c0, c1, c2, coeff_e, a0, a1, a2, b0, b1, therm_ta0, therm_ta1, therm_ta2, therm_ta3 = Calibration
+            Coefficients for dissolved oxygen
+            lat = latitude
+            lon = longitude
+            thermistor_units = unit of measurement for thermistor input, default to volts
+    """
 
     if thermistor_units == "volts":
         temperature = convert_sbe63_thermistor(thermistor, therm_ta0, therm_ta1, therm_ta2, therm_ta3)
@@ -151,12 +245,10 @@ def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c
     p_corr_exp = (coeff_e * pressure) / temperature_k
     p_corr = e ** p_corr_exp
 
-    # fmt: off
     ox_val = (
             (((a0 + a1 * temperature + a2 * oxygen_volts ** 2)
               / (b0 + b1 * oxygen_volts) - 1.0) / ksv) * s_corr * p_corr
     )
-    # fmt: on
 
     # Unit calculations to convert from ml/l to umol/kg
     absolute_salinity = gsw.sa_from_sp(salinity, pressure, lon, lat)
@@ -171,17 +263,23 @@ def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c
 
 def convert_sbe63_thermistor(
         instrument_output,
-        therm_ta0, therm_ta1, therm_ta2, therm_ta3
-):
-    """Converts a SBE63 thermistor raw output array to temperature in
-    ITS-90 deg C.
-
-    :param instrument_output: raw values from the thermistor
-    :param coefs: calibration coefficients for the thermistor in the
-        SBE63 sensor
-
-    :return: converted thermistor temperature values in ITS-90 deg C
+        therm_ta0, therm_ta1, therm_ta2, therm_ta3):
     """
+            Description:
+                Converts a SBE63 thermistor raw output array to temperature in ITS-90 deg C
+
+            Implemented by:
+                2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+
+            Usage:
+                temperature = convert_sbe63_thermistor(instrument_output, therm_ta0, therm_ta1, therm_ta2, therm_ta3)
+
+                    where
+
+                instrument_output = raw values from the thermistor
+                therm_ta0, therm_ta1, therm_ta2, therm_ta3 = Calibration Coefficients for sbe63 thermistor
+        """
+
     log_raw = np.log((100000 * instrument_output) / (3.3 - instrument_output))
     temperature = (
             1 / (therm_ta0 + therm_ta1 * log_raw + therm_ta2 * log_raw ** 2 + therm_ta3 * log_raw ** 3)
@@ -191,11 +289,21 @@ def convert_sbe63_thermistor(
 
 
 def convert_ph_voltage_counts(ph_counts):
-    """Convert pH voltage counts to a floating point value
-
-    :param ph_counts: pH voltage counts
-    :return: pH voltage
     """
+        Description:
+            Convert pH voltage counts to a floating point value
+
+        Implemented by:
+            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+
+        Usage:
+            ph_volts = convert_ph_voltage_counts(ph_counts)
+
+                where
+
+            ph_counts = pH voltage counts
+    """
+
     adc_vref = 2.5
     gain = 1
     adc_23bit = 8388608.0
@@ -205,19 +313,27 @@ def convert_ph_voltage_counts(ph_counts):
 
 def ph_total(vrs_ext, degc, psu, dbar, k0, k2, f):
     """
-    Calculate the total pH from the SeapHOx sensor. The total pH is calculated from the external voltage (vrs_ext),
-    temperature (degC), salinity (psu), pressure (dbar), and the calibration coefficients (k0, k2, f).
-    Source is Sea-Bird Scientific Application Note 99, "Calculating pH from ISFET pH Sensors".
+        Description:
+            Calculate the total pH from the SeapHOx sensor. The total pH is calculated from external voltage (vrs_ext),
+            temperature (degC), salinity (psu), pressure (dbar), and the calibration coefficients (k0, k2, f).
+            Source is Sea-Bird Scientific Application Note 99, "Calculating pH from ISFET pH Sensors".
 
-    :param vrs_ext: external voltage from the FET sensor
-    :param degc: temperature in degrees Celsius
-    :param psu: salinity in practical salinity units
-    :param dbar: pressure in decibars
-    :param k0: calibration coefficient from vendor documentation
-    :param k2: calibration coefficient from vendor documentation
-    :param f: calibration coefficients (f0, f1, f2, f3, f4, f5) from the vendor documentation (as an array)
-    :return: pH total
+        Implemented by:
+            2026-01-21: Samuel Dahlberg. Initial code, adapted from Chris Wingard's ph_total function in cgsn processing
+                        https://bitbucket.org/ooicgsn/cgsn-processing/src/master/cgsn_processing/process/proc_cphox.py
+
+        Usage:
+            ph = ph_total(vrs_ext, degc, psu, dbar, k0, k2, f)
+
+                where
+
+            vrs_ext = external voltage from the FET sensor
+            degc = temperature in degrees Celsius
+            psu = salinity in practical salinity units
+            dbar = pressure in decibars
+            k0, k2, f = Calibration Coefficients for ph calculation.
     """
+
     f = np.atleast_2d(f)
 
     fp = f[:, 0] * dbar + f[:, 1] * dbar ** 2 + f[:, 2] * dbar ** 3 + f[:, 3] * dbar ** 4 + f[:, 4] * dbar ** 5 + f[:, 5] * dbar ** 6
