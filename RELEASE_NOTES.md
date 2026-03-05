@@ -1,3 +1,25 @@
+# Release 2.5.6 2026-01-28
+
+Issue #16079 - New IonFunctions for phsen_h
+
+Issue #16168 - Metbk wind speed under-reporting changes
+
+# Release 2.5.5 2025-02-25
+
+Issue #16104 - PCO2W pressure calibration changes
+
+# Release 2.5.4 2025-06-12
+
+Issue #15879 - Adds IFCB stream calculated values
+
+# Release 2.5.3 2025-03-13
+
+Issue #15165 - Use new botpt predicted tide tables
+
+# Release 2.5.2 2025-02-25
+
+Issue #15787 - Adds support for VADCP-B functions
+
 # Release 2.5.1 2025-02-25
 
 Issue #15165 - Use new botpt predicted tide tables
