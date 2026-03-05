@@ -175,6 +175,132 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
         np.testing.assert_array_almost_equal(got_w, w, 4)
         np.testing.assert_array_almost_equal(got_e, e, 4)
 
+
+    def test_vadcp_b_beam(self):
+        """
+        Directly tests DPA functions vadcp_b_beam_eastward, vadcp_b_beam_northward,
+        vadcp_b_beam_vertical_est, and vadcp_b_beam_vertical_true. Indirectly tests vadcp_b_beam2ins,
+        vadcp_b_ins2earth and magnetic_correction functions. All three functions
+        must return the correct output for final tests cases to work.
+
+        Values based on those defined in DPS:
+
+            OOI (2012). Data Product Specification for Velocity Profile and Echo
+                Intensity. Document Control Number 1341-00750.
+                https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
+                >> Controlled >> 1000 System Level >>
+                1341-00750_Data_Product_SPEC_VELPROF_OOI.pdf)
+
+        Implemented by:
+
+            2013-04-10: Christopher Wingard. Initial code.
+            2014-02-06: Christopher Wingard. Added tests to confirm arrays of
+                        arrays can be processed (in other words, vectorized the
+                        code).
+            2015-06-23: Russell Desiderio. Revised documentation. Added unit test
+                        for the function adcp_beam_error.
+            2019-08-13: Christopher Wingard. Adds functionality to compute a 3-beam solution
+                        and cleans up syntax used in the function.
+            2025-02-19: Samuel Dahlberg. Duplicated original function (test_vadcp_beam) and
+                        modified to work with the vadcp_b instrument.
+
+        """
+
+        # expected test result values computed from Nrotek provided Matlab code, then run through magnetic declination
+        # and correction code in adcp_functions.
+        u_cor = np.array([[-0.0254, -0.0413, -0.0047,  0.0872, -0.0342,  0.1109, -0.0482, 0.0283, -0.0804, -0.0345]])
+        v_cor = np.array([[-0.0046,  0.0222,  0.0541,  0.0815, -0.0145,  0.0372,  0.1068, 0.0006,  0.0074,  0.1268]])
+        w = np.array([[-0.0336, -0.0032, 0.0097, 0.0326, -0.0047, 0.0017, -0.0125, -0.0134, 0.0049, -0.0430]])
+        w_true = np.array([[0.0531, -0.0316, -0.0504, 0.0444, 0.0160, 0.0058, -0.0687, 0.6178, 0.0285, 0.0094]])
+
+        # Beam values, percent good values, transformation matrix, heading/pitch/roll, lat/lon, and date pulled from
+        # instrument telemetered files
+        b1 = np.array([[-0.0450, 0.0160, 0.0390, 0.0590, -0.0230, 0.0000, 0.0520, -0.0270, 0.0080, -0.0020]])
+        b2 = np.array([[-0.0190, -0.0090, 0.0100, 0.0480, 0.0060, 0.0250, -0.0130, 0.0030, 0.0050, -0.0030]])
+        b3 = np.array([[-0.0570, -0.0220, 0.0040, 0.0630, -0.0350, 0.0450, -0.0400, -0.0100, -0.0450, -0.0970]])
+        b4 = np.array([[-0.0010, 0.0020, -0.0200, -0.0530, 0.0350, -0.0630, -0.0490, -0.0140, 0.0480, -0.0590]])
+        b5 = np.array([[0.0530, -0.0320, -0.0510, 0.0440, 0.0160, 0.0060, -0.0700, 0.6180, 0.0280, 0.0080]])
+
+        pg1 = np.array([[96.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 96.0]])
+        pg2 = np.array([[100.0, 80, 100.0, 100.0, 100.0, 100.0, 99.0, 100.0, 95.0, 94.0]])
+        pg3 = np.array([[97.0, 80, 88.0, 94.0, 91.0, 86.0, 83.0, 79.0, 79.0, 74.0]])
+        pg4 = np.array([[85.0, 80, 74.0, 69.0, 57.0, 58.9, 61.0, 84.0, 95.0, 96.0]])
+        pg5 = np.array([[63.0, 60.0, 62.0, 80.0, 87.0, 97.0, 98.0, 58.9, 84.0, 94.0]])
+
+        tm = [1.1831, 0.0000, -1.1831, 0.0000, 0.0000, -1.1831, 0.0000, 1.1831, 0.5518, 0.0000, 0.5518, 0.0000,
+              0.0000, 0.5518, 0.0000, 0.5518]
+
+        heading = 300.1
+        pitch = 0.6
+        roll = -0.2
+
+        lat = 44.5
+        lon = -125.4
+
+        ntp = 3948947793.3
+
+        # single record case
+        got_u_cor = af.vadcp_b_beam_eastward(b1, b2, b3, b4,
+                                          pg1, pg2, pg3, pg4,
+                                          heading, pitch, roll,
+                                          lat, lon, ntp, tm)
+        got_v_cor = af.vadcp_b_beam_northward(b1, b2, b3, b4,
+                                           pg1, pg2, pg3, pg4,
+                                           heading, pitch, roll,
+                                           lat, lon, ntp, tm)
+        got_w_est = af.vadcp_b_beam_vertical_est(b1, b2, b3, b4,
+                                      pg1, pg2, pg3, pg4,
+                                      heading, pitch, roll, tm)
+        got_w_true = af.vadcp_b_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4,
+                                             pg5, heading, pitch, roll, tm)
+
+        # test results
+        np.testing.assert_array_almost_equal(got_u_cor, u_cor, 4)
+        np.testing.assert_array_almost_equal(got_v_cor, v_cor, 4)
+        np.testing.assert_array_almost_equal(got_w_est, w, 4)
+        np.testing.assert_array_almost_equal(got_w_true, w_true, 4)
+
+        # reset the test inputs for multiple records
+        b1 = np.tile(b1, (24, 1))
+        b2 = np.tile(b2, (24, 1))
+        b3 = np.tile(b3, (24, 1))
+        b4 = np.tile(b4, (24, 1))
+        pg1 = np.tile(pg1, (24, 1))
+        pg2 = np.tile(pg2, (24, 1))
+        pg3 = np.tile(pg3, (24, 1))
+        pg4 = np.tile(pg4, (24, 1))
+        heading = np.ones(24, dtype=np.int) * heading
+        pitch = np.ones(24, dtype=np.int) * pitch
+        roll = np.ones(24, dtype=np.int) * roll
+        lat = np.ones(24) * lat
+        lon = np.ones(24) * lon
+        ntp = np.ones(24) * ntp
+
+        # reset outputs for multiple records
+        u_cor = np.tile(u_cor, (24, 1))
+        v_cor = np.tile(v_cor, (24, 1))
+        w = np.tile(w, (24, 1))
+        w_true = np.tile(w_true, (24, 1))
+
+        # multiple record case
+        got_u_cor = af.vadcp_b_beam_eastward(b1, b2, b3, b4,
+                                             pg1, pg2, pg3, pg4,
+                                          heading, pitch, roll,
+                                          lat, lon, ntp, tm)
+        got_v_cor = af.vadcp_b_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4,
+                                           heading, pitch, roll,
+                                           lat, lon, ntp, tm)
+        got_w_est = af.vadcp_b_beam_vertical_est(b1, b2, b3, b4, pg1, pg2, pg3, pg4,
+                                      heading, pitch, roll, tm)
+        got_w_true = af.vadcp_b_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4,
+                                             pg5, heading, pitch, roll, tm)
+
+        # test results
+        np.testing.assert_array_almost_equal(got_u_cor, u_cor, 4)
+        np.testing.assert_array_almost_equal(got_v_cor, v_cor, 4)
+        np.testing.assert_array_almost_equal(got_w_est, w, 4)
+        np.testing.assert_array_almost_equal(got_w_true, w_true, 4)
+
     def test_adcp_earth(self):
         """
         Tests magnetic_correction function for ADCPs set to output data in the
