@@ -251,8 +251,8 @@ def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c
     )
 
     # Unit calculations to convert from ml/l to umol/kg
-    absolute_salinity = gsw.sa_from_sp(salinity, pressure, lon, lat)
-    conservative_temp = gsw.ct_from_t(salinity, temperature, pressure)
+    absolute_salinity = gsw.SA_from_SP(salinity, pressure, lon, lat)
+    conservative_temp = gsw.CT_from_t(salinity, temperature, pressure)
     pref = 0
     potential_density = gsw.rho(absolute_salinity, conservative_temp, pref)
 
