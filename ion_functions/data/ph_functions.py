@@ -55,7 +55,7 @@ def ph_thermistor(traw, sami_bits=12):
 
     # convert raw thermistor readings from counts to degrees Centigrade
     # conversion depends on whether the SAMI is older 12 bit or newer 14 bit hardware
-    if sami_bits == 14:
+    if sami_bits[0] == 14:
         rt = np.log((traw / (16384.0 - traw)) * 17400.0)
     else:
         rt = np.log((traw / (4096.0 - traw)) * 17400.0)
