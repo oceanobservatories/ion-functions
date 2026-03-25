@@ -127,33 +127,33 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_
     """
     # reformat all input values to arrays of the correct dimensions, shape, and
     # type, recording the number of input records.
-    ref = (np.atleast_2d(ref)).astype(np.float)
+    ref = (np.atleast_2d(ref)).astype(float)
     nRec = ref.shape[0]
 
-    light = np.atleast_3d(light).astype(np.float)
+    light = np.atleast_3d(light).astype(float)
     light = np.reshape(light, (nRec, 23, 4))
 
-    therm = np.reshape(therm, (nRec, 1)).astype(np.float)
+    therm = np.reshape(therm, (nRec, 1)).astype(float)
 
-    ea434 = np.reshape(ea434, (nRec, 1)).astype(np.float)
-    eb434 = np.reshape(eb434, (nRec, 1)).astype(np.float)
-    ea578 = np.reshape(ea578, (nRec, 1)).astype(np.float)
-    eb578 = np.reshape(eb578, (nRec, 1)).astype(np.float)
+    ea434 = np.reshape(ea434, (nRec, 1)).astype(float)
+    eb434 = np.reshape(eb434, (nRec, 1)).astype(float)
+    ea578 = np.reshape(ea578, (nRec, 1)).astype(float)
+    eb578 = np.reshape(eb578, (nRec, 1)).astype(float)
 
     if np.isscalar(ind_slp) is True:
-        ind_slp = np.tile(ind_slp, (nRec)).astype(np.float)
+        ind_slp = np.tile(ind_slp, (nRec)).astype(float)
     else:
-        ind_slp = np.reshape(ind_slp, (nRec)).astype(np.float)
+        ind_slp = np.reshape(ind_slp, (nRec)).astype(float)
 
     if np.isscalar(ind_off) is True:
-        ind_off = np.tile(ind_off, (nRec)).astype(np.float)
+        ind_off = np.tile(ind_off, (nRec)).astype(float)
     else:
-        ind_off = np.reshape(ind_off, (nRec)).astype(np.float)
+        ind_off = np.reshape(ind_off, (nRec)).astype(float)
 
     if np.isscalar(psal) is True:
-        psal = np.tile(psal, (nRec, 1)).astype(np.float)
+        psal = np.tile(psal, (nRec, 1)).astype(float)
     else:
-        psal = np.reshape(psal, (nRec, 1)).astype(np.float)
+        psal = np.reshape(psal, (nRec, 1)).astype(float)
 
     # Calculate blanks from the 16 sets of reference light measurements
     arr434 = np.array([

@@ -361,8 +361,8 @@ def opt_pd_calc(ref, sig, offset, tintrn, tbins, tarray):
     """
     # Raw reference and signal values are imported as 1D arrays. They must be
     # the same length.
-    ref = np.atleast_1d(ref).astype(np.float)
-    sig = np.atleast_1d(sig).astype(np.float)
+    ref = np.atleast_1d(ref).astype(float)
+    sig = np.atleast_1d(sig).astype(float)
     lFlag = len(ref) != len(sig)
     if lFlag:
         raise ValueError('Reference and Signal arrays must be the same length')

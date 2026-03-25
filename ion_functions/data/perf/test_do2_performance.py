@@ -33,7 +33,7 @@ class TestDo2Performance(PerformanceTestCase):
         (SBE 43) instrument data processing algorithm.
         """
         # N voltage counts
-        volt_counts = np.ones(NeLEMENTS, dtype=np.int) * 16384
+        volt_counts = np.ones(NeLEMENTS, dtype=int) * 16384
         # calibration coefficients
         A = -3.1867e-3
         B = 1.7749e-4
@@ -54,7 +54,7 @@ class TestDo2Performance(PerformanceTestCase):
         Performance test for the do2_dofst_volt function for the DOFST
         (SBE 43F) instrument data processing algorithm.
         """
-        freq = np.ones(NeLEMENTS, dtype=np.int) * 4591
+        freq = np.ones(NeLEMENTS, dtype=int) * 4591
         A = -4.1168e-3
         B = 2.4818e-4
         C = -3.8820e-6
@@ -69,8 +69,8 @@ class TestDo2Performance(PerformanceTestCase):
             self.pres, self.temp, self.salt, self.lat, self.lon)
 
     def test_dosta_SVU(self):
-        calphase = np.ones(10000, dtype=np.float) * 38
-        temp = np.ones(10000, dtype=np.float) * 15.3
+        calphase = np.ones(10000, dtype=float) * 38
+        temp = np.ones(10000, dtype=float) * 15.3
         csv = np.array([
             0.002848, 0.000114, 1.51e-6, 70.42301, -0.10302,
             -12.9462, 1.265377])
@@ -80,7 +80,7 @@ class TestDo2Performance(PerformanceTestCase):
             stats, do2_SVU, calphase, temp, csv)
 
     def test_dosta_salinity_correction(self):
-        do_svu = np.ones(10000, dtype=np.float) * 102.34
+        do_svu = np.ones(10000, dtype=float) * 102.34
 
         stats = []
         self.profile(

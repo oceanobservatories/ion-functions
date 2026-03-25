@@ -608,7 +608,7 @@ class TestQCFunctionsUnit(BaseUnitTestCase):
         dt2 = np.array(usec, dtype='timedelta64[us]')
         dt = dt1+dt2
 
-        dt = dt.astype(np.float) / 1e6
+        dt = dt.astype(float) / 1e6
 
         z = np.array([87.8905, 39.8829, -0.0847, 0.0847,
                       66.5628, 63.4355, 23.4362,

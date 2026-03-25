@@ -19,15 +19,15 @@ class TestVelPerformance(PerformanceTestCase):
         2014-03-04: Stuart Pearce. Initial code.
     """
     def setUp(self):
-        self.lat = np.ones(10000, dtype=np.float) * 14.6846
-        self.lon = np.ones(10000, dtype=np.float) * -51.044
-        self.ts = np.ones(10000, dtype=np.int) * 3319563600
-        self.ve = np.ones(10000, dtype=np.float) * -3.2
-        self.vn = np.ones(10000, dtype=np.float) * 18.2
-        #self.vu = np.ones(10000, dtype=np.float) * -1.1
-        #vel0 = np.ones(10000, dtype=np.int) * 12345
-        #vel1 = np.ones(10000, dtype=np.int) * 15432
-        #self.vel2 = np.ones(10000, dtype=np.int) * 14253
+        self.lat = np.ones(10000, dtype=float) * 14.6846
+        self.lon = np.ones(10000, dtype=float) * -51.044
+        self.ts = np.ones(10000, dtype=int) * 3319563600
+        self.ve = np.ones(10000, dtype=float) * -3.2
+        self.vn = np.ones(10000, dtype=float) * 18.2
+        #self.vu = np.ones(10000, dtype=float) * -1.1
+        #vel0 = np.ones(10000, dtype=int) * 12345
+        #vel1 = np.ones(10000, dtype=int) * 15432
+        #self.vel2 = np.ones(10000, dtype=int) * 14253
         #beams = np.tile(np.array([1, 2, 4, 0]), (10000, 1))
         #self.vscale = -4
 
@@ -129,16 +129,16 @@ class TestVel3dkPerformance(PerformanceTestCase):
         2015-06-02: Russell Desiderio. Added 5th column to self.beams.
     """
     def setUp(self):
-        self.lat = np.ones(10000, dtype=np.float) * 14.6846
-        self.lon = np.ones(10000, dtype=np.float) * -51.044
-        self.ts = np.ones(10000, dtype=np.int) * 3319563600
-        self.vel0 = np.ones(10000, dtype=np.int) * 12345
-        self.vel1 = np.ones(10000, dtype=np.int) * 15432
-        self.vel2 = np.ones(10000, dtype=np.int) * 14253
+        self.lat = np.ones(10000, dtype=float) * 14.6846
+        self.lon = np.ones(10000, dtype=float) * -51.044
+        self.ts = np.ones(10000, dtype=int) * 3319563600
+        self.vel0 = np.ones(10000, dtype=int) * 12345
+        self.vel1 = np.ones(10000, dtype=int) * 15432
+        self.vel2 = np.ones(10000, dtype=int) * 14253
         self.beams = np.tile(np.array([1, 2, 4, 0, 0]), (10000, 1))
-        self.hdg = np.ones(10000, dtype=np.int) * 123
-        self.ptch = np.ones(10000, dtype=np.float) * 1.23
-        self.rll = np.ones(10000, dtype=np.float) * 1.23
+        self.hdg = np.ones(10000, dtype=int) * 123
+        self.ptch = np.ones(10000, dtype=float) * 1.23
+        self.rll = np.ones(10000, dtype=float) * 1.23
         self.vscale = -4
 
     def test_vel3dk_east(self):

@@ -42,10 +42,10 @@ class TestPHPerformance(PerformanceTestCase):
         ])
 
         # setup calculated output arrays
-        self.ref = np.zeros((6, 16), dtype=np.int)       # reference measurements
-        self.light = np.zeros((6, 92), dtype=np.int)     # light measurements
-        self.braw = np.zeros(6, dtype=np.int)            # raw battery voltage counts
-        self.traw = np.zeros(6, dtype=np.int)            # raw instrument temperature in counts
+        self.ref = np.zeros((6, 16), dtype=int)       # reference measurements
+        self.light = np.zeros((6, 92), dtype=int)     # light measurements
+        self.braw = np.zeros(6, dtype=int)            # raw battery voltage counts
+        self.traw = np.zeros(6, dtype=int)            # raw instrument temperature in counts
         for i in range(6):
             # parse the raw strings into subelements, such as the driver would
             # provide.

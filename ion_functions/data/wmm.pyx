@@ -91,12 +91,12 @@ cdef class WMM:
         if uu.shape != vv.shape:
             raise TypeError("Vectors are not aligned")
         if np.atleast_1d(lat).shape[0] == 1:
-            lat = np.ones(uu.shape, np.float) * lat
+            lat = np.ones(uu.shape, float) * lat
         if np.atleast_1d(lon).shape[0] == 1:
-            lon = np.ones(uu.shape, np.float) * lon
+            lon = np.ones(uu.shape, float) * lon
         z *= zflag
         if np.atleast_1d(z).shape[0] == 1:
-            z = np.ones(uu.shape, np.float) * z
+            z = np.ones(uu.shape, float) * z
         if np.atleast_1d(timestamp).shape[0] == 1:
             timestamp = np.ones(uu.shape, np.int64) * timestamp
         return self._velocity_correction(uu, vv, lat, lon, z, timestamp)
@@ -107,8 +107,8 @@ cdef class WMM:
     def _velocity_correction(self, uu, vv, lat, lon, z, timestamp):
         cdef np.ndarray[double] uu_in = uu
         cdef np.ndarray[double] vv_in = vv
-        cdef np.ndarray[double] uu_cor = np.empty(uu.shape, np.float)
-        cdef np.ndarray[double] vv_cor = np.empty(uu.shape, np.float)
+        cdef np.ndarray[double] uu_cor = np.empty(uu.shape, float)
+        cdef np.ndarray[double] vv_cor = np.empty(uu.shape, float)
         cdef np.ndarray[double] lat_in = lat
         cdef np.ndarray[double] lon_in = lon
         cdef np.ndarray[double] z_in = z

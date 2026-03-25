@@ -58,7 +58,7 @@ def polycal(coefficients, calibration_times, x, times):
     cdef np.ndarray[double] cal_t = calibration_times
     cdef np.ndarray[double] ix = x
     cdef np.ndarray[double] itimes = times
-    cdef np.ndarray[double] out = np.zeros(x.shape, dtype=np.float)
+    cdef np.ndarray[double] out = np.zeros(x.shape, dtype=float)
 
     c_polycal(&out[0], v.data, &cal_t[0], cal_t.shape[0], &ix[0], &itimes[0], x.shape[0])
 

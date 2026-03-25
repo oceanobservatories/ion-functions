@@ -1236,7 +1236,7 @@ def calculate_sliding_slopes(data, window_size, coverage_threshold=0.0):
     fraction_good = np.roll(fraction_good, half_window)
 
     # deal with round-off error and boundary considerations at threshold values
-    machine_epsilon = np.finfo(np.float).eps
+    machine_epsilon = np.finfo(float).eps
     eps_x_100 = machine_epsilon * 100
 
     # rather than deleting padding, keep it for index registration with padded data;
@@ -1619,7 +1619,7 @@ def calculate_all_sliding_slopes_then_Nan(data, window_size, coverage_threshold)
 
     # nan out fractional values (means) less than coverage threshold
     # there can be issues involving roundoff error when considering 100% coverage, so:
-    machine_epsilon = np.finfo(np.float).eps
+    machine_epsilon = np.finfo(float).eps
     fraction_good = fraction_good + 100 * machine_epsilon
     # avoid a python warning message by trapping out nans in the conditional
     fraction_good[np.isnan(fraction_good)] = -999.0  # any negative number will work as intended

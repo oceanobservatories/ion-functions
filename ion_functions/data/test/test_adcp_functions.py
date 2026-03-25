@@ -144,10 +144,10 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
         pg2 = np.tile(self.pg2, (24, 1))
         pg3 = np.tile(self.pg3, (24, 1))
         pg4 = np.tile(self.pg4, (24, 1))
-        heading = np.ones(24, dtype=np.int) * self.heading
-        pitch = np.ones(24, dtype=np.int) * self.pitch
-        roll = np.ones(24, dtype=np.int) * self.roll
-        orient = np.ones(24, dtype=np.int) * self.orient
+        heading = np.ones(24, dtype=int) * self.heading
+        pitch = np.ones(24, dtype=int) * self.pitch
+        roll = np.ones(24, dtype=int) * self.roll
+        orient = np.ones(24, dtype=int) * self.orient
         lat = np.ones(24) * self.lat
         lon = np.ones(24) * self.lon
         ntp = np.ones(24) * self.ntp
@@ -269,9 +269,9 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
         pg2 = np.tile(pg2, (24, 1))
         pg3 = np.tile(pg3, (24, 1))
         pg4 = np.tile(pg4, (24, 1))
-        heading = np.ones(24, dtype=np.int) * heading
-        pitch = np.ones(24, dtype=np.int) * pitch
-        roll = np.ones(24, dtype=np.int) * roll
+        heading = np.ones(24, dtype=int) * heading
+        pitch = np.ones(24, dtype=int) * pitch
+        roll = np.ones(24, dtype=int) * roll
         lat = np.ones(24) * lat
         lon = np.ones(24) * lon
         ntp = np.ones(24) * ntp
@@ -409,16 +409,16 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
             2019-08-14: Christopher Wingard. Reset to only test the vadcp_beam_vertical_true function.
         """
         # inputs
-        b1 = np.ones((10, 10), dtype=np.int) * -325
-        b2 = np.ones((10, 10), dtype=np.int) * 188
-        b3 = np.ones((10, 10), dtype=np.int) * 168
-        b4 = np.ones((10, 10), dtype=np.int) * -338
-        b5 = np.ones((10, 10), dtype=np.int) * -70
-        pg1 = np.ones((10, 10), dtype=np.int) * 100
-        pg2 = np.ones((10, 10), dtype=np.int) * 100
-        pg3 = np.ones((10, 10), dtype=np.int) * 100
-        pg4 = np.ones((10, 10), dtype=np.int) * 100
-        pg5 = np.ones((10, 10), dtype=np.int) * 100
+        b1 = np.ones((10, 10), dtype=int) * -325
+        b2 = np.ones((10, 10), dtype=int) * 188
+        b3 = np.ones((10, 10), dtype=int) * 168
+        b4 = np.ones((10, 10), dtype=int) * -338
+        b5 = np.ones((10, 10), dtype=int) * -70
+        pg1 = np.ones((10, 10), dtype=int) * 100
+        pg2 = np.ones((10, 10), dtype=int) * 100
+        pg3 = np.ones((10, 10), dtype=int) * 100
+        pg4 = np.ones((10, 10), dtype=int) * 100
+        pg5 = np.ones((10, 10), dtype=int) * 100
 
         # create some bad data points, which should yield NaNs for output
         pg1[:, (2, 3)] = 24
@@ -430,7 +430,7 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
                             32, 32, 32, 32, 32]) * 100
         pitch = np.array([0, 2, 3, 3, 1, 2, 2, 3, 3, 1]) * 100
         roll = np.array([0, 4, 3, 4, 3, 3, 4, 3, 4, 3]) * 100
-        orient = np.ones(10, dtype=np.int)
+        orient = np.ones(10, dtype=int)
 
         # expected outputs
         vlu_5bm_xpctd = np.array([[0.07000000, -0.00824854, -0.00804866, -0.02112871, 0.01775751,

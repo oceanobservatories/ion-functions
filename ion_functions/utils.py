@@ -234,7 +234,7 @@ def islogical(inflags):
         inflags = np.array([[0, 2]]).astype('np.int8')
         islogical(inflags)
         False
-        inflags = np.array([[0, 1]]).astype('np.float')
+        inflags = np.array([[0, 1]]).astype(float)
         islogical(inflags)
         False
         

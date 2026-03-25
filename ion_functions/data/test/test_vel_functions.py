@@ -36,7 +36,7 @@ DEPTH = 6 * np.ones(10)  # meters
 TS = np.array([
     3319563600, 3319567200, 3319570800, 3319574400, 3319578000,
     3319581600, 3319585200, 3319588800, 3319592400, 3319596000],
-    dtype=np.float)
+    dtype=float)
 
 # unit test input velocities
 # Nobska instrument outputs velocities in cm/s. VEL3D-B

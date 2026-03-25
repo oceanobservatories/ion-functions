@@ -2815,13 +2815,13 @@ def rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_s
     returns a table of the masses.
     '''
 
-    Tnb = np.int(((massp_rga_final_mass - massp_rga_initial_mass) * massp_rga_steps_per_amu) + 1)
+    Tnb = int(((massp_rga_final_mass - massp_rga_initial_mass) * massp_rga_steps_per_amu) + 1)
 
     mass_table = np.ones(Tnb)
     mass_table[0] = massp_rga_initial_mass
 
     for x in range(1, Tnb):
-        mass_table[x] = mass_table[x-1] + (1 / np.float(massp_rga_steps_per_amu))
+        mass_table[x] = mass_table[x-1] + (1 / float(massp_rga_steps_per_amu))
 
     mass_table = np.around(mass_table, decimals=1)
 
@@ -2972,7 +2972,7 @@ def SamplePreProcess(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sa
     msinlet_smpphint = np.absolute(np.nanmean(ph_meter_sampleint_mcu[direct_samples_ind]))
 
     #Calculate NAFEFF, which is an indicator of the drying efficiency of the nafion drier
-    nafeff = np.int(100 * (sample_mz18naf / sample_mz18))
+    nafeff = int(100 * (sample_mz18naf / sample_mz18))
 
     return (sample_mz15, sample_mz18naf, sample_mz2, sample_mz18, sample_mz30,
             sample_mz32, sample_mz34, sample_mz40, sample_mz44, nafeff, sample_Tnaf,

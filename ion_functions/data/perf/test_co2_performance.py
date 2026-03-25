@@ -19,7 +19,7 @@ class TestCO2Performance(PerformanceTestCase):
         self.calc = -1.5406
         self.sami_bits = 12
 
-        self.light = np.zeros(14, dtype=np.int)
+        self.light = np.zeros(14, dtype=int)
         self.mtype = int(s[5:7], 16)
         self.traw = int(s[75:79], 16)
         strt = 15

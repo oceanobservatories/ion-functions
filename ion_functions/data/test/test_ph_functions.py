@@ -223,11 +223,11 @@ class TestpHFunctionsUnit(BaseUnitTestCase):
         """
         # determine the number of records and create the output arrays
         nRec = self.ref.shape[0]
-        bout = np.zeros(nRec, dtype=np.float)
-        tout = np.zeros(nRec, dtype=np.float)
-        a434 = np.zeros((nRec, 23), dtype=np.float)
-        a578 = np.zeros((nRec, 23), dtype=np.float)
-        pout = np.zeros(nRec, dtype=np.float)
+        bout = np.zeros(nRec, dtype=float)
+        tout = np.zeros(nRec, dtype=float)
+        a434 = np.zeros((nRec, 23), dtype=float)
+        a578 = np.zeros((nRec, 23), dtype=float)
+        pout = np.zeros(nRec, dtype=float)
 
         # index through the records, calculating pH one record at a time
         for iRec in range(nRec):

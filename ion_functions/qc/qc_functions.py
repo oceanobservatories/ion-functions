@@ -710,12 +710,12 @@ def dataqc_solarelevation(lon, lat, dt):
     # Create a time tuple in UTC from the Epoch time input, and then create
     # scalars or numpy arrays of time elements for subsequent calculations.
     ldt = len(dt)
-    yy = np.zeros(ldt, dtype=np.int)
-    mn = np.zeros(ldt, dtype=np.int)
-    dd = np.zeros(ldt, dtype=np.int)
-    hh = np.zeros(ldt, dtype=np.int)
-    mm = np.zeros(ldt, dtype=np.int)
-    ss = np.zeros(ldt, dtype=np.int)
+    yy = np.zeros(ldt, dtype=int)
+    mn = np.zeros(ldt, dtype=int)
+    dd = np.zeros(ldt, dtype=int)
+    hh = np.zeros(ldt, dtype=int)
+    mm = np.zeros(ldt, dtype=int)
+    ss = np.zeros(ldt, dtype=int)
     for i in range(ldt):
         # create time tuple in UTC
         gtime = time.gmtime(dt[i])

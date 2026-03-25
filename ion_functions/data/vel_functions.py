@@ -552,7 +552,7 @@ def nobska_mag_corr_east(u, v, lat, lon, timestamp, z=0):
    # Check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
         # commented out next line according to NOTE above. -SP
-        #return np.ones(u.shape, dtype=np.float) * -9999
+        #return np.ones(u.shape, dtype=float) * -9999
         raise ValueError('Latitudes or Longitudes are not within the valid range!')
 
     # correct for magnetic declination
@@ -610,7 +610,7 @@ def nobska_mag_corr_north(u, v, lat, lon, timestamp, z=0):
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
         # commented out next line according to NOTE above. -SP
-        #return np.ones(u.shape, dtype=np.float) * -9999
+        #return np.ones(u.shape, dtype=float) * -9999
         raise ValueError('Latitudes or Longitudes are not within the valid range!')
 
     # correct for magnetic declination
@@ -704,7 +704,7 @@ def nortek_mag_corr_east(u, v, lat, lon, timestamp, z=0.0, status_code=0):
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
         # commented out next line according to NOTE above. -SP
-        #return np.ones(u.shape, dtype=np.float) * -9999
+        #return np.ones(u.shape, dtype=float) * -9999
         raise ValueError('Latitudes or Longitudes are not within the valid range!')
 
     # change the units of the input velocities from mm/sec (see Notes) to m/sec
@@ -776,7 +776,7 @@ def nortek_mag_corr_north(u, v, lat, lon, timestamp, z=0.0, status_code=0):
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
         # commented out next line according to NOTE above. -SP
-        #return np.ones(u.shape, dtype=np.float) * -9999
+        #return np.ones(u.shape, dtype=float) * -9999
         raise ValueError('Latitudes or Longitudes are not within the valid range!')
 
     # change the units of the input velocities from mm/sec (see Notes) to m/sec
@@ -1212,7 +1212,7 @@ def velpt_mag_corr_east(u, v, lat, lon, timestamp, z=0.0):
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
         # commented out next line according to NOTE above. -SP
-        #return np.ones(u.shape, dtype=np.float) * -9999
+        #return np.ones(u.shape, dtype=float) * -9999
         raise ValueError('Latitudes or Longitudes are not within the valid range!')
 
     # correct for magnetic declination
@@ -1270,7 +1270,7 @@ def velpt_mag_corr_north(u, v, lat, lon, timestamp, z=0.0):
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
         # commented out next line according to NOTE above. -SP
-        #return np.ones(u.shape, dtype=np.float) * -9999
+        #return np.ones(u.shape, dtype=float) * -9999
         raise ValueError('Latitudes or Longitudes are not within the valid range!')
 
     # correct for magnetic declination

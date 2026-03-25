@@ -14,12 +14,12 @@ import unittest
 class TestQCPerformance(PerformanceTestCase):
     def test_globalrangetest(self):
         stats = []
-        sample_set = np.empty(a_year, dtype=np.float)
+        sample_set = np.empty(a_year, dtype=float)
         sample_set.fill(17.)
         indexes = [i for i in range(a_year) if not i%20]
         sample_set[indexes] = 40
-        mins = np.empty(a_year, dtype=np.float)
-        maxs = np.empty(a_year, dtype=np.float)
+        mins = np.empty(a_year, dtype=float)
+        maxs = np.empty(a_year, dtype=float)
         mins.fill(10)
         maxs.fill(10)
 
@@ -28,7 +28,7 @@ class TestQCPerformance(PerformanceTestCase):
     def test_spiketest(self):
         stats = []
 
-        sample_set = np.empty(a_year, dtype=np.float)
+        sample_set = np.empty(a_year, dtype=float)
         sample_set.fill(3)
         indexes = [i for i in range(a_day * 2) if not i%20]
         sample_set[indexes] = 40
@@ -39,20 +39,20 @@ class TestQCPerformance(PerformanceTestCase):
     def test_stuckvalue(self):
         stats = []
         
-        sample_set = np.arange(a_year, dtype=np.float)
+        sample_set = np.arange(a_year, dtype=float)
         v = [4.83, 1.40, 3.33, 3.33, 3.33, 3.33, 4.09, 2.97, 2.85, 3.67]
         sample_set[0:len(v)] = v
         self.profile(stats, stuckvalue, sample_set, 0.001, 4)
 
     def test_trend(self):
         stats = []
-        x = np.arange(a_year, dtype=np.float)
+        x = np.arange(a_year, dtype=float)
         sample_set = np.sin(np.pi * 2 * x/60.) * 6 + 3.
-        self.profile(stats, trend, sample_set, np.arange(a_year, dtype=np.float))
+        self.profile(stats, trend, sample_set, np.arange(a_year, dtype=float))
 
     def test_gradient(self):
         stats = []
-        sample_set = np.arange(a_year, dtype=np.float)
+        sample_set = np.arange(a_year, dtype=float)
 
         self.profile(stats, grad, sample_set, sample_set, [-50,50], .1, [], 5)
 
@@ -69,7 +69,7 @@ class TestQCPerformance(PerformanceTestCase):
         stats = []
         t0 = 1356998400 + 2208988800 # 2013-01-01 + NTP Offset
         dat = np.arange(a_year) + t0
-        dat = np.asanyarray(dat, dtype=np.float)
+        dat = np.asanyarray(dat, dtype=float)
 
         self.profile(stats, ntp_to_month, dat)
 

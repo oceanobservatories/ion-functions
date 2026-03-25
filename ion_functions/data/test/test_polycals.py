@@ -13,10 +13,10 @@ class TestPolycals(BaseUnitTestCase):
         # Each of these types of representing a ragged array of coefficients needs to work
 
         coeffs = [[1.05, 0.01], [0.002, 1.003, 0.02], [1.03, 0]]
-        cal_t = np.array([7, 10, 15], dtype=np.float)
+        cal_t = np.array([7, 10, 15], dtype=float)
 
-        x = np.arange(20, dtype=np.float)
-        t = np.arange(20, dtype=np.float)
+        x = np.arange(20, dtype=float)
+        t = np.arange(20, dtype=float)
 
         out = polycal(coeffs, cal_t, x, t)
         expected = np.array([  0.        ,   1.        ,   2.        ,   3.        ,
@@ -32,7 +32,7 @@ class TestPolycals(BaseUnitTestCase):
         with self.assertRaises(TypeError):
             polycal(None, cal_t, x, t)
 
-        out = polycal(np.array(coeffs, dtype=np.object), cal_t, x, t)
+        out = polycal(np.array(coeffs, dtype=object), cal_t, x, t)
         np.testing.assert_allclose(out, expected)
 
         out = polycal(tuple(coeffs), cal_t, x, t)
