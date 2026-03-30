@@ -106,7 +106,7 @@ def dosta_phase_volt_to_degree(phase_volt):
     return phase_degree
 
 
-def dosta_Topt_volt_to_degC(t_optode_volt):
+def dosta_Topt_volt_to_degC(T_optode_volt):
     """
     Description:
         Computes T_optode [degC], the DOSTA foil temperature as measured by its internal thermistor,
@@ -142,7 +142,7 @@ def dosta_Topt_volt_to_degC(t_optode_volt):
     """
     # These coefficients to convert analog T_optode from volts to degC are universal
     # for all Aanderaa optodes. Obtained from Shawn Sneddon at Xylem-Aanderaa.
-    t_optode_degc = -5.0 + 8.0 * t_optode_volt
+    t_optode_degc = -5.0 + 8.0 * T_optode_volt
     return t_optode_degc
 
 
