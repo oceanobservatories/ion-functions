@@ -107,7 +107,8 @@ def prs_bottilt_ccmp(scmp, sn):
     ccmp = np.zeros(len(scmp))
 
     for i in range(len(scmp)):
-        ccmp[i] = cmp_lookup[(sn[i], int(round(scmp[i])))]
+        sn_key = sn[i].decode('utf-8') if isinstance(sn[i], bytes) else sn[i]
+        ccmp[i] = cmp_lookup[(sn_key, int(round(scmp[i])))]
     return ccmp
 
 
