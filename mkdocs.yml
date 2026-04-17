@@ -35,4 +35,7 @@ plugins:
 nav:
   - Home: index.md
   - System Interface: system_interface.md
-  - API Reference: []        # Add families here as modules are converted
+  - API Reference:
+    - CTD Functions: api/ctd_functions.md
+    - FLO Functions: api/flo_functions.md
+    - HYD Functions: api/hyd_functions.md
