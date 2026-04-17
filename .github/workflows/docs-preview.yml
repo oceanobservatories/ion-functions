@@ -1,0 +1,34 @@
+name: Deploy docs preview to GitHub Pages
+
+on:
+  push:
+    branches:
+      - documentation
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install numpy scipy gsw ppigrf numexpr mkdocs-material mkdocstrings[python]
+
+      - name: Add package to PYTHONPATH
+        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
+
+      - name: Set fork site_url
+        run: |
+          sed -i "s|site_url:.*|site_url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/|" mkdocs.yml
+
+      - name: Deploy
+        run: mkdocs gh-deploy --force

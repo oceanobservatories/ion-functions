@@ -1,0 +1,38 @@
+site_name: ion-functions
+site_url: https://oceanobservatories.github.io/ion-functions/
+site_description: OOI oceanographic data processing functions
+repo_url: https://github.com/oceanobservatories/ion-functions
+repo_name: oceanobservatories/ion-functions
+edit_uri: ""
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - python
+  logo: assets/NSF-OOI-RGB.png
+
+extra_css:
+  - assets/custom.css
+
+markdown_extensions:
+  - toc:
+      toc_depth: 3
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            show_source: true
+            show_root_heading: true
+            show_root_full_path: false
+            heading_level: 3
+            members_order: source
+
+nav:
+  - Home: index.md
+  - System Interface: system_interface.md
+  - API Reference: []        # Add families here as modules are converted
