@@ -1,4 +1,4 @@
-# OOI System Interface
+# Wrapper Functions
 
 Some modules expose thin wrapper functions in addition to the core functions
 documented in the API Reference. These wrappers exist because the OOI data
@@ -16,8 +16,9 @@ external use since it returns all outputs at once.
 instrument-specific or product-specific names. For example, `flo_chla`,
 `flo_cdom`, and `flo_beta` are all thin wrappers around `flo_scale_and_offset`,
 which is the actual computation. The named wrappers exist so that each OOI data
-product has a uniquely named callable; external users should call
+product has a uniquely named function; external users should call
 `flo_scale_and_offset` directly with the appropriate calibration coefficients.
 
 Wrapper functions are documented alongside their core counterparts in each
-instrument family page, under a collapsed "OOI System Interface" section.
+instrument family page (where applicable), under a collapsed "Wrapper 
+functions" section.

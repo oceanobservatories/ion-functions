@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.phsen_h_functions
-@file ion_functions/data/phsen_h_functions.py
-@author Samuel Dahlberg
-@brief Module containing Cabled PHSEN H data-calculations. Instrument data for the format 0 output is presented in raw
-units, and must be calculated into L2 Data. Most functions with the exception of 'ph_total' were pulled from SeaBird's
-scientific github: https://github.com/Sea-BirdScientific/seabirdscientific/tree/main/src/seabirdscientific
+Module containing data processing functions for the Sea-Bird Scientific Deep
+SeapHOx V2 pH instrument (PHSEN-G and PHSEN-H). Most functions with the
+exception of ph_total were adapted from Sea-Bird Scientific's open-source
+processing library: https://github.com/Sea-BirdScientific/seabirdscientific
 """
 
 import numpy as np
@@ -32,94 +30,158 @@ F = 96485.365
 
 def temperature_raw_conversion(temp_counts, a0, a1, a2, a3):
     """
-        Description:
-            This function converts the raw data from the instrument in A/D counts into Degrees C, ITS-90
+    Convert raw SBE 37 temperature A/D counts to degrees C (ITS-90).
 
-        Implemented by:
-            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+    Parameters
+    ----------
+    temp_counts : array_like
+        Raw temperature A/D counts from the SBE 37 MicroCAT [counts].
+    a0 : float
+        Calibration coefficient 1 for the temperature sensor [unitless].
+    a1 : float
+        Calibration coefficient 2 for the temperature sensor [unitless].
+    a2 : float
+        Calibration coefficient 3 for the temperature sensor [unitless].
+    a3 : float
+        Calibration coefficient 4 for the temperature sensor [unitless].
 
-        Usage:
-            temperature = temperature_raw_conversion(temp_counts, a0, a1, a2, a3)
+    Returns
+    -------
+    temperature : ndarray
+        Water temperature (ITS-90) [deg_C].
 
-                where
-
-            temp_counts = temperature value to convert in A/D counts
-            a0 = calibration coefficient for the temperature sensor
-            a1 = calibration coefficient for the temperature sensor
-            a2 = calibration coefficient for the temperature sensor
-            a3 = calibration coefficient for the temperature sensor
-        """
-
+    Notes
+    -----
+    Calibration coefficients a0 through a3 are from factory calibration
+    sheets supplied by Sea-Bird Scientific.
+    """
     temperature_counts = temp_counts
 
     log_t = np.log(temperature_counts)
     temperature = (
-                          1 / (a0 + a1 * log_t + a2 * log_t ** 2 + a3 * log_t ** 3)
-                  ) - KELVIN_OFFSET_0C
+        1 / (a0 + a1 * log_t + a2 * log_t ** 2 + a3 * log_t ** 3)
+    ) - KELVIN_OFFSET_0C
 
     return temperature
 
 
-def pressure_raw_conversion(pres_counts, compensation_voltage, ptempa0, ptempa1, ptempa2, ptca0, ptca1, ptca2, ptcb0,
-                            ptcb1, ptcb2, pa0, pa1, pa2):
+def pressure_raw_conversion(pres_counts, compensation_voltage,
+                            ptempa0, ptempa1, ptempa2,
+                            ptca0, ptca1, ptca2,
+                            ptcb0, ptcb1, ptcb2,
+                            pa0, pa1, pa2):
     """
-        Description:
-            This function Converts pressure counts to dbars
+    Convert raw SBE 37 pressure A/D counts to pressure in dbar.
 
-        Implemented by:
-            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+    Parameters
+    ----------
+    pres_counts : array_like
+        Raw pressure A/D counts from the SBE 37 MicroCAT [counts].
+    compensation_voltage : array_like
+        Pressure temperature compensation voltage. Units are counts or
+        volts depending on the instrument configuration [counts or V].
+    ptempa0 : float
+        Calibration coefficient 1 for the pressure temperature
+        compensation [unitless].
+    ptempa1 : float
+        Calibration coefficient 2 for the pressure temperature
+        compensation [unitless].
+    ptempa2 : float
+        Calibration coefficient 3 for the pressure temperature
+        compensation [unitless].
+    ptca0 : float
+        Calibration coefficient 4 for the pressure sensor [unitless].
+    ptca1 : float
+        Calibration coefficient 5 for the pressure sensor [unitless].
+    ptca2 : float
+        Calibration coefficient 6 for the pressure sensor [unitless].
+    ptcb0 : float
+        Calibration coefficient 7 for the pressure sensor [unitless].
+    ptcb1 : float
+        Calibration coefficient 8 for the pressure sensor [unitless].
+    ptcb2 : float
+        Calibration coefficient 9 for the pressure sensor [unitless].
+    pa0 : float
+        Calibration coefficient 10 for the pressure sensor [unitless].
+    pa1 : float
+        Calibration coefficient 11 for the pressure sensor [unitless].
+    pa2 : float
+        Calibration coefficient 12 for the pressure sensor [unitless].
 
-        Usage:
-            pressure = pressure_raw_conversion(pres_counts, compensation_voltage, ptempa0, ptempa1, ptempa2, ptca0,
-            ptca1, ptca2, ptcb0, ptcb1, ptcb2, pa0, pa1, pa2)
+    Returns
+    -------
+    pressure : ndarray
+        Sea pressure relative to one standard atmosphere (14.7 psia)
+        [dbar].
 
-                where
-
-            pres_counts = pressure value to convert, in A/D counts
-            compensation_voltage = pressure temperature compensation voltage, in
-            counts or volts depending on the instrument
-            ptempa0, ptempa1, ptempa2, ptca0, ptca1, ptca2, ptcb0, ptcb1, ptcb2, pa0, pa1, pa2 = calibration
-            coefficients for the pressure sensor
-        """
-
+    Notes
+    -----
+    Sea-level pressure (14.7 psia) is subtracted before unit conversion
+    so the result is gauge pressure. Calibration coefficients are from
+    factory calibration sheets supplied by Sea-Bird Scientific.
+    """
     sea_level_pressure = 14.7
 
     t = (
-            ptempa0
-            + ptempa1 * compensation_voltage
-            + ptempa2 * compensation_voltage**2
+        ptempa0
+        + ptempa1 * compensation_voltage
+        + ptempa2 * compensation_voltage ** 2
     )
-    x = pres_counts - ptca0 - ptca1 * t - ptca2 * t**2
-    n = x * ptcb0 / (ptcb0 + ptcb1 * t + ptcb2 * t**2)
-    pressure = pa0 + pa1 * n + pa2 * n**2
+    x = pres_counts - ptca0 - ptca1 * t - ptca2 * t ** 2
+    n = x * ptcb0 / (ptcb0 + ptcb1 * t + ptcb2 * t ** 2)
+    pressure = pa0 + pa1 * n + pa2 * n ** 2
 
     pressure -= sea_level_pressure
-
     pressure *= PSI_TO_DBAR
 
     return pressure
 
 
-def conductivity_raw_conversion(cond_counts, temperature, pressure, wbotc, g, h, i, j, ctcor, cpcor):
+def conductivity_raw_conversion(cond_counts, temperature, pressure,
+                                wbotc, g, h, i, j, ctcor, cpcor):
     """
-        Description:
-            Converts raw conductivity counts to S/m
+    Convert raw SBE 37 conductivity A/D counts to conductivity in S/m.
 
-        Implemented by:
-            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+    Parameters
+    ----------
+    cond_counts : array_like
+        Raw conductivity A/D counts from the SBE 37 MicroCAT [counts].
+    temperature : array_like
+        Reference temperature from the SBE 37 MicroCAT [deg_C].
+    pressure : array_like
+        Reference pressure from the SBE 37 MicroCAT [dbar].
+    wbotc : float
+        Calibration coefficient 1 for the conductivity sensor
+        [unitless].
+    g : float
+        Calibration coefficient 2 for the conductivity sensor
+        [unitless].
+    h : float
+        Calibration coefficient 3 for the conductivity sensor
+        [unitless].
+    i : float
+        Calibration coefficient 4 for the conductivity sensor
+        [unitless].
+    j : float
+        Calibration coefficient 5 for the conductivity sensor
+        [unitless].
+    ctcor : float
+        Calibration coefficient 6. Temperature correction factor for
+        the conductivity sensor [unitless].
+    cpcor : float
+        Calibration coefficient 7. Pressure correction factor for the
+        conductivity sensor [unitless].
 
-        Usage:
-            conductivity = conductivity_raw_conversion(cond_counts, temperature, pressure, wbotc, g, h, i, j,
-            ctcor, cpcor)
+    Returns
+    -------
+    conductivity : ndarray
+        Conductivity [S/m].
 
-                where
-
-            cond_counts = conductivity value to convert, in A/D counts
-            temperature = reference temperature, in degrees C
-            pressure = reference pressure, in dbar
-            g, h, i, j, ctcor, cpcor = calibration coefficients for the conductivity sensor
-        """
-
+    Notes
+    -----
+    Calibration coefficients are from factory calibration sheets
+    supplied by Sea-Bird Scientific.
+    """
     f = cond_counts * np.sqrt(1 + wbotc * temperature) / 1000.0
     numerator = g + h * f ** 2 + i * f ** 3 + j * f ** 4
     denominator = 1 + ctcor * temperature + cpcor * pressure
@@ -129,20 +191,24 @@ def conductivity_raw_conversion(cond_counts, temperature, pressure, wbotc, g, h,
 
 def internal_temperature(temp_counts):
     """
-        Description:
-            Converts the raw internal temperature counts to degrees C
+    Convert raw Deep SeapHOx V2 internal temperature counts to degrees C.
 
-        Implemented by:
-            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+    Parameters
+    ----------
+    temp_counts : array_like
+        Raw internal temperature counts from the Deep SeapHOx V2
+        instrument [counts].
 
-        Usage:
-            int_temperature = internal_temperature(temp_counts)
+    Returns
+    -------
+    temperature : ndarray
+        Internal instrument temperature [deg_C].
 
-                where
-
-            temp_counts = raw internal temperature counts
+    Notes
+    -----
+    The conversion uses a 16-bit ADC with a fixed slope of 175.72 and
+    offset of -46.85 derived from the SHT sensor calibration.
     """
-
     slope = 175.72
     offset = -46.85
     int_16bit = 2.0 ** 16
@@ -153,21 +219,32 @@ def internal_temperature(temp_counts):
 
 def internal_humidity(humidity_counts, temperature):
     """
-        Description:
-            Converts relative humidity counts to percent
+    Convert raw Deep SeapHOx V2 internal humidity counts to relative
+    humidity in percent.
 
-        Implemented by:
-            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+    Parameters
+    ----------
+    humidity_counts : array_like
+        Raw relative humidity counts from the Deep SeapHOx V2
+        instrument [counts].
+    temperature : array_like
+        Internal instrument temperature from internal_temperature
+        [deg_C].
 
-        Usage:
-            int_humidity = internal_humidity(humidity_counts, temperature)
+    Returns
+    -------
+    relative_humidity : ndarray
+        Relative humidity, clipped to the range [0, 100] [percent].
 
-                where
-
-            humidity_counts = raw relative humidity counts
-            temperature = converted internal temperature in degrees C
+    Notes
+    -----
+    Uncompensated relative humidity is first computed from the raw
+    counts using a 16-bit ADC with slope 125 and offset -6. A
+    temperature compensation of -0.15 percent per degree C deviation
+    from 25 deg_C is then applied. Values outside [0, 119] percent
+    before compensation are left unmodified; the final result is
+    clipped to [0, 100] percent.
     """
-
     slope = 125
     offset = -6
     int_16bit = 2.0 ** 16
@@ -182,7 +259,7 @@ def internal_humidity(humidity_counts, temperature):
         # Theoretically, uncompensated relative humidity can be up to 119%
         if 0 <= humidity < max_humidity:
             relative_humidity[n] = humidity + temperature_coefficient * (
-                    temperature_25c - temperature[n]
+                temperature_25c - temperature[n]
             )
 
     np.clip(relative_humidity, a_min=0, a_max=100)
@@ -190,34 +267,87 @@ def internal_humidity(humidity_counts, temperature):
     return relative_humidity
 
 
-def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2, coeff_e, a0, a1, a2, b0, b1,
-                     therm_ta0, therm_ta1, therm_ta2, therm_ta3, lat, lon, thermistor_units="volts"):
+def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity,
+                     c0, c1, c2, coeff_e, a0, a1, a2, b0, b1,
+                     therm_ta0, therm_ta1, therm_ta2, therm_ta3,
+                     lat, lon, thermistor_units="volts"):
     """
-        Description:
-            Converts raw oxygen phase value to ml/l
+    Convert raw SBE 63 oxygen phase to dissolved oxygen in umol/kg.
 
-        Implemented by:
-            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+    Parameters
+    ----------
+    raw_oxygen_phase : array_like
+        Raw SBE 63 phase value [microseconds].
+    thermistor : array_like
+        Raw SBE 63 thermistor output used as the temperature reference.
+        Units are volts when thermistor_units='volts' or degrees C when
+        thermistor_units='C'.
+    pressure : array_like
+        Pressure from the co-located SBE 37 MicroCAT [dbar].
+    salinity : array_like
+        Practical salinity from the co-located SBE 37 MicroCAT
+        [unitless].
+    c0 : float
+        Calibration coefficient 1 for the SBE 63 oxygen sensor
+        [unitless].
+    c1 : float
+        Calibration coefficient 2 for the SBE 63 oxygen sensor
+        [unitless].
+    c2 : float
+        Calibration coefficient 3 for the SBE 63 oxygen sensor
+        [unitless].
+    coeff_e : float
+        Calibration coefficient 4. Pressure correction coefficient for
+        the SBE 63 oxygen sensor [unitless].
+    a0 : float
+        Calibration coefficient 5 for the SBE 63 oxygen sensor
+        [unitless].
+    a1 : float
+        Calibration coefficient 6 for the SBE 63 oxygen sensor
+        [unitless].
+    a2 : float
+        Calibration coefficient 7 for the SBE 63 oxygen sensor
+        [unitless].
+    b0 : float
+        Calibration coefficient 8 for the SBE 63 oxygen sensor
+        [unitless].
+    b1 : float
+        Calibration coefficient 9 for the SBE 63 oxygen sensor
+        [unitless].
+    therm_ta0 : float
+        Calibration coefficient 1 for the SBE 63 thermistor [unitless].
+    therm_ta1 : float
+        Calibration coefficient 2 for the SBE 63 thermistor [unitless].
+    therm_ta2 : float
+        Calibration coefficient 3 for the SBE 63 thermistor [unitless].
+    therm_ta3 : float
+        Calibration coefficient 4 for the SBE 63 thermistor [unitless].
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees North].
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees East].
+    thermistor_units : str, optional
+        Units of the thermistor input: 'volts' (default) or 'C'.
 
-        Usage:
-            DO = dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c2, coeff_e,
-            a0, a1, a2, b0, b1, therm_ta0, therm_ta1, therm_ta2, therm_ta3, lat, lon, thermistor_units="volts")
+    Returns
+    -------
+    oxygen_umolkg : ndarray
+        Dissolved oxygen concentration [umol/kg].
 
-                where
-
-            raw_oxygen_phase = SBE63 phase value, in microseconds
-            thermistor = SBE63 thermistor data to use are reference
-            pressure =Converted pressure value from the attached CTD, in dbar
-            salinity = Converted salinity value from the attached CTD, in practical salinity PSU
-            c0, c1, c2, coeff_e, a0, a1, a2, b0, b1, therm_ta0, therm_ta1, therm_ta2, therm_ta3 = Calibration
-            Coefficients for dissolved oxygen
-            lat = latitude
-            lon = longitude
-            thermistor_units = unit of measurement for thermistor input, default to volts
+    Notes
+    -----
+    When thermistor_units is 'volts', the thermistor output is first
+    converted to temperature using convert_sbe63_thermistor. The
+    dissolved oxygen is computed from the phase value via a Stern-Volmer
+    model with salinity and pressure corrections. The result is
+    converted from ml/L to umol/kg using potential density computed
+    from the GSW TEOS-10 library. Calibration coefficients are from
+    factory calibration sheets supplied by Sea-Bird Scientific.
     """
-
     if thermistor_units == "volts":
-        temperature = convert_sbe63_thermistor(thermistor, therm_ta0, therm_ta1, therm_ta2, therm_ta3)
+        temperature = convert_sbe63_thermistor(
+            thermistor, therm_ta0, therm_ta1, therm_ta2, therm_ta3
+        )
     elif thermistor_units == "C":
         temperature = thermistor
     else:
@@ -236,7 +366,8 @@ def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c
 
     ts = np.log((KELVIN_OFFSET_25C - temperature) / (KELVIN_OFFSET_0C + temperature))
     s_corr_exp = (
-            salinity * (sol_b0 + sol_b1 * ts + sol_b2 * ts ** 2 + sol_b3 * ts ** 3) + sol_c0 * salinity ** 2
+        salinity * (sol_b0 + sol_b1 * ts + sol_b2 * ts ** 2 + sol_b3 * ts ** 3)
+        + sol_c0 * salinity ** 2
     )
     s_corr = e ** s_corr_exp
 
@@ -246,8 +377,8 @@ def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c
     p_corr = e ** p_corr_exp
 
     ox_val = (
-            (((a0 + a1 * temperature + a2 * oxygen_volts ** 2)
-              / (b0 + b1 * oxygen_volts) - 1.0) / ksv) * s_corr * p_corr
+        (((a0 + a1 * temperature + a2 * oxygen_volts ** 2)
+          / (b0 + b1 * oxygen_volts) - 1.0) / ksv) * s_corr * p_corr
     )
 
     # Unit calculations to convert from ml/l to umol/kg
@@ -261,49 +392,65 @@ def dissolved_oxygen(raw_oxygen_phase, thermistor, pressure, salinity, c0, c1, c
     return oxygen_umolkg
 
 
-def convert_sbe63_thermistor(
-        instrument_output,
-        therm_ta0, therm_ta1, therm_ta2, therm_ta3):
+def convert_sbe63_thermistor(instrument_output,
+                             therm_ta0, therm_ta1, therm_ta2, therm_ta3):
     """
-            Description:
-                Converts a SBE63 thermistor raw output array to temperature in ITS-90 deg C
+    Convert raw SBE 63 thermistor output to temperature in degrees C
+    (ITS-90).
 
-            Implemented by:
-                2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+    Parameters
+    ----------
+    instrument_output : array_like
+        Raw thermistor output from the SBE 63 optical dissolved oxygen
+        sensor [V].
+    therm_ta0 : float
+        Calibration coefficient 1 for the SBE 63 thermistor [unitless].
+    therm_ta1 : float
+        Calibration coefficient 2 for the SBE 63 thermistor [unitless].
+    therm_ta2 : float
+        Calibration coefficient 3 for the SBE 63 thermistor [unitless].
+    therm_ta3 : float
+        Calibration coefficient 4 for the SBE 63 thermistor [unitless].
 
-            Usage:
-                temperature = convert_sbe63_thermistor(instrument_output, therm_ta0, therm_ta1, therm_ta2, therm_ta3)
+    Returns
+    -------
+    temperature : ndarray
+        Temperature from the SBE 63 thermistor (ITS-90) [deg_C].
 
-                    where
-
-                instrument_output = raw values from the thermistor
-                therm_ta0, therm_ta1, therm_ta2, therm_ta3 = Calibration Coefficients for sbe63 thermistor
-        """
-
+    Notes
+    -----
+    Calibration coefficients are from factory calibration sheets
+    supplied by Sea-Bird Scientific.
+    """
     log_raw = np.log((100000 * instrument_output) / (3.3 - instrument_output))
     temperature = (
-            1 / (therm_ta0 + therm_ta1 * log_raw + therm_ta2 * log_raw ** 2 + therm_ta3 * log_raw ** 3)
-            - KELVIN_OFFSET_0C
+        1 / (therm_ta0 + therm_ta1 * log_raw
+             + therm_ta2 * log_raw ** 2 + therm_ta3 * log_raw ** 3)
+        - KELVIN_OFFSET_0C
     )
     return temperature
 
 
 def convert_ph_voltage_counts(ph_counts):
     """
-        Description:
-            Convert pH voltage counts to a floating point value
+    Convert raw ISFET pH voltage counts to volts for the Deep SeapHOx V2.
 
-        Implemented by:
-            2026-01-21: Samuel Dahlberg. Initial code, adapted from SeaBird's conversion code.
+    Parameters
+    ----------
+    ph_counts : array_like
+        Raw ISFET pH voltage counts from the Deep SeapHOx V2 instrument
+        [counts].
 
-        Usage:
-            ph_volts = convert_ph_voltage_counts(ph_counts)
+    Returns
+    -------
+    ph_volts : ndarray
+        ISFET external reference voltage (V_FET/REF) [Volts].
 
-                where
-
-            ph_counts = pH voltage counts
+    Notes
+    -----
+    The conversion uses a 23-bit ADC with a 2.5 V reference and unity
+    gain. The full-scale count is 8388608 (2^23).
     """
-
     adc_vref = 2.5
     gain = 1
     adc_23bit = 8388608.0
@@ -313,30 +460,64 @@ def convert_ph_voltage_counts(ph_counts):
 
 def ph_total(vrs_ext, degc, psu, dbar, k0, k2, f):
     """
-        Description:
-            Calculate the total pH from the SeapHOx sensor. The total pH is calculated from external voltage (vrs_ext),
-            temperature (degC), salinity (psu), pressure (dbar), and the calibration coefficients (k0, k2, f).
-            Source is Sea-Bird Scientific Application Note 99, "Calculating pH from ISFET pH Sensors".
+    Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sea-Bird
+    Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H).
 
-        Implemented by:
-            2026-01-21: Samuel Dahlberg. Initial code, adapted from Chris Wingard's ph_total function in cgsn processing
-                        https://bitbucket.org/ooicgsn/cgsn-processing/src/master/cgsn_processing/process/proc_cphox.py
+    Parameters
+    ----------
+    vrs_ext : array_like
+        External ISFET reference voltage (V_FET/REF) [Volts].
+    degc : array_like
+        In-situ temperature from the co-located CTD [deg_C].
+    psu : array_like
+        Practical salinity from the co-located CTD [unitless].
+    dbar : array_like
+        Pressure from the co-located CTD [dbar].
+    k0 : float or array_like
+        Calibration coefficient 1. Cell standard potential offset
+        for the external reference [Volts].
+    k2 : float or array_like
+        Calibration coefficient 2. Temperature slope coefficient for
+        the external reference [Volts deg_C^-1].
+    f : array_like, shape (..., 6)
+        Calibration coefficients 3-8. Coefficients f1 through f6 of
+        the 6th-order pressure response polynomial f(P). Coefficient
+        f0 is captured in k0 and is not used here [unitless].
 
-        Usage:
-            ph = ph_total(vrs_ext, degc, psu, dbar, k0, k2, f)
+    Returns
+    -------
+    p_h : ndarray
+        pH of seawater on the total hydrogen ion scale (PHWATER_L2)
+        [unitless].
 
-                where
+    Notes
+    -----
+    The algorithm follows Sea-Bird Scientific Application Note 99
+    (Johnson et al. 2016; Johnson et al. 2017). The ISFET external
+    cell exhibits a Nernstian response to pH and is sensitive to
+    chloride activity. The total pH is computed as:
 
-            vrs_ext = external voltage from the FET sensor
-            degc = temperature in degrees Celsius
-            psu = salinity in practical salinity units
-            dbar = pressure in decibars
-            k0, k2, f = Calibration Coefficients for ph calculation.
+        pH = (V_FET/REF - k0 - k2*t - f(P)) / S_nernst
+             + log10(Cl_T) + 2*log10(gamma_HCl)_T&P
+             - log10(1 + S_T/K_S,T&P)
+             - log10((1000 - 1.005*S) / 1000)
+
+    where S_nernst = R*T*ln(10)/F, Cl_T is total chloride, gamma_HCl
+    is the HCl activity coefficient corrected for temperature and
+    pressure, S_T is total sulfate, and K_S,T&P is the acid
+    dissociation constant of HSO4- corrected for temperature and
+    pressure. All intermediate quantities are computed from salinity,
+    temperature, and pressure following Dickson et al. (2007),
+    Khoo et al. (1977), Millero (1982, 1983), and Johnson et al.
+    (2017).
+
+    Calibration coefficients k0, k2, and f are from factory
+    calibration sheets supplied by Sea-Bird Scientific.
     """
-
     f = np.atleast_2d(f)
 
-    fp = f[:, 0] * dbar + f[:, 1] * dbar ** 2 + f[:, 2] * dbar ** 3 + f[:, 3] * dbar ** 4 + f[:, 4] * dbar ** 5 + f[:, 5] * dbar ** 6
+    fp = (f[:, 0] * dbar + f[:, 1] * dbar ** 2 + f[:, 2] * dbar ** 3
+          + f[:, 3] * dbar ** 4 + f[:, 4] * dbar ** 5 + f[:, 5] * dbar ** 6)
 
     bar = dbar * 0.10  # convert pressure from dbar to bar
 
@@ -346,48 +527,50 @@ def ph_total(vrs_ext, degc, psu, dbar, k0, k2, f):
     f = 9.6485365e4  # C/mol Faraday constant
     snerst = r * t * np.log(10) / f
 
-    # total chloride in seawater
-
+    # total chloride in seawater (Dickson et al. 2007)
     cl_total = (0.99889 / 35.453) * (psu / 1.80655) * (1000 / (1000 - 1.005 * psu))
 
-    # partial Molal volume of HCl (calculated as Millero 1983)
+    # partial Molal volume of HCl (Millero 1983)
     vhcl = 17.85 + 0.1044 * degc - 0.0001316 * degc ** 2
 
-    # Sample ionic strength (calculated as Dickson et al. 2007)
+    # Sample ionic strength (Dickson et al. 2007)
     i = (19.924 * psu) / (1000 - 1.005 * psu)
 
-    # Debye-Huckel constant for activity of HCl (calculated as Khoo et al. 1977)
+    # Debye-Huckel constant for activity of HCl (Khoo et al. 1977)
     adh = 0.0000034286 * degc ** 2 + 0.00067503 * degc + 0.49172143
 
-    # log of the activity coefficient of HCl as a function of temperature
-    # (calculated as Khoo et al. 1977)
+    # log of HCl activity coefficient as a function of temperature
+    # (Khoo et al. 1977)
     loghclt = ((-adh * np.sqrt(i)) / (1 + 1.394 * np.sqrt(i))) + (0.08885 - 0.000111 * degc) * i
 
-    # log10 of the activity coefficient of HCl as a function of temperature # and pressure (calculated as Johnson et al. 2017)
+    # log10 of HCl activity coefficient as a function of temperature
+    # and pressure (Johnson et al. 2017)
     loghcltp = loghclt + (((vhcl * bar) / (np.log(10) * r * t * 10)) / 2)
 
-    # total sulfate in seawater (calculated as Dickson et al. 2007)
+    # total sulfate in seawater (Dickson et al. 2007)
     so4_total = (0.1400 / 96.062) * (psu / 1.80655)
 
-    # acid disassociation constant of HSO4- (calculated as Dickson et al.
-    # 2007)
+    # acid dissociation constant of HSO4- (Dickson et al. 2007)
     ks = (1 - 0.001005 * psu) * np.exp(
-        (-4276.1 / t) + 141.328 - 23.093 * np.log(t) + ((-13856 / t) + 324.57 - 47.986 * np.log(t)) * np.sqrt(i) + (
-                (35474 / t) - 771.54 + 114.723 * np.log(t)) * i - (2698 / t) * i ** 1.5 + (1776 / t) * i ** 2)
+        (-4276.1 / t) + 141.328 - 23.093 * np.log(t)
+        + ((-13856 / t) + 324.57 - 47.986 * np.log(t)) * np.sqrt(i)
+        + ((35474 / t) - 771.54 + 114.723 * np.log(t)) * i
+        - (2698 / t) * i ** 1.5 + (1776 / t) * i ** 2)
 
-    # partial Molal volume of HSO4- (calculated as Millero 1983)
+    # partial Molal volume of HSO4- (Millero 1983)
     v_hso4 = -18.03 + 0.0466 * degc + 0.000316 * degc ** 2
 
-    # compressibility of sulfate (calculated as Millero 1983)
+    # compressibility of HSO4- (Millero 1983)
     kbar_s = (-4.53 + 0.09 * degc) / 1000
 
-    # acid dissociation constant of HSO4- as function of salinity,
-    # temperature, and pressure (calculated as Millero 1982)
+    # acid dissociation constant of HSO4- corrected for T and P
+    # (Millero 1982)
     kstp = ks * np.exp((-v_hso4 * bar + 0.5 * kbar_s * bar ** 2) / (r * t * 10))
 
-    # calculate the pH total, adjusted for pressure, temperature and
-    # salinity
-    p_h = (((vrs_ext - k0 - k2 * degc - fp) / snerst) + np.log10(cl_total) + 2 * loghcltp - np.log10(
-        1 + (so4_total / kstp)) - np.log10((1000 - 1.005 * psu) / 1000))
+    # calculate total pH adjusted for pressure, temperature, and salinity
+    p_h = (((vrs_ext - k0 - k2 * degc - fp) / snerst)
+           + np.log10(cl_total) + 2 * loghcltp
+           - np.log10(1 + (so4_total / kstp))
+           - np.log10((1000 - 1.005 * psu) / 1000))
 
     return p_h

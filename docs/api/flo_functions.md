@@ -26,7 +26,7 @@ instruments.
 
 ---
 
-### CHLAFLO and CDOMFLO — Fluorescence Concentrations (L0 $\rightarrow$ L1)
+### CHLAFLO and CDOMFLO — Fluorescence Concentrations (L0 to L1)
 
 Raw output from the FLORD/FLORT instrument is in counts, ranging from 0
 to approximately 4096. The L1 fluorescence concentrations are computed
@@ -60,7 +60,7 @@ invoked for those deployments.
 
 ---
 
-### FLUBSCT — Optical Backscatter (L0 $\rightarrow$ L1 $\rightarrow$ L2)
+### FLUBSCT — Optical Backscatter (L0 to L1 to L2)
 
 #### L1: Volume Scattering Function
 
@@ -96,7 +96,7 @@ The L2 product is the total optical backscatter coefficient $b_b$
 and total seawater scattering coefficient $b_\text{sw}$ using the Zhang
 et al. (2009) model with co-located CTD temperature and salinity:
 
-$$[\beta_\text{sw}, b_\text{sw}] = \text{flo\_zhang\_scatter\_coeffs}(\text{degC}, \text{psu}, \theta, \lambda)$$
+$$[\beta_\text{sw}, b_\text{sw}] = \text{flo_zhang_scatter_coeffs}(\text{degC}, \text{psu}, \theta, \lambda)$$
 
 **Step 2** — Subtract the seawater contribution to obtain the particulate
 volume scattering function:
@@ -231,7 +231,7 @@ when a single computation is needed for multiple products.
 
 ---
 
-## OOI System Interface
+## Wrapper Functions
 
 The three functions below are named-product wrappers that apply
 `flo_scale_and_offset` under instrument- and product-specific names to

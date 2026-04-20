@@ -22,7 +22,7 @@ calibration sheets supplied with individual instruments.
 
 ---
 
-### TEMPWAT — Water Temperature (L0 $\rightarrow$ L1)
+### TEMPWAT — Water Temperature (L0 to L1)
 
 Temperature is calculated from the raw data provided by the instrument.
 
@@ -61,7 +61,7 @@ $\pm 0.002\ ^\circ\text{C}$.
 
 ---
 
-### PRESWAT — Pressure / Depth (L0 $\rightarrow$ L1)
+### PRESWAT — Pressure / Depth (L0 to L1)
 
 Sea pressure is reported relative to one standard atmosphere (10.1325 dbar).
 Two pressure sensor types are used across the SBE 16Plus family: a
@@ -129,7 +129,7 @@ Output accuracy: SBE 16Plus V2 and SBE 37IM 0.1 % of full-scale range.
 
 ---
 
-### CONDWAT — Conductivity (L0 $\rightarrow$ L1)
+### CONDWAT — Conductivity (L0 to L1)
 
 Conductivity is calculated from the raw data provided by the instrument. The 
 SBE 16Plus outputs raw frequencies in hexadecimal; the SBE 37IM and SBE 52MP 
@@ -169,7 +169,7 @@ $\pm 0.0003$ S m$^{-1}$.
 
 ---
 
-### PRACSAL — Practical Salinity (L1 $\rightarrow$ L2)
+### PRACSAL — Practical Salinity (L1 to L2)
 
 Practical salinity is computed from L1 conductivity, temperature, and
 pressure using the TEOS-10 GSW library function `gsw.SP_from_C`, which
@@ -183,7 +183,7 @@ scale.
 
 ---
 
-### DENSITY — In-situ Density (L1/L2 $\rightarrow$ L2)
+### DENSITY — In-situ Density (L1/L2 to L2)
 
 In-situ seawater density is computed via a three-step chain using the TEOS-10
 GSW library:

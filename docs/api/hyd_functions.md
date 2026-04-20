@@ -19,7 +19,7 @@ individual instruments.
 
 ---
 
-### HYDAPBB — Broadband Acoustic Pressure Waves (L0 $\rightarrow$ L1)
+### HYDAPBB — Broadband Acoustic Pressure Waves (L0 to L1)
 
 The HYDBB instrument digitizes the hydrophone signal into a 24-bit WAV
 data stream at up to 200 kHz. Data are streamed over a 10/100BaseT Ethernet
@@ -61,7 +61,7 @@ Array Hybrid Mooring subsites PN1C and PN1D.
 
 ---
 
-### HYDAPLF — Low Frequency Acoustic Pressure Waves (L0 $\rightarrow$ L1)
+### HYDAPLF — Low Frequency Acoustic Pressure Waves (L0 to L1)
 
 The HYDLF hydrophone is attached electrically and physically to the co-located
 OBSBB or OBSBK broadband seismometer. Its analog output is digitized by the

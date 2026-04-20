@@ -40,7 +40,7 @@ plugins:
 
 nav:
   - Home: index.md
-  - System Interface: system_interface.md
+  - Wrapper Functions: wrapper_functions.md
   - API Reference:
     - CTD Functions: api/ctd_functions.md
     - FLO Functions: api/flo_functions.md

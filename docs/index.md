@@ -1,9 +1,9 @@
-# ion-functions
+# ION Functions
 
 Python library of oceanographic data processing functions for the
 [Ocean Observatories Initiative (OOI)](https://oceanobservatories.org/).
 
-ion-functions transforms raw instrument data (L0) into calibrated scientific
+ION Functions transforms raw instrument data (L0) into calibrated scientific
 data products at L1 and L2 levels, covering CTD, ADCP, velocity, dissolved
 oxygen, CO2, fluorometry, pH, pressure, meteorology, and more.
 
@@ -15,10 +15,10 @@ entries are pending conversion.
 
 | Module                              | Instruments                                 | Data products |
 |-------------------------------------|---------------------------------------------|---------------|
-| Hydrophone                          | HYDBB, HYDLF                                | HYDAPBB, HYDAPLF |
-| CTD                                 | SBE 16Plus, SBE 37IM, SBE 52MP, glider CTDs | TEMPWAT, PRESWAT, CONDWAT, PRACSAL, DENSITY |
-| Fluorometer                         | ECO FLORD, FLORT, FLNTU                     | CHLAFLO, CDOMFLO, FLUBSCT |
-| CO2                                 | SAMI-CO2                                    | PCO2WAT, PCO2ATM |
+| [Hydrophone](api/hyd_functions.md)  | HYDBB, HYDLF                                | HYDAPBB, HYDAPLF |
+| [CTD](api/ctd_functions.md)         | SBE 16Plus, SBE 37IM, SBE 52MP, glider CTDs | TEMPWAT, PRESWAT, CONDWAT, PRACSAL, DENSITY |
+| [Fluorometer](api/flo_functions.md) | ECO FLORD, FLORT, FLNTU                     | CHLAFLO, CDOMFLO, FLUBSCT |
+| [CO2](api/co2_functions.md)         | SAMI2-CO2, CO2-Pro                          | PCO2WAT, PCO2ATM, PCO2SSW, CO2FLUX |
 | Dissolved oxygen                    | SBE 43, Aanderaa Optode                     | DOXYGEN |
 | Water velocity (single-point)       | Aquadopp, FSI, Nobska MAVS                  | VELPTTU |
 | Ocean bottom seismometer            | OBSBB, OBSBK                                | GRNDVEL, GRNDACC, SGRDVEL |
