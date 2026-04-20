@@ -42,6 +42,8 @@ nav:
   - Home: index.md
   - Wrapper Functions: wrapper_functions.md
   - API Reference:
+    - CO2 Functions: api/co2_functions.md
     - CTD Functions: api/ctd_functions.md
     - FLO Functions: api/flo_functions.md
     - HYD Functions: api/hyd_functions.md
+    - PH Functions: api/ph_functions.md
