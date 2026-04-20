@@ -15,9 +15,15 @@ theme:
 extra_css:
   - assets/custom.css
 
+extra_javascript:
+  - assets/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
 markdown_extensions:
   - toc:
       toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
 
 plugins:
   - search
