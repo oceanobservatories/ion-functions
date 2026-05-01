@@ -159,28 +159,28 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578,
         Raw reference and signal measurements from the PHSEN measurement
         cycle. Contains 23 sets of 4 interleaved measurements:
         [ref434, sig434, ref578, sig578] [counts].
-    therm : array_like, shape (nRec,)
+    therm : array_like, shape (nRec)
         Thermistor temperature at the end of the measurement cycle,
         converted to degrees C via ph_thermistor (ABSTHRM_L0) [deg_C].
-    ea434 : array_like, shape (nRec,)
+    ea434 : array_like, shape (nRec)
         Calibration coefficient 1. Molar absorptivity of the acidic
         indicator form at 434 nm at the reference temperature [unitless].
-    eb434 : array_like, shape (nRec,)
+    eb434 : array_like, shape (nRer)
         Calibration coefficient 2. Molar absorptivity of the basic
         indicator form at 434 nm at the reference temperature [unitless].
-    ea578 : array_like, shape (nRec,)
+    ea578 : array_like, shape (nRec)
         Calibration coefficient 3. Molar absorptivity of the acidic
         indicator form at 578 nm at the reference temperature [unitless].
-    eb578 : array_like, shape (nRec,)
+    eb578 : array_like, shape (nRec)
         Calibration coefficient 4. Molar absorptivity of the basic
         indicator form at 578 nm at the reference temperature [unitless].
-    ind_slp : float or array_like, shape (nRec,)
+    ind_slp : float or array_like, shape (nRec)
         Indicator impurity slope correction factor applied to pH values
-        >= 8.2 [unitless].
-    ind_off : float or array_like, shape (nRec,)
+        greater than 8.2 [unitless].
+    ind_off : float or array_like, shape (nRec)
         Indicator impurity offset correction factor applied to pH values
-        >= 8.2 [unitless].
-    psal : float or array_like, shape (nRec,), optional
+        greater than 8.2 [unitless].
+    psal : float or array_like, shape (nRec), optional
         Practical salinity from a co-located CTD. Default is 35.0 if
         CTD data are unavailable [unitless].
 

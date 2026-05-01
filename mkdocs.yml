@@ -17,7 +17,7 @@ extra_css:
 
 extra_javascript:
   - assets/mathjax.js
-  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js
 
 markdown_extensions:
   - toc:
@@ -40,8 +40,9 @@ plugins:
 
 nav:
   - Home: index.md
-  - Wrapper Functions: wrapper_functions.md
-  - API Reference:
+  - Calibration Coefficients: calibrations.md
+  - Function Types: function_types.md
+  - Instrument Families:
     - CO2 Functions: api/co2_functions.md
     - CTD Functions: api/ctd_functions.md
     - FLO Functions: api/flo_functions.md

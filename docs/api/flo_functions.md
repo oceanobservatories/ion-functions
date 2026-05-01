@@ -14,19 +14,18 @@ by this module.
 
 Fixed-platform instruments include a wiper to actively limit biofouling.
 Mobile-platform instruments (profilers, gliders, AUVs) use only passive
-mitigation (copper faceplates and antifouling coatings).
+mitigation (copper faceplates).
 
 `flo_functions.py` converts raw L0 count data from these instruments into
 three L1 data products — fluorometric chlorophyll-a concentration
 (CHLAFLO_L1), fluorometric CDOM concentration (CDOMFLO_L1), and the
 volume scattering function (FLUBSCT_L1) — and one L2 product, the total
 optical backscatter coefficient (FLUBSCT_L2). All calibration coefficients
-are from factory calibration sheets supplied by WET Labs with individual
-instruments.
+are from factory calibration sheets.
 
 ---
 
-### CHLAFLO and CDOMFLO — Fluorescence Concentrations (L0 to L1)
+### CHLAFLO and CDOMFLO — Fluorescence Concentrations
 
 Raw output from the FLORD/FLORT instrument is in counts, ranging from 0
 to approximately 4096. The L1 fluorescence concentrations are computed
@@ -60,9 +59,7 @@ invoked for those deployments.
 
 ---
 
-### FLUBSCT — Optical Backscatter (L0 to L1 to L2)
-
-#### L1: Volume Scattering Function
+### FLUBSCT_L1: Total Volume Scattering Function
 
 The L1 optical backscatter product is the total volume scattering function
 $\beta(\theta, \lambda)$ ($\text{m}^{-1}\ \text{sr}^{-1}$) at the
@@ -76,7 +73,8 @@ where SF has units of $(\text{m}^{-1}\ \text{sr}^{-1})\ \text{count}^{-1}$.
 Raw counts range from 0 to approximately 4210. The dark count and scale
 factor are from the factory calibration sheet.
 
-The centroid angle $\theta$ and chi factor $\chi$ are instrument-dependent:
+The centroid angle $\theta$ and chi factor $\chi$ (used below) are 
+instrument-dependent:
 
 | Instrument type | OOI classes | $\theta$ | $\chi$ |
 |---|---|---|---|
@@ -87,7 +85,7 @@ All FLORD and FLORT backscatter channels use a nominal measurement
 wavelength of 700 nm. The ECO-BB3 (FLORT series O) is an exception with
 three backscatter channels at different visible wavelengths.
 
-#### L2: Total Optical Backscatter Coefficient
+### FLUBSCT_L2: Total Optical Backscatter Coefficient
 
 The L2 product is the total optical backscatter coefficient $b_b$
 ($\text{m}^{-1}$), computed in four steps:
@@ -106,7 +104,7 @@ $$\beta_p(\theta, \lambda) = \beta(\theta, \lambda) - \beta_\text{sw}(\theta, \l
 **Step 3** — Convert to the particulate backscattering coefficient using
 the chi factor $\chi$:
 
-$$b_{bp} = \chi \cdot 2\pi \cdot \beta_p(\theta, \lambda)$$
+$$b_{bp} = \chi \times 2\pi \times \beta_p(\theta, \lambda)$$
 
 The factor of $2\pi$ arises from integration over the polar angle. The
 chi factor relates the particulate volume scattering at angle $\theta$ to
@@ -165,17 +163,6 @@ when a single computation is needed for multiple products.
 
 ---
 
-::: ion_functions.data.flo_functions.flo_zhang_scatter_coeffs
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2013-07-15 | Christopher Wingard | Initial code |
-| 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
 ::: ion_functions.data.flo_functions.flo_bback_total
 
 #### History
@@ -184,6 +171,19 @@ when a single computation is needed for multiple products.
 | 2013-07-16 | Christopher Wingard | Initial code |
 | 2014-04-23 | Christopher Wingard | Revised to address integration issues and meet DPS intent |
 | 2015-10-26 | Russell Desiderio | Removed default argument values; revised documentation |
+| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+## Helper Functions
+
+::: ion_functions.data.flo_functions.flo_zhang_scatter_coeffs
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2013-07-15 | Christopher Wingard | Initial code |
+| 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
 | 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
@@ -221,6 +221,8 @@ when a single computation is needed for multiple products.
 
 ---
 
+## Wrapper Functions
+
 ::: ion_functions.data.flo_functions.flo_scat_seawater
 
 #### History
@@ -230,8 +232,6 @@ when a single computation is needed for multiple products.
 | 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
-
-## Wrapper Functions
 
 The three functions below are named-product wrappers that apply
 `flo_scale_and_offset` under instrument- and product-specific names to

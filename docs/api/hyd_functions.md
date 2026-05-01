@@ -3,13 +3,15 @@
 ## Background
 
 The Ocean Observatories Initiative deploys two classes of passive acoustic
-hydrophone instruments to record underwater sound pressure waves in the
-frequency ranges relevant to seismic, biological, and anthropogenic sources.
+hydrophone instruments as part of the cabled portion of the Coastal Endurance 
+Array and elsewhere in the Regional Cabled Array (RCA) to record underwater 
+sound pressure waves in the frequency ranges relevant to seismic, biological, 
+and anthropogenic sources.
 
 | Class | Hardware | Platform | Designator meaning |
 |---|---|---|---|
-| HYDBB | Ocean Sonics icListen HF | RSN and Endurance Hybrid Moorings | Hydrophone, Broadband |
-| HYDLF | Low-frequency hydrophone | RSN (co-located with OBSBB/OBSBK) | Hydrophone, Low Frequency |
+| HYDBB | Ocean Sonics icListen HF | Moored (fixed depth) | Hydrophone, Broadband |
+| HYDLF | Low-frequency hydrophone | Moored (fixed depth) | Hydrophone, Low Frequency |
 
 `hyd_functions.py` converts raw L0 data from both instrument classes into
 their respective L1 data products: Broadband Acoustic Pressure Waves
@@ -19,7 +21,7 @@ individual instruments.
 
 ---
 
-### HYDAPBB — Broadband Acoustic Pressure Waves (L0 to L1)
+### HYDAPBB_L1 — Broadband Acoustic Pressure Waves
 
 The HYDBB instrument digitizes the hydrophone signal into a 24-bit WAV
 data stream at up to 200 kHz. Data are streamed over a 10/100BaseT Ethernet
@@ -61,7 +63,7 @@ Array Hybrid Mooring subsites PN1C and PN1D.
 
 ---
 
-### HYDAPLF — Low Frequency Acoustic Pressure Waves (L0 to L1)
+### HYDAPLF_L1 — Low Frequency Acoustic Pressure Waves
 
 The HYDLF hydrophone is attached electrically and physically to the co-located
 OBSBB or OBSBK broadband seismometer. Its analog output is digitized by the

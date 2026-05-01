@@ -15,3 +15,53 @@ tbody td:first-child {
     padding: 4px;
     border-radius: 2px;
 }
+
+/* Add spacing below source code toggle (collapsed or expanded)
+   so History/Additional Notes headings don't pile up against it */
+details.mkdocstrings-source {
+    margin-bottom: 1.0em;
+}
+
+/* Widen the left navigation sidebar so long function names are not
+   clipped. All three containers must match. */
+.wy-nav-side {
+    width: 350px;
+}
+
+.wy-side-scroll {
+    width: 350px;
+}
+
+.wy-nav-content-wrap {
+    margin-left: 350px;
+}
+
+.wy-menu-vertical {
+    width: 350px;
+}
+
+.wy-side-nav-search {
+    width: 350px;
+}
+
+.rst-versions {
+    width: 350px;
+}
+
+/* Draft watermark on all pages (delete this section once we are ready to
+   release the final documentation) */
+.wy-nav-content::after {
+    content: "DRAFT";
+    position: fixed;
+    top: 50%;
+    left: calc(350px + (100% - 350px - 800px) / 2);
+    width: 800px;
+    text-align: center;
+    transform: translateY(-50%) rotate(-45deg);
+    font-size: 8rem;
+    font-weight: bold;
+    color: rgba(255, 0, 0, 0.05);
+    pointer-events: none;
+    z-index: 9999;
+    white-space: nowrap;
+}

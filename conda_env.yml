@@ -3,13 +3,13 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python>=3.10
+  - python>=3.13
   - cython
-  - matplotlib
-  - numexpr>=2.8.7
-  - numpy>=1.26.0
-  - scipy>=1.11.3
-  - gsw>=3.6.17
-  - ppigrf>=13.0
-  - mkdocs-material
+  - numpy>=2.4
+  - scipy>=1.17
+  - matplotlib>=3.10
+  - gsw>=3.6
+  - ppigrf>=2.0
   - mkdocstrings
+  - mkdocstrings-python
+  - mkdocs-material
