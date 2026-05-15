@@ -20,6 +20,12 @@ instruments measure pH on the total hydrogen ion scale ($\text{pH}_T$). All
 calibration coefficients are from factory calibration sheets supplied with 
 individual instruments.
 
+### Primary Sources
+
+| Document | DCN |
+|---|---|
+| [OOI (2012). Data Product Specification for pH of Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_SPEC_PHWATER_OOI.pdf) | 1341-00510 |
+
 ---
 
 ### PHWATER_L2 — pH of Seawater
@@ -117,7 +123,7 @@ salinity (Clayton and Byrne, 1993):
 
 $$pK'_a = \frac{1245.69}{T_C + 273.15} + 3.8275 + 0.0021 \times (35 - S)$$
 
-where $S$ is the seawater practical salinity from a co-lcated CTD (default 
+where $S$ is the seawater practical salinity from a co-located CTD (default 
 35.0 if no CTD data are available).
 
 **PHWATER_L2 Calculation**
@@ -267,6 +273,9 @@ Output accuracy: $\pm 0.05$ pH units; resolution 0.004 pH units; typical
 stability 0.003 pH units per month (Sea-Bird Scientific Deep SeapHOx V2
 data sheet, DS53, May 2025).
 
+Full algorithm derivations, calibration procedures, and source references
+are listed in the [References](#references) section.
+
 ---
 
 ## Core Functions
@@ -392,7 +401,7 @@ Millero, F. J. (1983). In Chemical Oceanography; Riley, J. P., Chester, R.,
 Eds.; Academic Press: London, Vol. 8, pp 1–88.
 
 [OOI (2012). Data Product Specification for pH of Seawater. Document Control
-Number 1341-00510.](https://oceanobservatories.org/wp-content/uploads/2015/10/1341-00510_Data_Product_SPEC_PHWATER_OOI.pdf)
+Number 1341-00510.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_SPEC_PHWATER_OOI.pdf)
 
 Sea-Bird Scientific (2025). Deep SeapHOx V2 Data Sheet. Document DS53,
 May 2025.

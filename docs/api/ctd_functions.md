@@ -28,6 +28,16 @@ integers). Depending on the instrument, telemetered data may be reported directl
 in L1 units while the recovered instrument data is reported in L0 units 
 requiring the conversions below.  
 
+### Primary Sources
+
+| Document | DCN |
+|---|---|
+| [OOI (2013). Data Product Specification for Water Temperature.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf) | 1341-00010 |
+| [OOI (2013). Data Product Specification for Pressure (Depth).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf) | 1341-00020 |
+| [OOI (2013). Data Product Specification for Conductivity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf) | 1341-00030 |
+| [OOI (2013). Data Product Specification for Salinity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf) | 1341-00040 |
+| [OOI (2012). Data Product Specification for Density.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf) | 1341-00050 |
+
 ---
 
 ### TEMPWAT_L1 — Seawater Temperature
@@ -228,6 +238,9 @@ $$\rho = \text{gsw.rho}(S_A, \Theta, p)$$
 
 Density is computed using the computationally-efficient 48-term expression
 described in McDougall et al. (2011).
+
+Full algorithm derivations, calibration procedures, and source references
+are listed in the [References](#references) section.
 
 ---
 
@@ -467,16 +480,16 @@ Sea-Bird Electronics (2011). SBE 37-IM MicroCAT User's Manual. Manual
 Version 027. Sea-Bird Electronics, Inc.
 
 [OOI (2013). Data Product Specification for Water Temperature. Document
-Control Number 1341-00010.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf)
+Control Number 1341-00010.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf)
 
 [OOI (2013). Data Product Specification for Pressure (Depth). Document
-Control Number 1341-00020.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf)
+Control Number 1341-00020.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf)
 
 [OOI (2013). Data Product Specification for Conductivity. Document Control
-Number 1341-00030.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf)
+Number 1341-00030.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf)
 
 [OOI (2013). Data Product Specification for Salinity. Document Control
-Number 1341-00040.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf)
+Number 1341-00040.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf)
 
 [OOI (2012). Data Product Specification for Density. Document Control Number
-1341-00050.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf)
+1341-00050.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf)
