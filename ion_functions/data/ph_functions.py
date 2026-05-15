@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.ph_functions
-@file ion_functions/data/ph_functions.py
-@author Christopher Wingard
-@brief Module containing pH family instrument related functions
+Module containing pH family instrument data processing functions for the
+Sunburst SAMI-II pH instrument (PHSEN).
 """
 
 # imports
@@ -11,12 +9,29 @@ import numpy as np
 import scipy as sp
 
 
-# functions to extract L0 parameters from SAMI-II pH instruments (PHSEN)
 def ph_434_intensity(light):
     """
-    Function to extract the signal intensity at 434 nm (PH434SI_L0) from the pH
-    instrument light measurements. Coded to accept either a single record or an
-    array of records.
+    Extract the L0 signal intensity at 434 nm (PH434SI_L0) from the PHSEN
+    light measurement array.
+
+    Parameters
+    ----------
+    light : array_like
+        Raw light measurement array from the PHSEN instrument. May be a
+        single record or an array of records. The array is reshaped
+        internally to (-1, 23, 4) where the second index selects the
+        measurement set and the third index selects the channel [counts].
+
+    Returns
+    -------
+    si434 : ndarray, shape (nRec, 23)
+        Signal intensity at 434 nm (PH434SI_L0) [counts].
+
+    Notes
+    -----
+    Each PHSEN data record contains 23 sets of 4 light measurements
+    interleaved as [ref434, sig434, ref578, sig578]. Column index 1
+    (0-based) of each set is the 434 nm signal intensity.
     """
     light = np.atleast_3d(light).astype(float)
     new = np.reshape(light, (-1, 23, 4))
@@ -26,9 +41,27 @@ def ph_434_intensity(light):
 
 def ph_578_intensity(light):
     """
-    Function to extract the signal intensity at 578 nm (PH578SI_L0) from the pH
-    instrument light measurements. Coded to accept either a single record or an
-    array of records.
+    Extract the L0 signal intensity at 578 nm (PH578SI_L0) from the PHSEN
+    light measurement array.
+
+    Parameters
+    ----------
+    light : array_like
+        Raw light measurement array from the PHSEN instrument. May be a
+        single record or an array of records. The array is reshaped
+        internally to (-1, 23, 4) where the second index selects the
+        measurement set and the third index selects the channel [counts].
+
+    Returns
+    -------
+    si578 : ndarray, shape (nRec, 23)
+        Signal intensity at 578 nm (PH578SI_L0) [counts].
+
+    Notes
+    -----
+    Each PHSEN data record contains 23 sets of 4 light measurements
+    interleaved as [ref434, sig434, ref578, sig578]. Column index 3
+    (0-based) of each set is the 578 nm signal intensity.
     """
     light = np.atleast_3d(light).astype(float)
     new = np.reshape(light, (-1, 23, 4))
@@ -36,25 +69,36 @@ def ph_578_intensity(light):
     return si578  # signal intensity, 578 nm (PH578SI_L0)
 
 
-# functions to convert thermistor and battery measurements from counts to
-# applicable engineering units
 def ph_thermistor(traw, sami_bits=12):
     """
-    Function to convert the thermistor data (ABSTHRM_L0) from counts to degrees
-    Centigrade for the pH instrument.
+    Convert the PHSEN thermistor counts (ABSTHRM_L0) to temperature in
+    degrees C.
 
-    Implemented by:
+    Parameters
+    ----------
+    traw : array_like
+        Raw thermistor counts from the PHSEN instrument (ABSTHRM_L0)
+        [counts].
+    sami_bits : int, optional
+        ADC resolution of the SAMI hardware generation. Use 12 for
+        original SAMI-II hardware (full-scale 4096 counts) and 14 for
+        newer hardware (full-scale 16384 counts). Default is 12.
 
-        2014-05-01: Christopher Wingard: Initial code.
-        2023-08-15: Samuel Dahlberg: Removed use of numexpr. Added default to sami_bits.
+    Returns
+    -------
+    therm : ndarray
+        Thermistor temperature [deg_C].
 
+    Notes
+    -----
+    The conversion uses a three-term polynomial in the natural log of the
+    thermistor resistance. The full-scale count differs between SAMI
+    hardware generations: 4096 for 12-bit hardware and 16384 for 14-bit
+    hardware. The reference resistance is 17400 ohms in both cases.
     """
-    # reset inputs to arrays
     traw = np.atleast_1d(traw)
     sami_bits = np.atleast_1d(sami_bits)
 
-    # convert raw thermistor readings from counts to degrees Centigrade
-    # conversion depends on whether the SAMI is older 12 bit or newer 14 bit hardware
     if sami_bits[0] == 14:
         rt = np.log((traw / (16384.0 - traw)) * 17400.0)
     else:
@@ -67,13 +111,31 @@ def ph_thermistor(traw, sami_bits=12):
 
 def ph_battery(braw, sami_bits=12):
     """
-    Function to convert the battery voltage from counts to Volts from the pH instrument.
+    Convert the PHSEN battery counts to battery voltage in Volts.
+
+    Parameters
+    ----------
+    braw : array_like
+        Raw battery counts from the PHSEN instrument [counts].
+    sami_bits : int, optional
+        ADC resolution of the SAMI hardware generation. Use 12 for
+        original SAMI-II hardware (full-scale 4096 counts) and 14 for
+        newer hardware (full-scale 16384 counts). Default is 12.
+
+    Returns
+    -------
+    volts : ndarray
+        Battery voltage [Volts].
+
+    Notes
+    -----
+    The full-scale voltage and count differ between SAMI hardware
+    generations. For 12-bit hardware the full-scale is 15 V at 4096
+    counts; for 14-bit hardware the full-scale is 3 V at 4000 counts.
     """
-    # reset inputs to arrays
     braw = np.atleast_1d(braw)
     sami_bits = np.atleast_1d(sami_bits)
 
-    # convert raw battery readings from counts to Volts
     if sami_bits[0] == 14:
         volts = braw * 3. / 4000.
     else:
@@ -81,52 +143,66 @@ def ph_battery(braw, sami_bits=12):
     return volts
 
 
-# function to calculate the PHWATER_L2 data product
-def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_off, psal=35.0):
+def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578,
+                    ind_slp, ind_off, psal=35.0):
     """
-    Description:
+    Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sunburst
+    SAMI-II pH instrument (PHSEN).
 
-        OOI Level 2 pH of seawater core data product, which is calculated using
-        data from the Sunburst SAMI-II pH instrument (PHSEN). This document is
-        intended to be used by OOI programmers to construct appropriate
-        processes to create the L2 pH of seawater core data product.
+    Parameters
+    ----------
+    ref : array_like, shape (nRec, 16)
+        Raw blank reference and signal measurements from the PHSEN blank
+        cycle. Contains 4 sets of 4 interleaved measurements:
+        [ref434, sig434, ref578, sig578] [counts].
+    light : array_like, shape (nRec, 92)
+        Raw reference and signal measurements from the PHSEN measurement
+        cycle. Contains 23 sets of 4 interleaved measurements:
+        [ref434, sig434, ref578, sig578] [counts].
+    therm : array_like, shape (nRec)
+        Thermistor temperature at the end of the measurement cycle,
+        converted to degrees C via ph_thermistor (ABSTHRM_L0) [deg_C].
+    ea434 : array_like, shape (nRec)
+        Calibration coefficient 1. Molar absorptivity of the acidic
+        indicator form at 434 nm at the reference temperature [unitless].
+    eb434 : array_like, shape (nRer)
+        Calibration coefficient 2. Molar absorptivity of the basic
+        indicator form at 434 nm at the reference temperature [unitless].
+    ea578 : array_like, shape (nRec)
+        Calibration coefficient 3. Molar absorptivity of the acidic
+        indicator form at 578 nm at the reference temperature [unitless].
+    eb578 : array_like, shape (nRec)
+        Calibration coefficient 4. Molar absorptivity of the basic
+        indicator form at 578 nm at the reference temperature [unitless].
+    ind_slp : float or array_like, shape (nRec)
+        Indicator impurity slope correction factor applied to pH values
+        greater than 8.2 [unitless].
+    ind_off : float or array_like, shape (nRec)
+        Indicator impurity offset correction factor applied to pH values
+        greater than 8.2 [unitless].
+    psal : float or array_like, shape (nRec), optional
+        Practical salinity from a co-located CTD. Default is 35.0 if
+        CTD data are unavailable [unitless].
 
-    Implemented by:
+    Returns
+    -------
+    ph : ndarray, shape (nRec,)
+        pH of seawater on the total hydrogen ion scale (PHWATER_L2)
+        [unitless].
 
-        2013-04-19: Christopher Wingard. Initial code.
+    Notes
+    -----
+    The algorithm selects the 8 most linearly consistent measurement
+    points from 23 collected during each cycle (skipping the first 5)
+    by finding the window of 8 consecutive points with the highest
+    linear correlation coefficient (R^2) between indicator concentration
+    and point pH. The final pH is extrapolated to zero indicator
+    concentration from this best-fit region.
 
-    Usage:
-
-        ph = ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578,
-                             psal=35.0, ind=1)
-
-            where
-
-        ph = measured pH of seawater [unitless]
-        ref = raw signal and reference measurements during blank cycle [counts]
-        light = raw signal and reference measurements during measurement cycle
-            [counts]
-        therm = thermistor reading at end of measurement cycle [deg_C]
-        ea434 = mCP molar absorptivities provided by vendor, specific to a
-            reagent bag with a defined shelflife.
-        eb434 = mCP molar absorptivities as above
-        ea578 = mCP molar absorptivities as above
-        eb578 = mCP molar absorptivities as above
-        ind_slp = indicator impurity slope correction factor [unitless]
-        ind_off = indicator impurity offset correction factor [unitless]
-        psal = practical salinity estimate used in calculcations from a
-            co-located CTD, default is 35.0 if CTD data is unavailable
-            [unitless] 
-
-    References:
-
-        OOI (2014). Data Product Specification for pH of Seawater. Document
-            Control Number 1341-00510. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00510_Data_Product_SPEC_PHWATER_OOI.pdf)
+    An impurity correction (ind_slp, ind_off) is applied when the
+    calculated pH exceeds 8.2. This correction is not described in DPS
+    1341-00510 and was added post-publication.
     """
-    # reformat all input values to arrays of the correct dimensions, shape, and
-    # type, recording the number of input records.
     ref = (np.atleast_2d(ref)).astype(float)
     nRec = ref.shape[0]
 
@@ -172,10 +248,8 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_
     ])
     blank578 = np.reshape(np.mean(arr578, axis=0), (nRec, 1))
 
-    # Extract 23 sets of 4 light measurements into arrays corresponding to the
-    # raw reference and signal measurements at 434 and 578 nm. Input is an
-    # array of length 92 (23 sets * 4 measurements per set). Can reshape and
-    # slice to extract the parameters.
+    # Extract 23 sets of 4 light measurements into arrays corresponding
+    # to the raw reference and signal measurements at 434 and 578 nm.
     ref434 = light[:, :, 0]   # reference signal, 434 nm
     int434 = light[:, :, 1]   # signal intensity, 434 nm (PH434SI_L0)
     ref578 = light[:, :, 2]   # reference signal, 578 nm
@@ -192,7 +266,7 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_
 
     R = abs578 / abs434
 
-    # pka from Clayton and Byrne, 1993
+    # pKa from Clayton and Byrne, 1993
     pKa = (1245.69 / (therm + 273.15)) + 3.8275 + (0.0021 * (35. - psal))
     pKa = np.reshape(pKa, (-1, 1))
 
@@ -214,18 +288,13 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_
     IndConc = HI + I
     pointph = np.real(pKa + sp.log10(V1 / V2))
 
-    # ************************ Initial pH Calcs ************************
     # determine the most linear region of points for pH of seawater
     # calculation, skipping the first 5 points.
     IndConca = IndConc[:, 5:]
     Y = pointph[:, 5:]
     X = np.linspace(1, 18, 18)
 
-    # create arrays for vectorized computations used in sum of squares below.
-    # reflows 1D and 2D arrays into 2D and 3D arrays, respectively, shifting
-    # each "row" of the arrays by one value, allowing the sum of square
-    # calculations to be computed in a vectorized fashion, replacing the for
-    # loop that had the computations running on 1:8, 2:9, ... 11:18.
+    # create arrays for vectorized computations used in sum of squares.
     step = 7  # number of points to use
     count = step + 1
     nPts = np.size(X) - step
@@ -236,8 +305,7 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_
         for j in range(nRec):
             y[j, i, :] = Y[j, i:i+count]
 
-    # compute the range of best fitting points, using array multiplications to
-    # determine the best fit via the correlation coefficient.
+    # compute correlation coefficient for each window of 8 points
     sumx = np.sum(x, axis=1)
     sumy = np.sum(y, axis=2)
     sumxy = np.sum(x * y, axis=2)
@@ -261,7 +329,7 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_
         IndConcS[i, :] = IndConca[i, cutoff1[i]:cutoff2[i]]
         pointphS[i, :] = Y[i, cutoff1[i]:cutoff2[i]]
 
-    # ************************* Final pH Calcs *************************
+    # Final pH calculation: extrapolate to zero indicator concentration
     sumx = np.sum(IndConcS, axis=1)
     sumy = np.sum(pointphS, axis=1)
     sumxy = np.sum(pointphS * IndConcS, axis=1)
@@ -277,8 +345,8 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_
     slope = ssxy / ssx
     ph = ybar - slope * xbar
 
-    # pH corrections due to indicator impurity if the calculated pH is greater
-    # than 8.2.
+    # pH corrections due to indicator impurity if the calculated pH is
+    # greater than 8.2.
     phFlag = ph >= 8.2
     ph[phFlag] = ph[phFlag] * ind_slp[phFlag] + ind_off[phFlag]
 

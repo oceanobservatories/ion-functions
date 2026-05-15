@@ -1,122 +1,82 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.flo_functions
-@file ion_functions/data/flo_functions.py
-@author Christopher Wingard, Craig Risien, Russell Desiderio
-@brief Module containing Fluorometer Three Wavelength (FLORT) and Fluorometer
-    Two Wavelength (FLORD) instrument family related functions
+Module containing Fluorometer Three Wavelength (FLORT) and Fluorometer
+Two Wavelength (FLORD) instrument family related functions. Converts
+raw L0 count data from WET Labs ECO fluorometers into L1 fluorescence
+concentration products (CHLAFLO, CDOMFLO) and L1/L2 optical backscatter
+products (FLUBSCT).
 """
 import numpy as np
 
 
 def flo_bback_total(beta, degC, psu, theta, wlngth, xfactor):
     """
-    Description:
+    Compute total optical backscatter coefficient (FLUBSCT_L2).
 
-        This function calculates the OOI Level 2 Optical Backscatter data product
-        (FLUBSCT_L2), which is calculated using data from the WET Labs, Inc. ECO
-        fluorometer family of instruments (FLORD, FLORT, FLNTU) at the wavelength
-        specified by the wlngth argument. See Notes.
+    Derives the total (seawater + particulate) optical backscatter
+    coefficient from the L1 volume scattering function (FLUBSCT_L1)
+    and co-located CTD data. The seawater volume scattering function
+    and total scattering coefficient are computed using the Zhang et al.
+    (2009) model via flo_zhang_scatter_coeffs.
 
-    Implemented by:
+    Parameters
+    ----------
+    beta : array_like
+        Volume scattering function (seawater + particulate) at angle
+        theta and wavelength wlngth (FLUBSCT_L1) [m^-1 sr^-1].
+    degC : array_like
+        In situ water temperature from co-located CTD [degC].
+    psu : array_like
+        In situ salinity from co-located CTD [psu].
+    theta : float
+        Effective (centroid) backscatter scattering angle [degrees].
+        For FLORT D/J/K/M/N/O and FLORD D (ECO 3-channel): 124 deg.
+        For FLORD G/L/M and FLNTU A (ECO 2-channel): 140 deg.
+    wlngth : float
+        Optical backscatter measurement wavelength [nm].
+    xfactor : float
+        Chi factor scaling particulate scattering at angle theta to the
+        total particulate backscattering coefficient [unitless].
+        For FLORT D/J/K/M/N/O and FLORD D (ECO 3-channel): 1.076.
+        For FLORD G/L/M and FLNTU A (ECO 2-channel): 1.096.
 
-        2013-07-16: Christopher Wingard. Initial Code.
-        2014-04-23: Christopher Wingard. Slight revisions to address
-                    integration issues and to meet intent of DPS.
-        2015-10-26: Russell Desiderio. Deleted default values in argument list.
-                                       Revised documentation. Added Notes section.
+    Returns
+    -------
+    bback : ndarray
+        Total optical backscatter coefficient (FLUBSCT_L2) [m^-1].
 
-    Usage:
-
-        bback = flo_bback_total(beta, degC, psu, theta, wlngth, xfactor)
-
-            where
-
-        bback = total (seawater + particulate) optical backscatter coefficient
-            at wavelength wlngth (FLUBSCT_L2) [m-1].
-        beta = value of the volume scattering function (seawater + particulate) measured
-            at angle theta and at wavelength wlngth (FLUBSCT_L1) [m-1 sr-1].
-        degC = in situ water temperature from co-located CTD [deg_C].
-        psu = in situ salinity from co-located CTD [psu].
-        theta = effective (centroid) optical backscatter scattering angle [degrees] which
-            is a function of the sensor geometry of the measuring instrument. See Notes.
-        wlngth = optical backscatter measurement wavelength [nm]. See Notes.
-        xfactor = X (Chi) factor which scales the particulate scattering value at a particular
-            backwards angle to the total particulate backscattering coefficient integrated
-            over all backwards angles. See Notes.
-
-    Notes:
-
-        The values to be used for theta, chi factor, and wavelength depend on the instrument.
-
-        For WETLabs 'ECO' instruments with 3 optical channels (FLORT D,J,K,M,N,O; FLORD D) the
-        centroid angle theta is 124 degrees (not 117 as in WETLabs' older documentation) and the
-        appropriate chi factor for these instruments is 1.076 [Sullivan, Twardowski, Zaneveld, and
-        Moore, 2013, Table 6.2b, "ECO-BB" (= ECO-BB3)]. The ECO-BB3 was initially mis-classified
-        as an OPTAA series M instrument, and is now classified as a FLORT series O instrument.
-
-        For 'ECO' instruments with 2 optical channels (WETLabs models FLBB and FLNTU: FLORD G,L,M
-        and the FLNTU component of FLORT A which is now designated as FLNTU series A) the centroid
-        angle theta is 140 degrees and the chi factor is 1.096 (Mike Twardowski, personal
-        communication).
-
-        All optical backscatter channels of FLORD and FLORT instruments use a light source at
-        a nominal wavelength of 700nm. All three optical channels of an ECO-BB3 are backscatter
-        channels, typically at 3 different wavelengths in the visible (blue, green and red). The
-        wavelength dependence of the chi factor is a subject of current research. At this time
-        it is thought to be very weakly dependent on wavelength, if at all, and so the above chi
-        factors should be used for scattering calculations involving any visible wavelength
-        (Mike Twardowski, personal communication).
-
-        The chi factor is a function of angle and the sensor geometry of the instrument used to
-        measure the volume scattering function at a given backwards scattering angle. It is a
-        scaling factor relating the particulate scattering at that angle to the particulate
-        total backscatter coefficient (the latter is the integral over all backwards angles of the
-        volume scattering function due to particles). The chi factor is not an "angular resolution"
-        as it has been labelled in the OOI program.
-
-        Depending on context within the documentation the word 'total' can have several meanings:
-            (1) seawater + particulate scattering
-            (2) forward + backward scattering
-            (3) backscatter integrated over all backwards wavelengths.
-
-    References:
-
-        OOI (2012). Data Product Specification for Optical Backscatter (Red
-            Wavelengths). Document Control Number 1341-00540 (version 1-05).
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
-            1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf)
-
-        Sullivan, J.M., M.S. Twardowski, J.R.V. Zaneveld, and C.C. Moore. Measuring optical
-            backscattering in water. Chapter 6 in Light Scattering Reviews 7: Radiative Transfer
-            and Optical Properties of Atmosphere and Underlying Surface (2013) pp 189-224.
-
+    Notes
+    -----
+    The chi factor is a function of angle and sensor geometry. It scales
+    particulate scattering at the measurement angle to the particulate
+    total backscatter coefficient (the integral over all backward angles
+    of the volume scattering function due to particles). Values for theta
+    and xfactor are instrument-dependent; see the DPS for FLUBSCT (OOI,
+    2014, DCN 1341-00540) for details.
     """
     # calculate:
-    #    betasw, the theoretical value of the volume scattering function for seawater only
-    #        at the measurement angle theta and wavelength wlngth [m-1 sr-1], and,
-    #    bsw, the theoretical value for the total (in this case meaning forward + backward)
-    #         scattering coefficient for seawater (also with no particulate contribution)
-    #         at wavelength wlngth [m-1].
-    # Values below are computed using provided code from Zhang et al 2009.
+    #    betasw, the theoretical value of the volume scattering function for
+    #        seawater only at the measurement angle theta and wavelength
+    #        wlngth [m-1 sr-1], and,
+    #    bsw, the theoretical value for the total (forward + backward)
+    #        scattering coefficient for seawater at wavelength wlngth [m-1].
+    # Values are computed using the Zhang et al. (2009) model.
     betasw, bsw = flo_zhang_scatter_coeffs(degC, psu, theta, wlngth)
 
-    # calculate the volume scattering at angle theta of particles only, betap.
+    # calculate the volume scattering at angle theta of particles only.
     #     beta = scattering measured at angle theta for seawater + particulates
-    #     betasw = theoretical seawater only value calculated at angle theta
+    #     betasw = theoretical seawater only value at angle theta
     betap = beta - betasw
 
-    # calculate the particulate backscatter coefficient bbackp [m-1] which is effectively
-    # the particulate scattering function integrated over all backwards angles. The factor
-    # of 2*pi arises from the integration over the (implicit) polar angle variable.
+    # calculate the particulate backscatter coefficient bbackp [m-1], the
+    # particulate scattering function integrated over all backwards angles.
+    # The factor of 2*pi arises from integration over the polar angle.
     pi = np.pi
     bbackp = xfactor * 2.0 * pi * betap
 
-    # calculate the backscatter coefficient due to seawater from the total (forward + backward)
-    # scattering coefficient bsw. because the effective scattering centers in pure seawater are
-    # much smaller than the wavelength, the shape of the scattering function is symmetrical in
-    # the forward and backward directions.
+    # calculate the backscatter coefficient due to seawater from the total
+    # (forward + backward) scattering coefficient bsw. The scattering by
+    # water molecules is symmetric, so the backward portion is bsw / 2.
     bbsw = bsw / 2
 
     # calculate the total (particulates + seawater) backscatter coefficient.
@@ -127,38 +87,29 @@ def flo_bback_total(beta, degC, psu, theta, wlngth, xfactor):
 
 def flo_scat_seawater(degC, psu, theta, wlngth, delta=0.039):
     """
-    Description:
+    Compute the total scattering coefficient of pure seawater.
 
-        Computes the scattering coefficient of seawater based on the
-        computation of Zhang et al 2009 as presented in the DPS for Optical
-        Backscatter (red wavelengths).
+    Thin wrapper around flo_zhang_scatter_coeffs that returns only the
+    total scattering coefficient bsw. Used where only bsw is required
+    without the volume scattering function betasw.
 
-    Implemented by:
+    Parameters
+    ----------
+    degC : array_like
+        In situ water temperature from co-located CTD [degC].
+    psu : array_like
+        In situ salinity from co-located CTD [psu].
+    theta : float
+        Optical backscatter scattering angle [degrees].
+    wlngth : float
+        Optical backscatter measurement wavelength [nm].
+    delta : float, optional
+        Depolarization ratio [unitless]. Default is 0.039.
 
-        2014-04-24: Christopher Wingard. Initial Code
-
-    Usage:
-
-        bsw = flo_scat_seawater(degC, psu, theta, wlngth, delta)
-
-            where
-
-        bsw = total scattering coefficient of pure seawater [m-1]
-        degC = in situ water temperature from co-located CTD [deg_C]
-        psu = in situ salinity from co-located CTD [psu]
-        theta = optical backscatter angle [degrees].
-            See Notes to function flo_bback_total.
-        wlngth = optical backscatter measurement wavelength [nm].
-            See Notes to function flo_bback_total.
-        delta = depolarization ratio [unitless]. Default of 0.039 is assumed.
-
-    References:
-
-        OOI (2012). Data Product Specification for Optical Backscatter (Red
-            Wavelengths). Document Control Number 1341-00540 (version 1-05).
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
-            1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf)
+    Returns
+    -------
+    bsw : ndarray
+        Total scattering coefficient of pure seawater [m^-1].
     """
     _, bsw = flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta)
     return bsw
@@ -166,51 +117,47 @@ def flo_scat_seawater(degC, psu, theta, wlngth, delta=0.039):
 
 def flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta=0.039):
     """
-    Description:
+    Compute seawater scattering coefficients using the Zhang et al. (2009)
+    model.
 
-        Computes scattering coefficients for seawater (both the volume scattering at
-        a given angle theta and the total scattering coefficient integrated over all
-        scattering angles) at a given wavelength wlngth based on the computation of
-        Zhang et al 2009 as presented in the DPS for Optical Backscatter.
+    Calculates the volume scattering function of pure seawater at a given
+    angle (betasw) and the total seawater scattering coefficient (bsw) at
+    a given wavelength. The computation follows the model described in
+    Zhang et al. (2009) and implemented in the DPS for FLUBSCT (OOI,
+    2014, DCN 1341-00540). This code is derived from MATLAB code provided
+    by Dr. Xiaodong Zhang, University of North Dakota.
 
-        This code is derived from Matlab code developed and made available
-        online by:
+    Parameters
+    ----------
+    degC : array_like
+        In situ water temperature from co-located CTD [degC].
+    psu : array_like
+        In situ salinity from co-located CTD [psu].
+    theta : float
+        Optical backscatter scattering angle [degrees].
+    wlngth : float
+        Optical backscatter measurement wavelength [nm].
+    delta : float, optional
+        Depolarization ratio [unitless]. Default is 0.039.
 
-            Dr. Xiaodong Zhang
-            Associate Professor
-            Department of Earth Systems Science and Policy
-            University of North Dakota
-            http://www.und.edu/instruct/zhang/
+    Returns
+    -------
+    betasw : ndarray
+        Volume scattering function of pure seawater at angle theta and
+        wavelength wlngth [m^-1 sr^-1].
+    bsw : ndarray
+        Total scattering coefficient of pure seawater [m^-1].
 
-    Implemented by:
-
-        2013-07-15: Christopher Wingard. Initial Code
-        2023-08-15: Samuel Dahlberg. Removed use of numexpr
-
-    Usage:
-
-        betasw, bsw = flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta)
-
-            where
-
-        betasw = value for the volume scattering function of pure seawater
-            at angle theta and wavelength wlngth [m-1 sr-1]
-        bsw = total scattering coefficient of pure seawater [m-1]
-        degC = in situ water temperature from co-located CTD [deg_C]
-        psu = in situ salinity from co-located CTD [psu]
-        theta = optical backscatter angle [degrees].
-            See Notes to function flo_bback_total.
-        wlngth = optical backscatter measurement wavelength [nm].
-            See Notes to function flo_bback_total.
-        delta = depolarization ratio [unitless]. Default of 0.039 is assumed.
-
-    References:
-
-        OOI (2012). Data Product Specification for Optical Backscatter (Red
-            Wavelengths). Document Control Number 1341-00540 (version 1-05).
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
-            1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf)
+    Notes
+    -----
+    The model combines scattering contributions from density fluctuations
+    and concentration fluctuations. Isothermal compressibility is from
+    Lepple and Millero (1971). Seawater density is from UNESCO Technical
+    Papers in Marine Science No. 38 (1981). Water activity is from
+    Millero and Leung (1976). The refractive index of seawater is from
+    Quan and Fry (1994) and the refractive index of air is from Ciddor
+    (1996). The PMH model is used for the density derivative of the
+    refractive index.
     """
     # values of the constants
     Na = 6.0221417930e23    # Avogadro's constant
@@ -233,11 +180,11 @@ def flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta=0.039):
     # density of seawater from UNESCO 38 (1981).
     rho = flo_density_seawater(degC, psu)
 
-    # water activity data of seawater is from Millero and Leung (1976, American
-    # Journal of Science, 276, 1035-1077). Table 19 was reproduced using
-    # Eq.(14,22,23,88,107) that were fitted to polynominal equation. dlnawds is
-    # a partial derivative of the natural logarithm of water activity with
-    # regards to salinity.
+    # water activity data of seawater is from Millero and Leung (1976,
+    # American Journal of Science, 276, 1035-1077). Table 19 was reproduced
+    # using Eq.(14,22,23,88,107) that were fitted to polynominal equation.
+    # dlnawds is a partial derivative of the natural logarithm of water
+    # activity with regards to salinity.
     dlnawds = (-5.58651e-4 + 2.40452e-7 * degC - 3.12165e-9 * degC**2 + 2.40808e-11 * degC**3) + \
             1.5 * (1.79613e-5 - 9.9422e-8 * degC + 2.08919e-9 * degC**2 - 1.39872e-11 * degC**3) * \
             psu**0.5 + 2 * (-2.31065e-6 - 1.37674e-9 * degC - 1.93316e-11 * degC**2) * psu
@@ -266,19 +213,30 @@ def flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta=0.039):
 
 def flo_refractive_index(wlngth, degC, psu):
     """
-    Helper function for flo_zhang_scatter_coeffs
-    @param wlngth backscatter measurement wavlength (nm)
-    @param degC in situ water temperature (deg_C)
-    @param psu in site practical salinity (psu)
-    @retval nsw absolute refractive index of seawater
-    @retval dnds partial derivative of seawater refractive index with regards to
-        seawater.
+    Compute the absolute refractive index of seawater.
 
-    Implemented by:
+    Helper function for flo_zhang_scatter_coeffs. Computes the absolute
+    refractive index of seawater (nsw) and its partial derivative with
+    respect to salinity (dnds). The refractive index of air uses the
+    Ciddor (1996) formula; the refractive index of seawater uses the
+    Quan and Fry (1994) formula.
 
-        2014-02-21: Initial Code
-        2023-08-15: Samuel Dahlberg. Removed use of numexpr
+    Parameters
+    ----------
+    wlngth : float
+        Backscatter measurement wavelength [nm].
+    degC : array_like
+        In situ water temperature [degC].
+    psu : array_like
+        In situ practical salinity [psu].
 
+    Returns
+    -------
+    nsw : ndarray
+        Absolute refractive index of seawater [unitless].
+    dnds : ndarray
+        Partial derivative of seawater refractive index with respect to
+        salinity [unitless psu^-1].
     """
     # refractive index of air is from Ciddor (1996, Applied Optics).
     n_air = 1.0 + (5792105.0 / (238.0185 - 1 / (wlngth/1e3)**2) + 167917.0 / (57.362 - 1 / (wlngth/1e3)**2)) / 1e8
@@ -306,16 +264,24 @@ def flo_refractive_index(wlngth, degC, psu):
 
 def flo_isotherm_compress(degC, psu):
     """
-    Helper function for flo_zhang_scatter_coeffs
-    @param degC in situ water temperature
-    @param psu in site practical salinity
-    @retval iso_comp seawater isothermal compressibility
+    Compute seawater isothermal compressibility.
 
-    Implemented by:
+    Helper function for flo_zhang_scatter_coeffs. Computes seawater
+    isothermal compressibility from the secant bulk modulus using
+    Millero (1980) for pure water and the seawater correction following
+    Lepple and Millero (1971).
 
-        2014-02-21: Initial Code
-        2023-08-15: Samuel Dahlberg. Removed use of numexpr
+    Parameters
+    ----------
+    degC : array_like
+        In situ water temperature [degC].
+    psu : array_like
+        In situ practical salinity [psu].
 
+    Returns
+    -------
+    iso_comp : ndarray
+        Seawater isothermal compressibility [Pa^-1].
     """
     # pure water secant bulk Millero (1980, Deep-sea Research)
     kw = 19652.21 + 148.4206 * degC - 2.327105 * degC**2 + 1.360477e-2 * degC**3 - 5.155288e-5 * degC**4
@@ -333,18 +299,25 @@ def flo_isotherm_compress(degC, psu):
 
 def flo_density_seawater(degC, psu):
     """
-    Helper function for flo_zhang_scatter_coeffs
-    @param degC in situ water temperature
-    @param psu in site practical salinity
-    @retval rho_sw density of seawater
+    Compute the density of seawater.
 
-    Implemented by:
+    Helper function for flo_zhang_scatter_coeffs. Computes seawater
+    density from the UNESCO Technical Papers in Marine Science No. 38
+    (1981) formulation.
 
-        2014-02-21: Initial Code
-        2023-08-15: Samuel Dahlberg. Removed use of numexpr
+    Parameters
+    ----------
+    degC : array_like
+        In situ water temperature [degC].
+    psu : array_like
+        In situ practical salinity [psu].
 
+    Returns
+    -------
+    rho_sw : ndarray
+        Density of seawater [kg m^-3].
     """
-    # density of water and seawater,unit is Kg/m^3, from UNESCO,38,1981
+    # density of water and seawater, unit is Kg/m^3, from UNESCO,38,1981
     a0 = 8.24493e-1
     a1 = -4.0899e-3
     a2 = 7.6438e-5
@@ -373,31 +346,28 @@ def flo_density_seawater(degC, psu):
 
 def flo_scale_and_offset(counts_output, counts_dark, scale_factor):
     """
-    Description:
+    Apply scale-and-offset calibration to raw fluorometer counts.
 
-        This scale and offset function is a simple numeric expression that can
-        be applied to the CHLAFLO, CDOMFLO, FLUBSCT data products
+    Converts raw L0 digital counts from WET Labs ECO fluorometers to
+    calibrated L1 concentration or volume scattering function values.
+    This is the core algorithm shared by flo_chla (CHLAFLO_L1),
+    flo_cdom (CDOMFLO_L1), and flo_beta (FLUBSCT_L1).
 
-    Implemented by:
+    Parameters
+    ----------
+    counts_output : array_like
+        Measured sample output [counts].
+    counts_dark : array_like
+        Dark counts: signal output of the fluorometer in clean water
+        with black tape over the detector [counts]. From factory
+        calibration sheet.
+    scale_factor : array_like
+        Scale factor from factory calibration sheet [units counts^-1].
 
-        2014-01-30: Craig Risien. Initial Code
-        2023-08-15: Samuel Dahlberg. Removed use of numexpr
-
-    Usage:
-
-        value = flo_scale_and_offset(counts_output, counts_dark, scale_factor)
-
-            where
-
-        value = output value
-        counts_output = measured sample output [counts]
-        counts_dark = measured signal output of fluormeter in clean water with
-                      black tape over the detector [counts]
-        scale_factor = multiplier [units counts^-1]
-
-    References:
-
-        N/A
+    Returns
+    -------
+    value : ndarray
+        Calibrated output in units determined by scale_factor.
     """
     value = (counts_output - counts_dark) * scale_factor
     return value
@@ -405,41 +375,13 @@ def flo_scale_and_offset(counts_output, counts_dark, scale_factor):
 
 def flo_chla(counts_output, counts_dark, scale_factor):
     """
-    Description:
+    OOI single-output wrapper for CHLAFLO_L1. Returns fluorometric
+    chlorophyll-a concentration [ug L^-1].
 
-        The OOI Level 1 Fluorometric Chlorophyll-a Concentration core data
-        product is a measure of how much light has been re-emitted after
-        being absorbed by Chlorophyll-a molecules found in all phytoplankton.
-        By measuring the intensity and nature of this fluorescence,
-        phytoplankton biomass can be estimated. The concentration of
-        Chlorophyll-a is a proxy for the abundance of phytoplankton in the
-        water column, and thus the amount of primary productivity that can be
-        empirically achieved. Chlorophyll absorbs photons in the visible
-        spectrum (400-700nm) and fluoresces visible blue light.
-
-    Implemented by:
-
-        2014-01-30: Craig Risien. Initial Code
-
-    Usage:
-
-        chla_conc = flo_chla(counts_output, counts_dark, scale_factor)
-
-            where
-
-        chla_conc = Fluorometric Chlorophyll-a Concentration (CHLAFLO_L1) [ug L^-1]
-        counts_output = measured sample output (CHLAFLO_L0) [counts]
-        counts_dark = measured signal output of fluormeter in clean water with
-                      black tape over the detector [counts]
-        scale_factor = multiplier [ug L^-1 counts^-1]
-
-    References:
-
-        OOI (2012). Data Product Specification for Fluorometric Chlorophyll-a
-            Concentration. Document Control Number 1341-00530.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00530_Data_Product_SPEC_CHLAFLO_OOI.pdf)
+    See Also
+    --------
+    flo_scale_and_offset : Core algorithm; use directly where the same
+        scale-and-offset calculation is needed for other data products.
     """
     chla_conc = flo_scale_and_offset(counts_output, counts_dark, scale_factor)
     return chla_conc
@@ -447,47 +389,13 @@ def flo_chla(counts_output, counts_dark, scale_factor):
 
 def flo_cdom(counts_output, counts_dark, scale_factor):
     """
-    Description:
+    OOI single-output wrapper for CDOMFLO_L1. Returns fluorometric
+    CDOM concentration [ppb].
 
-        The OOI Level 1 Fluorometric CDOM concentration core data product is a
-        measure of how much light has been re-emitted from refractory colored
-        organic compounds found in the fluorometric pool of colored dissolved
-        organic matter (CDOM) in seawater. This data product describes a
-        measure of the amount of tannins (polyphenols that bind to proteins and
-        other large molecules) or lignins (polymers of phenolic acids) from
-        decaying plant material or byproducts from the decomposition of
-        animals. It accounts for the tea-like color of some water masses. CDOM
-        is not particulate, but water masses can contain both CDOM and
-        turbidity. CDOM absorbs ultraviolet light and fluoresces visible blue
-        light. The fluorescence of CDOM is used in many applications such as
-        continuous monitoring of wastewater discharge, natural tracer of
-        specific water bodies, ocean color research and the effect of CDOM on
-        satellite imagery, and investigations of CDOM concentrations impacting
-        light availability used for primary production.
-
-    Implemented by:
-
-        2014-01-30: Craig Risien. Initial Code
-
-    Usage:
-
-        cdom_conc = flo_cdom(counts_output, counts_dark, scale_factor)
-
-            where
-
-        cdom_conc = Fluorometric CDOM Concentration (CDOMFLO_L1) [ppb]
-        counts_output = measured sample output (CDOMFLO_L0) [counts]
-        counts_dark = measured signal output of fluormeter in clean water with
-                      black tape over the detector [counts]
-        scale_factor = multiplier [ppb counts^-1]
-
-    References:
-
-        OOI (2012). Data Product Specification for Fluorometric CDOM
-            Concentration. Document Control Number 1341-00550.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00550_Data_Product_SPEC_CDOMFLO_OOI.pdf)
+    See Also
+    --------
+    flo_scale_and_offset : Core algorithm; use directly where the same
+        scale-and-offset calculation is needed for other data products.
     """
     cdom_conc = flo_scale_and_offset(counts_output, counts_dark, scale_factor)
     return cdom_conc
@@ -495,42 +403,14 @@ def flo_cdom(counts_output, counts_dark, scale_factor):
 
 def flo_beta(counts_output, counts_dark, scale_factor):
     """
-    Description:
+    OOI single-output wrapper for FLUBSCT_L1. Returns the volume
+    scattering function at the instrument centroid angle [m^-1 sr^-1].
 
-        This function calculates FLUBSCT_L1, the value for the volume scattering
-        function measured at the effective measurement angle determined by the
-        sensor geometry of the particular instrument used. Most of the FLORD,
-        FLORT, and FLNTU instruments measure backscattering at a wavelength of
-        700nm (the exception is the FLORT series O ECO-BB3 instrument). For more
-        information see the Notes section of the function flo_bback_total in this
-        module.
-
-    Implemented by:
-
-        2014-01-30: Craig Risien. Initial Code
-        2015-10-23: Russell Desiderio. Revised documentation.
-
-    Usage:
-
-        beta = flo_flubsct(counts_output, counts_dark, scale_factor)
-
-            where
-
-        beta = value of the volume scattering function measured at the effective
-               (centroid) backscatter angle of the measuring instrument at its
-               measurement wavelength (usually 700nm) (FLUBSCT_L1) [m^-1 sr^-1]
-        counts_output = measured sample output (FLUBSCT_L0) [counts]
-        counts_dark = measured signal output of fluorometer in clean water
-                      with black tape over the detector [counts]
-        scale_factor = multiplier [m^-1 sr^-1 counts^-1]
-
-    References:
-
-        OOI (2012). Data Product Specification for Fluorometric Chlorophyll-a
-            Concentration. Document Control Number 1341-00540 (version 1-05).
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf)
+    See Also
+    --------
+    flo_scale_and_offset : Core algorithm; use directly where the same
+        scale-and-offset calculation is needed for other data products.
+    flo_bback_total : Computes FLUBSCT_L2 from the L1 beta value.
     """
     beta = flo_scale_and_offset(counts_output, counts_dark, scale_factor)
     return beta

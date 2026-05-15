@@ -16,3 +16,6 @@ extensions/test
 *.so
 notebooks/
 .idea
+
+.claude
+CLAUDE.md

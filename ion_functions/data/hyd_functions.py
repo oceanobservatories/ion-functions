@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.hyd_functions
-@file ion_functions/data/hyd_functions.py
-@author Christopher Wingard
-@brief Module containing Hydrophone instrument family related functions
+Module containing Hydrophone (HYD) instrument family data processing
+functions for the Ocean Observatories Initiative. Converts raw L0 data
+from Broadband Hydrophone (HYDBB) and Low Frequency Hydrophone (HYDLF)
+instruments into L1 acoustic pressure wave data products.
 """
 
 import numpy as np
@@ -11,37 +11,36 @@ import numpy as np
 
 def hyd_bb_acoustic_pwaves(wav, gain):
     """
-    Description:
+    Compute the L1 Broadband Acoustic Pressure Waves product (HYDAPBB)
+    from the Ocean Sonics icListen HF Broadband Hydrophone (HYDBB).
 
-        Calculates the OOI Level 1 (L1) Broadband Acoustic Pressure Waves core
-        data product (HYDAPBB), using data from Broadband Hydrophone (HYDBB)
-        instruments. The HYDBB instrument senses passive acoustic pressure
-        waves from 5 Hz to 100 kHz, at 24-bit resolution.
+    Parameters
+    ----------
+    wav : array_like
+        Raw L0 time-series from the HYDBB instrument encoded as
+        normalized WAV floating-point values in the range [-1, 1]
+        (HYDAPBB_L0). Shape (n_records, n_samples) or (n_samples,).
+    gain : float or array_like
+        External gain applied by the instrument signal conditioning
+        chain [dBV]. Scalar or shape (n_records,).
 
-    Implemented by:
+    Returns
+    -------
+    tsv : ndarray
+        L1 time-series voltage compensated for external gain
+        (HYDAPBB_L1) [V]. Shape (n_records, n_samples).
 
-        2014-05-16: Christopher Wingard. Initial Code
-        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
-                    Changed local variable names to follow naming convention.
+    Notes
+    -----
+    The WAV format encodes samples as normalized values in [-1, 1].
+    Multiplying by 3 recovers the physical voltage using the icListen
+    HF full-scale range of +/-3 V. The gain in dBV is converted to a
+    linear factor via 10^(gain/20) and divided out.
 
-    Usage:
-
-        tsv = hyd_bb_acoustic_pwaves(wav, gain)
-
-            where
-
-        tsv = time-series voltage compensated for external gain and wav format
-            scaling [Volts] (HYDAPBB_L1)
-        wav = raw time-series voltage [Volts] (HYDAPBB_L0)
-        gain = external gain setting [dB]
-
-    References:
-
-        OOI (2013). Data Product Specification for Acoustic Pressure Waves.
-            Document Control Number 1341-00820.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
-            1341-00820_Data_Product_SPEC_HYDAPBB_OOI.pdf)
+    The frequency-dependent OCVR (Open Circuit Voltage Response) of
+    the hydrophone cannot be applied to a broadband time-series without
+    prior frequency-domain filtering. HYDAPBB_L1 is therefore
+    gain-compensated voltage, not calibrated pressure.
     """
     # shape inputs to correct dimensions
     wav = np.atleast_2d(wav)
@@ -65,35 +64,30 @@ def hyd_bb_acoustic_pwaves(wav, gain):
 
 def hyd_lf_acoustic_pwaves(raw, gain=3.2):
     """
-    Description:
+    Compute the L1 Low Frequency Acoustic Pressure Waves product
+    (HYDAPLF) from the Low Frequency Hydrophone (HYDLF).
 
-        Calculates the OOI Level 1 (L1) Low Frequency Acoustic Pressure Waves
-        core data product (HYDAPLF), using data from the Low Frequency
-        Hydrophone (HYDLF) instruments.
+    Parameters
+    ----------
+    raw : array_like
+        Raw L0 time-series digitized by the Guralp DM24 digitizer
+        [counts] (HYDAPLF_L0).
+    gain : float, optional
+        Guralp DM24 fixed bit weight [uV/count]. Default is 3.2.
 
-    Implemented by:
+    Returns
+    -------
+    hydaplf : ndarray
+        L1 time-series of low frequency acoustic pressure waves
+        (HYDAPLF_L1) [V].
 
-        2014-07-09: Christopher Wingard. Initial Code.
-        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
-
-    Usage:
-
-        hydaplf = hyd_lf_acoustic_pwaves(counts, gain)
-
-            where
-
-        hydaplf = time-series of low frequency acoustic pressure waves [V]
-            (HYDAPLF_L1)
-        raw = raw time-series digitizied in counts [counts] (HYDAPLF_L0)
-        gain = Gurlap DM24 fixed gain bit weight [uV/count]
-
-    References:
-
-        OOI (2013). Data Product Specification for Low Frequency Acoustic
-            Pressure Waves. Document Control Number 1341-00821.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
-            1341-00821_Data_Product_SPEC_HYDAPLF_OOI.pdf)
+    Notes
+    -----
+    The bit weight converts raw counts to microvolts; the result is
+    scaled by 1e-6 to return Volts. The frequency-dependent OCVR of
+    the hydrophone cannot be applied to a broadband time-series without
+    prior frequency-domain filtering. HYDAPLF_L1 is therefore
+    gain-compensated voltage, not calibrated pressure.
     """
     # apply the gain correction to convert the signal from counts to V
     gain = gain * 1.0e-6

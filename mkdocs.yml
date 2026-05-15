@@ -1,0 +1,50 @@
+site_name: ion-functions
+site_url: https://oceanobservatories.github.io/ion-functions/
+site_description: OOI oceanographic data processing functions
+repo_url: https://github.com/oceanobservatories/ion-functions
+repo_name: oceanobservatories/ion-functions
+edit_uri: ""
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - python
+  logo: assets/NSF-OOI-RGB.png
+
+extra_css:
+  - assets/custom.css
+
+extra_javascript:
+  - assets/mathjax.js
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js
+
+markdown_extensions:
+  - toc:
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            show_source: true
+            show_root_heading: true
+            show_root_full_path: false
+            heading_level: 3
+            members_order: source
+
+nav:
+  - Home: index.md
+  - Calibration Coefficients: calibrations.md
+  - Function Types: function_types.md
+  - Instrument Families:
+    - CO2 Functions: api/co2_functions.md
+    - CTD Functions: api/ctd_functions.md
+    - FLO Functions: api/flo_functions.md
+    - HYD Functions: api/hyd_functions.md
+    - PH Functions: api/ph_functions.md
