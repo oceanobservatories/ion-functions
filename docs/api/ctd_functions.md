@@ -13,6 +13,7 @@ classes covered by this module.
 | CTDMO | SBE 37IM | Moored (fixed depth) | CTD, Modem (Inductive) |
 | CTDPF | SBE 16Plus V2 (A/B) or SBE 52MP (C/K/L) | Profiling | CTD, Profiler |
 | CTDGV | SBE GPCTD (Seabird Payload CTD) | Gliders | CTD, Glider Vehicle |
+| PHSEN | SBE Deep SeapHOx V2 | Moored (fixed depth) | pH Sensor |
 
 `ctd_functions.py` converts raw Sea-Bird Electronics CTD data into calibrated 
 L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) and computes the L2 
@@ -37,6 +38,50 @@ requiring the conversions below.
 | [OOI (2013). Data Product Specification for Conductivity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf) | 1341-00030 |
 | [OOI (2013). Data Product Specification for Salinity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf) | 1341-00040 |
 | [OOI (2012). Data Product Specification for Density.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf) | 1341-00050 |
+
+---
+
+### CONDWAT_L1 — Seawater Conductivity
+
+The raw seawater conductivity (CONDWAT_L0, $c_0$), is reported in either 
+counts or scaled L1 units. The converted seawater conductivity, 
+CONDWAT_L1, is reported in S m$^{-1}$. As with temperature, conversions from 
+L0 to L1 depend on the instrument class and/or data delivery method.
+
+**SBE 16Plus** (CTDBP, CTDPF-A/B): The raw count is converted to a frequency
+$f$ in kHz, then evaluated with a polynomial corrected for temperature and
+pressure:
+
+$$f = \frac{c_0 \div  256}{1000}$$
+
+$$C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor}\times T + \text{CPcor}\times P}$$
+
+where $T$ is TEMPWAT_L1 ($^\circ\text{C}$), $P$ is PRESWAT_L1 (dbar), and
+$g$, $h$, $i$, $j$, CTcor, CPcor are factory calibration coefficients.
+
+**SBE 37IM instrument-recovered** (CTDMO): Same polynomial as the SBE 16Plus
+path, but includes an additional wbotc correction to the frequency:
+
+$$f = \frac{c_0 \div  256}{1000} \times \sqrt{1 + \text{wbotc}\times T}$$
+
+**SBE 37IM telemetered and recovered_host** (CTDMO):
+
+$$C_{L1} = c_0 \div 100000 - 0.5$$
+
+**SBE 37 Deep SeapHOx V2 streamed and recovered_instrument** (PHSEN):
+#TODO
+
+**SBE 52MP** (CTDPF-C/K/L): Linear scaling with a unit conversion from
+mS cm$^{-1}$ to S m$^{-1}$:
+
+$$C_{L1} = (c_0 \div 10000 - 0.5) \times 0.1$$
+
+**CTDGV (glider)**: The SBE GPCTD computes conductivity onboard the vehicle
+using vendor software and transmits the result already in S m$^{-1}$;
+`ion-functions` is not invoked for those deployments.
+
+Output accuracy: SBE 16Plus V2 $\pm 0.0005$ S m$^{-1}$; SBE 37IM
+$\pm 0.0003$ S m$^{-1}$.
 
 ---
 
@@ -69,6 +114,9 @@ retained in the instrument-stored file and require the calibration-coefficient
 equation:
 
 $$T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15$$
+
+**SBE 37 Deep SeapHOx V2 streamed and recovered_instrument** (PHSEN):
+#TODO
 
 **SBE 52MP** (CTDPF-C/K/L): The instrument outputs engineering units scaled 
 to an integer. The L1 conversion is:
@@ -144,6 +192,9 @@ polynomial as the SBE 16Plus strain-gauge path, but with the raw thermistor
 count $pt_0$ used directly in the polynomial rather than being first
 converted to voltage.
 
+**SBE 37 Deep SeapHOx V2 streamed and recovered_instrument** (PHSEN):
+#TODO
+
 **SBE 52MP** (CTDPF-C/K/L):
 
 $$P_{L1} = p_0 \div 100 - 10$$
@@ -154,47 +205,6 @@ converts to dbar:
 $$P_{L1}\ [\text{dbar}] = p_{\text{bar}} \times 10$$
 
 Output accuracy: SBE 16Plus V2 and SBE 37IM 0.1 % of full-scale range.
-
----
-
-### CONDWAT_L1 — Seawater Conductivity
-
-The raw seawater conductivity (CONDWAT_L0, $c_0$), is reported in either 
-counts or scaled L1 units. The converted seawater conductivity, 
-CONDWAT_L1, is reported in S m$^{-1}$. As with temperature, conversions from 
-L0 to L1 depend on the instrument class and/or data delivery method.
-
-**SBE 16Plus** (CTDBP, CTDPF-A/B): The raw count is converted to a frequency
-$f$ in kHz, then evaluated with a polynomial corrected for temperature and
-pressure:
-
-$$f = \frac{c_0 \div  256}{1000}$$
-
-$$C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor}\times T + \text{CPcor}\times P}$$
-
-where $T$ is TEMPWAT_L1 ($^\circ\text{C}$), $P$ is PRESWAT_L1 (dbar), and
-$g$, $h$, $i$, $j$, CTcor, CPcor are factory calibration coefficients.
-
-**SBE 37IM instrument-recovered** (CTDMO): Same polynomial as the SBE 16Plus
-path, but includes an additional wbotc correction to the frequency:
-
-$$f = \frac{c_0 \div  256}{1000} \times \sqrt{1 + \text{wbotc}\times T}$$
-
-**SBE 37IM telemetered and recovered_host** (CTDMO):
-
-$$C_{L1} = c_0 \div 100000 - 0.5$$
-
-**SBE 52MP** (CTDPF-C/K/L): Linear scaling with a unit conversion from
-mS cm$^{-1}$ to S m$^{-1}$:
-
-$$C_{L1} = (c_0 \div 10000 - 0.5) \times 0.1$$
-
-**CTDGV (glider)**: The SBE GPCTD computes conductivity onboard the vehicle
-using vendor software and transmits the result already in S m$^{-1}$;
-`ion-functions` is not invoked for those deployments.
-
-Output accuracy: SBE 16Plus V2 $\pm 0.0005$ S m$^{-1}$; SBE 37IM
-$\pm 0.0003$ S m$^{-1}$.
 
 ---
 
@@ -430,6 +440,44 @@ correctly.
 
 ---
 
+## SeapHOx CTD Functions
+
+The Sea-Bird Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H) integrates
+an SBE 37 MicroCAT CTD alongside an SBE 63 dissolved oxygen sensor and a
+Deep SeaFET pH sensor. The three functions below convert raw SBE 37 A/D
+counts to calibrated temperature, pressure, and conductivity for use by
+the SeapHOx dissolved oxygen and pH algorithms. They live in
+`phsen_h_functions.py`, but are documented here because they implement the 
+SBE 37 calibration equations already covered by this page. 
+See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
+
+::: ion_functions.data.phsen_h_functions.temperature_raw_conversion
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+
+---
+
+::: ion_functions.data.phsen_h_functions.pressure_raw_conversion
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+
+---
+
+::: ion_functions.data.phsen_h_functions.conductivity_raw_conversion
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+
+---
+
 ## References
 
 Feistel, R. (2008). A Gibbs function for seawater thermodynamics for -6 to
@@ -493,3 +541,6 @@ Number 1341-00040.](https://oceanobservatories.org/wp-content/uploads/2023/09/13
 
 [OOI (2012). Data Product Specification for Density. Document Control Number
 1341-00050.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf)
+
+Sea-Bird Scientific. *Deep SeapHOx V2 Ocean CT(D)-pH-DO Sensor*. Data
+sheet DS.53.May25. Bellevue, WA: Sea-Bird Scientific.

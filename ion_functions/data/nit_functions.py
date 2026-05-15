@@ -1,111 +1,81 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.nit_functions
-@file ion_functions/data/nit_functions.py
-@author Craig Risien
-@brief Module containing NIT related data-calculations.
+Module containing NIT (NUTNR) data processing functions for the Ocean
+Observatories Initiative. Computes the temperature and salinity corrected
+dissolved nitrate concentration (NITRTSC_L2) from raw UV absorption spectra
+produced by the Sea-Bird Scientific SUNA V2 nitrate sensor.
 """
 
 import numpy as np
 
 
 def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
-                         ctd_sp, data_in, frame_type, wllower=217, wlupper=240):
+                         ctd_sp, data_in, frame_type, wllower=217,
+                         wlupper=240):
     """
-    Description:
+    Compute NITRTSC_L2, dissolved nitrate concentration corrected for
+    temperature and salinity.
 
-        This Python code is based on Matlab code
-        (NUTNR_Example_MATLAB_Code_20140521_ver_1_00.m) that was
-        developed by O.E. Kawka (UW/RSN).
+    Parameters
+    ----------
+    cal_temp : array_like, shape (N,)
+        Calibration water temperature [degC]. Scalar value tiled to length
+        N by the OOI data management system.
+    wl : array_like, shape (N, 256)
+        Wavelength bins for each spectral channel [nm].
+    eno3 : array_like, shape (N, 256)
+        Nitrate molar absorptivity (extinction coefficients) at each
+        wavelength, from factory calibration [1/(M cm)].
+    eswa : array_like, shape (N, 256)
+        Seawater extinction coefficients at each wavelength at reference
+        salinity 35 and calibration temperature cal_temp, from factory
+        calibration [1/(M cm)].
+    di : array_like, shape (N, 256)
+        Deionized water reference spectrum from factory calibration
+        [counts].
+    dark_value : array_like, shape (N,)
+        Dark current scalar, averaged from dark frame measurements
+        [counts].
+    ctd_t : array_like, shape (N,)
+        In situ water temperature from co-located CTD (TEMPWAT_L1)
+        [degC].
+    ctd_sp : array_like, shape (N,)
+        Practical salinity from co-located CTD (PRACSAL_L2) [unitless].
+    data_in : array_like, shape (N, 256)
+        Raw UV absorption spectrum from the SUNA V2 (NITROPT_L0)
+        [counts].
+    frame_type : array_like, shape (N,)
+        Frame type string for each data packet. Light frames ('SLB') are
+        processed; dark frames ('SDB', 'SDF', 'NDF') are filled with NaN.
+    wllower : float or array_like, shape (N,), optional
+        Lower wavelength limit for spectral fitting window [nm]. Default
+        is 217 nm (1-cm pathlength probe tip). Use 220 nm for 4-cm
+        pathlength probe tips.
+    wlupper : float or array_like, shape (N,), optional
+        Upper wavelength limit for spectral fitting window [nm]. Default
+        is 240 nm (1-cm pathlength probe tip). Use 245 nm for 4-cm
+        pathlength probe tips.
 
-        The code below calculates the Dissolved Nitrate Concentration
-        with the Sakamoto et. al. (2009) algorithm that uses the observed
-        sample salinity and temperature to subtract the bromide component
-        of the overall seawater UV absorption spectrum before solving for
-        the nitrate concentration.
+    Returns
+    -------
+    NO3_conc : ndarray, shape (N,)
+        Temperature and salinity corrected dissolved nitrate concentration
+        (NITRTSC_L2) [uM]. Dark frame records are filled with NaN.
 
-        The output represents the OOI L2 Dissolved Nitrate Concentration,
-        Temperature and Salinity Corrected (NITRTSC).
+    Notes
+    -----
+    Implements the Sakamoto et al. (2009) TS-corrected nitrate algorithm.
+    For each light frame, absorbance is computed from the ratio of the
+    deionized water reference to the dark-corrected seawater spectrum.
+    The seawater bromide contribution is removed using temperature-
+    corrected seawater extinction coefficients scaled by practical
+    salinity. Nitrate concentration is then obtained by linear least
+    squares using a model matrix that includes the nitrate extinction
+    spectrum plus a linear baseline in wavelength.
 
-    Implemented by:
-
-        2014-05-22: Craig Risien. Initial Code
-        2014-05-27: Craig Risien. This function now looks for the light vs
-                    dark frame measurements and only calculates nitrate
-                    concentration based on the light frame measurements.
-        2015-04-09: Russell Desiderio. CI is now implementing cal coeffs
-                    by tiling in time, requiring coding changes. The
-                    tiling includes the wllower and wlupper variables
-                    when supplied by CI.
-
-    Usage:
-
-        NO3_conc = ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di,
-                                        dark_value, ctd_t, ctd_sp, data_in,
-                                        frame_type, wllower, wlupper)
-
-            where
-
-        cal_temp = Calibration water temperature value
-        wl = (256,) array of wavelength bins
-        eno3 = (256,) array of wavelength-dependent nitrate
-                extinction coefficients
-        eswa = (256,) array of seawater extinction coefficients
-        di = (256,) array of deionized water reference spectrum
-        dark_value = (N,) array of dark average scalar value
-        ctd_t = (N,) array of water temperature values from
-                colocated CTD [deg C].
-                (see 1341-00010_Data_Product_Spec_TEMPWAT)
-        ctd_sp = (N,) array of practical salinity values from
-                colocated CTD [unitless].
-                (see 1341-00040_Data_Product_Spec_PRACSAL)
-        data_in = (N x 256) array of nitrate measurement values
-                from the UV absorption spectrum data product
-                (L0 NITROPT) [unitless]
-        NO3_conc = L2 Dissolved Nitrate Concentration, Temperature and
-                Corrected (NITRTSC) [uM]
-        frame_type = (N,) array of Frame type, either a light or dark
-                measurement. This function only uses the data from light
-                frame measurements.
-        wllower = Lower wavelength limit for spectra fit.
-                  From DPS: 217 nm (1-cm pathlength probe tip) or
-                            220 nm (4-cm pathlength probe tip)
-        wlupper = Upper wavelength limit for spectra fit.
-                  From DPS: 240 nm (1-cm pathlength probe tip) or
-                            245 nm (4-cm pathlength probe tip)
-    Notes:
-
-        2015-04-10: R. Desiderio.
-            CI has determined that cal coefficients will implemented as time-vectorized
-            arguments as inputs to DPAs. This means that all input calibration coefficients
-            originally dimensioned as (256,) will now be dimensioned as (N,256), where N is
-            the number of data packets.
-
-            This change broke the code ("Blocker Bug #2942") and so necessitated a revision
-            of this DPA and its unit test. The useindex construct along with variables WL,
-            ENO3, ESWA, and DI were originally set up outside the loop. However, with this CI
-            change, it is now possible that the cal coefficients could change inside of the
-            cal coeff variable arrays (reflecting data coming from two different instruments).
-            I took the conservative approach and moved these calculations inside the loop to
-            be calculated for each data packet.
-
-            Fill values on output have been changed to np.nan.
-
-    References:
-
-        OOI (2014). Data Product Specification for NUTNR Data Products.
-            Document Control Number 1341-00620.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
-            1341-00620_Data_Product_Spec_NUTNR_OOI.pdf)
-        Johnson, K. S., and L. J. Coletti. 2002. In situ ultraviolet
-            spectrophotometry for high resolution and long-term monitoring
-            of nitrate, bromide and bisulfide in the ocean. Deep-Sea Res.
-            I 49:1291-1305
-        Sakamoto, C.M., K.S. Johnson, and L.J. Coletti (2009). Improved
-            algorithm for the computation of nitrate concentrations in
-            seawater using an in situ ultraviolet spectrophotometer.
-            Limnology and Oceanography: Methods 7: 132-143
+    The four fixed Sakamoto coefficients (Asak=1.1500276, Bsak=0.02840,
+    Csak=-0.3101349, Dsak=0.001222) parameterize the absorbance of
+    seasalt at 35 salinity vs temperature (Sakamoto et al. 2009, Eq. 4).
     """
     n_data_packets = data_in.shape[0]
 
@@ -129,9 +99,6 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
     for i in range(0, n_data_packets):
 
         if frame_type[i] == 'SDB' or frame_type[i] == 'SDF' or frame_type[i] == "NDF":
-
-            ## Ignore and fill dark frame measurements
-            #NO3_conc[i] = -9999999.0
 
             # change this to output nans instead.
             NO3_conc[i] = np.nan

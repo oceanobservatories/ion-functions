@@ -54,7 +54,7 @@ details.mkdocstrings-source {
     content: "DRAFT";
     position: fixed;
     top: 50%;
-    left: calc(350px + (100% - 350px - 800px) / 2);
+    left: 350px;
     width: 800px;
     text-align: center;
     transform: translateY(-50%) rotate(-45deg);

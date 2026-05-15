@@ -9,35 +9,34 @@
 
 def obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.):
     """
-    Description:
+    Compute broadband ground velocity (GRNDVEL_L1) from raw OBS counts.
 
-        Calculates the OOI Level 1 (L1) Broadband Ground Velocity core data
-        product (GRNDVEL) in units of m/s, using data from the Ocean Bottom
-        Broadband Seismometer (OBSBB and OBSBK) instruments.
+    Parameters
+    ----------
+    raw : array_like
+        Raw time-series digitized in counts [counts] (GRNDVEL_L0).
+    gain : float, optional
+        Guralp DM24 fixed gain bit weight [uV/count]. Default is 3.2.
+    sensitivity : float, optional
+        Guralp CMG-1T sensor sensitivity [V/(m/s)]. Default is 1500.0.
 
-    Implemented by:
+    Returns
+    -------
+    grndvel : array_like
+        Time-series broadband ground velocity [m/s] (GRNDVEL_L1).
 
-        2014-07-09: Christopher Wingard. Initial Code
-        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+    Notes
+    -----
+    Applied to OBSBB instruments deployed on the Regional Cabled Array.
+    The gain is converted from uV/count to V/count before applying the
+    calibration. Full algorithm details are in DPS DCN 1341-00090.
 
-    Usage:
-
-        grndvel = obs_bb_ground_velocity(counts, gain, sensitivity)
-
-            where
-
-        grndvel = time-series of ocean bottom seismic signal [m/s] (GRNDVEL_L1)
-        raw = raw time-series digitizied in counts [counts] (GRNDVEL_L0)
-        gain = Gurlap DM24 fixed gain bit weight [uV/count]
-        sensitivity = Gurlap CMG1T sensor sensitivity [V/m/s]
-
-    References:
-
-        OOI (2013). Data Product Specification for Broadband Ground Velocity.
-            Document Control Number 1341-00090.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
-            1341-00090_Data_Product_SPEC_GRNDVEL_OOI.pdf)
+    History
+    -------
+    2014-07-09: Christopher Wingard. Initial Code
+    2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+    2025-05-15: Christopher Wingard. Converted to NumPy docstring format;
+        updated documentation.
     """
     # scale the gain and sensitivity ...
     gain = gain * 1.0e-6
@@ -50,35 +49,34 @@ def obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.):
 
 def obs_bb_ground_acceleration(raw, gain=3.2, sensitivity=0.508):
     """
-    Description:
+    Compute broadband ground acceleration (GRNDACC_L1) from raw OBS counts.
 
-        Calculates the OOI Level 1 (L1) Broadband Ground Acceleration core data
-        product (GRNDACC) in units of m/s^2, using data from the Ocean Bottom
-        Broadband Seismometer (OBSBB and OBSBK) instruments.
+    Parameters
+    ----------
+    raw : array_like
+        Raw time-series digitized in counts [counts] (GRNDACC_L0).
+    gain : float, optional
+        Guralp DM24 fixed gain bit weight [uV/count]. Default is 3.2.
+    sensitivity : float, optional
+        Guralp CMG-5T sensor sensitivity [V/(m/s^2)]. Default is 0.508.
 
-    Implemented by:
+    Returns
+    -------
+    grndacc : array_like
+        Time-series broadband ground acceleration [m/s^2] (GRNDACC_L1).
 
-        2014-07-09: Christopher Wingard. Initial Code
-        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+    Notes
+    -----
+    Applied to OBSBB instruments deployed on the Regional Cabled Array.
+    The gain is converted from uV/count to V/count before applying the
+    calibration. Full algorithm details are in DPS DCN 1341-00100.
 
-    Usage:
-
-        grndacc = obs_bb_ground_acceleration(counts, gain, sensitivity)
-
-            where
-
-        grndacc = time-series of ocean bottom seismic signal [m/s^2] (GRNDACC_L1)
-        raw = raw time-series digitizied in counts [counts] (GRNDACC_L0)
-        gain = Gurlap DM24 fixed gain bit weight [uV/count]
-        sensitivity = Gurlap CMG5T sensor sensitivity [V/m/s^2]
-
-    References:
-
-        OOI (2013). Data Product Specification for Broadband Ground Acceleration.
-            Document Control Number 1341-00100.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
-            1341-00100_Data_Product_SPEC_GRNDACC_OOI.pdf)
+    History
+    -------
+    2014-07-09: Christopher Wingard. Initial Code
+    2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+    2025-05-15: Christopher Wingard. Converted to NumPy docstring format;
+        updated documentation.
     """
     # scale the gain and sensitivity ...
     gain = gain * 1.0e-6
@@ -91,35 +89,35 @@ def obs_bb_ground_acceleration(raw, gain=3.2, sensitivity=0.508):
 
 def obs_sp_ground_velocity(raw, gain=2.84, sensitivity=1200.):
     """
-    Description:
+    Compute short period ground velocity (SGRDVEL_L1) from raw OBS counts.
 
-        Calculates the OOI Level 1 (L1) Short Period Ground Velocity core data
-        product (SGRDVEL) in units of m/s, using data from the Ocean Bottom
-        Short Period Seismometer (OBSSP) instruments.
+    Parameters
+    ----------
+    raw : array_like
+        Raw time-series digitized in counts [counts] (SGRDVEL_L0).
+    gain : float, optional
+        Guralp DM24 fixed gain bit weight [uV/count]. Default is 2.84.
+    sensitivity : float, optional
+        Guralp CMG-6T sensor sensitivity [V/(m/s)]. Default is 1200.0.
 
-    Implemented by:
+    Returns
+    -------
+    sgrdvel : array_like
+        Time-series short period ground velocity [m/s] (SGRDVEL_L1).
 
-        2014-07-09: Christopher Wingard. Initial Code
-        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+    Notes
+    -----
+    Applied to OBSSP instruments deployed on the Regional Cabled Array
+    at Hydrate Ridge and Axial Volcano. The gain is converted from
+    uV/count to V/count before applying the calibration. Full algorithm
+    details are in DPS DCN 1341-00110.
 
-    Usage:
-
-        sgrdvel = obs_sp_ground_velocity(counts, gain, sensitivity)
-
-            where
-
-        grndacc = time-series of ocean bottom seismic signal [m/s] (SGRDVEL_L1)
-        raw = raw time-series digitizied in counts [counts] (SGRDVEL_L0)
-        gain = Gurlap DM24 fixed gain bit weight [uV/count]
-        sensitivity = Gurlap CMG6T sensor sensitivity [V/m/s]
-
-    References:
-
-        OOI (2013). Data Product Specification for Broadband Ground Acceleration.
-            Document Control Number 1341-00100.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Controlled >> 1000 System Level >>
-            1341-00100_Data_Product_SPEC_GRNDACC_OOI.pdf)
+    History
+    -------
+    2014-07-09: Christopher Wingard. Initial Code
+    2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+    2025-05-15: Christopher Wingard. Converted to NumPy docstring format;
+        updated documentation.
     """
     # scale the gain and sensitivity ...
     gain = gain * 1.0e-6
