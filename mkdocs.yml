@@ -40,16 +40,20 @@ plugins:
 
 nav:
   - Home: index.md
+  - Installation: installation.md
+  - Data Product Levels: data_products.md
   - Calibration Coefficients: calibrations.md
   - Function Types: function_types.md
-  - Deep SeapHOx V2: seaphox.md
+  - Instrument Notes:
+    - Deep SeapHOx V2: seaphox.md
   - Instrument Families:
     - CO2 Functions: api/co2_functions.md
+    - PH Functions: api/ph_functions.md
     - CTD Functions: api/ctd_functions.md
-    - DO Functions: api/do2_functions.md
+    - DO2 Functions: api/do2_functions.md
     - FLO Functions: api/flo_functions.md
     - HYD Functions: api/hyd_functions.md
     - NIT Functions: api/nit_functions.md
     - OBS Functions: api/obs_functions.md
-    - PH Functions: api/ph_functions.md
+    - OPT Functions: api/opt_functions.md
     - VEL Functions: api/vel_functions.md

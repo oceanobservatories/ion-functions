@@ -21,15 +21,19 @@ three L1 data products — fluorometric chlorophyll-a concentration
 (CHLAFLO_L1), fluorometric CDOM concentration (CDOMFLO_L1), and the
 volume scattering function (FLUBSCT_L1) — and one L2 product, the total
 optical backscatter coefficient (FLUBSCT_L2). All calibration coefficients
-are from factory calibration sheets.
+are from factory calibration sheets. Within the OOI data system, FLO
+functions fall under the Water Column science regime. FLORD instruments
+fall under the Chlorophyll a and Inherent Optical Properties categories;
+FLORT instruments additionally include the Colored Dissolved Organic Matter
+category.
 
 ### Primary Sources
 
-| Document | DCN |
+| DCN | Document |
 |---|---|
-| [OOI (2012). Data Product Specification for Fluorometric Chlorophyll-a Concentration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00530_Data_Product_SPEC_CHLAFLO_OOI.pdf) | 1341-00530 |
-| [OOI (2012). Data Product Specification for Fluorometric CDOM Concentration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00550_Data_Product_SPEC_CDOMFLO_OOI.pdf) | 1341-00550 |
-| [OOI (2014). Data Product Specification for Optical Backscatter (Red Wavelengths).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf) | 1341-00540 |
+| 1341-00530 | [OOI (2012). Data Product Specification for Fluorometric Chlorophyll-a Concentration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00530_Data_Product_SPEC_CHLAFLO_OOI.pdf) |
+| 1341-00550 | [OOI (2012). Data Product Specification for Fluorometric CDOM Concentration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00550_Data_Product_SPEC_CDOMFLO_OOI.pdf) |
+| 1341-00540 | [OOI (2014). Data Product Specification for Optical Backscatter (Red Wavelengths).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf) |
 
 ---
 

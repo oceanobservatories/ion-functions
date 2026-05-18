@@ -20,7 +20,9 @@ L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) and computes the L2
 derived products Practical Salinity (PRACSAL) and in-situ Density (DENSITY) 
 using the [TEOS-10 GSW library](https://teos-10.github.io/GSW-Python/). All 
 calibration coefficients are from factory calibration values supplied with 
-individual instruments.
+individual instruments. Within the OOI data system, CTD functions fall under
+the Water Column science regime and the Conductivity, Temperature, Pressure,
+Salinity, and Density categories.
 
 The L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) may be reported directly
 by the instrument (computed onboard the sensor using vendor firmware) or they 
@@ -31,13 +33,13 @@ requiring the conversions below.
 
 ### Primary Sources
 
-| Document | DCN |
+| DCN | Document |
 |---|---|
-| [OOI (2013). Data Product Specification for Water Temperature.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf) | 1341-00010 |
-| [OOI (2013). Data Product Specification for Pressure (Depth).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf) | 1341-00020 |
-| [OOI (2013). Data Product Specification for Conductivity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf) | 1341-00030 |
-| [OOI (2013). Data Product Specification for Salinity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf) | 1341-00040 |
-| [OOI (2012). Data Product Specification for Density.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf) | 1341-00050 |
+| 1341-00010 | [OOI (2013). Data Product Specification for Water Temperature.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf) |
+| 1341-00020 | [OOI (2013). Data Product Specification for Pressure (Depth).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf) |
+| 1341-00030 | [OOI (2013). Data Product Specification for Conductivity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf) |
+| 1341-00040 | [OOI (2013). Data Product Specification for Salinity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf) |
+| 1341-00050 | [OOI (2012). Data Product Specification for Density.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf) |
 
 ---
 

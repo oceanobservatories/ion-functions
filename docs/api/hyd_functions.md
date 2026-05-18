@@ -17,14 +17,16 @@ and anthropogenic sources.
 their respective L1 data products: Broadband Acoustic Pressure Waves
 (HYDAPBB_L1) and Low Frequency Acoustic Pressure Waves (HYDAPLF_L1). All
 calibration coefficients are from factory calibration sheets supplied with
-individual instruments.
+individual instruments. Within the OOI data system, HYD functions fall
+under the Water Column and Seafloor/Crust science regimes and the Passive
+Acoustics category.
 
 ### Primary Sources
 
-| Document | DCN |
+| DCN | Document |
 |---|---|
-| OOI (2013). Data Product Specification for Broadband Acoustic Pressure Waves. (Not released.) | 1341-00820 |
-| [OOI (2013). Data Product Specification for Low Frequency Acoustic Pressure Waves.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00821_Data_Product_SPEC_HYDAPLF_OOI.pdf) | 1341-00821 |
+| 1341-00820 | OOI (2013). Data Product Specification for Broadband Acoustic Pressure Waves. (Not released.) |
+| 1341-00821 | [OOI (2013). Data Product Specification for Low Frequency Acoustic Pressure Waves.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00821_Data_Product_SPEC_HYDAPLF_OOI.pdf) |
 
 ---
 

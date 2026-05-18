@@ -22,14 +22,15 @@ dissolved oxygen sensor. See [Deep SeapHOx V2](../seaphox.md) for instrument
 architecture context.
 
 All calibration coefficients are from factory calibration sheets supplied with
-individual instruments.
+individual instruments. Within the OOI data system, dissolved oxygen functions
+fall under the Water Column science regime and the Dissolved O$_2$ category.
 
 ### Primary Sources
 
-| Document | DCN |
+| DCN | Document |
 |---|---|
-| [OOI (2014). Data Product Specification for Oxygen Concentration from "Stable" Instruments.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00520_Data_Product_SPEC_DOCONCS_OOI.pdf) | 1341-00520 |
-| [OOI (2013). Data Product Specification for Fast Dissolved Oxygen.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00521_Data_Product_Spec_DOCONCF_OOI.pdf) | 1341-00521 |
+| 1341-00520 | [OOI (2014). Data Product Specification for Oxygen Concentration from "Stable" Instruments.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00520_Data_Product_SPEC_DOCONCS_OOI.pdf) |
+| 1341-00521 | [OOI (2013). Data Product Specification for Fast Dissolved Oxygen.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00521_Data_Product_Spec_DOCONCF_OOI.pdf) |
 
 ---
 

@@ -5,11 +5,15 @@
 The Ocean Observatories Initiative deploys the Sea-Bird Scientific SUNA V2
 (Submersible Ultraviolet Nitrate Analyzer) as its nitrate sensor. The SUNA V2
 is an optical, chemical-free sensor derived from the ISUS (In Situ Ultraviolet
-Spectroscopy) technology developed at MBARI. OOI instrument class NUTNR
-(Nutrient Sensor) covers both the original ISUS instruments and the SUNA V2.
+Spectroscopy) technology developed at MBARI. Prior to 2017, OOI deployed the ISUS
+sensor on fixed depth platforms in the uncabled arrays prior to convert all ISUS
+sensors to the SUNA V2. The OOI instrument class NUTNR (Nutrient Sensor) covers 
+both the original ISUS instruments and the SUNA V2.
 
 `nit_functions.py` computes a single L2 data product, NITRTSC_L2, from raw
-UV absorption spectra produced by NUTNR instruments.
+UV absorption spectra produced by NUTNR instruments. Within the OOI data
+system, NIT functions fall under the Water Column science regime and the
+Nitrate category.
 
 ### Primary Sources
 
@@ -33,14 +37,13 @@ The SUNA V2 produces two frame types in each measurement cycle:
 - **Light frames** (frame type `SLB`) — UV absorption spectra measured
   through the seawater sample. These are used to compute NITRTSC_L2.
 - **Dark frames** (frame type `SDB`, `SDF`, or `NDF`) — baseline
-  measurements with the UV lamp off. These are used to correct light
-  frames for electronic noise and are not converted to nitrate
-  concentrations; they are filled with `NaN` on output.
+  measurements with the UV lamp off. These are not used by OOI; they are 
+  filled with `NaN` on output.
 
 Each frame contains a 256-element UV absorption spectrum (NITROPT_L0)
 covering approximately 190–400 nm, sampled at roughly 0.8 nm intervals.
 The instrument also provides a dark current scalar (`dark_value`) averaged
-from dark frame measurements.
+from the previous dark frame measurements.
 
 #### Calibration Coefficients
 
@@ -83,7 +86,7 @@ $$\lambda,\ ENO3,\ ESWA,\ DI \gets \text{channels where } \text{wllower} \leq wl
 **Step 2 — Dark-correct the measured spectrum** by subtracting the dark
 current scalar from the raw spectral counts:
 
-$$SW_{corr} = SW - dark\_value$$
+$$SW_{corr} = SW - dark_value$$
 
 **Step 3 — Compute absorbance** from the ratio of the deionized water
 reference to the dark-corrected seawater spectrum:

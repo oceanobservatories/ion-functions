@@ -14,15 +14,18 @@ instrument classes covered by this module.
 `co2_functions.py` processes data from both instrument classes and computes
 a third derived product, CO$_2$ flux from the ocean to the atmosphere 
 (CO2FLUX_L2), using auxiliary bulk meteorology data from the METBK instrument 
-class.
+class. Within the OOI data system, PCO2W instruments fall under the Water
+Column science regime and the Dissolved CO$_2$ category. PCO2A instruments
+fall under the Air-Sea Interface and Surface Water regimes and the same
+Dissolved CO$_2$ category.
 
 ### Primary Sources
 
-| Document | DCN |
+| DCN | Document |
 |---|---|
-| [OOI (2018). Data Product Specification for Partial Pressure of CO2 in Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00490_Data_Product_SPEC_PCO2WAT_OOI-2.pdf) | 1341-00490 |
-| [OOI (2012). Data Product Specification for Partial Pressure of CO2 in Air and Surface Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00260_Data_Product_SPEC_PCO2ATM_PCO2SSW_OOI.pdf) | 1341-00260 |
-| [OOI (2012). Data Product Specification for Flux of CO2 from the Ocean into the Atmosphere.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00270_Data_Product_SPEC_CO2FLUX_OOI.pdf) | 1341-00270 |
+| 1341-00490 | [OOI (2018). Data Product Specification for Partial Pressure of CO2 in Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00490_Data_Product_SPEC_PCO2WAT_OOI-2.pdf) |
+| 1341-00260 | [OOI (2012). Data Product Specification for Partial Pressure of CO2 in Air and Surface Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00260_Data_Product_SPEC_PCO2ATM_PCO2SSW_OOI.pdf) |
+| 1341-00270 | [OOI (2012). Data Product Specification for Flux of CO2 from the Ocean into the Atmosphere.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00270_Data_Product_SPEC_CO2FLUX_OOI.pdf) |
 
 ---
 

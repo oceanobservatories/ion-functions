@@ -4,8 +4,8 @@ td, th {
     word-break: break-word;
 }
 
-/* Prevent date column from wrapping (first column of every table body row) */
-tbody td:first-child {
+/* Prevent 1st column from wrapping (first column of every table body row) */
+tbody td:nth-child(1) {
     white-space: nowrap !important;
 }
 

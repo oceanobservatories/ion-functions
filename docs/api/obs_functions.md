@@ -13,15 +13,17 @@ Incorporated Research Institutions for Seismology (IRIS).
 classes into their respective L1 data products: Broadband Ground Velocity
 (GRNDVEL_L1), Broadband Ground Acceleration (GRNDACC_L1), and Short Period
 Ground Velocity (SGRDVEL_L1). All calibration coefficients are from factory
-calibration sheets supplied with individual instruments.
+calibration sheets supplied with individual instruments. Within the OOI
+data system, OBS functions fall under the Seafloor/Crust science regime
+and the Ground Motion category.
 
 ### Primary Sources
 
-| Document | DCN |
+| DCN | Document |
 |---|---|
-| [OOI (2013). Data Product Specification for Broadband Ground Velocity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00090_Data_Product_SPEC_GRNDVEL_OOI.pdf) | 1341-00090 |
-| [OOI (2013). Data Product Specification for Broadband Ground Acceleration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00100_Data_Product_SPEC_GRNDACC_OOI.pdf) | 1341-00100 |
-| [OOI (2013). Data Product Specification for Short Period Ground Velocity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00110_Data_Product_SPEC_SGRDVEL_OOI.pdf) | 1341-00110 |
+| 1341-00090 | [OOI (2013). Data Product Specification for Broadband Ground Velocity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00090_Data_Product_SPEC_GRNDVEL_OOI.pdf) |
+| 1341-00100 | [OOI (2013). Data Product Specification for Broadband Ground Acceleration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00100_Data_Product_SPEC_GRNDACC_OOI.pdf) |
+| 1341-00110 | [OOI (2013). Data Product Specification for Short Period Ground Velocity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00110_Data_Product_SPEC_SGRDVEL_OOI.pdf) |
 
 ---
 

@@ -18,13 +18,14 @@ Scientific Deep SeapHOx V2](https://www.seabird.com/products/deep-seaphox-v2-ph-
 (PHSEN-G and PHSEN-H) and computes the same PHWATER_L2 data product. Both 
 instruments measure pH on the total hydrogen ion scale ($\text{pH}_T$). All 
 calibration coefficients are from factory calibration sheets supplied with 
-individual instruments.
+individual instruments. Within the OOI data system, pH functions fall under
+the Water Column science regime and the pH category.
 
 ### Primary Sources
 
-| Document | DCN |
+| DCN | Document |
 |---|---|
-| [OOI (2012). Data Product Specification for pH of Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_SPEC_PHWATER_OOI.pdf) | 1341-00510 |
+| 1341-00510 | [OOI (2012). Data Product Specification for pH of Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_SPEC_PHWATER_OOI.pdf) |
 
 ---
 
