@@ -1,5 +1,10 @@
 # HYD Functions
 
+!!! note "Inactive Module"
+    These functions were written in anticipation of an OOI data processing
+    pipeline that was never implemented. They are retained for reference
+    but are not used in OOI data production.
+
 ## Background
 
 The Ocean Observatories Initiative deploys two classes of passive acoustic

@@ -8,7 +8,10 @@ instruments into L1 acoustic pressure wave data products.
 
 import numpy as np
 
+from ion_functions import deprecated
 
+
+@deprecated
 def hyd_bb_acoustic_pwaves(wav, gain):
     """
     Compute the L1 Broadband Acoustic Pressure Waves product (HYDAPBB)
@@ -62,6 +65,7 @@ def hyd_bb_acoustic_pwaves(wav, gain):
     return tsv
 
 
+@deprecated
 def hyd_lf_acoustic_pwaves(raw, gain=3.2):
     """
     Compute the L1 Low Frequency Acoustic Pressure Waves product

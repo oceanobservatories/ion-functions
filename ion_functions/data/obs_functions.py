@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.obs_functions
-@file ion_functions/data/obs_functions.py
-@author Christopher Wingard
-@brief Module containing Ocean Bottom Seismometer instrument related functions
+Module containing Ocean Bottom Seismometer (OBS) instrument family data
+processing functions for the Ocean Observatories Initiative. Converts
+raw L0 data from Broadband (OBSBB) and Short Period (OBSSP) seismometers
+into L1 ground motion data products.
 """
+from ion_functions import deprecated
 
 
+@deprecated
 def obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.):
     """
     Compute broadband ground velocity (GRNDVEL_L1) from raw OBS counts.
@@ -47,6 +49,7 @@ def obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.):
     return grndvel
 
 
+@deprecated
 def obs_bb_ground_acceleration(raw, gain=3.2, sensitivity=0.508):
     """
     Compute broadband ground acceleration (GRNDACC_L1) from raw OBS counts.
@@ -87,6 +90,7 @@ def obs_bb_ground_acceleration(raw, gain=3.2, sensitivity=0.508):
     return grndacc
 
 
+@deprecated
 def obs_sp_ground_velocity(raw, gain=2.84, sensitivity=1200.):
     """
     Compute short period ground velocity (SGRDVEL_L1) from raw OBS counts.
