@@ -360,7 +360,7 @@ class TestMetFunctionsUnit(BaseUnitTestCase):
         the refactored code were then incorporated as the target test values for the python
         code to calculate.
 
-        The coolskin\warmlayer 'xpctd' arrays are dimensioned as 4 x 3:
+        The coolskin/warmlayer 'xpctd' arrays are dimensioned as 4 x 3:
         {4 permutations of the [jwarm,jcool] switches} x {3 hourly data points}
         The switch assignments as a function of row are:
                 jwarm   jcool
@@ -379,9 +379,9 @@ class TestMetFunctionsUnit(BaseUnitTestCase):
         2014-12-29: Russell Desiderio. Incorporated tests on Irminger METBK data.
         2015-07-13: Russell Desiderio. Incorporated tests using time-vectorized input for sensor
                     heights and algorithm switches; tested only met_latnflx as a proxy for all
-                    the functions using the coolskin\warmlayer algorithm.
+                    the functions using the coolskin/warmlayer algorithm.
         2015-10-26: Russell Desiderio. Expanded tests developed on 7-13 to test all data products
-                    using the coolskin\warmlayer algorithm (fixes problem exposed in redmine ticket
+                    using the coolskin/warmlayer algorithm (fixes problem exposed in redmine ticket
                     #8592).
 
                     Also fixed test_met_mommflx within this test module, which had been named

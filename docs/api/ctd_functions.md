@@ -71,7 +71,18 @@ $$f = \frac{c_0 \div  256}{1000} \times \sqrt{1 + \text{wbotc}\times T}$$
 $$C_{L1} = c_0 \div 100000 - 0.5$$
 
 **SBE 37 Deep SeapHOx V2 streamed and recovered_instrument** (PHSEN):
-#TODO
+Uses the same wbotc polynomial as the SBE 37IM instrument-recovered path.
+Unlike the standalone SBE 37IM path, the raw A/D counts $c_0$ are used
+directly as the frequency input (no $\div 256$ scaling step):
+
+$$f = c_0 \times \sqrt{1 + \text{wbotc} \times T}\ /\ 1000$$
+
+$$C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor} \times T
++ \text{CPcor} \times P}$$
+
+where $T$ is TEMPWAT_L1 ($^\circ$C), $P$ is PRESWAT_L1 (dbar), and $g$,
+$h$, $i$, $j$, wbotc, CTcor, CPcor are factory calibration coefficients.
+See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 
 **SBE 52MP** (CTDPF-C/K/L): Linear scaling with a unit conversion from
 mS cm$^{-1}$ to S m$^{-1}$:
@@ -118,7 +129,13 @@ equation:
 $$T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15$$
 
 **SBE 37 Deep SeapHOx V2 streamed and recovered_instrument** (PHSEN):
-#TODO
+Raw temperature counts $t_0$ are converted using the same log polynomial as
+the SBE 37IM instrument-recovered path, with the raw A/D counts used directly
+(no scaling step before the logarithm):
+
+$$T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15$$
+
+where $a_0$, $a_1$, $a_2$, $a_3$ are factory calibration coefficients.
 
 **SBE 52MP** (CTDPF-C/K/L): The instrument outputs engineering units scaled 
 to an integer. The L1 conversion is:
@@ -195,7 +212,22 @@ count $pt_0$ used directly in the polynomial rather than being first
 converted to voltage.
 
 **SBE 37 Deep SeapHOx V2 streamed and recovered_instrument** (PHSEN):
-#TODO
+Uses the same strain-gauge polynomial as the SBE 16Plus strain-gauge path.
+The pressure temperature compensation voltage $t_v$ is first converted from
+counts via $t_v = pt_0 \div 13107$, then:
+
+$$t = \text{PTEMPA0} + \text{PTEMPA1} \times t_v + \text{PTEMPA2} \times t_v^2$$
+
+$$x = p_0 - \text{PTCA0} - \text{PTCA1} \times t - \text{PTCA2} \times t^2$$
+
+$$n = \frac{x \times \text{PTCB0}}{\text{PTCB0} + \text{PTCB1} \times t + \text{PTCB2} \times t^2}$$
+
+$$p_{\text{psi}} = \text{PA0} + \text{PA1} \times n + \text{PA2} \times n^2$$
+
+$$P_{L1} = (p_{\text{psi}} - 14.7) \times 0.689475729$$
+
+where $p_0$ is the raw pressure count and all calibration coefficients are
+from factory calibration sheets.
 
 **SBE 52MP** (CTDPF-C/K/L):
 
@@ -415,44 +447,6 @@ correctly.
 
 ---
 
-::: ion_functions.data.ctd_functions.ctd_pracsal
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2013-03-13 | Christopher Wingard | Initial code |
-| 2013-05-10 | Christopher Wingard | Minor edits to comments |
-| 2014-01-31 | Russell Desiderio | Standardized comment format |
-| 2023-08-15 | Samuel Dahlberg | Replaced incompatible pygsw with GSW library |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.ctd_functions.ctd_density
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2013-03-11 | Christopher Mueller | Initial code |
-| 2013-03-13 | Christopher Wingard | Added commenting; moved to ctd_functions |
-| 2013-05-10 | Christopher Wingard | Minor edits to comments |
-| 2014-01-31 | Russell Desiderio | Standardized comment format |
-| 2023-08-15 | Samuel Dahlberg | Replaced incompatible pygsw with GSW library |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-## SeapHOx CTD Functions
-
-The Sea-Bird Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H) integrates
-an SBE 37 MicroCAT CTD alongside an SBE 63 dissolved oxygen sensor and a
-Deep SeaFET pH sensor. The three functions below convert raw SBE 37 A/D
-counts to calibrated temperature, pressure, and conductivity for use by
-the SeapHOx dissolved oxygen and pH algorithms. They live in
-`phsen_h_functions.py`, but are documented here because they implement the 
-SBE 37 calibration equations already covered by this page. 
-See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
-
 ::: ion_functions.data.phsen_h_functions.temperature_raw_conversion
 
 #### History
@@ -477,6 +471,33 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 | Date | Author | Change |
 |---|---|---|
 | 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+
+---
+
+::: ion_functions.data.ctd_functions.ctd_pracsal
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2013-03-13 | Christopher Wingard | Initial code |
+| 2013-05-10 | Christopher Wingard | Minor edits to comments |
+| 2014-01-31 | Russell Desiderio | Standardized comment format |
+| 2023-08-15 | Samuel Dahlberg | Replaced incompatible pygsw with GSW library |
+| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.ctd_functions.ctd_density
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2013-03-11 | Christopher Mueller | Initial code |
+| 2013-03-13 | Christopher Wingard | Added commenting; moved to ctd_functions |
+| 2013-05-10 | Christopher Wingard | Minor edits to comments |
+| 2014-01-31 | Russell Desiderio | Standardized comment format |
+| 2023-08-15 | Samuel Dahlberg | Replaced incompatible pygsw with GSW library |
+| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

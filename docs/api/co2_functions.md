@@ -21,11 +21,11 @@ Dissolved CO$_2$ category.
 
 ### Primary Sources
 
-| DCN | Document |
-|---|---|
-| 1341-00490 | [OOI (2018). Data Product Specification for Partial Pressure of CO2 in Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00490_Data_Product_SPEC_PCO2WAT_OOI-2.pdf) |
-| 1341-00260 | [OOI (2012). Data Product Specification for Partial Pressure of CO2 in Air and Surface Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00260_Data_Product_SPEC_PCO2ATM_PCO2SSW_OOI.pdf) |
-| 1341-00270 | [OOI (2012). Data Product Specification for Flux of CO2 from the Ocean into the Atmosphere.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00270_Data_Product_SPEC_CO2FLUX_OOI.pdf) |
+| DCN | Document                                                                                                                                                                                                          |
+|---|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1341-00490 | [OOI (2018). Data Product Specification for Partial Pressure of CO2 in Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00490_Data_Product_Spec_PCO2WAT_OOI-2.pdf)                       |
+| 1341-00260 | [OOI (2012). Data Product Specification for Partial Pressure of CO2 in Air and Surface Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00260_Data_Product_SPEC_PCO2SSW_PCO2ATM_OOI.pdf) |
+| 1341-00270 | [OOI (2012). Data Product Specification for Flux of CO2 from the Ocean into the Atmosphere.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00270_Data_Product_SPEC_CO2FLUX_OOI.pdf)              |
 
 ---
 
@@ -354,10 +354,10 @@ Weiss, R. F. (1974). Carbon dioxide in water and seawater: the solubility
 of a non-ideal gas. Marine Chemistry, 2, 203-215.
 
 [OOI (2012). Data Product Specification for Partial Pressure of CO2 in Air
-and Surface Seawater. Document Control Number 1341-00260.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00260_Data_Product_SPEC_PCO2ATM_PCO2SSW_OOI.pdf)
+and Surface Seawater. Document Control Number 1341-00260.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00260_Data_Product_SPEC_PCO2SSW_PCO2ATM_OOI.pdf)
 
 [OOI (2018). Data Product Specification for Partial Pressure of CO2 in
-Seawater. Document Control Number 1341-00490.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00490_Data_Product_SPEC_PCO2WAT_OOI-2.pdf)
+Seawater. Document Control Number 1341-00490.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00490_Data_Product_Spec_PCO2WAT_OOI-2.pdf)
 
 [OOI (2012). Data Product Specification for Flux of CO2 from the Ocean into
 the Atmosphere. Document Control Number 1341-00270.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00270_Data_Product_SPEC_CO2FLUX_OOI.pdf)

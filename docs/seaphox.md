@@ -22,11 +22,11 @@ From the user perspective it behaves as a single instrument, but internally it
 comprises three sensor subsystems that each require their own calibration coefficients 
 and processing functions:
 
-| Sub-instrument | Measurements | OOI Data Products |
-|---|---|---|
-| SBE 37 MicroCAT | Temperature, pressure, conductivity | TEMPWAT, PRESWAT, CONDWAT, PRACSAL |
-| SBE 63 Optical DO | Dissolved oxygen, thermistor temperature | DOXYGEN (reported as dissolved oxygen) |
-| Deep SeaFET V2 | ISFET voltage | PHWATER_L2 |
+| Sub-instrument | Measurements | OOI Data Products                            |
+|---|---|----------------------------------------------|
+| SBE 37 MicroCAT | Temperature, pressure, conductivity | TEMPWAT, PRESWAT, CONDWAT, PRACSAL, DENSITY  |
+| SBE 63 Optical DO | Dissolved oxygen, thermistor temperature | DOCONCS, DOXYGEN |
+| Deep SeaFET V2 | ISFET voltage | PHWATER                                      |
 
 The SBE 37 provides the temperature, pressure, and salinity context required
 by both the SBE 63 oxygen algorithm and the Deep SeaFET pH algorithm. The
@@ -92,5 +92,5 @@ sensor's raw output and are not associated with any OOI science data product.
 
 ## References
 
-Sea-Bird Scientific. *Deep SeapHOx V2 Ocean CT(D)-pH-DO Sensor*. Data
-sheet DS.53.May25. Bellevue, WA: Sea-Bird Scientific.
+[Sea-Bird Scientific. *Deep SeapHOx V2. pH, Conductivity, Temperature, Pressure, Dissolved
+Oxygen*. User Manual, 2025-04-29, Rev E. Bellevue, WA.](https://www.seabird.com/products/deep-seaphox-v2-ph-sensor)

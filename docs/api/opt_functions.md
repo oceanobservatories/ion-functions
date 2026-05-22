@@ -28,14 +28,14 @@ processing chain.
 
 ### Primary Sources
 
-| Document | DCN |
-|---|---|
-| [OOI (2014). Data Product Specification for Optical Beam Attenuation Coefficient. Document Control Number 1341-00690.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf) | 1341-00690 |
-| [OOI (2014). Data Product Specification for Optical Absorption Coefficient. Document Control Number 1341-00700.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf) | 1341-00700 |
-| [OOI (2012). Data Product Specification for Photosynthetically Active Radiation (PAR) from Satlantic Instrument on RSN Shallow Profiler. Document Control Number 1341-00720.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00720_Data_Product_SPEC_OPTPARW_Satl_OOI.pdf) | 1341-00720 |
-| [OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00721_Data_Product_SPEC_OPTPARW_Bios_OOI.pdf) | 1341-00721 |
-| [OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00722_Data_Product_SPEC_OPTPARW_WETLabs.pdf) | 1341-00722 |
-| [OOI (2014). Data Product Specification for Downwelling Spectral Irradiance. Document Control Number 1341-00730.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00730_DATA_PRODUCT_SPEC_SPECTIR_OOI.pdf) | 1341-00730 |
+| DCN | Document                                                                                                                                                                                                                                                                                                |
+|---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1341-00690 | [OOI (2014). Data Product Specification for Optical Beam Attenuation Coefficient. Document Control Number 1341-00690.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)                                                                          |
+| 1341-00700 | [OOI (2014). Data Product Specification for Optical Absorption Coefficient. Document Control Number 1341-00700.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)                                                                                |
+| 1341-00720 | [OOI (2012). Data Product Specification for Photosynthetically Active Radiation (PAR) from Instruments on Cabled Shallow Profilers. Document Control Number 1341-00720.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00720_Data_Product_SPEC_OPTPARW_Satl_OOI-2.pdf)                 |
+| 1341-00721 | OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721. |
+| 1341-00722 | OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722. |
+| 1341-00730 | [OOI (2014). Data Product Specification for Downwelling Spectral Irradiance. Document Control Number 1341-00730.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00730_DATA_PRODUCT_SPEC_SPECTIR_OOI.pdf)                                                                               |
 
 ---
 
@@ -129,7 +129,8 @@ OPTABSN_L2 is the spectral optical absorption coefficient for all water
 impurities ($a_{pd}(\lambda)$, m$^{-1}$), computed from raw measurements
 made by the Sea-Bird Scientific ac-s (OPTAA). It represents the difference between
 the total absorption of the water mixture and that of pure seawater:
-$a_{pd} = a - a_w$.
+
+$$a_{pd} = a - a_w$$
 
 OPTABSN_L2 is an L2 product requiring co-located CTD temperature
 (TEMPWAT_L1) and salinity (PRACSAL_L2), and the simultaneously computed
@@ -155,9 +156,7 @@ OPTATTN_L2 (Steps 1 and 2 above), but applied to the absorption channel
 
 **Step 3 — Apply the water temperature and salinity correction:**
 
-$$a_{pd;ts}(\lambda) = a_{pd}(\lambda)
-- \Psi_t(\lambda) \times (t - t_r)
-- \Psi_{sa}(\lambda) \times s$$
+$$a_{pd;ts}(\lambda) = a_{pd}(\lambda) - \Psi_t(\lambda) \times (t - t_r) - \Psi_{sa}(\lambda) \times s$$
 
 where $\Psi_{sa}$ is the absorption-channel salinity correction constant
 (distinct from the attenuation-channel $\Psi_{sc}$ used in OPTATTN).
@@ -480,11 +479,11 @@ NASA/TM-2003-211621, Vol. IV.
 
 [OOI (2014). Data Product Specification for Optical Absorption Coefficient. Document Control Number 1341-00700.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)
 
-[OOI (2012). Data Product Specification for Photosynthetically Active Radiation (PAR) from Satlantic Instrument on RSN Shallow Profiler. Document Control Number 1341-00720.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00720_Data_Product_SPEC_OPTPARW_Satl_OOI.pdf)
+[OOI (2012). Data Product Specification for Photosynthetically Active Radiation (PAR) from Instruments on Cabled Shallow Profilers. Document Control Number 1341-00720.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00720_Data_Product_SPEC_OPTPARW_Satl_OOI-2.pdf)
 
-[OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00721_Data_Product_SPEC_OPTPARW_Bios_OOI.pdf)
+OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721.
 
-[OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00722_Data_Product_SPEC_OPTPARW_WETLabs.pdf)
+OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722.
 
 [OOI (2014). Data Product Specification for Downwelling Spectral Irradiance. Document Control Number 1341-00730.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00730_DATA_PRODUCT_SPEC_SPECTIR_OOI.pdf)
 

@@ -806,7 +806,7 @@ def met_netsirr_hourly(shortwave_down, timestamp):
         Calculates NETSIRR_HOURLY_L2, the OOI core data product net shortwave radiation
         (wavelengths between 0.3 and 3.0 um) in the downward direction, for the METBK
         instrument on an hourly time base. This data product does not require the
-        coolskin\warmlayer algorithms.
+        coolskin/warmlayer algorithms.
 
     Implemented by:
 

@@ -57,7 +57,7 @@ The DOSTA reaches the OOI data system through three distinct hardware
 configurations, each producing a different L0 format:
 
 **Analog output to CTD voltage channel** — The optode outputs $P_t$ and
-$T_{opt}$ as 0–5 V analog signals routed into CTD auxiliary voltage channels.
+$T_{opt}$ as 0-5 V analog signals routed into CTD auxiliary voltage channels.
 The voltage signals are parsed as DOCONCS-VLT_L0 (phase) and a separate
 temperature voltage, then converted to degrees and $^\circ$C:
 
@@ -72,7 +72,7 @@ These fixed conversion coefficients are universal for all Aanderaa optodes
 concentration directly in internal units transmitted over RS-232 to an SBE
 16Plus V2 CTD, parsed as DOCONCS-CNT_L0:
 
-$$\text{DOCONCS\_L1}\ [\mu\text{mol/L}] = \frac{\text{DOCONCS-CNT\_L0}}{10000} - 10$$
+$$\text{DOCONCS_L1}\ [\mu\text{mol/L}] = \frac{\text{DOCONCS-CNT_L0}}{10000} - 10$$
 
 **Autonomous digital output** — The optode operates independently and reports
 $P_t$ (DOCONCS-DEG_L0) and $T_{opt}$ directly in degrees and $^\circ$C,
@@ -85,7 +85,7 @@ DOCONCS_L1 is computed using the Stern-Volmer-Uchida (SVU) equation
 (Uchida et al. 2008). The SVU equation relates the calibrated phase to
 oxygen concentration with a temperature-dependent sensitivity:
 
-$$K_{SV} = \text{csv}_1 + \text{csv}_2 \times T_{opt} + \text{csv}_3 \times T_{opt}^2$$
+$$K_{SV} = \text{csv}_1 + \text{csv}_2 \times T_{opt} + \text{csv}_3 \times {T_{opt}}^2$$
 
 $$P_0 = \text{csv}_4 + \text{csv}_5 \times T_{opt}$$
 
@@ -101,14 +101,13 @@ $\text{csv}_7$ are factory calibration coefficients.
 A secondary calibration (conc_coef = [offset, slope]) is applied after the
 SVU equation:
 
-$$O_2 = \text{conc\_coef}[0] + \text{conc\_coef}[1] \times O_2$$
+$$O_2 = \text{conc_coef}[0] + \text{conc_coef}[1] \times O_2$$
 
 Aanderaa applies this two-point correction after refurbishment; for new
 optodes or new SVU foil determinations conc_coef defaults to [0, 1].
 
-The result is DOCONCS_L1 in $\mu$mol L$^{-1}$. Note: the OOI Software
-Application Framework (SAF) incorrectly lists the units for this product as
-$\mu$mol kg$^{-1}$.
+The result is DOCONCS_L1 in $\mu$mol L$^{-1}$. Note: the OOI documentation
+incorrectly lists the units for this product as $\mu$mol kg$^{-1}$.
 
 The optode foil thermistor temperature ($T_{opt}$) must be used as the
 temperature input to the SVU equation, not CTD temperature. The thermistor is
@@ -128,13 +127,13 @@ kg$^{-1}$). The correction has three sequential steps.
 at reference pressure $p_{ref} = 0$ dbar from absolute salinity and
 conservative temperature (TEOS-10 GSW library):
 
-$$S_A = \text{gsw.SA\_from\_SP}(S_P,\ p,\ \text{lon},\ \text{lat})$$
+$$S_A = \text{gsw.SA_from_SP}(S_P, p, \text{lon}, \text{lat})$$
 
-$$\Theta = \text{gsw.CT\_from\_t}(S_A,\ T,\ p)$$
+$$\Theta = \text{gsw.CT_from_t}(S_A, T, p)$$
 
-$$\rho = \text{gsw.rho}(S_A,\ \Theta,\ p_{ref})$$
+$$\rho = \text{gsw.rho}(S_A, \Theta, p_{ref})$$
 
-$$O_{2,\text{mass}} = \frac{1000 \times O_2\ [\mu\text{mol/L}]}{\rho\ [\text{kg/m}^3]}$$
+$$O_{2,\text{mass}} = \frac{1000 \times O_2 [\mu\text{mol/L}]}{\rho\ [\text{kg/m}^3]}$$
 
 **Step 2 — Pressure correction** (Uchida et al. 2008):
 
@@ -145,9 +144,9 @@ combined fit):
 
 $$t_s = \ln\!\left(\frac{298.15 - T}{273.15 + T}\right)$$
 
-$$B(t_s) = B_0 + B_1 t_s + B_2 t_s^2 + B_3 t_s^3$$
+$$B(t_s) = B_0 + B_1 t_s + B_2 {t_s}^2 + B_3 {t_s}^3$$
 
-$$\text{DOXYGEN\_L2} = \exp\!\left[(S_P - S_{ref}) \times B(t_s) + C_0 \times (S_P^2 - S_{ref}^2)\right] \times O_{2,\text{pres}}$$
+$$\text{DOXYGEN_L2} = \exp\!\left[(S_P - S_{ref}) \times B(t_s) + C_0 \times ({S_P}^2 - {S_{ref}}^2)\right] \times O_{2,\text{pres}}$$
 
 where $B_0 = -6.24097 \times 10^{-3}$, $B_1 = -6.93498 \times 10^{-3}$,
 $B_2 = -6.90358 \times 10^{-3}$, $B_3 = -4.29155 \times 10^{-3}$,
@@ -173,7 +172,7 @@ directly to DOCONCF_L2.
 
 **SBE 43 (DOFST-A):** The raw hex voltage counts are converted to volts:
 
-$$V = \frac{\text{DOCONCF-CNT\_L0}}{13107}$$
+$$V = \frac{\text{DOCONCF-CNT_L0}}{13107}$$
 
 **SBE 43F (DOFST-K):** The raw hex frequency value is used directly as
 $F$ [Hz].
@@ -189,9 +188,9 @@ OOI DPS to prevent amplification of residual noise in deep water):
 $$T_s = \ln\!\left(\frac{298.15 - T}{273.15 + T}\right)$$
 
 $$\begin{align}
-\text{Oxsol}(T, S) &= \exp\!\big[A_0 + A_1 T_s + A_2 T_s^2 + A_3 T_s^3
-+ A_4 T_s^4 + A_5 T_s^5 \\
-&\quad + S(B_0 + B_1 T_s + B_2 T_s^2 + B_3 T_s^3) + C_0 S^2\big]
+\text{Oxsol}(T, S) &= \exp\!\big[A_0 + A_1 T_s + A_2 {T_s}^2 + A_3 {T_s}^3
++ A_4 {T_s}^4 + A_5 {T_s}^5 \\
+&\quad + S(B_0 + B_1 T_s + B_2 {T_s}^2 + B_3 {T_s}^3) + C_0 S^2\big]
 \end{align}$$
 
 where $A_0 = 2.00907$, $A_1 = 3.22014$, $A_2 = 4.0501$, $A_3 = 4.94457$,
@@ -201,7 +200,7 @@ $C_0 = -4.88682 \times 10^{-7}$.
 
 **Step 2 — Intermediate oxygen concentration** [mL L$^{-1}$]:
 
-$$\text{DO\_int} = \text{Soc} \times (x + \text{offset}) \times \text{Oxsol}(T, S)
+$$\text{DO_int} = \text{Soc} \times (x + \text{offset}) \times \text{Oxsol}(T, S)
 \times (1 + AT + BT^2 + CT^3) \times e^{EP/K}$$
 
 where $x$ is $V$ (SBE 43) or $F$ (SBE 43F), $K = T + 273.15$ is absolute
@@ -212,66 +211,30 @@ temperature, and Soc, offset, A, B, C, E are factory calibration coefficients.
 Potential density $\rho_\theta$ is computed using `gsw.pot_rho_t_exact` with
 a reference pressure of 0 dbar:
 
-$$\text{DOCONCF\_L2} = \frac{\text{DO\_int} \times 44660}{\rho_\theta}$$
+$$\text{DOCONCF_L2} = \frac{\text{DO_int} \times 44660}{\rho_\theta}$$
 
 ---
 
-### PHSEN-H Dissolved Oxygen — SBE 63 Optical Sensor
+### DOXYGEN_L2 — SeapHOx Dissolved Oxygen
 
 The Sea-Bird Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H) integrates an
 SBE 63 optical dissolved oxygen sensor alongside an SBE 37 MicroCAT CTD and
 a Deep SeaFET pH sensor. The SBE 63 uses a Stern-Volmer fluorescence quenching
-approach similar to the DOSTA Aanderaa optode but with a different calibration
-model. Functions for the SBE 63 are in `phsen_h_functions.py` and are
-documented here because the SBE 63 is a dissolved oxygen sensor.
+approach with a calibration model distinct from the DOSTA Aanderaa optode.
+Processing depends on the data delivery method.
+
+**Streamed and recovered_instrument**: Raw phase output ($\mu$s) is converted
+directly to DOXYGEN_L2 ($\mu$mol kg$^{-1}$) via `dissolved_oxygen` in
+`phsen_h_functions.py`. Salinity and pressure corrections and the conversion
+from mL L$^{-1}$ to $\mu$mol kg$^{-1}$ using potential density are all
+applied within a single function call.
+
+**Telemetered**: The instrument reports dissolved oxygen in mL L$^{-1}$
+(DOCONCS_L1). The salinity and pressure correction to produce DOXYGEN_L2
+follows the same `do2_salinity_correction` path as the DOSTA optode. This
+processing path is not yet implemented in `do2_functions.py`.
 
 See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
-
-#### SBE 63 Algorithm
-
-Raw SBE 63 phase output ($\mu$s) is converted to a voltage:
-
-$$V_{O_2} = \frac{\text{phase}\ [\mu\text{s}]}{39.457071}$$
-
-The Stern-Volmer sensitivity constant:
-
-$$K_{SV} = c_0 + c_1 T + c_2 T^2$$
-
-Salinity correction (constants from the Sea-Bird SBE 63 calibration):
-
-$$t_s = \ln\!\left(\frac{298.15 - T}{273.15 + T}\right)$$
-
-$$S_\text{corr} = \exp\!\left[S \times (b_0 + b_1 t_s + b_2 t_s^2 + b_3 t_s^3)
-+ c_{s0} S^2\right]$$
-
-where $b_0 = -6.24523 \times 10^{-3}$, $b_1 = -7.37614 \times 10^{-3}$,
-$b_2 = -1.0341 \times 10^{-2}$, $b_3 = -8.17083 \times 10^{-3}$,
-$c_{s0} = -4.88682 \times 10^{-7}$.
-
-Pressure correction:
-
-$$P_\text{corr} = \exp\!\left(\frac{E \times p}{K}\right)$$
-
-where $K = T + 273.15$ and $E$ is a factory calibration coefficient.
-
-Oxygen concentration [mL L$^{-1}$]:
-
-$$O_2 = \left(\frac{a_0 + a_1 T + a_2 V_{O_2}^2}{b_0' + b_1' V_{O_2}} - 1\right)
-\frac{S_\text{corr} \times P_\text{corr}}{K_{SV}}$$
-
-where $a_0$, $a_1$, $a_2$, $b_0'$, $b_1'$ are factory calibration
-coefficients from the SBE 63 calibration sheet.
-
-Conversion to $\mu$mol kg$^{-1}$ uses potential density from the co-located
-SBE 37 MicroCAT via the TEOS-10 GSW library:
-
-$$\text{DO}\ [\mu\text{mol/kg}] = \frac{O_2 \times 44660}{\rho}$$
-
-When the `thermistor` input is in volts, the SBE 63 thermistor is first
-converted to temperature using `convert_sbe63_thermistor`.
-
-Full algorithm derivations, calibration procedures, and source references
-are listed in the [References](#references) section.
 
 ---
 
@@ -319,13 +282,6 @@ are listed in the [References](#references) section.
 
 ::: ion_functions.data.phsen_h_functions.dissolved_oxygen
 
-#### Additional Notes
-This function processes the SBE 63 optical dissolved oxygen sensor
-integrated into the Sea-Bird Scientific Deep SeapHOx V2 (PHSEN-G and
-PHSEN-H). It lives in `phsen_h_functions.py` for historical reasons but is
-documented here because the SBE 63 is a dissolved oxygen sensor. See
-[Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
-
 #### History
 | Date | Author | Change |
 |---|---|---|
@@ -368,13 +324,6 @@ documented here because the SBE 63 is a dissolved oxygen sensor. See
 ---
 
 ::: ion_functions.data.phsen_h_functions.convert_sbe63_thermistor
-
-#### Additional Notes
-This function converts raw SBE 63 thermistor output for the dissolved
-oxygen sensor integrated into the Sea-Bird Scientific Deep SeapHOx V2
-(PHSEN-G and PHSEN-H). It lives in `phsen_h_functions.py` for historical
-reasons but is documented here alongside `dissolved_oxygen`. See
-[Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 
 #### History
 | Date | Author | Change |

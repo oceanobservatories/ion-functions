@@ -1,6 +1,6 @@
 # Calibration Coefficients
 
-Ion-functions may require calibration coefficients as inputs to convert raw
+ION functions may require calibration coefficients as inputs to convert raw
 instrument data into calibrated scientific data products.
 
 ## Sources and Management

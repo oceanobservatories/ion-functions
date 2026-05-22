@@ -33,12 +33,13 @@ VEL3D instruments fall under the Water Column and Seafloor/Crust regimes.
 
 ### Primary Sources
 
-| DCN | Document |
-|---|---|
-| 1341-00790 | [OOI (2013). Data Product Specification for Mean Point Water Velocity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00790_Data_Product_SPEC_VELPTMN_OOI.pdf) |
-| 1341-00780 | [OOI (2012). Data Product Specification for Turbulent Point Water Velocity (Nortek Vector).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf) |
-| 1341-00781 | [OOI (2012). Data Product Specification for Turbulent Point Water Velocity (Nobska MAVS-4).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00781_Data_Product_SPEC_VELPTTU_Nobska_OOI.pdf) |
-| 1341-00792 | [OOI (2014). Data Product Specification for Mean Point Water Velocity Data from FSI Acoustic Current Meters.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf) |
+| DCN | Document                                                                                                                                                                                             |
+|---|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1341-00780 | [OOI (2012). Data Product Specification for Turbulent Point Water Velocity (Nortek Vector).](https://oceanobservatories.org/wp-content/uploads/2023/09/Data_Product_SPEC_VELPTTU_combined.pdf)       |
+| 1341-00781 | [OOI (2012). Data Product Specification for Turbulent Point Water Velocity (Nobska MAVS-4).](https://oceanobservatories.org/wp-content/uploads/2023/09/Data_Product_SPEC_VELPTTU_combined.pdf)       |
+| 1341-00782 | [OOI (2012). Data Product Specification for Turbulent Point Water Velocity (ACM and Aquadopp II).](https://oceanobservatories.org/wp-content/uploads/2023/09/Data_Product_SPEC_VELPTTU_combined.pdf) |
+| 1341-00790 | [OOI (2013). Data Product Specification for Mean Point Water Velocity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00790_Data_Product_SPEC_VELPTMN_OOI.pdf)                      |
+| 1341-00792 | OOI (2014). Data Product Specification for Mean Point Water Velocity Data from FSI Acoustic Current Meters. |
 
 ---
 
@@ -551,18 +552,14 @@ caveats about the stationary case apply.
 
 ## References
 
-OOI (2012). Data Product Specification for Turbulent Point Water Velocity
-(Nobska MAVS-4). Document Control Number 1341-00781.
-[https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00781_Data_Product_SPEC_VELPTTU_Nobska_OOI.pdf](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00781_Data_Product_SPEC_VELPTTU_Nobska_OOI.pdf)
+[OOI (2012). Data Product Specification for Turbulent Point Water Velocity
+(Nobska MAVS-4). Document Control Number 1341-00781.](https://oceanobservatories.org/wp-content/uploads/2023/09/Data_Product_SPEC_VELPTTU_combined.pdf)
 
-OOI (2012). Data Product Specification for Turbulent Point Water Velocity
-(Nortek Vector). Document Control Number 1341-00780.
-[https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf)
+[OOI (2012). Data Product Specification for Turbulent Point Water Velocity
+(Nortek Vector). Document Control Number 1341-00780.](https://oceanobservatories.org/wp-content/uploads/2023/09/Data_Product_SPEC_VELPTTU_combined.pdf)
 
-OOI (2013). Data Product Specification for Mean Point Water Velocity. Document
-Control Number 1341-00790.
-[https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00790_Data_Product_SPEC_VELPTMN_OOI.pdf](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00790_Data_Product_SPEC_VELPTMN_OOI.pdf)
+[OOI (2013). Data Product Specification for Mean Point Water Velocity. Document
+Control Number 1341-00790.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00790_Data_Product_SPEC_VELPTMN_OOI.pdf)
 
 OOI (2014). Data Product Specification for Mean Point Water Velocity Data from
 FSI Acoustic Current Meters. Document Control Number 1341-00792.
-[https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)

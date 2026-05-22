@@ -23,9 +23,10 @@ the Water Column science regime and the pH category.
 
 ### Primary Sources
 
-| DCN | Document |
-|---|---|
-| 1341-00510 | [OOI (2012). Data Product Specification for pH of Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_SPEC_PHWATER_OOI.pdf) |
+| DCN        | Document                                                                                                                                                             |
+|------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1341-00510 | [OOI (2012). Data Product Specification for pH of Seawater.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_Spec_PHWATER_OOI.pdf) |
+| AN99       | [Calculating pH from ISFET pH Sensors. SeaFET V2, Shallow SeapHOx V2, Deep SeapHOx V2, Floats](https://242648281.fs1.hubspotusercontent-na2.net/hubfs/242648281/Resources/Application%20Notes/AN99-CalculatepH.pdf)                                                                     |
 
 ---
 
@@ -273,6 +274,7 @@ calibration sheets supplied by Sea-Bird Scientific with each instrument.
 Output accuracy: $\pm 0.05$ pH units; resolution 0.004 pH units; typical
 stability 0.003 pH units per month (Sea-Bird Scientific Deep SeapHOx V2
 data sheet, DS53, May 2025).
+See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 
 Full algorithm derivations, calibration procedures, and source references
 are listed in the [References](#references) section.
@@ -402,13 +404,13 @@ Millero, F. J. (1983). In Chemical Oceanography; Riley, J. P., Chester, R.,
 Eds.; Academic Press: London, Vol. 8, pp 1–88.
 
 [OOI (2012). Data Product Specification for pH of Seawater. Document Control
-Number 1341-00510.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_SPEC_PHWATER_OOI.pdf)
+Number 1341-00510.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_Spec_PHWATER_OOI.pdf)
 
 Sea-Bird Scientific (2025). Deep SeapHOx V2 Data Sheet. Document DS53,
 May 2025.
 
-Sea-Bird Scientific. Application Note 99: Calculating pH from ISFET pH
-Sensors. SeaFET V2, Shallow SeapHOx V2, Deep SeapHOx V2, Floats.
+[Sea-Bird Scientific. Application Note 99: Calculating pH from ISFET pH
+Sensors. SeaFET V2, Shallow SeapHOx V2, Deep SeapHOx V2, Floats.](https://242648281.fs1.hubspotusercontent-na2.net/hubfs/242648281/Resources/Application%20Notes/AN99-CalculatepH.pdf)
 
 Seidel, M. P., DeGrandpre, M. D., and Dickson, A. G. (2008). A sensor for
 in situ indicator-based measurements of seawater pH. Marine Chemistry,

@@ -29,11 +29,11 @@ category.
 
 ### Primary Sources
 
-| DCN | Document |
-|---|---|
-| 1341-00530 | [OOI (2012). Data Product Specification for Fluorometric Chlorophyll-a Concentration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00530_Data_Product_SPEC_CHLAFLO_OOI.pdf) |
-| 1341-00550 | [OOI (2012). Data Product Specification for Fluorometric CDOM Concentration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00550_Data_Product_SPEC_CDOMFLO_OOI.pdf) |
-| 1341-00540 | [OOI (2014). Data Product Specification for Optical Backscatter (Red Wavelengths).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf) |
+| DCN | Document                                                                                                                                                                                                |
+|---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1341-00530 | [OOI (2012). Data Product Specification for Fluorometric Chlorophyll-a Concentration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00530_Data_Product_Specification_CHLAFLO_OOI.pdf) |
+| 1341-00550 | [OOI (2012). Data Product Specification for Fluorometric CDOM Concentration.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00550_Data_Product_Specification_CDOMFLO_OOI.pdf)                   |
+| 1341-00540 | [OOI (2014). Data Product Specification for Optical Backscatter (Red Wavelengths).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf)             |
 
 ---
 
@@ -317,10 +317,10 @@ Zhang, X., Hu, L., and He, M. (2009). Scattering by pure seawater:
 Effect of salinity. Optics Express, 17(7), 5698-5710.
 
 [OOI (2012). Data Product Specification for Fluorometric Chlorophyll-a
-Concentration. Document Control Number 1341-00530.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00530_Data_Product_SPEC_CHLAFLO_OOI.pdf)
+Concentration. Document Control Number 1341-00530.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00530_Data_Product_Specification_CHLAFLO_OOI.pdf)
 
 [OOI (2012). Data Product Specification for Fluorometric CDOM
-Concentration. Document Control Number 1341-00550.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00550_Data_Product_SPEC_CDOMFLO_OOI.pdf)
+Concentration. Document Control Number 1341-00550.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00550_Data_Product_Specification_CDOMFLO_OOI.pdf)
 
 [OOI (2014). Data Product Specification for Optical Backscatter (Red
 Wavelengths). Document Control Number 1341-00540.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf)
