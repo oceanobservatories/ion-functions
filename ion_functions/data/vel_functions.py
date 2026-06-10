@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.vel_functions
-@file ion_functions/data/vel_functions.py
-@author Stuart Pearce, Russell Desiderio
-@brief Module containing velocity family instrument related functions
+Functions for computing OOI velocity family data products.
+
+Covers VELPTMN (Mean Point Water Velocity) and VELPTTU (Turbulent Point Water
+Velocity) for the following instrument classes: VELPT-A/B/D/J (Nortek
+Aquadopp), VEL3D-A (FSI ACM-3D-MP, RSN), VEL3D-B (Nobska MAVS-4), VEL3D-C/D
+(Nortek Vector), VEL3D-K (Nortek Aquadopp II on McLane WFP), and VEL3D-L
+(FSI ACM-Plus, Scripps).
 """
 
 import numpy as np
@@ -82,75 +85,51 @@ Helper sub-functions:
 # wrapper functions for use in ION
 def fsi_acm_rsn_east(vp1, vp3, hx, hy, hdg_cal, hx_cal, hy_cal, lat, lon, timestamp):
     """
-    Description:
+    OOI wrapper for VELPTMN-VLE_L1 eastward velocity from VEL3D-A (RSN).
 
-        Calculates the VEL3D Series A eastwards velocity data product VELPTMN-VLE_L1
-        for the Falmouth Scientific (FSI) Acoustic Current Meter (ACM) mounted on a McLane
-        profiler as deployed by RSN. The horizontal velocities are corrected for magnetic
-        declination.
+    Derives the instrument heading from field direction cosines and an
+    8-point spin calibration, then calls fsi_acm_horz_vel to compute the
+    eastward velocity component.
 
-    Usage:
+    Parameters
+    ----------
+    vp1 : array_like
+        Raw beam velocity from the port stinger finger;
+        VELPTMN-VP1_L0 [cm/s].
+    vp3 : array_like
+        Raw beam velocity from the starboard stinger finger;
+        VELPTMN-VP3_L0 [cm/s].
+    hx : array_like
+        Direction cosine of the magnetic field projected onto the
+        instrument x-axis; VELPTMN-HXX_L0.
+    hy : array_like
+        Direction cosine of the magnetic field projected onto the
+        instrument y-axis; VELPTMN-HYY_L0.
+    hdg_cal : array_like
+        8-element vector of reference ACM headings from a compass
+        calibration spin test [degrees clockwise from magnetic north].
+    hx_cal : array_like
+        8-element vector of direction cosines of the magnetic field
+        projected along the instrument x-axis during a calibration spin.
+    hy_cal : array_like
+        8-element vector of direction cosines of the magnetic field
+        projected along the instrument y-axis during a calibration spin.
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
 
-        u = fsi_acm_rsn_east(vp1, vp3, hx, hy, hdg_cal, hx_cal, hy_cal, lat, lon, timestamp)
+    Returns
+    -------
+    u : ndarray
+        Eastward velocity VELPTMN-VLE_L1 in true Earth coordinates [m/s].
 
-            where
-
-        u = eastwards velocity VELPTMN-VLE_L1 [m/s]
-        vp1 = raw beam velocity from the port stinger finger; VELPTMN-VP1_L0 [cm/s]
-        vp3 = raw beam velocity from the starboard stinger finger; VELPTMN-VP3_L0 [cm/s]
-        hx = direction cosine of magnetic field projected onto the instrument x-axis;
-            VELPTMN-HXX_L0
-        hy = direction cosine of magnetic field projected onto the instrument y-axis;
-            VELPTMN-HYY_L0
-        hdg_cal = 8-element vector of reference ACM headings from a compass calibration
-            spin test. heading convention: nautical [degrees clockwise from magnetic north].
-            see Notes.
-        hx_cal = 8-element vector of direction cosines of the magnetic field projected along
-            the instrument x-axis acquired during a compass calibration spin test.
-        hy_cal = 8-element vector of direction cosines of the magnetic field projected along
-            the instrument y-axis acquired during a compass calibration spin test.
-        lat = latitude of the instrument [decimal degrees].  East is positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North is positive, South negative.
-        timestamp = NTP time stamp from a data particle [secs since 1900-01-01].
-
-    Implemented by:
-
-        2015-02-13: Russell Desiderio. Initial code.
-        2015-05-29: Russell Desiderio. Time-vectorized calcoeffs by removing exception checking of the
-                                       lengths of calcoeff arrays. This is now done by checking the
-                                       shapes of these variables in the fsi_acm_compass_cal routine
-                                       which is called by fsi_acm_nautical_heading.
-    Notes:
-
-        The VEL3D series A and L instruments are FSI current meters modified for use on a
-        McLane profiler. The FSI ACM has 4 raw beam velocities. The correspondences between
-        the MMP manual designations and the IDD designations are:
-
-        (Xplus, Yplus, Xminus, Yminus)     (MMP manual, page G-22)
-        (va   , vb   , vc    , vd    )     (IDD, VEL3D series A)
-        (vp1  , vp2  , vp3   , vp4   )     (IDD, VEL3D series L)
-        (left , down , right , up    )     (spatial orientation)
-
-        This is also the ordering of these parameters in telemetered and recovered data.
-
-        SERIES A instruments are deployed by RSN. Compass calibrations from a spin test as
-        described in the MMP manual are used to correct field compass direction cosine
-        measurements so that headings can be calculated for the field data.
-
-        For more information see the Notes to worker function fsi_acm_horz_vel.
-
-    References:
-
-        OOI (2015). Data Product Specification for Mean Point Water Velocity
-            Data from FSI Acoustic Current Meters. Document Control Number
-            1341-00792. https://alfresco.oceanobservatories.org/  (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)
-
-        OOI (2015). 1341-00792_VELPTMN Artifact: McLane Moored Profiler User Manual.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00792_VELPTMN >>
-            MMP-User Manual-Rev-E-WEB.pdf)
+    See Also
+    --------
+    fsi_acm_horz_vel : Core algorithm; use directly for multi-output
+        access.
     """
     # calculate the headings from the field direction cosines hx and hy and the cal data.
     hdg = fsi_acm_nautical_heading(hx, hy, hdg_cal, hx_cal, hy_cal)
@@ -162,76 +141,52 @@ def fsi_acm_rsn_east(vp1, vp3, hx, hy, hdg_cal, hx_cal, hy_cal, lat, lon, timest
 
 def fsi_acm_rsn_north(vp1, vp3, hx, hy, hdg_cal, hx_cal, hy_cal, lat, lon, timestamp):
     """
-    Description:
+    OOI wrapper for VELPTMN-VLN_L1 northward velocity from VEL3D-A (RSN).
 
-        Calculates the VEL3D Series A northwards velocity data product VELPTMN-VLN_L1
-        for the Falmouth Scientific (FSI) Acoustic Current Meter (ACM) mounted on a McLane
-        profiler as deployed by RSN. The horizontal velocities are corrected for magnetic
-        declination.
+    Derives the instrument heading from field direction cosines and an
+    8-point spin calibration, then calls fsi_acm_horz_vel to compute the
+    northward velocity component.
 
-    Usage:
+    Parameters
+    ----------
+    vp1 : array_like
+        Raw beam velocity from the port stinger finger;
+        VELPTMN-VP1_L0 [cm/s].
+    vp3 : array_like
+        Raw beam velocity from the starboard stinger finger;
+        VELPTMN-VP3_L0 [cm/s].
+    hx : array_like
+        Direction cosine of the magnetic field projected onto the
+        instrument x-axis; VELPTMN-HXX_L0.
+    hy : array_like
+        Direction cosine of the magnetic field projected onto the
+        instrument y-axis; VELPTMN-HYY_L0.
+    hdg_cal : array_like
+        8-element vector of reference ACM headings from a compass
+        calibration spin test [degrees clockwise from magnetic north].
+    hx_cal : array_like
+        8-element vector of direction cosines of the magnetic field
+        projected along the instrument x-axis during a calibration spin.
+    hy_cal : array_like
+        8-element vector of direction cosines of the magnetic field
+        projected along the instrument y-axis during a calibration spin.
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
 
-        v = fsi_acm_rsn_north(vp1, vp3, hx, hy, hdg_cal, hx_cal, hy_cal, lat, lon, timestamp)
+    Returns
+    -------
+    v : ndarray
+        Northward velocity VELPTMN-VLN_L1 in true Earth coordinates
+        [m/s].
 
-            where
-
-        v = northwards velocity VELPTMN-VLN_L1 [m/s]
-        vp1 = raw beam velocity from the port stinger finger; VELPTMN-VP1_L0 [cm/s]
-        vp3 = raw beam velocity from the starboard stinger finger; VELPTMN-VP3_L0 [cm/s]
-        hx = direction cosine of magnetic field projected onto the instrument x-axis;
-            VELPTMN-HXX_L0
-        hy = direction cosine of magnetic field projected onto the instrument y-axis;
-            VELPTMN-HYY_L0
-        hdg_cal = 8-element vector of reference ACM headings from a compass calibration
-            spin test. heading convention: nautical [degrees clockwise from magnetic north].
-            see Notes.
-        hx_cal = 8-element vector of direction cosines of the magnetic field projected along
-            the instrument x-axis acquired during a compass calibration spin test.
-        hy_cal = 8-element vector of direction cosines of the magnetic field projected along
-            the instrument y-axis acquired during a compass calibration spin test.
-        lat = latitude of the instrument [decimal degrees].  East is positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North is positive, South negative.
-        timestamp = NTP time stamp from a data particle [secs since 1900-01-01].
-
-    Implemented by:
-
-        2015-02-13: Russell Desiderio. Initial code.
-        2015-05-29: Russell Desiderio. Time-vectorized calcoeffs by removing exception checking of the
-                                       lengths of calcoeff arrays. This is now done by checking the
-                                       shapes of these variables in the fsi_acm_compass_cal routine
-                                       which is called by fsi_acm_nautical_heading.
-
-    Notes:
-
-        The VEL3D series A and L instruments are FSI current meters modified for use on a
-        McLane profiler. The FSI ACM has 4 raw beam velocities. The correspondences between
-        the MMP manual designations and the IDD designations are:
-
-        (Xplus, Yplus, Xminus, Yminus)     (MMP manual, page G-22)
-        (va   , vb   , vc    , vd    )     (IDD, VEL3D series A)
-        (vp1  , vp2  , vp3   , vp4   )     (IDD, VEL3D series L)
-        (left , down , right , up    )     (spatial orientation)
-
-        This is also the ordering of these parameters in telemetered and recovered data.
-
-        SERIES A instruments are deployed by RSN. Compass calibrations from a spin test as
-        described in the MMP manual are used to correct field compass direction cosine
-        measurements so that headings can be calculated for the field data.
-
-        For more information see the Notes to worker function fsi_acm_horz_vel.
-
-    References:
-
-        OOI (2015). Data Product Specification for Mean Point Water Velocity
-            Data from FSI Acoustic Current Meters. Document Control Number
-            1341-00792. https://alfresco.oceanobservatories.org/  (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)
-
-        OOI (2015). 1341-00792_VELPTMN Artifact: McLane Moored Profiler User Manual.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00792_VELPTMN >>
-            MMP-User Manual-Rev-E-WEB.pdf)
+    See Also
+    --------
+    fsi_acm_horz_vel : Core algorithm; use directly for multi-output
+        access.
     """
     # calculate the headings from the field direction cosines hx and hy and the cal data.
     hdg = fsi_acm_nautical_heading(hx, hy, hdg_cal, hx_cal, hy_cal)
@@ -243,62 +198,39 @@ def fsi_acm_rsn_north(vp1, vp3, hx, hy, hdg_cal, hx_cal, hy_cal, lat, lon, times
 
 def fsi_acm_sio_east(vp1, vp3, hdg, lat, lon, timestamp):
     """
-    Description:
+    OOI wrapper for VELPTMN-VLE_L1 eastward velocity from VEL3D-L (SIO).
 
-        Calculates the VEL3D Series L eastwards velocity data product VELPTMN-VLE_L1
-        for the Falmouth Scientific (FSI) Acoustic Current Meter (ACM) mounted on a McLane
-        profiler as deployed by Scripps. Horizontal velocities are corrected for magnetic
-        variation.
+    Calls fsi_acm_horz_vel with the instrument-reported heading to
+    compute the eastward velocity component. No compass calibration
+    correction is applied for Scripps deployments.
 
-    Usage:
+    Parameters
+    ----------
+    vp1 : array_like
+        Raw beam velocity from the port stinger finger;
+        VELPTMN-VP1_L0 [cm/s].
+    vp3 : array_like
+        Raw beam velocity from the starboard stinger finger;
+        VELPTMN-VP3_L0 [cm/s].
+    hdg : array_like
+        ACM heading as reported by the instrument [degrees clockwise
+        from magnetic north]; VELPTMN-HDG_L0.
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
 
-        u = fsi_acm_sio_east(vp1, vp3, hdg, lat, lon, timestamp)
+    Returns
+    -------
+    u : ndarray
+        Eastward velocity VELPTMN-VLE_L1 in true Earth coordinates [m/s].
 
-            where
-
-        u = eastwards velocity VELPTMN-VLE_L1 [m/s]
-        vp1 = raw beam velocity from the port stinger finger; VELPTMN-VP1_L0 [cm/s]
-        vp3 = raw beam velocity from the starboard stinger finger; VELPTMN-VP3_L0 [cm/s]
-        hdg = ACM heading as reported by the instrument [degrees clockwise from
-            magnetic north]; VELPTMN-HDG_L0. see Notes.
-        lat = latitude of the instrument [decimal degrees].  East is positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North is positive, South negative.
-        timestamp = NTP time stamp from a data particle [secs since 1900-01-01].
-
-    Implemented by:
-
-        2015-02-18: Russell Desiderio. Initial code.
-
-    Notes:
-
-        The VEL3D series A and L instruments are FSI current meters modified for use on a
-        McLane profiler. The FSI ACM has 4 raw beam velocities. The correspondences between
-        the MMP manual designations and the IDD designations are:
-
-        (Xplus, Yplus, Xminus, Yminus)     (MMP manual, page G-22)
-        (va   , vb   , vc    , vd    )     (IDD, VEL3D series A)
-        (vp1  , vp2  , vp3   , vp4   )     (IDD, VEL3D series L)
-        (left , down , right , up    )     (spatial orientation)
-
-        This is also the ordering of these parameters in telemetered and recovered data.
-
-        SERIES L instruments are deployed by Scripps. Compass calibrations are not used to
-        correct field compass measurements from these instruments.
-
-        For more information see the Notes to worker function fsi_acm_horz_vel.
-
-    References:
-
-        OOI (2015). Data Product Specification for Mean Point Water Velocity
-            Data from FSI Acoustic Current Meters. Document Control Number
-            1341-00792. https://alfresco.oceanobservatories.org/  (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)
-
-        OOI (2015). 1341-00792_VELPTMN Artifact: McLane Moored Profiler User Manual.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00792_VELPTMN >>
-            MMP-User Manual-Rev-E-WEB.pdf)
+    See Also
+    --------
+    fsi_acm_horz_vel : Core algorithm; use directly for multi-output
+        access.
     """
     # call the worker function which calculates both the east and north data products
     (u, _) = fsi_acm_horz_vel(vp1, vp3, hdg, lat, lon, timestamp)
@@ -307,62 +239,40 @@ def fsi_acm_sio_east(vp1, vp3, hdg, lat, lon, timestamp):
 
 def fsi_acm_sio_north(vp1, vp3, hdg, lat, lon, timestamp):
     """
-    Description:
+    OOI wrapper for VELPTMN-VLN_L1 northward velocity from VEL3D-L (SIO).
 
-        Calculates the VEL3D Series L northwards velocity data product VELPTMN-VLN_L1
-        for the Falmouth Scientific (FSI) Acoustic Current Meter (ACM) mounted on a McLane
-        profiler as deployed by Scripps. Horizontal velocities are corrected for magnetic
-        variation.
+    Calls fsi_acm_horz_vel with the instrument-reported heading to
+    compute the northward velocity component. No compass calibration
+    correction is applied for Scripps deployments.
 
-    Usage:
+    Parameters
+    ----------
+    vp1 : array_like
+        Raw beam velocity from the port stinger finger;
+        VELPTMN-VP1_L0 [cm/s].
+    vp3 : array_like
+        Raw beam velocity from the starboard stinger finger;
+        VELPTMN-VP3_L0 [cm/s].
+    hdg : array_like
+        ACM heading as reported by the instrument [degrees clockwise
+        from magnetic north]; VELPTMN-HDG_L0.
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
 
-        v = fsi_acm_sio_north(vp1, vp3, hdg, lat, lon, timestamp)
+    Returns
+    -------
+    v : ndarray
+        Northward velocity VELPTMN-VLN_L1 in true Earth coordinates
+        [m/s].
 
-            where
-
-        v = northwards velocity VELPTMN-VLN_L1 [m/s]
-        vp1 = raw beam velocity from the port stinger finger; VELPTMN-VP1_L0 [cm/s]
-        vp3 = raw beam velocity from the starboard stinger finger; VELPTMN-VP3_L0 [cm/s]
-        hdg = ACM heading as reported by the instrument [degrees clockwise from
-            magnetic north]; VELPTMN-HDG_L0. see Notes.
-        lat = latitude of the instrument [decimal degrees].  East is positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North is positive, South negative.
-        timestamp = NTP time stamp from a data particle [secs since 1900-01-01].
-
-    Implemented by:
-
-        2015-02-18: Russell Desiderio. Initial code.
-
-    Notes:
-
-        The VEL3D series A and L instruments are FSI current meters modified for use on a
-        McLane profiler. The FSI ACM has 4 raw beam velocities. The correspondences between
-        the MMP manual designations and the IDD designations are:
-
-        (Xplus, Yplus, Xminus, Yminus)     (MMP manual, page G-22)
-        (va   , vb   , vc    , vd    )     (IDD, VEL3D series A)
-        (vp1  , vp2  , vp3   , vp4   )     (IDD, VEL3D series L)
-        (left , down , right , up    )     (spatial orientation)
-
-        This is also the ordering of these parameters in telemetered and recovered data.
-
-        SERIES L instruments are deployed by Scripps. Compass calibrations are not used to
-        correct field compass measurements from these instruments.
-
-        For more information see the Notes to worker function fsi_acm_horz_vel.
-
-    References:
-
-        OOI (2015). Data Product Specification for Mean Point Water Velocity
-            Data from FSI Acoustic Current Meters. Document Control Number
-            1341-00792. https://alfresco.oceanobservatories.org/  (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)
-
-        OOI (2015). 1341-00792_VELPTMN Artifact: McLane Moored Profiler User Manual.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00792_VELPTMN >>
-            MMP-User Manual-Rev-E-WEB.pdf)
+    See Also
+    --------
+    fsi_acm_horz_vel : Core algorithm; use directly for multi-output
+        access.
     """
     # call the worker function which calculates both the east and north data products
     (_, v) = fsi_acm_horz_vel(vp1, vp3, hdg, lat, lon, timestamp)
@@ -371,62 +281,36 @@ def fsi_acm_sio_north(vp1, vp3, hdg, lat, lon, timestamp):
 
 def fsi_acm_up_profiler_ascending(vp1, vp3, vp4):
     """
-    Description:
+    Compute VELPTMN-VLU-ASC_L1 upward velocity during profiler ascent.
 
-        Calculates the VEL3D Series A and L upward velocity data product VELPTMN-VLU-ASC_L1
-        for the Falmouth Scientific (FSI) Acoustic Current Meter (ACM) mounted on a McLane
-        profiler.
+    Calculates the upward velocity data product for VEL3D series A and L
+    FSI ACM instruments during profiler ascent. Uses vp1, vp3, and vp4
+    to avoid contamination from the sheet-flow wake of the stinger's
+    central post, which affects vp2 during ascent.
 
-        Because of the orientation of the ACM stinger fingers (see Notes) upward
-        current velocity can be calculated in several different ways. This function
-        calculates the vertical velocity to be used when the profiler is ascending,
-        avoiding the use of data from vp2 which will be contaminated by the sheet-flow
-        wake of the stinger's central post.
+    Parameters
+    ----------
+    vp1 : array_like
+        Raw beam velocity from the port stinger finger;
+        VELPTMN-VP1_L0 [cm/s].
+    vp3 : array_like
+        Raw beam velocity from the starboard stinger finger;
+        VELPTMN-VP3_L0 [cm/s].
+    vp4 : array_like
+        Raw beam velocity from the upper stinger finger;
+        VELPTMN-VP4_L0 [cm/s].
 
-    Usage:
+    Returns
+    -------
+    w : ndarray
+        Upward velocity VELPTMN-VLU-ASC_L1 [m/s].
 
-        w_fsi_asc = fsi_acm_up_profiler_ascending(vp1, vp3, vp4)
-
-            where
-
-        w_fsi_asc = velocity up; VELPTMN-VLU-ASC_L1 [m/s]
-        vp1 = raw beam velocity from the port stinger finger; VELPTMN-VP1_L0 [cm/s]
-        vp3 = raw beam velocity from the starboard stinger finger; VELPTMN-VP3_L0 [cm/s]
-        vp4 = raw beam velocity from the upper stinger finger; VELPTMN-VP4_L0 [cm/s]
-
-    Implemented by:
-
-        2015-02-13: Russell Desiderio. Initial code.
-
-    Notes:
-
-        The VEL3D series A and L instruments are FSI current meters modified for use on a
-        McLane profiler. The FSI ACM has 4 raw beam velocities. The correspondences between
-        the MMP manual designations and the IDD designations are:
-
-        (Xplus, Yplus, Xminus, Yminus)     (MMP manual, page G-22)
-        (va   , vb   , vc    , vd    )     (IDD, VEL3D series A)
-        (vp1  , vp2  , vp3   , vp4   )     (IDD, VEL3D series L)
-        (left , down , right , up    )     (spatial orientation)
-
-        This is also the ordering of these parameters in telemetered and recovered data.
-
-        The MMP manual Rev E, page 8-30, incorrectly calculates the upward velocities wU and wD.
-
-        For more information see the Notes to worker function fsi_acm_horz_vel.
-
-    References:
-
-        OOI (2015). Data Product Specification for Mean Point Water Velocity
-            Data from FSI Acoustic Current Meters. Document Control Number
-            1341-00792. https://alfresco.oceanobservatories.org/  (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)
-
-        OOI (2015). 1341-00792_VELPTMN Artifact: McLane Moored Profiler User Manual.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00792_VELPTMN >>
-            MMP-User Manual-Rev-E-WEB.pdf)
+    Notes
+    -----
+    The MMP manual (Rev E, p. 8-30) contains an error in the upward
+    velocity formula for ascent. The formula implemented here follows
+    the corrected algorithm. Pitch and roll effects are considered
+    negligible for profiler-mounted instruments.
     """
     # find the x-velocity in the instrument coordinate system
     x = -(vp1 + vp3) / np.sqrt(2.0)
@@ -439,62 +323,36 @@ def fsi_acm_up_profiler_ascending(vp1, vp3, vp4):
 
 def fsi_acm_up_profiler_descending(vp1, vp2, vp3):
     """
-    Description:
+    Compute VELPTMN-VLU-DSC_L1 upward velocity during profiler descent.
 
-        Calculates the VEL3D Series A and L upwards velocity data product VELPTMN-VLU-DSC_L1
-        for the Falmouth Scientific (FSI) Acoustic Current Meter (ACM) mounted on a McLane
-        profiler.
+    Calculates the upward velocity data product for VEL3D series A and L
+    FSI ACM instruments during profiler descent. Uses vp1, vp2, and vp3
+    to avoid contamination from the sheet-flow wake of the stinger's
+    central post, which affects vp4 during descent.
 
-        Because of the orientation of the ACM stinger fingers (see Notes) upward
-        current velocity can be calculated in several different ways. This function
-        calculates the vertical velocity to be used when the profiler is descending,
-        avoiding the use of data from vp4 which will be contaminated by the sheet-flow
-        wake of the stinger's central post.
+    Parameters
+    ----------
+    vp1 : array_like
+        Raw beam velocity from the port stinger finger;
+        VELPTMN-VP1_L0 [cm/s].
+    vp2 : array_like
+        Raw beam velocity from the lower stinger finger;
+        VELPTMN-VP2_L0 [cm/s].
+    vp3 : array_like
+        Raw beam velocity from the starboard stinger finger;
+        VELPTMN-VP3_L0 [cm/s].
 
-    Usage:
+    Returns
+    -------
+    w : ndarray
+        Upward velocity VELPTMN-VLU-DSC_L1 [m/s].
 
-        w_fsi_dsc = fsi_acm_up_profiler_descending(vp1, vp2, vp3)
-
-            where
-
-        w_fsi_dsc = velocity up; VELPTMN-VLU-DSC_L1 [m/s]
-        vp1 = raw beam velocity from the port stinger finger; VELPTMN-VP1_L0 [cm/s]
-        vp2 = raw beam velocity from the lower stinger finger; VELPTMN-VP2_L0 [cm/s]
-        vp3 = raw beam velocity from the starboard stinger finger; VELPTMN-VP3_L0 [cm/s]
-
-    Implemented by:
-
-        2015-02-13: Russell Desiderio. Initial code.
-
-    Notes:
-
-        The VEL3D series A and L instruments are FSI current meters modified for use on a
-        McLane profiler. The FSI ACM has 4 raw beam velocities. The correspondences between
-        the MMP manual designations and the IDD designations are:
-
-        (Xplus, Yplus, Xminus, Yminus)     (MMP manual, page G-22)
-        (va   , vb   , vc    , vd    )     (IDD, VEL3D series A)
-        (vp1  , vp2  , vp3   , vp4   )     (IDD, VEL3D series L)
-        (left , down , right , up    )     (spatial orientation)
-
-        This is also the ordering of these parameters in telemetered and recovered data.
-
-        The MMP manual Rev E, page 8-30, incorrectly calculates the upward velocities wU and wD.
-
-        For more information see the Notes to worker function fsi_acm_horz_vel.
-
-    References:
-
-        OOI (2015). Data Product Specification for Mean Point Water Velocity
-            Data from FSI Acoustic Current Meters. Document Control Number
-            1341-00792. https://alfresco.oceanobservatories.org/  (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)
-
-        OOI (2015). 1341-00792_VELPTMN Artifact: McLane Moored Profiler User Manual.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00792_VELPTMN >>
-            MMP-User Manual-Rev-E-WEB.pdf)
+    Notes
+    -----
+    The MMP manual (Rev E, p. 8-30) contains an error in the upward
+    velocity formula for descent. The formula implemented here follows
+    the corrected algorithm. Pitch and roll effects are considered
+    negligible for profiler-mounted instruments.
     """
     # find the x-velocity in the instrument coordinate system
     x = -(vp1 + vp3) / np.sqrt(2.0)
@@ -507,47 +365,36 @@ def fsi_acm_up_profiler_descending(vp1, vp2, vp3):
 
 def nobska_mag_corr_east(u, v, lat, lon, timestamp, z=0):
     """
-    Description:
+    OOI wrapper for VELPTTU-VLE_L1 eastward velocity from VEL3D-B (Nobska).
 
-        Corrects the eastward velocity from a VEL3D-B Nobska MAVS 4
-        instrument for magnetic declination to produce an L1 VELPTTU-VLE
-        OOI data product.
+    Converts units from cm/s to m/s and calls vel_mag_correction to
+    apply the WMM magnetic declination rotation.
 
-        Given a velocity vector with components u & v in the magnetic East
-        and magnetic North directions respectively, this function calculates
-        the magnetic declination for the location, depth, and time of the
-        vector from the World Magnetic Model (WMM) and transforms the vector
-        to a true Earth reference frame.
+    Parameters
+    ----------
+    u : array_like
+        Uncorrected eastward velocity in magnetic Earth frame [cm/s].
+    v : array_like
+        Uncorrected northward velocity in magnetic Earth frame [cm/s].
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
+    z : float or array_like, optional
+        Depth of instrument relative to sea level [m], positive values
+        only. Default is 0.
 
-        This function is a wrapper around the function "vel_mag_correction".
+    Returns
+    -------
+    u_cor : ndarray
+        Eastward velocity VELPTTU-VLE_L1 in true Earth frame [m/s].
 
-    Usage:
-
-        u_cor = nobska_mag_corr_east(u, v, lat, lon, ntp_timestamp, z=0)
-
-            where
-
-        u_cor = eastward velocity VELPTTU-VLE_L1, in true Earth frame,
-            with the correction for magnetic declination applied. [m/s]
-
-        u = uncorrected eastward velocity in magnetic Earth frame. [cm/s]
-        v = uncorrected northward velocity in magnetic Earth frame. [cm/s]
-        lat = latitude of the instrument [decimal degrees].  East is
-            positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North
-            is positive, South negative.
-        ntp_timestamp = NTP time stamp from a data particle
-            [secs since 1900-01-01].
-        z = depth of instrument relative to sea level [meters].
-            Positive values only. Default value is 0.
-
-    References:
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00781.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00781_Data_Product_SPEC_VELPTTU_Nobska_OOI.pdf)
+    See Also
+    --------
+    vel_mag_correction : Core algorithm; use directly for multi-output
+        access.
     """
    # Check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
@@ -565,47 +412,36 @@ def nobska_mag_corr_east(u, v, lat, lon, timestamp, z=0):
 
 def nobska_mag_corr_north(u, v, lat, lon, timestamp, z=0):
     """
-    Description:
+    OOI wrapper for VELPTTU-VLN_L1 northward velocity from VEL3D-B (Nobska).
 
-        Corrects the northward velocity from a VEL3D-B Nobska MAVS 4
-        instrument for magnetic declination to produce an L1 VELPTTU-VLN
-        OOI data product.
+    Converts units from cm/s to m/s and calls vel_mag_correction to
+    apply the WMM magnetic declination rotation.
 
-        Given a velocity vector with components u & v in the magnetic East
-        and magnetic North directions respectively, this function calculates
-        the magnetic declination for the location, depth, and time of the
-        vector from the World Magnetic Model (WMM) and transforms the vector
-        to a true Earth reference frame.
+    Parameters
+    ----------
+    u : array_like
+        Uncorrected eastward velocity in magnetic Earth frame [cm/s].
+    v : array_like
+        Uncorrected northward velocity in magnetic Earth frame [cm/s].
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
+    z : float or array_like, optional
+        Depth of instrument relative to sea level [m], positive values
+        only. Default is 0.
 
-        This function is a wrapper around the function "vel_mag_correction".
+    Returns
+    -------
+    v_cor : ndarray
+        Northward velocity VELPTTU-VLN_L1 in true Earth frame [m/s].
 
-    Usage:
-
-        v_cor = nobska_mag_corr_north(u, v, lat, lon, ntp_timestamp, z)
-
-            where
-
-        v_cor = northward velocity VELPTTU-VLN_L1, in true Earth frame,
-            with the correction for magnetic declination applied. [m/s]
-
-        u = uncorrected eastward velocity in magnetic Earth frame. [cm/s]
-        v = uncorrected northward velocity in magnetic Earth frame. [cm/s]
-        lat = latitude of the instrument [decimal degrees].  East is
-            positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North
-            is positive, South negative.
-        ntp_timestamp = NTP time stamp from a data particle
-            [secs since 1900-01-01].
-        z = depth of instrument relative to sealevel [meters].
-            Positive values only. Default value is 0.
-
-    References:
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00781.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00781_Data_Product_SPEC_VELPTTU_Nobska_OOI.pdf)
+    See Also
+    --------
+    vel_mag_correction : Core algorithm; use directly for multi-output
+        access.
     """
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
@@ -623,83 +459,65 @@ def nobska_mag_corr_north(u, v, lat, lon, timestamp, z=0):
 
 def nobska_scale_up_vel(w):
     """
-    Description:
+    Compute VELPTTU-VLU_L1 upward velocity for VEL3D-B (Nobska MAVS-4).
 
-        Computes the VELPTTU-VLU_L1 data product from a VEL3D-B Nobska MAVS-4 by converting
-        the units of the raw velocity vertical velocity measurement from cm/s to m/s.
+    Converts the upward velocity from the Nobska MAVS-4 instrument from
+    cm/s to m/s.
 
-    Usage:
+    Parameters
+    ----------
+    w : array_like
+        Raw upward velocity [cm/s].
 
-        w_mps = nobska_scale_up_vel(w_cmps)
-
-            where
-
-        w_mps = Output vertical velocity VELPTTU-VLU_L1 [m/s]
-        w_cmps = Input vertical velocity [cm/s]
-
-    References:
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00781.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00781_Data_Product_SPEC_VELPTTU_Nobska_OOI.pdf)
+    Returns
+    -------
+    w_mps : ndarray
+        Upward velocity VELPTTU-VLU_L1 [m/s].
     """
     return w / 100.0
 
 
 def nortek_mag_corr_east(u, v, lat, lon, timestamp, z=0.0, status_code=0):
     """
-    Description:
+    OOI wrapper for VELPTTU-VLE_L1 eastward velocity from VEL3D-C/D (Vector).
 
-        Corrects the eastward velocity from VEL3D-CD Nortek Vector instruments for
-        magnetic declination to produce an L1 VELPTTU-VLE OOI data product.
+    Converts units from mm/s to m/s, calls vel_mag_correction to apply
+    the WMM magnetic declination rotation, then applies optional status
+    code scaling via nortek_scale_velocity.
 
-        Given a velocity vector with components u & v in the magnetic East
-        and magnetic North directions respectively, this function calculates
-        the magnetic declination for the location, depth, and time of the
-        vector from the World Magnetic Model (WMM) and transforms the vector
-        to a true Earth reference frame.
+    Parameters
+    ----------
+    u : array_like
+        Uncorrected eastward velocity in magnetic Earth frame [mm/s].
+    v : array_like
+        Uncorrected northward velocity in magnetic Earth frame [mm/s].
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
+    z : float or array_like, optional
+        Depth of instrument relative to sea level [m], positive values
+        only. Default is 0.
+    status_code : int or array_like, optional
+        Status code variable from the instrument system packet. If bit 1
+        is set, velocity is scaled by 0.1. Default is 0.
 
-        This function is a wrapper around the function "vel_mag_correction".
+    Returns
+    -------
+    u_cor : ndarray
+        Eastward velocity VELPTTU-VLE_L1 in true Earth frame [m/s].
 
-    Usage:
+    Notes
+    -----
+    As of 2015-06-08, the DPS (1341-00780) is still incorrect: the
+    Nortek Vector outputs its velocities in units of mm/s.
 
-        u_cor = nortek_mag_corr_east(u, v, lat, lon, ntp_timestamp, z)
-
-            where
-
-        u_cor = eastward velocity VELPTTU-VLE_L1, in true Earth frame,
-            with the correction for magnetic declination applied. [m/s]
-
-        u = uncorrected eastward velocity in magnetic Earth frame. [mm/s]
-        v = uncorrected northward velocity in magnetic Earth frame. [mm/s]
-        lat = latitude of the instrument [decimal degrees].  East is
-            positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North
-            is positive, South negative.
-        ntp_timestamp = NTP time stamp from a data particle
-            [secs since 1900-01-01].
-        z = depth of instrument relative to sealevel [meters].
-            Positive values only. Default value is 0.
-        status_code = status code variable from system packet.
-            Scale velocity by 0.1 if bit 1 of status_code is 1
-
-    2015-06-08: Russell Desiderio. Changed DPA to reflect correct units
-                                   of input velocities. see Notes.
-
-    Notes:
-
-        As of 2015-06-08, the DPS referenced below is still incorrect:
-        the Nortek Vector outputs its velocities in units of mm/sec.
-
-    References:
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00780.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf)
+    See Also
+    --------
+    vel_mag_correction : Core algorithm; use directly for multi-output
+        access.
     """
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
@@ -722,56 +540,45 @@ def nortek_mag_corr_east(u, v, lat, lon, timestamp, z=0.0, status_code=0):
 
 def nortek_mag_corr_north(u, v, lat, lon, timestamp, z=0.0, status_code=0):
     """
-    Description:
+    OOI wrapper for VELPTTU-VLN_L1 northward velocity from VEL3D-C/D (Vector).
 
-        Corrects the northward velocity from VEL3D-CD Nortek Vector instruments for
-        magnetic declination to produce an L1 VELPTTU-VLN OOI data product.
+    Converts units from mm/s to m/s, calls vel_mag_correction to apply
+    the WMM magnetic declination rotation, then applies optional status
+    code scaling via nortek_scale_velocity.
 
-        Given a velocity vector with components u & v in the magnetic East
-        and magnetic North directions respectively, this function calculates
-        the magnetic declination for the location, depth, and time of the
-        vector from the World Magnetic Model (WMM) and transforms the vector
-        to a true Earth reference frame.
+    Parameters
+    ----------
+    u : array_like
+        Uncorrected eastward velocity in magnetic Earth frame [mm/s].
+    v : array_like
+        Uncorrected northward velocity in magnetic Earth frame [mm/s].
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
+    z : float or array_like, optional
+        Depth of instrument relative to sea level [m], positive values
+        only. Default is 0.
+    status_code : int or array_like, optional
+        Status code variable from the instrument system packet. If bit 1
+        is set, velocity is scaled by 0.1. Default is 0.
 
-        This function is a wrapper around the function "vel_mag_correction".
+    Returns
+    -------
+    v_cor : ndarray
+        Northward velocity VELPTTU-VLN_L1 in true Earth frame [m/s].
 
-    Usage:
+    Notes
+    -----
+    As of 2015-06-08, the DPS (1341-00780) is still incorrect: the
+    Nortek Vector outputs its velocities in units of mm/s.
 
-        v_cor = nortek_mag_corr_north(u, v, lat, lon, ntp_timestamp, z)
-
-            where
-
-        v_cor = northward velocity VELPTTU-VLN_L1, in true Earth frame,
-            with the correction for magnetic declination applied. [m/s]
-
-        u = uncorrected eastward velocity in magnetic Earth frame. [mm/s]
-        v = uncorrected northward velocity in magnetic Earth frame. [mm/s]
-        lat = latitude of the instrument [decimal degrees].  East is
-            positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North
-            is positive, South negative.
-        ntp_timestamp = NTP time stamp from a data particle
-            [secs since 1900-01-01].
-        z = depth of instrument relative to sealevel [meters].
-            Positive values only. Default value is 0.
-        status_code = status code variable from system packet.
-            Scale velocity by 0.1 if bit 1 of status_code is 1
-
-    2015-06-08: Russell Desiderio. Changed DPA to reflect correct units
-                                   of input velocities. see Notes.
-
-    Notes:
-
-        As of 2015-06-08, the DPS referenced below is still incorrect:
-        the Nortek Vector outputs its velocities in units of mm/sec.
-
-    References:
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00780.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf)
+    See Also
+    --------
+    vel_mag_correction : Core algorithm; use directly for multi-output
+        access.
     """
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
@@ -794,42 +601,47 @@ def nortek_mag_corr_north(u, v, lat, lon, timestamp, z=0.0, status_code=0):
 
 def nortek_up_vel(w, status_code=0):
     """
-    Description:
+    Compute VELPTTU-VLU_L1 upward velocity for VEL3D-C/D (Nortek Vector).
 
-        Computes the VELPTTU-VLU_L1 data product from a VEL3D-CD Nortek Vector by converting
-        the units of the raw velocity vertical velocity measurement from mm/s to m/s.
+    Converts the upward velocity from the Nortek Vector instrument from
+    mm/s to m/s, with optional status code scaling.
 
-    Usage:
+    Parameters
+    ----------
+    w : array_like
+        Raw upward velocity [mm/s].
+    status_code : int or array_like, optional
+        Status code variable from the instrument system packet. If bit 1
+        is set, velocity is scaled by 0.1. Default is 0.
 
-        w_l1 = nortek_up_vel(w_l0)
+    Returns
+    -------
+    w_l1 : ndarray
+        Upward velocity VELPTTU-VLU_L1 [m/s].
 
-            where
-
-        w_l1 = Output vertical velocity VELPTTU-VLU_L1 [m/s]
-        w_l0 = Input vertical velocity [mm/s]
-
-    2015-06-08: Russell Desiderio. Changed DPA to reflect correct units
-                                   of input velocities. see Notes.
-
-    Notes:
-
-        As of 2015-06-08, the DPS referenced below is still incorrect:
-        the Nortek Vector outputs its velocities in units of mm/sec.
-
-    References:
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00780.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf)
+    Notes
+    -----
+    As of 2015-06-08, the DPS (1341-00780) is still incorrect: the
+    Nortek Vector outputs its velocities in units of mm/s.
     """
     return nortek_scale_velocity(w / 1000.0, status_code)
 
 
 def nortek_scale_velocity(velocity, status_code=0):
     """
-    scale velocity by 0.1 if bit 1 of status_code is 1
+    Scale Nortek Vector velocity by 0.1 if bit 1 of status_code is set.
+
+    Parameters
+    ----------
+    velocity : array_like
+        Velocity to scale [any units].
+    status_code : int or array_like, optional
+        Status code from the instrument system packet. Default is 0.
+
+    Returns
+    -------
+    velocity_scaled : ndarray
+        Scaled velocity in the same units as input.
     """
     status_code = np.rint(status_code).astype(dtype=int)
     scale_factor = np.where(np.bitwise_and(status_code, 0x2).astype(dtype=bool), 0.1, 1.0)
@@ -840,81 +652,58 @@ def vel3dk_east(
         vel0, vel1, vel2, heading, pitch, roll, beams, lat, lon,
         timestamp, Vscale, z=0, vel3=0):
     """
+    OOI wrapper for VELPTTU-VLE_L1 eastward velocity from VEL3D-K.
 
-        *** R.DESIDERIO: **** 2018-06-20 *************************************
-        THE STATIONARY TRANSFORM (4 BEAM-VELOCITY) CASE HAS NOT BEEN CHECKED
-        AND COULD VERY WELL BE INCORRECT. TO DATE IT HAS NOT BEEN USED DURING
-        OOI MCLANE PROFILES.
-        **********************************************************************
+    Scales beam velocities, converts attitude variables from deci-degrees
+    to degrees, calls vel3dk_transform, then applies vel_mag_correction
+    to return the eastward component.
 
-    Description:
+    Parameters
+    ----------
+    vel0 : array_like
+        Beam 0 velocity as scaled integer counts.
+    vel1 : array_like
+        Beam 1 velocity as scaled integer counts.
+    vel2 : array_like
+        Beam 2 velocity as scaled integer counts.
+    heading : array_like
+        Instrument heading from the Aquadopp II [deci-degrees].
+    pitch : array_like
+        Instrument pitch from the Aquadopp II [deci-degrees].
+    roll : array_like
+        Instrument roll from the Aquadopp II [deci-degrees].
+    beams : array_like
+        Beam configuration as an Nx5 array listing the physical beams
+        corresponding to vel0-vel3. The 5th column is ignored.
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
+    Vscale : int or float
+        Velocity scaling exponent; velocities are multiplied by
+        10^Vscale.
+    z : float or array_like, optional
+        Depth of instrument relative to sea level [m], positive values
+        only. Default is 0.
+    vel3 : array_like, optional
+        Optional 4th beam velocity as scaled integer counts. Default 0
+        (3-beam mode).
 
-        Computes Eastward Velocity L1 VELPTTU-VLE in True Earth coordinates
-        for VEL3D-K instruments.
+    Returns
+    -------
+    u_cor : ndarray
+        Eastward velocity VELPTTU-VLE_L1 in true Earth frame [m/s].
 
-        Transforms beam velocities to Earth coordinate velocities and then
-        corrects for magnetic declination to produce the true Earth frame
-        eastward velocity as the L1 VELPTTU-VLE OOI data product.
+    Notes
+    -----
+    The stationary (4-beam) transform has not been exercised in OOI
+    deployments and is unverified.
 
-        Takes 3 or 4 beam velocities in integer counts from a VEL3D-K
-        (Aquadopp II on a McLane Profiler(MMP)) with the provided Vscale,
-        beam configuration parameters, and attitude orientation (heading,
-        pitch, and roll) data from an MMP A#####.DEC binary data file.
-
-        Given velocities in beam coordinates in the configuration provided
-        by the beam parameters, this function transforms the beam velocities
-        to magnetic Earth coordinates (East, North, and Up). Then the East
-        and North velocity vectors (u & v) are corrected for magnetic
-        declination for the location, depth, and time of the vectors using
-        the World Magnetic Model (WMM), transforming the vectors to a true
-        Earth reference frame.
-
-        This function is a wrapper around the functions "vel_mag_correction"
-        and "vel3dk_transform".
-
-    Usage:
-        u_cor = vel3dk_east(
-            vel0, vel1, vel2, heading, pitch, roll, beams, lat, lon,
-            timestamp, Vscale, z=0, vel3=0)
-
-            where
-
-        u_cor = floating point eastward velocity VELPTTU-VLE_L1, in true Earth
-            frame, with the correction for magnetic declination applied. [m/s]
-
-        vel0, 1, 2, 3 = AquadoppII beam velocities as integers to be
-            scaled by 10^Vscale. vel3 is optional depending on the
-            number of beams used as listed in beams.
-            [scaled integer distance/s]
-        heading, pitch, roll = attitude data obtained from the
-            AquadoppII.  [deci-degrees, i.e. 0.1degrees]
-        beams = beam configuration as an Nx5 array listing the
-            physical beams used that correspond to velocities vel0-3.
-            The 5th beam will always be zero since there is not a 5th
-            transducer and the 5th column will be ignored. Should be
-            configured as [beam1,beam2,beam3,beam4,beam5] where beam#
-            corresponds to vel#-1 (e.g. beam1 to vel0).
-        lat = latitude of the instrument [decimal degrees].  East is
-            positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North
-            is positive, South negative.
-        ntp_timestamp = NTP time stamp from a data particle
-            [secs since 1900-01-01].
-        Vscale = velocity scaling exponent factor.
-        z = depth of instrument relative to sealevel [meters].
-            Positive values only. Default value is 0.
-
-    References:
-
-        VEL3D-K IDD (2014) (No DPS as of 2014-03-03)
-        https://confluence.oceanobservatories.org/display/instruments/
-        VEL3D-K__stc_imodem+-+Telemetered
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00780.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf)
+    See Also
+    --------
+    vel3dk_transform : Core algorithm; use directly for full ENU output.
     """
     # convert from scaled, integer distance/s (as received from the
     # binary data file) to floating point m/s using the Vscale parameter
@@ -965,81 +754,58 @@ def vel3dk_north(
         timestamp, Vscale, z=0, vel3=0):
 
     """
+    OOI wrapper for VELPTTU-VLN_L1 northward velocity from VEL3D-K.
 
-        *** R.DESIDERIO: **** 2018-06-20 *************************************
-        THE STATIONARY TRANSFORM (4 BEAM-VELOCITY) CASE HAS NOT BEEN CHECKED
-        AND COULD VERY WELL BE INCORRECT. TO DATE IT HAS NOT BEEN USED DURING
-        OOI MCLANE PROFILES.
-        **********************************************************************
+    Scales beam velocities, converts attitude variables from deci-degrees
+    to degrees, calls vel3dk_transform, then applies vel_mag_correction
+    to return the northward component.
 
-    Description:
+    Parameters
+    ----------
+    vel0 : array_like
+        Beam 0 velocity as scaled integer counts.
+    vel1 : array_like
+        Beam 1 velocity as scaled integer counts.
+    vel2 : array_like
+        Beam 2 velocity as scaled integer counts.
+    heading : array_like
+        Instrument heading from the Aquadopp II [deci-degrees].
+    pitch : array_like
+        Instrument pitch from the Aquadopp II [deci-degrees].
+    roll : array_like
+        Instrument roll from the Aquadopp II [deci-degrees].
+    beams : array_like
+        Beam configuration as an Nx5 array listing the physical beams
+        corresponding to vel0-vel3. The 5th column is ignored.
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
+    Vscale : int or float
+        Velocity scaling exponent; velocities are multiplied by
+        10^Vscale.
+    z : float or array_like, optional
+        Depth of instrument relative to sea level [m], positive values
+        only. Default is 0.
+    vel3 : array_like, optional
+        Optional 4th beam velocity as scaled integer counts. Default 0
+        (3-beam mode).
 
-        Computes Northward Velocity L1 VELPTTU-VLN in True Earth coordinates
-        for VEL3D-K instruments.
+    Returns
+    -------
+    v_cor : ndarray
+        Northward velocity VELPTTU-VLN_L1 in true Earth frame [m/s].
 
-        Transforms beam velocities to Earth coordinate velocities and then
-        corrects for magnetic declination to produce the true Earth frame
-        northward velocity as the L1 VELPTTU-VLN OOI data product.
+    Notes
+    -----
+    The stationary (4-beam) transform has not been exercised in OOI
+    deployments and is unverified.
 
-        Takes 3 or 4 beam velocities in integer counts from a VEL3D-K
-        (Aquadopp II on a McLane Profiler(MMP)) with the provided Vscale,
-        beam configuration parameters, and attitude orientation (heading,
-        pitch, and roll) data from an MMP A#####.DEC binary data file.
-
-        Given velocities in beam coordinates in the configuration provided
-        by the beam parameters, this function transforms the beam velocities
-        to magnetic Earth coordinates (East, North, and Up). Then the East
-        and North velocity vectors (u & v) are corrected for magnetic
-        declination for the location, depth, and time of the vectors using
-        the World Magnetic Model (WMM), transforming the vectors to a true
-        Earth reference frame.
-
-        This function is a wrapper around the functions "vel_mag_correction"
-        and "vel3dk_transform".
-
-    Usage:
-        v_cor = vel3dk_north(
-            vel0, vel1, vel2, heading, pitch, roll, beams, lat, lon,
-            ntp_timestamp, Vscale, z=0, vel3=0)
-
-            where
-
-        v_cor = floating point northward velocity VELPTTU-VLN_L1, in true Earth
-            frame, with the correction for magnetic declination applied. [m/s]
-
-        vel0, 1, 2, 3 = AquadoppII beam velocities as integers to be
-            scaled by 10^Vscale. vel3 is optional depending on the
-            number of beams used as listed in beams.
-            [scaled integer distance/s]
-        heading, pitch, roll = attitude data obtained from the
-            AquadoppII.  [deci-degrees, i.e. 0.1degrees]
-        beams = beam configuration as an Nx5 array listing the
-            physical beams used that correspond to velocities vel0-3.
-            The 5th beam will always be zero since there is not a 5th
-            transducer and the 5th column will be ignored. Should be
-            configured as [beam1,beam2,beam3,beam4,beam5] where beam#
-            corresponds to vel#-1 (e.g. beam1 to vel0).
-        lat = latitude of the instrument [decimal degrees].  East is
-            positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North
-            is positive, South negative.
-        ntp_timestamp = NTP time stamp from a data particle
-            [secs since 1900-01-01].
-        Vscale = velocity scaling exponent factor.
-        z = depth of instrument relative to sealevel [meters].
-            Positive values only. Default value is 0.
-
-    References:
-
-        VEL3D-K IDD (2014) (No DPS as of 2014-03-03)
-        https://confluence.oceanobservatories.org/display/instruments/
-        VEL3D-K__stc_imodem+-+Telemetered
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00780.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf)
+    See Also
+    --------
+    vel3dk_transform : Core algorithm; use directly for full ENU output.
     """
     # convert from scaled, integer distance/s (as received from the
     # binary data file) to floating point m/s using the Vscale parameter
@@ -1087,51 +853,48 @@ def vel3dk_north(
 def vel3dk_up(
         vel0, vel1, vel2, heading, pitch, roll, beams, Vscale, vel3=0):
     """
+    OOI wrapper for VELPTTU-VLU_L1 upward velocity from VEL3D-K.
 
-        *** R.DESIDERIO: **** 2018-06-20 *************************************
-        THE STATIONARY TRANSFORM (4 BEAM-VELOCITY) CASE HAS NOT BEEN CHECKED
-        AND COULD VERY WELL BE INCORRECT. TO DATE IT HAS NOT BEEN USED DURING
-        OOI MCLANE PROFILES.
-        **********************************************************************
+    Scales beam velocities, converts attitude variables from deci-degrees
+    to degrees, calls vel3dk_transform, and returns the upward component.
 
-    Description:
+    Parameters
+    ----------
+    vel0 : array_like
+        Beam 0 velocity as scaled integer counts.
+    vel1 : array_like
+        Beam 1 velocity as scaled integer counts.
+    vel2 : array_like
+        Beam 2 velocity as scaled integer counts.
+    heading : array_like
+        Instrument heading from the Aquadopp II [deci-degrees].
+    pitch : array_like
+        Instrument pitch from the Aquadopp II [deci-degrees].
+    roll : array_like
+        Instrument roll from the Aquadopp II [deci-degrees].
+    beams : array_like
+        Beam configuration as an Nx5 array listing the physical beams
+        corresponding to vel0-vel3. The 5th column is ignored.
+    Vscale : int or float
+        Velocity scaling exponent; velocities are multiplied by
+        10^Vscale.
+    vel3 : array_like, optional
+        Optional 4th beam velocity as scaled integer counts. Default 0
+        (3-beam mode).
 
-        Computes Northward Velocity L1 VELPTTU-VLU in True Earth coordinates
-        for VEL3D-K instruments.
+    Returns
+    -------
+    w : ndarray
+        Upward velocity VELPTTU-VLU_L1 [m/s].
 
-        Takes an integer vertical velocity in generic distance per second
-        units from a VEL3D-K (Aquadopp II on a McLane Profiler(MMP)) with
-        the provided Vscale parameter from an MMP A#####.DEC binary data
-        file to scale the velocity to a floating point in m/s.
+    Notes
+    -----
+    The stationary (4-beam) transform has not been exercised in OOI
+    deployments and is unverified.
 
-    Usage:
-        w_mps = vel3dk_up(
-                    vel0, vel1, vel2, heading, pitch, roll,
-                    beams, Vscale, vel3=0)
-
-            where
-
-        w_mps = floating point vertical velocity VELPTTU-VLU_L1 [m/s]
-
-        vel0, 1, 2, 3 = AquadoppII beam velocities as integers to be
-            scaled by 10^Vscale. vel3 is optional depending on the
-            number of beams used as listed in beams.
-            [scaled integer distance/s]
-        heading, pitch, roll = attitude data obtained from the
-            AquadoppII.  [deci-degrees, i.e. 0.1degrees]
-        beams = beam configuration as an Nx5 array listing the
-            physical beams used that correspond to velocities vel0-3.
-            The 5th beam will always be zero since there is not a 5th
-            transducer and the 5th column will be ignored. Should be
-            configured as [beam1,beam2,beam3,beam4,beam5] where beam#
-            corresponds to vel#-1 (e.g. beam1 to vel0).
-        Vscale = velocity scaling exponent factor.
-
-    References:
-
-        VEL3D-K IDD (2014) (No DPS as of 2014-03-03)
-        https://confluence.oceanobservatories.org/display/instruments/
-        VEL3D-K__stc_imodem+-+Telemetered
+    See Also
+    --------
+    vel3dk_transform : Core algorithm; use directly for full ENU output.
     """
     # convert from scaled, integer distance/s (as received from the
     # binary data file) to floating point m/s using the Vscale parameter
@@ -1167,47 +930,37 @@ def vel3dk_up(
 
 def velpt_mag_corr_east(u, v, lat, lon, timestamp, z=0.0):
     """
-    Description:
+    OOI wrapper for VELPTMN-VLE_L1 eastward velocity from VELPT-A/B/D/J.
 
-        Corrects the eastward velocity from all series of VELPT instruments (ABDJ)
-        instrument for magnetic declination to produce an L1 VELPTMN-VLE OOI
-        data product. All instruments in the VELPT category are a variety of
-        Nortek Aquadopp. However, this DPA does not apply to VEL3D-K.
+    Converts units from mm/s to m/s and calls vel_mag_correction to
+    apply the WMM magnetic declination rotation. Does not apply to
+    VEL3D-K.
 
-        Given a velocity vector with components u & v in the magnetic East
-        and magnetic North directions respectively, this function calculates
-        the magnetic declination for the location, depth, and time of the
-        vector from the World Magnetic Model (WMM) and transforms the vector
-        to a true Earth reference frame.
+    Parameters
+    ----------
+    u : array_like
+        Uncorrected eastward velocity in magnetic Earth frame [mm/s].
+    v : array_like
+        Uncorrected northward velocity in magnetic Earth frame [mm/s].
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
+    z : float or array_like, optional
+        Depth of instrument relative to sea level [m], positive values
+        only. Default is 0.
 
-        This function is a wrapper around the function "vel_mag_correction".
+    Returns
+    -------
+    u_cor : ndarray
+        Eastward velocity VELPTMN-VLE_L1 in true Earth frame [m/s].
 
-    Usage:
-
-        u_cor = velpt_mag_corr_east(u, v, lat, lon, ntp_timestamp, z)
-
-            where
-
-        u_cor = eastward velocity VELPTMN-VLE_L1, in true Earth frame,
-            with the correction for magnetic declination applied. [m/s]
-
-        u = uncorrected eastward velocity in magnetic Earth frame. [mm/s]
-        v = uncorrected northward velocity in magnetic Earth frame. [mm/s]
-        lat = latitude of the instrument [decimal degrees].  East is
-            positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North
-            is positive, South negative.
-        ntp_timestamp = NTP time stamp from a data particle
-            [secs since 1900-01-01].
-        z = depth of instrument relative to sealevel [meters].
-            Positive values only. Default value is 0.
-
-    References:
-        OOI (2012). Data Product Specification for Mean Point Water
-            Velocity. Document Control Number 1341-00790.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00790_Data_Product_SPEC_VELPTMN_OOI.pdf)
+    See Also
+    --------
+    vel_mag_correction : Core algorithm; use directly for multi-output
+        access.
     """
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
@@ -1224,48 +977,37 @@ def velpt_mag_corr_east(u, v, lat, lon, timestamp, z=0.0):
 
 def velpt_mag_corr_north(u, v, lat, lon, timestamp, z=0.0):
     """
-    Description:
+    OOI wrapper for VELPTMN-VLN_L1 northward velocity from VELPT-A/B/D/J.
 
-        Corrects the northward velocity from all series of VELPT instruments (ABDJ)
-        instrument for magnetic declination to produce an L1 VELPTMN-VLN OOI
-        data product. All instruments in the VELPT category are a variety of
-        Nortek Aquadopp. However, this DPA does not apply to VEL3D-K.
+    Converts units from mm/s to m/s and calls vel_mag_correction to
+    apply the WMM magnetic declination rotation. Does not apply to
+    VEL3D-K.
 
-        Given a velocity vector with components u & v in the magnetic East
-        and magnetic North directions respectively, this function calculates
-        the magnetic declination for the location, depth, and time of the
-        vector from the World Magnetic Model (WMM) and transforms the vector
-        to a true Earth reference frame.
+    Parameters
+    ----------
+    u : array_like
+        Uncorrected eastward velocity in magnetic Earth frame [mm/s].
+    v : array_like
+        Uncorrected northward velocity in magnetic Earth frame [mm/s].
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
+    z : float or array_like, optional
+        Depth of instrument relative to sea level [m], positive values
+        only. Default is 0.
 
-        This function is a wrapper around the function "vel_mag_correction".
+    Returns
+    -------
+    v_cor : ndarray
+        Northward velocity VELPTMN-VLN_L1 in true Earth frame [m/s].
 
-    Usage:
-
-        v_cor = velpt_mag_corr_north(u, v, lat, lon, ntp_timestamp, z)
-
-            where
-
-        v_cor = northward velocity VELPTMN-VLN_L1, in true Earth frame,
-            with the correction for magnetic declination applied. [m/s]
-
-        u = uncorrected eastward velocity in magnetic Earth frame. [mm/s]
-        v = uncorrected northward velocity in magnetic Earth frame. [mm/s]
-        lat = latitude of the instrument [decimal degrees].  East is
-            positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North
-            is positive, South negative.
-        ntp_timestamp = NTP time stamp from a data particle
-            [secs since 1900-01-01].
-        z = depth of instrument relative to sealevel [meters].
-            Positive values only. Default value is 0.
-
-    References:
-
-        OOI (2012). Data Product Specification for Mean Point Water
-            Velocity. Document Control Number 1341-00790.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00790_Data_Product_SPEC_VELPTMN_OOI.pdf)
+    See Also
+    --------
+    vel_mag_correction : Core algorithm; use directly for multi-output
+        access.
     """
    # check for valid latitudes & longitudes
     if not valid_lat(lat) or not valid_lon(lon):
@@ -1282,28 +1024,20 @@ def velpt_mag_corr_north(u, v, lat, lon, timestamp, z=0.0):
 
 def velpt_up_vel(w):
     """
-    Description:
+    Compute VELPTMN-VLU_L1 upward velocity for VELPT-A/B/D/J (Aquadopp).
 
-        Computes the VELPTMN-VLU_L1 data product from all series (ABDJ) of the instrument
-        class VELPT. The units of the raw upwards velocity measurements are converted from
-        mm/s to m/s. This DPA does not apply to VEL3D-K.
+    Converts the upward velocity from Nortek Aquadopp instruments
+    (VELPT series A/B/D/J) from mm/s to m/s. Does not apply to VEL3D-K.
 
-    Usage:
+    Parameters
+    ----------
+    w : array_like
+        Raw upward velocity [mm/s].
 
-        w_mps = velpt_up_vel(w_mmps)
-
-            where
-
-        w_mps = Output vertical velocity VELPTMN-VLU_L1 [m/s]
-        w_mmps = Input vertical velocity [mm/s]
-
-    References:
-
-        OOI (2012). Data Product Specification for Mean Point Water
-            Velocity. Document Control Number 1341-00790.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00790_Data_Product_SPEC_VELPTMN_OOI.pdf)
+    Returns
+    -------
+    w_mps : ndarray
+        Upward velocity VELPTMN-VLU_L1 [m/s].
     """
     return w / 1000.
 
@@ -1312,83 +1046,57 @@ def velpt_up_vel(w):
 ## VEL3D-A,L subfunctions ##
 def fsi_acm_horz_vel(vp1, vp3, hdg, lat, lon, timestamp):
     """
-    Description:
+    Compute horizontal ENU velocities for VEL3D series A and L (FSI ACM).
 
-        Worker function which calculates eastward and northward velocities
-        corrected for magnetic declination for VEL3D series A and L instruments.
+    Converts raw beam velocities vp1 and vp3 from the FSI ACM stinger
+    configuration to eastward and northward velocity components in true
+    Earth coordinates, corrected for magnetic declination.
 
-    Usage:
+    Parameters
+    ----------
+    vp1 : array_like
+        Raw beam velocity from the port stinger finger;
+        VELPTMN-VP1_L0 [cm/s].
+    vp3 : array_like
+        Raw beam velocity from the starboard stinger finger;
+        VELPTMN-VP3_L0 [cm/s].
+    hdg : array_like
+        ACM nautical heading [degrees clockwise from magnetic north to
+        the instrument x-axis].
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
 
-        (u, v) = fsi_acm_horz_vel(vp1, vp3, hdg, lat, lon, timestamp)
+    Returns
+    -------
+    u : ndarray
+        Eastward velocity in true Earth coordinates [m/s].
+    v : ndarray
+        Northward velocity in true Earth coordinates [m/s].
 
-            where
+    Notes
+    -----
+    The FSI ACM stinger has 4 fingers oriented 45 deg from a central
+    post so that their tips describe a square. The instrument x-axis
+    runs along the central post away from the profiler; y is to port of
+    x; z is up. vp1 (port) and vp3 (starboard) lie in the horizontal
+    plane and are used for horizontal velocity.
 
-        u = eastwards velocity [m/s]
-        v = northwards velocity [m/s]
-        vp1 = raw beam velocity from the port stinger finger; VELPTMN-VP1_L0 [cm/s]
-        vp3 = raw beam velocity from the starboard stinger finger; VELPTMN-VP3_L0 [cm/s]
-        hdg = ACM nautical heading [degrees clockwise from magnetic north to the instrument's
-            x-axis]
-        lat = latitude of the instrument [decimal degrees].  East is positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North is positive, South negative.
-        timestamp = NTP time stamp from a data particle [secs since 1900-01-01].
+    The beam-to-instrument transform is:
 
-    Implemented by:
+        Vx = (-vp1 - vp3) / sqrt(2)
+        Vy = (vp1 - vp3) / sqrt(2)
 
-        2015-02-18: Russell Desiderio. Initial code.
+    Pitch and roll are negligible for profiler-mounted instruments, so
+    the instrument-to-earth transform involves only a heading correction
+    combined with the WMM magnetic declination.
 
-    Notes:
-
-        The VEL3D series A and L instruments are FSI current meters modified for use
-        on a McLane profiler. The FSI ACM manuals do *not* show the sensor used on the
-        McLane. The modified horizontal-looking configuration used on the McLane is
-        called the stinger configuration, a picture of which is on page 2-1 of the McLane
-        Moored Profiler (MMP) User Manual Rev E. There are 4 stinger 'fingers' oriented
-        at 45 degrees from a central post such that their tips describe a square.
-
-        The FSI ACM has 4 raw beam velocities. The correspondences between the MMP manual
-        designations and the IDD designations are:
-
-        (Xplus, Yplus, Xminus, Yminus)     (MMP manual, page G-22)
-        (va   , vb   , vc    , vd    )     (IDD, VEL3D series A)
-        (vp1  , vp2  , vp3   , vp4   )     (IDD, VEL3D series L)
-        (left , down , right , up    )     (spatial orientation)
-
-        This is also the ordering of these parameters in telemetered and recovered data.
-
-        The instrument coordinate system is defined as: the x-axis is along the central post
-        moving away from the profiler. The y-axis is to port of the x-axis and the z-axis is
-        up. Headings are defined with respect to the orientation of the x-axis with respect
-        to clockwise from North (for nautical headings) or counterclockwise from East (for
-        cartesian headings).
-
-        Raw vp1 and vp3 beam velocities are positive for flow along the acoustic path from the
-        central post towards the finger. Raw vp2 and vp4 beam velocities are positive for flow
-        along the acoustic path from the finger towards the central post.
-
-        The spatial orientation of these fingers is (left, down, right, up). Because vp1
-        and vp3 lie in the horizontal plane and vp2 and vp4 lie in the orthogonal vertical
-        plane, transformation from beam to instrument coordinates is particularly simple. In
-        addition, because the ACM is mounted on the profiler, the pitch and roll angles are
-        considered to be small and negligible, so that the transformation from instrument
-        to earth coordinates involves only heading corrections.
-
-        For series A, the hdg values are calculated from field (hx,hy) direction cosine
-        data and correction parameters computed from a compass calibration. For series L,
-        the hdg values are directly output by the ACM.
-
-    References:
-
-        OOI (2015). Data Product Specification for Mean Point Water Velocity
-            Data from FSI Acoustic Current Meters. Document Control Number
-            1341-00792. https://alfresco.oceanobservatories.org/  (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)
-
-        OOI (2015). 1341-00792_VELPTMN Artifact: McLane Moored Profiler User Manual.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00792_VELPTMN >>
-            MMP-User Manual-Rev-E-WEB.pdf)
+    For series A (RSN), hdg is derived from calibrated field direction
+    cosines by fsi_acm_nautical_heading. For series L (Scripps), hdg
+    is reported directly by the instrument.
     """
     # convert from beam coordinates to instrument coordinates
     Vx = (-vp1 - vp3) / np.sqrt(2.0)
@@ -1426,51 +1134,43 @@ def fsi_acm_horz_vel(vp1, vp3, hdg, lat, lon, timestamp):
 
 def fsi_acm_nautical_heading(hx, hy, hdg_cal, hx_cal, hy_cal):
     """
-    Description:
+    Compute ACM compass headings from field direction cosines and calibration.
 
-        Calculates ACM compass headings from field direction cosine data (hx,hy) and a spin
-        test compass calibration as described in the MMP manual. Used only for VEL3D series
-        A instruments (FSI ACMs deployed by RSN on a McLane profiler).
+    Derives nautical headings from field direction cosines (hx, hy) using
+    an 8-point spin test compass calibration. Used only for VEL3D series A
+    instruments (FSI ACMs deployed by RSN).
 
-    Usage:
+    Parameters
+    ----------
+    hx : array_like
+        Direction cosine of the local magnetic field projected onto the
+        instrument x-axis.
+    hy : array_like
+        Direction cosine of the local magnetic field projected onto the
+        instrument y-axis.
+    hdg_cal : array_like
+        8-element vector of reference ACM headings from a compass
+        calibration spin test [degrees clockwise from magnetic north].
+    hx_cal : array_like
+        8-element vector of direction cosines of the magnetic field
+        projected along the instrument x-axis during a calibration spin.
+    hy_cal : array_like
+        8-element vector of direction cosines of the magnetic field
+        projected along the instrument y-axis during a calibration spin.
 
-        hdg = fsi_acm_nautical_heading(hx, hy, hdg_cal, hx_cal, hy_cal)
+    Returns
+    -------
+    hdg_nautical : ndarray
+        Heading values [degrees clockwise from magnetic north to the
+        instrument x-axis], in [0, 360).
 
-
-            where
-
-        hdg = heading values associated with field data [degrees clockwise from magnetic north to
-            the instrument's x-axis].
-        hx = the direction cosine of the local magnetic field projected onto the instrument x-axis.
-        hy = the direction cosine of the local magnetic field projected onto the instrument y-axis.
-        hdg_cal = 8-element vector of reference stinger headings from a compass calibration spin test.
-            heading convention: nautical [degrees clockwise from magnetic north to the instrument's
-            x-axis]
-        hx_cal = 8-element vector of direction cosines of the magnetic field projected along
-            the instrument x-axis acquired during a compass calibration spin test.
-        hy_cal = 8-element vector of direction cosines of the magnetic field projected along
-            the instrument y-axis acquired during a compass calibration spin test.
-
-    Implemented by:
-
-        2015-02-18: Russell Desiderio. Initial code.
-
-    Notes:
-
-        See Notes for the function fsi_acm_compass_cal.
-
-    References:
-
-        OOI (2015). Data Product Specification for Mean Point Water Velocity
-            Data from FSI Acoustic Current Meters. Document Control Number
-            1341-00792. https://alfresco.oceanobservatories.org/  (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)
-
-        OOI (2015). 1341-00792_VELPTMN Artifact: McLane Moored Profiler User Manual.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00792_VELPTMN >>
-            MMP-User Manual-Rev-E-WEB.pdf). see p. 8-18 and Appendix D.
+    Notes
+    -----
+    Calibration correction parameters (offsets, scale factors, compass
+    bias) are computed by fsi_acm_compass_cal and applied to the field
+    direction cosines before the heading is derived from atan2(hx/hy).
+    See the MMP manual (p. 8-18 and Appendix D) for the calibration
+    procedure.
     """
     # calculate the compass cal correction values
     (hx_offset, hy_offset, hx_scale, hy_scale, compass_bias) = fsi_acm_compass_cal(
@@ -1496,62 +1196,46 @@ def fsi_acm_nautical_heading(hx, hy, hdg_cal, hx_cal, hy_cal):
 
 def fsi_acm_compass_cal(hdg_cal, hx_cal, hy_cal):
     """
-    Description:
+    Compute compass calibration parameters from an 8-point spin test.
 
-        Calculates compass calibration correction parameters based on an 8-point spin test
-        for field data acquired from FSI acoustic current meters. Used only for VEL3D series
-        A instruments (FSI ACMs deployed by RSN on a McLane profiler).
+    Calculates offsets, scaling factors, and a compass bias from
+    calibration direction cosines acquired during a spin test for FSI
+    ACM instruments. Used only for VEL3D series A instruments (RSN).
 
-    Usage:
+    Parameters
+    ----------
+    hdg_cal : array_like
+        8-element vector of reference ACM headings from a compass
+        calibration spin test [degrees clockwise from magnetic north].
+        Spacing should be 45 degrees.
+    hx_cal : array_like
+        8-element vector of direction cosines of the magnetic field
+        projected along the instrument x-axis during the calibration.
+    hy_cal : array_like
+        8-element vector of direction cosines of the magnetic field
+        projected along the instrument y-axis during the calibration.
 
-        (hx_offset, hy_offset, hx_scale, hy_scale, compass_bias) = fsi_acm_compass_cal(
-                                                                   hdg_cal, hx_cal, hy_cal)
+    Returns
+    -------
+    hx_offset : ndarray
+        Subtractive correction offset for the hx direction cosine.
+    hy_offset : ndarray
+        Subtractive correction offset for the hy direction cosine.
+    hx_scale : ndarray
+        Multiplicative scaling correction for the hx direction cosine.
+    hy_scale : ndarray
+        Multiplicative scaling correction for the hy direction cosine.
+    compass_bias : ndarray
+        Additive correction to derived cartesian heading values [degrees].
 
-            where
+    Notes
+    -----
+    The 8 compass points should be equidistantly spaced around a circle.
+    The anticipated RSN ACM calibration headings are 335, 20, 65, 110,
+    155, 200, 245, 290 degrees.
 
-        hx_offset = subtractive correction offset to the direction cosine hx of the local
-            magnetic field projected onto the instrument x-axis.
-        hy_offset = subtractive correction offset to hy.
-        hx_scale = multiplicative scaling factor correction to the direction cosine hx of the
-            local magnetic field projected onto the instrument x-axis.
-        hy_scale = multiplicative scaling factor correction to hy.
-        compass_bias = additive correction to derived cartesian heading values [degrees]
-        hdg_cal = 8-element vector of reference stinger headings from a compass calibration
-            spin test. heading convention: nautical (0 degrees is North, positive angles are cw)
-            heading units: degrees
-        hx_cal = 8-element vector of direction cosines of the magnetic field projected along
-            the instrument x-axis acquired during a compass calibration spin test.
-        hy_cal = 8-element vector of direction cosines of the magnetic field projected along
-            the instrument y-axis acquired during a compass calibration spin test.
-
-    Implemented by:
-
-        2015-02-16: Russell Desiderio. Initial code.
-        2015-06-01: Russell Desiderio. Adjusted code to process vertically stacked (in time)
-                                       input variables.
-
-    Notes:
-
-        The 8-compass-point spin test involves acquiring hx_cal and hy_cal direction cosine
-        measurements from the FSI ACM as a function of the independently known and recorded
-        rotational orientation (hdg_cal) of the ACM instrument's x-axis in degrees clockwise
-        relative to magnetic North. The spacing of the compass points should be 45 degrees.
-        Because of the way the RSN ACMs are mounted on the McLane profiler it is anticipated
-        that these values will be:
-
-        RSN ACM CAL HEADINGS:  335, 20, 65, 110, 155, 200, 245, 290.
-
-        However, the order is unimportant, as are the actual compass directions used, as long
-        as the heading of the x-axis of the ACM is used and the compass points are equi-distantly
-        spaced out around a circle.
-
-        Note that the procedure in the MMP manual works in a cartesian heading system (defined
-        as the bearing of the instrument's x-asis in degrees counter-clockwise from magnetic east).
-        The DPA converts the nautical calibration heading values to cartesian when calculating
-        direction cosine and compass corrections.
-
-        If no cal is available, the following compass cal entries can be used to give offsets and
-        biases of 0 and scaling factors of 1:
+    If no calibration is available, default cal values producing zero
+    offsets and biases and unit scaling factors can be used:
 
         hdg_cal  hx_cal   hy_cal
            0      1.0      0.0
@@ -1562,19 +1246,6 @@ def fsi_acm_compass_cal(hdg_cal, hx_cal, hy_cal):
          225     -1.0     -1.0
          270      0.0     -1.0
          315      1.0     -1.0
-
-    References:
-
-        OOI (2015). Data Product Specification for Mean Point Water Velocity
-            Data from FSI Acoustic Current Meters. Document Control Number
-            1341-00792. https://alfresco.oceanobservatories.org/  (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00792_Data_Product_SPEC_VELPTMN_ACM_OOI.pdf)
-
-        OOI (2015). 1341-00792_VELPTMN Artifact: McLane Moored Profiler User Manual.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00792_VELPTMN >>
-            MMP-User Manual-Rev-E-WEB.pdf). see p. 8-18 and Appendix D.
     """
     # make sure that the cal variables are sized correctly.
     # variables should be passed to DPAs as 2D vectors, but make sure to avoid tuple out of range.
@@ -1626,83 +1297,37 @@ def fsi_acm_compass_cal(hdg_cal, hx_cal, hy_cal):
 ## VEL3D-K Beam coordinate transformations ##
 def generate_beam_transforms():
     """
-    Description:
-        This function is used to create the 3 possible beam-to-cartesian
-        coordinate transform matrices that transforms velocity vectors
-        from beam coordinates of the Nortek Aquadopp II velocity
-        instrument (VEL3D-K), to the cartesian coordinates of the McLane
-        Moored Profiler (Wire Following Profiler [WFP]). The transform
-        used depends on the beams used by the Aquadopp II during a
-        profile. The spherical coordinates for the 4 beams on the
-        instrument and the orientation of the instrument on the profiler
-        are hard coded here (never expected to change) for processing
-        ease i.e. no required inputs to the function.
+    Generate beam-to-profiler-cartesian transform matrices for VEL3D-K.
 
-        The 3 possible beam configurations are an upward traveling
-        profile (using 3 of 4 beams), a downward traveling profile
-        (using 3 of 4 beams), or a stationary profile (using 4 of 4
-        beams). These 3 transform matrices are returned in a dictionary
-        that is loaded into the module as a constant for use in the
-        actual transformation functions. The dictionary keys are
-        'upward', 'downward', or 'stationary'.
+    Creates the three possible beam-to-cartesian coordinate transform
+    matrices for the Nortek Aquadopp II (VEL3D-K) on a McLane Moored
+    Profiler, corresponding to upward-traveling profiles (beams 1, 2, 4),
+    downward-traveling profiles (beams 2, 3, 4), and stationary
+    measurements (all 4 beams). Returns a dictionary keyed by 'upward',
+    'downward', and 'stationary'.
 
-        ********************* 2018-06-20 *************************************
-        THE STATIONARY TRANSFORM CASE HAS NOT BEEN CHECKED AND COULD VERY WELL
-        BE INCORRECT. TO DATE IT HAS NOT BEEN USED DURING OOI MCLANE PROFILES.
-        **********************************************************************
+    Returns
+    -------
+    beam2XYZ_transforms : dict
+        Dictionary with keys 'upward', 'downward', and 'stationary',
+        each containing a numpy matrix for transforming beam velocities
+        to profiler Cartesian (XYZ) coordinates.
 
-    Implemented by:
-        2014-05-13: Stuart Pearce. Reimplementation of code from P.J.
-            Rusello at Nortek
-        2018-06-18: Russell Desiderio. Corrected erroneous code from
-            Rusello. See Notes.
+    Notes
+    -----
+    Transducer azimuthal angles increase in the counter-clockwise
+    direction (1 -> 4 -> 3 -> 2). Elevation angles are 47.5 deg for
+    beams 1 and 3, and 25 deg for beams 2 and 4.
 
-    Notes:
-        In 2017 I (RDesiderio) noticed that the data from the VEL3D-K
-        instruments on the McLane profiler were aliased due to what
-        turned out to be an ambiguity velocity problem. In the course
-        of diagnosing this problem the data were sent to Nortek, who
-        sent back corrected data and the code used to calculate it.
-        This code significantly differs from the 2014 code that was
-        sent to Stuart Pearce for coding this DPA.
+    The stationary (4-beam) transform has not been exercised in OOI
+    deployments and is unverified.
 
-        I have also derived what the code should be from knowing the
-        transducer geometry, the sign convention for radial beam velocities,
-        knowing that the instrument 'X' axis is the heading reference,
-        figuring out the correct sequence of undoing pitch and roll so that
-        the heading reference maintains its direction during these rotations,
-        and from observing the signs of the AQDII pitch and roll values when
-        the profiler was manually tilted by suspending it from a gantry
-        crane. The equations match the second (!) set sent by Nortek in
-        2017. (They had a sign error in the first set sent in 2017 which
-        resulted in downward measured 'current' velocities during downward
-        profiles; upward values are expected because the downward profiler
-        velocity was much faster than downwelling or upwelling water velocities).
-
-        The 2014 code from P.J. Rusello has 3 errors. They are:
-        (1) The transducer azimuthal angles increase in a clockwise direction
-            (1 -> 2 -> 3 -> 4), which results in a left-handed cartesian
-            coordinate system. In 2017 an email I received from Nortek stated
-            that these angles increase in the counter-clockwise direction
-            1 -> 4 -> 3 -> 2.
-        (2) The pitch values are negated. They should not be negated.
-        (3) The heading values are used as is. Because the heading
-            reference is the instrument 'X' axis and not the 'Y' axis,
-            90 degrees must be subtracted from the heading values.
-
-        Error (1) is corrected in the current function. Errors (2) and (3)
-        are corrected in the function generate_ENU_transform.
-
-        Coordinate systems: Because the AQDII measures heading as the direction
-        of the projection of the instrument 'X' axis on the horizontal plane,
-        I denote the XYZ coordinate system as the instrument coordinate system
-        and regard the xyz coordinate system as the transducer cartesian
-        coordinate system. Stuart's documentation refers to the xyz coordinate
-        system as instrument coordinates and XYZ as profiler coordinates.
-
-    References:
-        Lengthy discussions with Nortek and McLane representatives.  No
-        DPS as of yet.
+    The 2018 revision corrected three errors from the original 2014
+    Nortek-supplied code: (1) azimuthal angles were previously defined
+    clockwise (left-handed coordinate system); (2) pitch values were
+    incorrectly negated; (3) heading values were not offset by 90 deg
+    to account for the Aquadopp II heading reference being the
+    instrument X-axis.
     """
     ## INTERNAL DESCRIPTION:
     ## First a matrix that transforms the velocities from cartesian
@@ -1787,22 +1412,28 @@ XYZ_TRANSFORMS = generate_beam_transforms()
 
 def get_XYZ_transform(beamlist):
     """
-    Description:
+    Retrieve the beam-to-profiler-cartesian transform for a given beam config.
 
-        Sub-function that retrieves the proper beam-to-profiler-cartesian
-        coordinates from the stored dictionary constant based on the beam
-        configuration for a profile.
+    Selects the appropriate pre-computed transform matrix from the
+    XYZ_TRANSFORMS module constant based on the beam configuration list
+    for a profile.
 
-    Usage:
-        beam2XYZ_transform = get_XYZ_transform(beamlist)
+    Parameters
+    ----------
+    beamlist : list
+        List of physical beam numbers used in order, e.g. [1, 2, 4, 0]
+        for an upward-traveling profile.
 
-        where
+    Returns
+    -------
+    t_beam2XYZ : numpy.matrix
+        Beam-to-profiler-cartesian transform matrix.
 
-        beam2XYZ_transform = the beam-to-profiler-cartesian transform
-            matrix
-        beamlist = a list (derived from the data file) that describes
-            the physical beams used in order.  E.g. [1, 2, 4, 0]
-
+    Notes
+    -----
+    Valid beam configurations are [1, 2, 4, 0] (upward), [2, 3, 4, 0]
+    (downward), and [1, 2, 3, 4] (stationary). The stationary case
+    prints a warning and has not been verified in OOI deployments.
     """
     ## Implemented by:
     ## 2014-05-13: Stuart Pearce. Reimplementation of code from P.J.
@@ -1820,35 +1451,34 @@ def get_XYZ_transform(beamlist):
 
 def generate_ENU_transform(heading, pitch, roll):
     """
-    Description:
-        This function is used to create the cartesian-to-Earth
-        coordinate transform matrices that transforms velocity vectors
-        from cartesian coordinates of a McLane Profiler (with a Nortek
-        Aquadopp II velocity instrument (VEL3D-K)), to Earth coordinates
-        using heading, pitch, and roll data from the attitude sensor on
-        board the Aquadopp II.
+    Generate profiler-cartesian to Earth ENU transform for VEL3D-K.
 
-    Usage:
-        XYZ2Earth_trans = generate_ENU_transform(heading, pitch, roll)
+    Constructs the rotation matrix that transforms velocity vectors from
+    profiler Cartesian (XYZ) coordinates to Earth coordinates (East,
+    North, Up) using heading, pitch, and roll from the Aquadopp II.
 
-        where
+    Parameters
+    ----------
+    heading : float
+        Instrument heading [degrees]. The Aquadopp II heading reference
+        is the instrument X-axis; 90 deg is subtracted before the
+        rotation matrix is constructed.
+    pitch : float
+        Instrument pitch [degrees].
+    roll : float
+        Instrument roll [degrees].
 
-        XYZ2Earth_trans = the cartesian-to-Earth coordinate tranform
-            matrix
-        heading, pitch, roll = the attitude measurements by the Aquadopp
-            II velocity instrument.
+    Returns
+    -------
+    XYZ2ENU : numpy.matrix
+        3x3 rotation matrix transforming profiler XYZ to Earth ENU.
 
-    Implemented by:
-        2014-05-13: Stuart Pearce. Reimplementation of code from P.J.
-            Rusello at Nortek
-        2018-06-18: Russell Desiderio. Corrected erroneous code from 2014
-            (in this function, heading and pitch). See Notes for the function
-            generate_beam_transforms.
-
-    References:
-        Lengthy discussions with Nortek and McLane representatives.  No
-        DPS as of yet.
-
+    Notes
+    -----
+    The 2018 revision corrected two errors in the 2014 code: (1) pitch
+    values were incorrectly negated; (2) heading was not offset by 90 deg
+    to account for the Aquadopp II heading reference being the X-axis
+    rather than the Y-axis.
     """
     ### RDesiderio: Because the heading measured by the AQDII is with reference
     ### to the instrument 'X' axis relative to magnetic north, the measured
@@ -1888,60 +1518,46 @@ def generate_ENU_transform(heading, pitch, roll):
 def vel3dk_transform(
         vel0, vel1, vel2, heading, pitch, roll, beams, vel3=0):
     """
-    Description:
-        Transforms beam velocities to Earth coordinate velocities
-        (uncorrected for magnetic declination) for an OOI
-        VEL3D-K instrument.
+    Transform VEL3D-K beam velocities to Earth ENU coordinates.
 
-        Takes 3 or 4 beam velocities in m/s from a VEL3D-K
-        (Aquadopp II on a McLane Profiler(MMP)), a beam configuration
-        array, and attitude orientation data (heading, pitch, and roll),
-        and transforms the velocities from beam coordinates to Earth
-        coordinates in the East, North, and Upwards directions.
+    Transforms 3 or 4 beam velocities from the Nortek Aquadopp II
+    (VEL3D-K) on a McLane Moored Profiler to Earth coordinates (East,
+    North, Up), uncorrected for magnetic declination.
 
-    Usage:
-        ENU = vel3dk_transform(vel0, vel1, vel2, heading, pitch, roll,
-                               beams, vel3=0)
+    Parameters
+    ----------
+    vel0 : array_like
+        Beam 0 velocity [m/s].
+    vel1 : array_like
+        Beam 1 velocity [m/s].
+    vel2 : array_like
+        Beam 2 velocity [m/s].
+    heading : array_like
+        Instrument heading [degrees].
+    pitch : array_like
+        Instrument pitch [degrees].
+    roll : array_like
+        Instrument roll [degrees].
+    beams : array_like
+        Beam configuration as an Nx5 array. The 5th column is ignored.
+        Rows containing the integer fill value (-999999999) produce NaN
+        outputs.
+    vel3 : array_like, optional
+        Optional 4th beam velocity [m/s]. Default 0 (3-beam mode).
 
-        where
+    Returns
+    -------
+    ENU : numpy.matrix
+        3 x N matrix of Earth coordinate velocities (East, North, Up)
+        uncorrected for magnetic declination. Rows corresponding to beam
+        configuration fill values contain NaN.
 
-        ENU = A matrix of velocity data in Earth coordinates (East,
-            North, Up) uncorrected for magnetic declination with East
-            velocities in the first row, North velocities in the second
-            row and Upward velocities in the 3rd row.
-        vel0, 1, 2, 3 = AquadoppII beam velocities as integers to be
-            scaled by 10^Vscale. vel3 is optional depending on the
-            number of beams used as listed in beams.
-            [scaled integer distance/s]
-        heading, pitch, roll = attitude data obtained from the
-            AquadoppII.  [degrees]
-        beams = beam configuration as an Nx5 array listing the
-            physical beams used that correspond to velocities vel0-3.
-            The 5th beam will always be zero since there is not a 5th
-            transducer and the 5th column will be ignored. Should be
-            configured as [beam1,beam2,beam3,beam4,beam5] where beam#
-            corresponds to vel#-1 (e.g. beam1 to vel0).
-
-            Documentation added: as of 2015-06-03, the IDD states that
-            the 5th beam value will be NULL which should turn into the
-            integer fill value -999999999 when presented to this DPA.
-            This DPA deletes the 5th column of beams, so this is moot.
-
-    Implemented by:
-        2014-05-13: Stuart Pearce. Reimplementation of code from P.J.
-            Rusello at Nortek
-        2015-06-02: Russell Desiderio. Trapped out instances of actionable
-            fill values in the beams configuration variable to return Nans
-            for those corresponding data products. Actionable fill values
-            are those that are situated in the 1st 4 columns; fill values
-            in the 5th column are ignored because the 5th column is deleted.
-        2018-06-19: Russell Desiderio. Added to the documentation that the
-            products of this function are ENU velocities uncorrected for
-            magnetic declination.
-
-    References:
-        Lengthy discussions with Nortek and McLane representatives.  No
-        DPS as of yet.
+    Notes
+    -----
+    The integer fill value for beam configuration variables is
+    -999999999. Rows in the beams array containing this value are
+    excluded from the transform and produce NaN in the output. The 5th
+    beam column is discarded before processing.
     """
     # denote the agreed upon fill value for all integer variables.
     fill = -999999999
@@ -2035,69 +1651,49 @@ def vel3dk_transform(
 ## magnetic correction subfunction
 def vel_mag_correction(u, v, lat, lon, ntp_timestamp, z=0.0, zflag=-1):
     """
-    Description:
+    Apply magnetic declination correction to horizontal velocity components.
 
-        Given a velocity vector U, measured in a sensor frame that is
-        referenced to Earth's magnetic field, with components u & v in
-        the magnetic East and magnetic North directions respectively;
-        vel_mag_correction transforms U to true Earth referenced
-        directions by a rotation that removes the magnetic declination.
-        Magnetic Declination, theta(x,y,z,t), is the azimuthal angular
-        offset between true North and magnetic North as a function of
-        Earth referenced location (latitude, longitude, & height/depth)
-        and time. Magnetic declination is estimated from the World
-        Magnetic Model (WMM) using the location and time of the vector.
+    Rotates a velocity vector (u, v) referenced to magnetic North into
+    true Earth coordinates by removing the magnetic declination estimated
+    from the World Magnetic Model (WMM) for the given location and time.
 
-    Usage:
+    Parameters
+    ----------
+    u : array_like
+        Uncorrected eastward velocity in magnetic Earth frame.
+    v : array_like
+        Uncorrected northward velocity in magnetic Earth frame.
+    lat : float or array_like
+        Latitude of the instrument [decimal degrees]. North is positive.
+    lon : float or array_like
+        Longitude of the instrument [decimal degrees]. East is positive.
+    ntp_timestamp : float or array_like
+        NTP timestamp [seconds since 1900-01-01].
+    z : float or array_like, optional
+        Depth or height of the instrument relative to sea level [m],
+        positive values only. Default is 0.
+    zflag : int, optional
+        Indicates whether z is depth (-1) or height above sea level
+        (+1). Default is -1 (depth).
 
-        u_cor, v_cor = vel_mag_correction(u, v, lat, lon, ntp_timestamp, z, zflag)
+    Returns
+    -------
+    u_cor : ndarray
+        Eastward velocity corrected to true Earth frame.
+    v_cor : ndarray
+        Northward velocity corrected to true Earth frame.
 
-            where
+    Notes
+    -----
+    Magnetic declination is computed via
+    generic_functions.magnetic_declination and is defined as positive
+    when magnetic north is east of true north. The rotation applied is:
 
-        u_cor = eastward velocity, in true Earth frame, with the
-            correction for magnetic declination applied.
-        v_cor = northward velocity, in true Earth frame, with the
-            correction for magnetic declination applied.
-
-        u = uncorrected eastward velocity in magnetic Earth frame.
-        v = uncorrected northward velocity in magnetic Earth frame.
-        lat = latitude of the instrument [decimal degrees].  East is
-            positive, West negative.
-        lon = longitude of the instrument [decimal degrees]. North
-            is positive, South negative.
-        ntp_timestamp = NTP time stamp from a data particle
-            [secs since 1900-01-01].
-        z = depth or height of instrument relative to sealevel [meters].
-            Positive values only. Default value is 0.
-        zflag = indicates whether to use z as a depth or height relative
-            to sealevel. -1=depth (i.e. -z) and 1=height (i.e. +z). -1
-            is the default, because Oceanography!
-
-    Implemented by:
-
-        2013-04-17: Stuart Pearce. Initial code.
-        2013-04-24: Stuart Pearce. Changed to be general for all velocity
-                    instruments.
-        2014-02-05: Christopher Wingard. Edited to use magnetic corrections in
-                    the generic_functions module.
-
-    References:
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00781.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00781_Data_Product_SPEC_VELPTTU_Nobska_OOI.pdf)
-
-        OOI (2012). Data Product Specification for Turbulent Point Water
-            Velocity. Document Control Number 1341-00780.
-            https://alfresco.oceanobservatories.org/ (See: Company Home
-            >> OOI >> Controlled >> 1000 System Level >>
-            1341-00780_Data_Product_SPEC_VELPTTU_Nortek_OOI.pdf)
+        u_cor = u * cos(theta) + v * sin(theta)
+        v_cor = v * cos(theta) - u * sin(theta)
     """
     # retrieve the magnetic declination
     theta = magnetic_declination(lat, lon, ntp_timestamp, z, zflag)
-    #print theta
 
     # apply the magnetic declination correction
     magvar = np.vectorize(magnetic_correction)
@@ -2108,11 +1704,18 @@ def vel_mag_correction(u, v, lat, lon, ntp_timestamp, z=0.0, zflag=-1):
 
 # helper sub-functions
 def valid_lat(lat):
-    """valid_lat(lat) -> boolean
+    """
+    Check whether lat values are within the valid range [-90, 90].
 
-    Checks if inputs are valid latitude values.
-    Returns True if value is between -90 and 90,
-    False otherwise.
+    Parameters
+    ----------
+    lat : float or array_like
+        Latitude value(s) to check [decimal degrees].
+
+    Returns
+    -------
+    valid : bool
+        True if all values are in [-90, 90], False otherwise.
     """
     if isinstance(lat, np.ndarray):
         if np.any(lat > 90) or np.any(lat < -90):
@@ -2123,11 +1726,18 @@ def valid_lat(lat):
 
 
 def valid_lon(lon):
-    """valid_lon(lon) -> boolean
+    """
+    Check whether lon values are within the valid range [-180, 180].
 
-    Checks if inputs are valid longitude values.
-    Returns True if value is between -180 and 180,
-    False otherwise.
+    Parameters
+    ----------
+    lon : float or array_like
+        Longitude value(s) to check [decimal degrees].
+
+    Returns
+    -------
+    valid : bool
+        True if all values are in [-180, 180], False otherwise.
     """
     if isinstance(lon, np.ndarray):
         if np.any(lon > 180) or np.any(lon < -180):

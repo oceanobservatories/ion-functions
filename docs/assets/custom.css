@@ -4,8 +4,8 @@ td, th {
     word-break: break-word;
 }
 
-/* Prevent date column from wrapping (first column of every table body row) */
-tbody td:first-child {
+/* Prevent 1st column from wrapping (first column of every table body row) */
+tbody td:nth-child(1) {
     white-space: nowrap !important;
 }
 
@@ -54,7 +54,7 @@ details.mkdocstrings-source {
     content: "DRAFT";
     position: fixed;
     top: 50%;
-    left: calc(350px + (100% - 350px - 800px) / 2);
+    left: 350px;
     width: 800px;
     text-align: center;
     transform: translateY(-50%) rotate(-45deg);

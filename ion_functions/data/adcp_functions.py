@@ -2117,7 +2117,7 @@ def z_from_p(p, lat, geo_strf_dyn_height=0, sea_surface_geopotential=0):
 
 def enthalpy_SSO_0_p(p):
     """
-    This documentation and code is copy\pasted from the matlab coding of this function.
+    This documentation and code is copy/pasted from the matlab coding of this function.
 
     %==========================================================================
     %  This function calculates enthalpy at the Standard Ocean Salinity, SSO,

@@ -13,13 +13,16 @@ classes covered by this module.
 | CTDMO | SBE 37IM | Moored (fixed depth) | CTD, Modem (Inductive) |
 | CTDPF | SBE 16Plus V2 (A/B) or SBE 52MP (C/K/L) | Profiling | CTD, Profiler |
 | CTDGV | SBE GPCTD (Seabird Payload CTD) | Gliders | CTD, Glider Vehicle |
+| PHSEN | SBE Deep SeapHOx V2 | Moored (fixed depth) | pH Sensor |
 
 `ctd_functions.py` converts raw Sea-Bird Electronics CTD data into calibrated 
 L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) and computes the L2 
 derived products Practical Salinity (PRACSAL) and in-situ Density (DENSITY) 
 using the [TEOS-10 GSW library](https://teos-10.github.io/GSW-Python/). All 
 calibration coefficients are from factory calibration values supplied with 
-individual instruments.
+individual instruments. Within the OOI data system, CTD functions fall under
+the Water Column science regime and the Conductivity, Temperature, Pressure,
+Salinity, and Density categories.
 
 The L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) may be reported directly
 by the instrument (computed onboard the sensor using vendor firmware) or they 
@@ -27,6 +30,71 @@ may be reported as L0 values in raw units (counts, frequency, or linearly scaled
 integers). Depending on the instrument, telemetered data may be reported directly 
 in L1 units while the recovered instrument data is reported in L0 units 
 requiring the conversions below.  
+
+### Primary Sources
+
+| DCN | Document |
+|---|---|
+| 1341-00010 | [OOI (2013). Data Product Specification for Water Temperature.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf) |
+| 1341-00020 | [OOI (2013). Data Product Specification for Pressure (Depth).](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf) |
+| 1341-00030 | [OOI (2013). Data Product Specification for Conductivity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf) |
+| 1341-00040 | [OOI (2013). Data Product Specification for Salinity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf) |
+| 1341-00050 | [OOI (2012). Data Product Specification for Density.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf) |
+
+---
+
+### CONDWAT_L1 — Seawater Conductivity
+
+The raw seawater conductivity (CONDWAT_L0, $c_0$), is reported in either 
+counts or scaled L1 units. The converted seawater conductivity, 
+CONDWAT_L1, is reported in S m$^{-1}$. As with temperature, conversions from 
+L0 to L1 depend on the instrument class and/or data delivery method.
+
+**SBE 16Plus** (CTDBP, CTDPF-A/B): The raw count is converted to a frequency
+$f$ in kHz, then evaluated with a polynomial corrected for temperature and
+pressure:
+
+$$f = \frac{c_0 \div  256}{1000}$$
+
+$$C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor}\times T + \text{CPcor}\times P}$$
+
+where $T$ is TEMPWAT_L1 ($^\circ\text{C}$), $P$ is PRESWAT_L1 (dbar), and
+$g$, $h$, $i$, $j$, CTcor, CPcor are factory calibration coefficients.
+
+**SBE 37IM instrument-recovered** (CTDMO): Same polynomial as the SBE 16Plus
+path, but includes an additional wbotc correction to the frequency:
+
+$$f = \frac{c_0 \div  256}{1000} \times \sqrt{1 + \text{wbotc}\times T}$$
+
+**SBE 37IM telemetered and recovered_host** (CTDMO):
+
+$$C_{L1} = c_0 \div 100000 - 0.5$$
+
+**SBE 37 Deep SeapHOx V2 streamed and recovered_instrument** (PHSEN):
+Uses the same wbotc polynomial as the SBE 37IM instrument-recovered path.
+Unlike the standalone SBE 37IM path, the raw A/D counts $c_0$ are used
+directly as the frequency input (no $\div 256$ scaling step):
+
+$$f = c_0 \times \sqrt{1 + \text{wbotc} \times T}\ /\ 1000$$
+
+$$C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor} \times T
++ \text{CPcor} \times P}$$
+
+where $T$ is TEMPWAT_L1 ($^\circ$C), $P$ is PRESWAT_L1 (dbar), and $g$,
+$h$, $i$, $j$, wbotc, CTcor, CPcor are factory calibration coefficients.
+See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
+
+**SBE 52MP** (CTDPF-C/K/L): Linear scaling with a unit conversion from
+mS cm$^{-1}$ to S m$^{-1}$:
+
+$$C_{L1} = (c_0 \div 10000 - 0.5) \times 0.1$$
+
+**CTDGV (glider)**: The SBE GPCTD computes conductivity onboard the vehicle
+using vendor software and transmits the result already in S m$^{-1}$;
+`ion-functions` is not invoked for those deployments.
+
+Output accuracy: SBE 16Plus V2 $\pm 0.0005$ S m$^{-1}$; SBE 37IM
+$\pm 0.0003$ S m$^{-1}$.
 
 ---
 
@@ -59,6 +127,15 @@ retained in the instrument-stored file and require the calibration-coefficient
 equation:
 
 $$T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15$$
+
+**SBE 37 Deep SeapHOx V2 streamed and recovered_instrument** (PHSEN):
+Raw temperature counts $t_0$ are converted using the same log polynomial as
+the SBE 37IM instrument-recovered path, with the raw A/D counts used directly
+(no scaling step before the logarithm):
+
+$$T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15$$
+
+where $a_0$, $a_1$, $a_2$, $a_3$ are factory calibration coefficients.
 
 **SBE 52MP** (CTDPF-C/K/L): The instrument outputs engineering units scaled 
 to an integer. The L1 conversion is:
@@ -134,6 +211,24 @@ polynomial as the SBE 16Plus strain-gauge path, but with the raw thermistor
 count $pt_0$ used directly in the polynomial rather than being first
 converted to voltage.
 
+**SBE 37 Deep SeapHOx V2 streamed and recovered_instrument** (PHSEN):
+Uses the same strain-gauge polynomial as the SBE 16Plus strain-gauge path.
+The pressure temperature compensation voltage $t_v$ is first converted from
+counts via $t_v = pt_0 \div 13107$, then:
+
+$$t = \text{PTEMPA0} + \text{PTEMPA1} \times t_v + \text{PTEMPA2} \times t_v^2$$
+
+$$x = p_0 - \text{PTCA0} - \text{PTCA1} \times t - \text{PTCA2} \times t^2$$
+
+$$n = \frac{x \times \text{PTCB0}}{\text{PTCB0} + \text{PTCB1} \times t + \text{PTCB2} \times t^2}$$
+
+$$p_{\text{psi}} = \text{PA0} + \text{PA1} \times n + \text{PA2} \times n^2$$
+
+$$P_{L1} = (p_{\text{psi}} - 14.7) \times 0.689475729$$
+
+where $p_0$ is the raw pressure count and all calibration coefficients are
+from factory calibration sheets.
+
 **SBE 52MP** (CTDPF-C/K/L):
 
 $$P_{L1} = p_0 \div 100 - 10$$
@@ -144,47 +239,6 @@ converts to dbar:
 $$P_{L1}\ [\text{dbar}] = p_{\text{bar}} \times 10$$
 
 Output accuracy: SBE 16Plus V2 and SBE 37IM 0.1 % of full-scale range.
-
----
-
-### CONDWAT_L1 — Seawater Conductivity
-
-The raw seawater conductivity (CONDWAT_L0, $c_0$), is reported in either 
-counts or scaled L1 units. The converted seawater conductivity, 
-CONDWAT_L1, is reported in S m$^{-1}$. As with temperature, conversions from 
-L0 to L1 depend on the instrument class and/or data delivery method.
-
-**SBE 16Plus** (CTDBP, CTDPF-A/B): The raw count is converted to a frequency
-$f$ in kHz, then evaluated with a polynomial corrected for temperature and
-pressure:
-
-$$f = \frac{c_0 \div  256}{1000}$$
-
-$$C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor}\times T + \text{CPcor}\times P}$$
-
-where $T$ is TEMPWAT_L1 ($^\circ\text{C}$), $P$ is PRESWAT_L1 (dbar), and
-$g$, $h$, $i$, $j$, CTcor, CPcor are factory calibration coefficients.
-
-**SBE 37IM instrument-recovered** (CTDMO): Same polynomial as the SBE 16Plus
-path, but includes an additional wbotc correction to the frequency:
-
-$$f = \frac{c_0 \div  256}{1000} \times \sqrt{1 + \text{wbotc}\times T}$$
-
-**SBE 37IM telemetered and recovered_host** (CTDMO):
-
-$$C_{L1} = c_0 \div 100000 - 0.5$$
-
-**SBE 52MP** (CTDPF-C/K/L): Linear scaling with a unit conversion from
-mS cm$^{-1}$ to S m$^{-1}$:
-
-$$C_{L1} = (c_0 \div 10000 - 0.5) \times 0.1$$
-
-**CTDGV (glider)**: The SBE GPCTD computes conductivity onboard the vehicle
-using vendor software and transmits the result already in S m$^{-1}$;
-`ion-functions` is not invoked for those deployments.
-
-Output accuracy: SBE 16Plus V2 $\pm 0.0005$ S m$^{-1}$; SBE 37IM
-$\pm 0.0003$ S m$^{-1}$.
 
 ---
 
@@ -228,6 +282,9 @@ $$\rho = \text{gsw.rho}(S_A, \Theta, p)$$
 
 Density is computed using the computationally-efficient 48-term expression
 described in McDougall et al. (2011).
+
+Full algorithm derivations, calibration procedures, and source references
+are listed in the [References](#references) section.
 
 ---
 
@@ -390,6 +447,33 @@ correctly.
 
 ---
 
+::: ion_functions.data.phsen_h_functions.temperature_raw_conversion
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+
+---
+
+::: ion_functions.data.phsen_h_functions.pressure_raw_conversion
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+
+---
+
+::: ion_functions.data.phsen_h_functions.conductivity_raw_conversion
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+
+---
+
 ::: ion_functions.data.ctd_functions.ctd_pracsal
 
 #### History
@@ -467,16 +551,19 @@ Sea-Bird Electronics (2011). SBE 37-IM MicroCAT User's Manual. Manual
 Version 027. Sea-Bird Electronics, Inc.
 
 [OOI (2013). Data Product Specification for Water Temperature. Document
-Control Number 1341-00010.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf)
+Control Number 1341-00010.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf)
 
 [OOI (2013). Data Product Specification for Pressure (Depth). Document
-Control Number 1341-00020.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf)
+Control Number 1341-00020.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf)
 
 [OOI (2013). Data Product Specification for Conductivity. Document Control
-Number 1341-00030.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf)
+Number 1341-00030.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf)
 
 [OOI (2013). Data Product Specification for Salinity. Document Control
-Number 1341-00040.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf)
+Number 1341-00040.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf)
 
 [OOI (2012). Data Product Specification for Density. Document Control Number
-1341-00050.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf)
+1341-00050.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf)
+
+Sea-Bird Scientific. *Deep SeapHOx V2 Ocean CT(D)-pH-DO Sensor*. Data
+sheet DS.53.May25. Bellevue, WA: Sea-Bird Scientific.

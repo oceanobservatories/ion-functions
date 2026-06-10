@@ -1,5 +1,10 @@
 # HYD Functions
 
+!!! note "Inactive Module"
+    These functions were written in anticipation of an OOI data processing
+    pipeline that was never implemented. They are retained for reference
+    but are not used in OOI data production.
+
 ## Background
 
 The Ocean Observatories Initiative deploys two classes of passive acoustic
@@ -17,7 +22,16 @@ and anthropogenic sources.
 their respective L1 data products: Broadband Acoustic Pressure Waves
 (HYDAPBB_L1) and Low Frequency Acoustic Pressure Waves (HYDAPLF_L1). All
 calibration coefficients are from factory calibration sheets supplied with
-individual instruments.
+individual instruments. Within the OOI data system, HYD functions fall
+under the Water Column and Seafloor/Crust science regimes and the Passive
+Acoustics category.
+
+### Primary Sources
+
+| DCN | Document |
+|---|---|
+| 1341-00820 | OOI (2013). Data Product Specification for Broadband Acoustic Pressure Waves. (Not released.) |
+| 1341-00821 | [OOI (2013). Data Product Specification for Low Frequency Acoustic Pressure Waves.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00821_Data_Product_SPEC_HYDAPLF_OOI.pdf) |
 
 ---
 
@@ -95,6 +109,9 @@ the waterborne pressure signal from the solid-earth seismic signal.
 HYDLF instruments are deployed on the RSN system at Hydrate Ridge (PN1A,
 PN1B) and Axial (PN3A, PN3B) subsites.
 
+Full algorithm derivations, calibration procedures, and source references
+are listed in the [References](#references) section.
+
 ---
 
 ## Core functions
@@ -138,4 +155,4 @@ OOI (2013). Data Product Specification for Broadband Acoustic Pressure
 Waves. Document Control Number 1341-00820. (Not released.)
 
 [OOI (2013). Data Product Specification for Low Frequency Acoustic
-Pressure Waves. Document Control Number 1341-00821.](https://oceanobservatories.org/wp-content/uploads/2015/09/1341-00821_Data_Product_SPEC_HYDAPLF_OOI.pdf)
+Pressure Waves. Document Control Number 1341-00821.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00821_Data_Product_SPEC_HYDAPLF_OOI.pdf)
