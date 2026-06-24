@@ -39,9 +39,9 @@ The THSPH instrument is a custom multi-electrode chemistry sonde deployed
 directly in hydrothermal vent fluids on the Regional Cabled Array. It
 measures temperature and chemical concentrations in high-temperature
 vent fluids using a combination of thermocouples, thermistors, and
-electrochemical electrodes. The instrument outputs hexadecimal voltage and
-resistance data that are converted off-instrument to the L1 and L2 data
-products described below.
+electrochemical electrodes. The instrument outputs voltage and resistance 
+data that are converted off-instrument to the L1 and L2 data products 
+described below.
 
 The THSPH contains eight channels. The temperature-relevant channels are:
 a high-temperature thermocouple (TCH), a low-temperature thermocouple
@@ -84,22 +84,22 @@ correction (coefficients `e2l`) converts engineering values to lab-calibrated
 voltages or resistances.
 
 **Step 3 -- Lab-calibrated to scientific units.** For the thermocouples, a
-5th-degree polynomial in `l2s` converts calibrated voltage [mV] to
-temperature [$^\circ$C]. For the thermistors, a 4th-degree polynomial in
-`l2s` is evaluated at $\ln(R_{ts,actual})$ to produce an intermediate value
+5th-degree polynomial (coefficients `l2s`) converts calibrated voltage [mV] to
+temperature [$^\circ$C]. For the thermistors, a 4th-degree polynomial (coefficients 
+`l2s`) is evaluated at $\ln(R_{ts,actual})$ to produce an intermediate value
 $pval$, and temperature is recovered as:
 
 $$T_{ts} = \frac{1}{pval} - 273.15$$
 
 **Step 4 -- Cold-junction correction.** The reference thermistor temperature
-is converted to a thermocouple-equivalent voltage using a `s2v` polynomial,
+is converted to a thermocouple-equivalent voltage using `s2v` coefficients,
 which is added to the calibrated thermocouple voltage before the final
 polynomial evaluation to yield the absolute (cold-junction-corrected)
 temperature at each thermocouple site.
 
-**Step 5 -- Final linear calibration.** A linear `s2f` correction is applied
-to the combined thermocouple-plus-thermistor temperature to yield the final
-L1 products TH and TL.
+**Step 5 -- Final linear calibration.** A linear correction (coefficients `s2f`)
+is applied to the combined thermocouple-plus-thermistor temperature to yield the 
+final L1 products TH and TL.
 
 The four intermediate sub-products (TCH, TCL, REF, INT) are produced at
 earlier stages of this chain and are useful for instrument diagnostics.
@@ -154,21 +154,17 @@ temperature, using four sets of 5th-degree coefficients (`arr_tac`,
 `arr_tbc1`, `arr_tbc2`, `arr_tbc3`). When no chloride measurement is
 available, a default of 250 mmol/kg is used. Out-of-range electrode
 potentials ($E_{ph}$ outside [-0.7, 0.0] V) and out-of-range pH values
-(outside [3.0, 7.0]) are set to NaN as specified in the unreleased DPS.
-
-The DPS documents for THSPHHC (1341-00210), THSPHHS (1341-00200), and
-THSPHPH (1341-00190) were never publicly released. The algorithm
-descriptions above are derived from the code and code comments only.
+(outside [3.0, 7.0]) are set to NaN.
 
 ---
 
 ### TRHPH -- Temperature-Resistivity Probe
 
 The TRHPH instrument is a custom probe placed directly in high-temperature
-hydrothermal vent fluid to measure temperature, ORP, and resistivity. It
-uses a Type K thermocouple for high-temperature measurement and a thermistor
-as a cold-junction reference, along with a Pt-Ag/AgCl ORP electrode pair
-and three resistivity circuits scaled to different concentration ranges.
+hydrothermal vent fluid to measure temperature, oxidation-reduction potential 
+(ORP), and resistivity. It uses a Type K thermocouple for high-temperature 
+measurement and a thermistor as a cold-junction reference, along with a Pt-Ag/AgCl 
+ORP electrode pair and three resistivity circuits scaled to different concentration ranges.
 
 #### TRHPHTE_L1 -- Vent Fluid Temperature from TRHPH
 
@@ -180,7 +176,10 @@ $$T_{ts} = 27.50133 - 17.2658 \times V_{ts} + \frac{15.83424}{V_{ts}}$$
 
 The final temperature $T$ is then determined by three cases:
 
-- When $V_{tc} \leq 0$: $T = T_{ts}$
+- When $V_{tc} \leq 0$: 
+
+$$T = T_{ts}$$
+
 - When $V_{tc} > 0$ and $T_{ts} > 10$ $^\circ$C:
 
 $$T = (V_{tc} + c_3 {T_{ts}}^3 + c_2 {T_{ts}}^2 + c_1 T_{ts} + c_0)
@@ -207,13 +206,13 @@ corrects for the electronic offset and gain introduced by the A/D board:
 
 $$ORP = \frac{V \times 1000 - offset}{gain}$$
 
-where $V$ is the raw ORP voltage (TRHPHVO_L0) in volts, $offset$ is the
+where $V$ is the raw ORP voltage (TRHPHVO_L0) in volts (V), $offset$ is the
 electronic offset calibration coefficient in mV, and $gain$ is the gain
 multiplier calibration coefficient. The result is rounded to the nearest
-integer mV. The DPS notes that because the reference electrode is not a
-Standard Hydrogen Electrode, ORP values from this instrument cannot be
-directly compared with standard in-situ ORP measurements; the primary use
-of this product is to quantify change in ORP with respect to time.
+integer mV. Because the reference electrode is not a Standard Hydrogen Electrode, 
+ORP values from this instrument cannot be directly compared with standard in-situ 
+ORP measurements; the primary use of this product is to quantify change in ORP 
+with respect to time.
 
 #### TRHPHCC_L2 -- Vent Fluid Chloride Concentration
 
@@ -249,8 +248,9 @@ The PRESF and PREST instrument classes both produce the SFLPRES_L1 Seafloor
 Pressure data product (dbar). PRESF uses the Sea-Bird SBE 26plus, which
 measures absolute pressure (hydrostatic plus atmospheric) using an internal
 quartz crystal resonator and supports three sampling modes. PREST uses the
-Sea-Bird SBE 54 Tsunameter, which streams real-time pressure data in PSIA
-that requires only a unit conversion.
+Sea-Bird SBE 54 Tsunameter, which streams real-time absolute pressure data.
+Both instruments report the absolute pressure in psi and only require unit 
+conversions.
 
 #### SFLPRES_L1 -- Seafloor Pressure
 
@@ -259,24 +259,24 @@ hydrostatic and atmospheric pressure. Three sub-products correspond to the
 three SBE 26plus operating modes:
 
 **SFLPRES-RTIME** is produced from real-time ASCII output. The instrument
-internally converts raw counts to pressure in PSIA using onboard calibration
-coefficients. The L1 product is a direct unit conversion:
+internally converts raw counts to pressure in psi using onboard calibration
+coefficients. The L1 product is a direct unit conversion from psi to dbar:
 
-$$p_{dbar} = p_{psia} \times 0.689475728$$
+$$p_{dbar} = p_{psi} \times 0.689475728$$
 
-**SFLPRES-TIDE** is produced from post-recovery hexadecimal tide data.
-The 3-byte (6-character) decimal pressure number `p_dec_tide` is converted
-to PSIA using instrument calibration coefficients $M$, $B$, and optional
-slope and offset corrections, then scaled to dbar:
+**SFLPRES-TIDE** is produced from post-recovery tide data. The raw pressure 
+measurement `p_dec_tide` is converted to psi using instrument calibration 
+coefficients $M$, $B$, and optional slope and offset corrections, then scaled
+to dbar:
 
-$$p_{psia} = slope \times \frac{p_{dec\_tide} - B}{M} + offset$$
+$$p_{psi} = slope \times \frac{p_{dec\_tide} - B}{M} + offset$$
 
-$$p_{dbar} = p_{psia} \times 0.689475728$$
+$$p_{dbar} = p_{psi} \times 0.689475728$$
 
-**SFLPRES-WAVE** is produced from post-recovery hexadecimal wave burst data.
-The pressure temperature compensation frequency (PTCF) and pressure
-frequency (PF) are derived from raw inputs, then pressure is computed using
-quartz transducer calibration coefficients as specified in DPS 1341-00230:
+**SFLPRES-WAVE** is produced from post-recovery wave burst data. The pressure 
+temperature compensation frequency (PTCF) and pressure frequency (PF) are derived 
+from raw inputs, then pressure is computed using quartz transducer calibration 
+coefficients as specified in DPS 1341-00230:
 
 $$\begin{align}
 U &= \frac{10^6}{PTCF} - U_0 \\
@@ -284,7 +284,7 @@ C &= C_1 + C_2 U + C_3 U^2 \\
 D &= D_1 + D_2 \\
 T_0 &= \frac{T_1 + T_2 U + T_3 U^2 + T_4 U^3}{10^6} \\
 W &= 1 - {T_0}^2 \times PF^2 \\
-p_{psia} &= slope \times [C \times W \times (1 - D \times W) + POffset]
+p_{psi} &= slope \times [C \times W \times (1 - D \times W) + POffset]
             + offset
 \end{align}$$
 
@@ -293,9 +293,10 @@ $^\circ$C) is decoded from the tide record temperature number $t_0$ as:
 
 $$t = \frac{t_0}{1000} - 10$$
 
-The SBE 54 Tsunameter (PREST) transmits pressure already converted to PSIA
+The SBE 54 Tsunameter (PREST) transmits pressure already converted to psi
 using onboard calibration coefficients; the L1 product is computed with the
-same unit conversion as SFLPRES-RTIME.
+same unit conversion as SFLPRES-RTIME and also represents the absolute seafloor
+pressure..
 
 Full algorithm derivations, calibration procedures, and source references
 are listed in the [References](#references) section.

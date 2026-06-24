@@ -198,11 +198,11 @@ def wav_triaxys_correct_mean_wave_direction(dir_raw, lat, lon, ntp_ts):
 
     Notes
     -----
-    Magnetic declination is computed using the WMM2010 model via
+    Magnetic declination is computed using the IGRF-14 model via
     generic_functions.magnetic_declination. The WAVSS is a surface sensor;
     depth defaults to 0 (sea level) in the declination calculation.
     """
-    # calculate the magnetic declination using the WWM2010 model
+    # calculate the magnetic declination using the IGRF-14 model
     # the WAVSS is a surface wave sensor, so that height above sealevel = 0,
     # which is the default value used in the magnetic_declination calculation.
     theta = magnetic_declination(lat, lon, ntp_ts)
@@ -242,7 +242,7 @@ def wav_triaxys_correct_directional_wave_direction(dir_raw, lat, lon, ntp_ts):
 
     Notes
     -----
-    Magnetic declination is computed using the WMM2010 model via
+    Magnetic declination is computed using the IGRF-14 model via
     generic_functions.magnetic_declination. The WAVSS is a surface sensor;
     depth defaults to 0 (sea level) in the declination calculation.
 
@@ -261,7 +261,7 @@ def wav_triaxys_correct_directional_wave_direction(dir_raw, lat, lon, ntp_ts):
     # Nan entries unchanged.
     dir_raw[dir_raw == fill_value] = np.nan
 
-    # calculate the magnetic declination using the WWM2010 model
+    # calculate the magnetic declination using the IGRF-14 model
     # the WAVSS is a surface wave sensor, so that height above sealevel = 0,
     # which is the default value used in the magnetic_declination calculation.
     theta = magnetic_declination(lat, lon, ntp_ts)
@@ -319,7 +319,7 @@ def wav_triaxys_magcor_buoymotion_x(x, y, lat, lon, ntp_timestamp):
     lon = np.atleast_1d(lon)
     ntp_timestamp = np.atleast_1d(ntp_timestamp)
 
-    # calculate the magnetic declination using the WWM2010 model.
+    # calculate the magnetic declination using the IGRF-14 model.
     # the WAVSS surface wave sensor is at sealevel, which is the default z value for mag dec.
     theta = magnetic_declination(lat, lon, ntp_timestamp)
 
@@ -372,7 +372,7 @@ def wav_triaxys_magcor_buoymotion_y(x, y, lat, lon, ntp_timestamp):
     lon = np.atleast_1d(lon)
     ntp_timestamp = np.atleast_1d(ntp_timestamp)
 
-    # calculate the magnetic declination using the WWM2010 model.
+    # calculate the magnetic declination using the IGRF-14 model.
     # the WAVSS surface wave sensor is at sealevel, which is the default z value for mag dec.
     theta = magnetic_declination(lat, lon, ntp_timestamp)
 

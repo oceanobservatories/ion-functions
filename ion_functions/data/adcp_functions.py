@@ -1145,15 +1145,14 @@ def vadcp_b_ins2earth(u, v, w1, w2, heading, pitch, roll):
 
 # Compute the VELTURB_L1 data products for the VADCP instrument deployed by
 # RSN.
-@deprecated
 def vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf,
                         lat, lon, dt):
     """
-    OOI wrapper for VELTURB-VLE_L1. Deprecated; use vadcp_b_beam_eastward.
+    OOI wrapper for VELTURB-VLE_L1 from original VADCP (TRDI) beam data.
 
     Returns the eastward velocity profile (VELTURB-VLE_L1) for the original
     VADCP (Teledyne RDI Workhorse Sentinel) as defined in DPS 1341-00760.
-    Superseded by vadcp_b_beam_eastward for VADCP-B deployments.
+    For VADCP-B deployments, use vadcp_b_beam_eastward instead.
 
     Parameters
     ----------
@@ -1201,7 +1200,7 @@ def vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf,
 
     See Also
     --------
-    vadcp_b_beam_eastward : Replacement for VADCP-B deployments.
+    vadcp_b_beam_eastward : Equivalent function for VADCP-B deployments.
     """
     # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
@@ -1227,15 +1226,14 @@ def vadcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf,
     return u_cor
 
 
-@deprecated
 def vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf,
                          lat, lon, dt):
     """
-    OOI wrapper for VELTURB-VLN_L1. Deprecated; use vadcp_b_beam_northward.
+    OOI wrapper for VELTURB-VLN_L1 from original VADCP (TRDI) beam data.
 
     Returns the northward velocity profile (VELTURB-VLN_L1) for the original
     VADCP (Teledyne RDI Workhorse Sentinel) as defined in DPS 1341-00760.
-    Superseded by vadcp_b_beam_northward for VADCP-B deployments.
+    For VADCP-B deployments, use vadcp_b_beam_northward instead.
 
     Parameters
     ----------
@@ -1283,7 +1281,7 @@ def vadcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf,
 
     See Also
     --------
-    vadcp_b_beam_northward : Replacement for VADCP-B deployments.
+    vadcp_b_beam_northward : Equivalent function for VADCP-B deployments.
     """
     # force shapes of some inputs to arrays of the correct dimensions
     lat = np.atleast_1d(lat)
@@ -1442,10 +1440,9 @@ def vadcp_beam_vertical_true(b1, b2, b3, b4, b5, pg1, pg2, pg3, pg4, pg5,
     return w
 
 
-@deprecated
 def vadcp_beam_error(b1, b2, b3, b4, pg1, pg2, pg3, pg4):
     """
-    OOI wrapper for VELTURB-ERR_L1. Deprecated.
+    OOI wrapper for VELTURB-ERR_L1 from original VADCP (TRDI) beam data.
 
     Returns the error velocity profile (VELTURB-ERR_L1) for the original
     VADCP (Teledyne RDI Workhorse Sentinel) as defined in DPS 1341-00760.

@@ -57,8 +57,8 @@ nav:
     - OPT Functions: api/opt_functions.md
     - PRS Functions: api/prs_functions.md
     - SFL Functions: api/sfl_functions.md
-    - ADCP Functions: api/adcp_functions.md
     - VEL Functions: api/vel_functions.md
+    - ADCP Functions: api/adcp_functions.md
     - WAV Functions: api/wav_functions.md
   - Inactive Families:
     - HYD Functions: api/hyd_functions.md

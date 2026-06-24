@@ -122,7 +122,7 @@ def magnetic_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
     """
     Description:
 
-        Wrapper function, vectorizing inputs to wmm_declination. Provides the
+        Wrapper function, vectorizing inputs to igrf_declination. Provides the
         magnetic declination for a platform given its location (latitude and
         longitude), the date (from the ntp_timestamp), the depth or height of
         the instrument in meters (z), and a flag value (zflag) to indicate
@@ -171,8 +171,9 @@ def magnetic_correction(theta, u, v):
         This function corrects velocity profiles for the magnetic variation
         (declination) at the measurement location. This calculation is used by
         several different data products (e.g. VELPROF, WINDAVG) from multiple
-        instrument classes. The magnetic declination is obtained from the 2010
-        World Magnetic Model (WMM2010) provided by NOAA (see wmm_declination).
+        instrument classes. The magnetic declination is obtained from the
+        International Geomagnetic Reference Field (IGRF-14) model (see
+        igrf_declination).
 
     Implemented by:
 
@@ -302,10 +303,14 @@ def igrf_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
 
     References:
 
-        Maus, S., S. Macmillan, S. McLean, B. Hamilton, A. Thomson, M. Nair,
-            and C. Rollins, 2010, The US/UK World Magnetic Model for 2010-2015,
-            NOAA Technical Report NESDIS/NGDC.
-            http://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+        Alken, P., Thebault, E., Beggan, C.D., et al. (2021). International
+            Geomagnetic Reference Field: the thirteenth generation. Earth
+            Planets Space, 73, 49.
+            https://doi.org/10.1186/s40623-020-01288-x
+
+        Strom, K.M., and Reistad, H. (2024). ppigrf: Python package for
+            computing the International Geomagnetic Reference Field (IGRF).
+            https://github.com/IAGA-VMOD/ppigrf
     """
 
     if ntp == 1:

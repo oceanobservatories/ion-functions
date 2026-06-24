@@ -10,10 +10,19 @@ of the sea surface in the wave field. All wave statistics computations are
 performed internally by the instrument's proprietary firmware; ion-functions
 does not re-implement those algorithms.
 
-The WAVSS acquires accelerations over a sampling interval (typically 20--30
-minutes) and produces a single set of wave property values representing that
-interval, along with a time series of platform displacement over the course of
-the acquisition.
+The WAVSS acquires accelerations over a sampling interval (typically 20 minutes) 
+and produces a single set of wave property values representing that interval, 
+along with a time series of platform displacement over the course of the 
+acquisition.
+
+Wave statistics are also measured by Teledyne RDI acoustic Doppler current
+profilers (ADCPs) mounted on the seafloor at the shallowest OOI Endurance
+and Pioneer Mid-Atlantic Bight (MAB) locations. Those instruments collect raw 
+ping-level data which RDI's WavesMon software processes into derived wave 
+statistics. This measurement method is used at those sites because the moorings 
+are shallow enough for a bottom-mounted ADCP to accurately measure wave parameters. 
+The WavesMon outputs map to the same WAVSTAT product namespace as the WAVSS outputs; 
+ion-functions is not involved in the WavesMon processing pipeline.
 
 ### Primary Sources
 
@@ -23,41 +32,70 @@ the acquisition.
 
 ### WAVSTAT Data Products
 
-The WAVSS reports a large set of wave statistics under the collective product
-name WAVSTAT. Most of these are extracted directly from the instrument's NMEA
-output sentences without further computation by ion-functions. The table below
-lists all WAVSTAT sub-products, their sources, and the ion-functions function
-responsible where one exists.
+The WAVSS and WavesMon pipelines together produce a set of wave statistics
+under the collective product name WAVSTAT. Most WAVSS products are extracted
+directly from the instrument's NMEA output sentences without further
+computation by ion-functions. WavesMon products are computed by RDI's
+WavesMon software from raw ADCP data and are not processed by
+ion-functions. The table below lists all WAVSTAT sub-products, their units,
+and their source(s).
 
-| Product ID | Alt. | Description | Units | Source |
-|---|---|---|---|---|
-| WAVSTAT-N0 | N0 | Number of zero crossings in displacement data (QC use) | -- | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-HMAX | Hmax | Maximum wave height | m | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-HAVG | Havg | Average wave height | m | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-TAVG | Tavg | Average wave period | s | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-HSIG | Hsig | Significant wave height (average of highest 1/3) | m | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-HMO | Hmo | Significant wave height from spectral moments | m | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-TSIG | Tsig | Significant wave period (average period of Hsig waves) | s | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-H10 | H10 | Average height of highest 1/10 of waves | m | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-T10 | T10 | Average period of H10 waves | s | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-TP | TP | Peak wave period | s | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-TP5 | TP5 | Peak wave period via Read method (alternative to TP) | s | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-D_L0 | D | Mean wave direction (magnetic) | deg | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-D_L2 | D | Mean wave direction (true north) | deg | `wav_triaxys_correct_mean_wave_direction` |
-| WAVSTAT-DS | DS | Mean directional spread of wave field | deg | Instrument firmware; extracted from $TSPWA |
-| WAVSTAT-PND | PND | Power spectral density, non-directional spectra | m$^2$ Hz$^{-1}$ | Instrument firmware; extracted from $TSPNA |
-| WAVSTAT-FND_L1 | FND | Frequency values for non-directional spectral bins | Hz | `wav_triaxys_nondir_freq` |
-| WAVSTAT-FDS_L1 | FDS | Frequency values for directional spectral bins | Hz | `wav_triaxys_dir_freq` |
-| WAVSTAT-PDS | PDS | Power spectral density, directional spectra | m$^2$ Hz$^{-1}$ | Instrument firmware; extracted from $TSPMA |
-| WAVSTAT-DDS_L0 | DDS | Wave directions from directional spectra (magnetic) | deg | Instrument firmware; extracted from $TSPMA |
-| WAVSTAT-DDS_L2 | DDS | Wave directions from directional spectra (true north) | deg | `wav_triaxys_correct_directional_wave_direction` |
-| WAVSTAT-SDS | SDS | Directional spread from directional spectra | deg | Instrument firmware; extracted from $TSPMA |
-| WAVSTAT-MOTX_L0 | X | Eastward buoy displacement (magnetic frame) | m | Instrument firmware; extracted from $TSPHA |
-| WAVSTAT-MOTX_L1 | X | Eastward buoy displacement (true east) | m | `wav_triaxys_magcor_buoymotion_x` |
-| WAVSTAT-MOTY_L0 | Y | Northward buoy displacement (magnetic frame) | m | Instrument firmware; extracted from $TSPHA |
-| WAVSTAT-MOTY_L1 | Y | Northward buoy displacement (true north) | m | `wav_triaxys_magcor_buoymotion_y` |
-| WAVSTAT-MOTZ | Z | Vertical buoy displacement | m | Instrument firmware; extracted from $TSPHA |
-| WAVSTAT-MOTT_L1 | t | Time of each buoy displacement measurement | s since 1900-01-01 | `wav_triaxys_buoymotion_time` |
+<table style="table-layout:fixed;width:100%;border-collapse:collapse;border-spacing:0">
+<colgroup>
+<col style="width:20%">
+<col style="width:30%">
+<col style="width:12%">
+<col style="width:38%">
+</colgroup>
+<thead>
+<tr>
+<th style="white-space:normal;padding:6px 8px;border-bottom:2px solid #e1e4e5;text-align:left">Product ID</th>
+<th style="white-space:normal;padding:6px 8px;border-bottom:2px solid #e1e4e5;text-align:left">Description</th>
+<th style="white-space:normal;padding:6px 8px;border-bottom:2px solid #e1e4e5;text-align:left">Units</th>
+<th style="white-space:normal;padding:6px 8px;border-bottom:2px solid #e1e4e5;text-align:left">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-N0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Number of zero crossings in displacement data (QC use)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">--</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HMAX</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Maximum wave height</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hmax</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HAVG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean significant wave height</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hm</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TAVG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Period associated with mean significant wave height</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Tz</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HSIG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height (average of highest 1/3)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: H13</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HM0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height from spectral moments</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hs</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TSIG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave period (average period of Hsig waves)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: T13</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-H10</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Average height of highest 1/10 of waves</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: H1/10</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-T10</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Average period of H10 waves</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: T1/10</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TP</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak wave period</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Tp (see also WAVSTAT-TSIG, WAVSTAT-TP5)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TP5</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak wave period via Read method (alternative to TP)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Tp (see also WAVSTAT-TP, WAVSTAT-TSIG)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TMAX</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Maximum peak wave period</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Tmax</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-D_L0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean wave direction (magnetic)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-D_L2</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean wave direction (true north)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_correct_mean_wave_direction</code>. WavesMon: Dp (reported to true north; no correction applied by ion-functions)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DMEAN</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean peak wave direction</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Dmean</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DS</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean directional spread of wave field</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DEPTH</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Water depth from pressure sensor</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Depth Water level</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TP_SEA</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak period in sea region of power spectrum</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Tp_Sea</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-D_SEA</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak direction in sea region at peak period</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Dp_Sea</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HSIG_SEA</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height in sea region of power spectrum</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Hs_Sea</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TP_SWELL</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak period in swell region of power spectrum</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Tp_Swell</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-D_SWELL</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak swell direction at peak period in swell region</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Dp_Swell</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HSIG_SWELL</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height in swell region of power spectrum</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Hs_Swell</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-PND</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Power spectral density, non-directional spectra</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m<sup>2</sup> Hz<sup>-1</sup></td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPNA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-FND_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Frequency values for non-directional spectral bins</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Hz</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_nondir_freq</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-FDS_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Frequency values for directional spectral bins</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Hz</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_dir_freq</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-PDS</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Power spectral density, directional spectra</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m<sup>2</sup> Hz<sup>-1</sup></td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA. WavesMon: directional spectrum (mm<sup>2</sup> Hz<sup>-1</sup> per cycle, 90 directions x 128 frequencies)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DDS_L0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Wave directions from directional spectra (magnetic)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DDS_L2</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Wave directions from directional spectra (true north)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_correct_directional_wave_direction</code>. WavesMon: directional spectrum directions (reported to true north; no correction applied by ion-functions)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-SDS</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Directional spread from directional spectra</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTX_L0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Eastward buoy displacement (magnetic frame)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPHA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTX_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Eastward buoy displacement (true east)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_magcor_buoymotion_x</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTY_L0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Northward buoy displacement (magnetic frame)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPHA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTY_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Northward buoy displacement (true north)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_magcor_buoymotion_y</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTZ</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Vertical buoy displacement</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPHA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTT_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Time of each buoy displacement measurement</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">seconds since 1900-01-01</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_buoymotion_time</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-VELPROF</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Current magnitude at each depth level</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m s<sup>-1</sup></td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: depthlevel1..N magnitude</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px">WAVSTAT-DIRPROF</td><td style="white-space:normal;padding:6px 8px">Current direction at each depth level</td><td style="white-space:normal;padding:6px 8px">deg</td><td style="white-space:normal;padding:6px 8px">WavesMon: depthlevel1..N direction</td></tr>
+</tbody>
+</table>
 
 ### Frequency Vector Reconstruction
 
@@ -102,7 +140,7 @@ measurements.
 The WAVSS contains an internal compass. Wave directions (WAVSTAT-D and
 WAVSTAT-DDS) and buoy displacement components (WAVSTAT-MOTX and WAVSTAT-MOTY)
 are reported in the magnetic reference frame. ion-functions corrects these to
-true north using the WMM2010 magnetic declination model via
+true north using the IGRF-14 magnetic declination model via
 `generic_functions.magnetic_declination`.
 
 The direction correction applies a rotation modulo 360 deg:
@@ -123,14 +161,6 @@ Y_{true} &= -X_{mag} \times \sin\theta + Y_{mag} \times \cos\theta
 
 The WAVSS is a surface sensor; the depth parameter for the declination
 calculation defaults to 0 (sea level).
-
-### ADCP Wave Statistics
-
-Wave statistics are also measured by RDI/Teledyne acoustic Doppler current
-profilers (ADCPs) mounted on the seafloor at the two shallowest OOI Endurance
-Inshore mooring locations. Those instruments process wave data using RDI's
-WavesMon software, which produces outputs equivalent to the WAVSS WAVSTAT
-products. ion-functions is not involved in that processing pipeline.
 
 Full algorithm derivations, processing references, and source documentation
 are listed in the [References](#references) section.
@@ -260,6 +290,14 @@ Intensity. Document Control Number 1341-00750.](https://oceanobservatories.org/w
 
 [OOI (2013). Data Product Specification for Turbulent Velocity Profile and
 Echo Intensity. Document Control Number 1341-00760.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00760_Data_Product_SPEC_VELTURB_ECHOINT_OOI.pdf)
+
+Alken, P., Thebault, E., Beggan, C.D., et al. (2021). International
+Geomagnetic Reference Field: the thirteenth generation. *Earth Planets Space*,
+73, 49. <https://doi.org/10.1186/s40623-020-01288-x>
+
+Strom, K.M., and Reistad, H. (2024). ppigrf: Python package for computing
+the International Geomagnetic Reference Field (IGRF).
+<https://github.com/IAGA-VMOD/ppigrf>
 
 AXYS Technologies Inc. *TRIAXYS OEM Directional Wave Sensor, User's Manual.*
 Sidney, BC: AXYS Technologies Inc. May 2005.

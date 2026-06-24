@@ -28,15 +28,16 @@ functions are implemented in `prs_functions.py`.
 
 ### BOTPRES_L1 -- Nano-resolution Bottom Pressure
 
-BOTPRES_L1 is the nano-resolution bottom pressure (psia) at the seafloor,
+BOTPRES_L1 is the nano-resolution bottom pressure (psi) at the seafloor,
 produced by the Paroscientific Digiquartz Pressure Transducer (Model
 42.4K-265) integrated in the BOTPT instrument. As specified in DPS
 1341-00070, the L1 product is computed entirely onboard by the paired
 pressure transducer and Intelligent Interface Board using
 temperature-compensated frequency-to-pressure conversion; no
 off-instrument computation is required. The instrument transmits the
-result directly as the L1 BOTPRES data product in psia at 40 Hz.
-ion-functions is not invoked for this product.
+result directly as the L1 BOTPRES data product in psi (as absolute pressure,
+seawater and atmospheric pressure) at 40 Hz. ion-functions is not invoked 
+for this product.
 
 ---
 
@@ -103,11 +104,11 @@ represented; the boolean mask `mask_nonzero` records the positions of
 non-empty bins within the full time span for use by downstream products.
 
 **Depth conversion and de-tiding.** Binned mean pressure (MEANPRES_L2,
-psi) is converted to depth and de-tided to produce MEANDEPTH_L2 (m). As
-specified in DPS 1341-00080, atmospheric pressure is not subtracted from
-the L1 pressure data despite its units of psia. The conversion factor is
--0.67 m/psi, and depth follows a negative convention, so the predicted
-tide (m) is added to de-tide the record:
+psi) is converted to depth and de-tided to produce MEANDEPTH_L2 (m). 
+Atmospheric pressure is not subtracted from the L1 pressure data despite 
+its units of psi. The conversion factor is -0.67 m/psi, and depth follows
+a negative convention, so the predicted tide (m) is added to de-tide the 
+record:
 
 $$MEANDEPTH = (MEANPRES \times -0.67) + PREDTIDE$$
 
@@ -139,10 +140,6 @@ specified by a fractional coverage threshold (default 0.75) are assigned
 NaN. The data vector is front-padded with NaN so that windows near the
 start of the record that satisfy the coverage criterion produce non-NaN
 values.
-
-The DPS document for BOTSFLU (1341-00080) was never publicly released.
-Algorithm descriptions above are derived from the code and code comments
-only.
 
 Full algorithm derivations, calibration procedures, and source references
 are listed in the [References](#references) section.

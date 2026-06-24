@@ -4,8 +4,9 @@
     This page covers two instrument families that share a single module:
     **ADCPS/ADCPT/ADCPA** (Teledyne RDI Workhorse, producing VELPROF and
     ECHOINT) and **VADCP** (Teledyne RDI 5-Beam Workhorse, producing VELTURB
-    and ECHOINT). The deprecated original VADCP functions are listed under
-    [Deprecated Functions](#deprecated-functions).
+    and ECHOINT). The original VADCP (TRDI) and its replacement, the VADCP-B
+    (Nortek Signature 55), use separate processing pipelines; both are
+    documented under [Wrapper Functions](#wrapper-functions).
 
 ## Background
 
@@ -79,8 +80,11 @@ and $\theta = 20^\circ$ is the fixed beam angle for both the Workhorse Long
 Ranger and Workhorse Quartermaster. Applying $A$ yields:
 
 $$x = c \times a \times (b1 - b2)$$
+
 $$y = c \times a \times (b4 - b3)$$
+
 $$z = b \times (b1 + b2 + b3 + b4)$$
+
 $$e = d \times (b1 + b2 - b3 - b4)$$
 
 #### Three-Beam Solution
@@ -120,6 +124,7 @@ upward-looking instruments, 180$^\circ$ is added to the measured roll angle
 before applying $M$ (DPS 1341-00750, Equations 3-4):
 
 $$R = \text{Tilt2} + 180^\circ \quad \text{(upward-looking)}$$
+
 $$P = \arctan[\tan(\text{Tilt1}) \times \cos(\text{Tilt2})]$$
 
 Heading, pitch, and roll are recorded in the PD0 variable leader in
@@ -139,9 +144,10 @@ $$\begin{pmatrix} U \\ V \end{pmatrix}
 \times
 \begin{pmatrix} uu \\ vv \end{pmatrix}$$
 
-Magnetic declination is computed using the World Magnetic Model via
-`magnetic_declination` in `generic_functions.py`, using the deployment
-latitude, longitude, and timestamp.
+Magnetic declination is computed using the International Geomagnetic
+Reference Field (IGRF-14) model via `magnetic_declination` in
+`generic_functions.py`, using the deployment latitude, longitude, and
+timestamp.
 
 #### Echo Intensity
 
@@ -150,7 +156,7 @@ integer (counts) per beam per depth cell. ECHOINT_L1 is computed by scaling
 the raw counts by a factory-supplied scale factor (nominally 0.45 dB/count
 for the Workhorse family):
 
-$$\text{ECHOINT\_L1} = \text{raw counts} \times \text{sfactor}$$
+$$\text{ECHOINT_L1} = \text{raw counts} \times \text{sfactor}$$
 
 #### Bin Depths
 
@@ -170,9 +176,9 @@ instruments deployed on RSN 200 m platforms. ECHOINT_L1 is the echo intensity
 (dB) for each beam.
 
 The original VADCP (Teledyne RDI Workhorse Sentinel, 600 kHz) is a 5-beam
-instrument operated as two synchronized ADCPs in a master/slave configuration.
-The primary (master) 4-beam unit provides heading, tilt, and compass data; the
-secondary (slave) unit provides only beam 5 (the vertical beam). The 5th beam
+instrument operated as two synchronized ADCPs in a primary/secondary
+configuration. The primary 4-beam unit provides heading, tilt, and compass
+data; the secondary unit provides only beam 5 (the vertical beam). The 5th beam
 points directly upward and provides an independent estimate of the vertical
 velocity component.
 
@@ -199,12 +205,11 @@ Two vertical velocity products are defined:
   rotation using the beam 5 velocity in place of the z component. Depth
   cells where beam 5 percent good falls below 25% are set to the fill value.
 
-The deprecated `vadcp_beam_eastward`, `vadcp_beam_northward`, and
+The TRDI `vadcp_beam_eastward`, `vadcp_beam_northward`, and
 `vadcp_beam_error` functions use the standard 4-beam `adcp_beam2ins` and
 `adcp_ins2earth` pipeline. `vadcp_beam_vertical_est` and
-`vadcp_beam_vertical_true` are not deprecated because no VADCP-B replacements
-exist for the 5-beam vertical products; see
-[Deprecated Functions](#deprecated-functions).
+`vadcp_beam_vertical_true` use the same pipeline but incorporate the 5th
+beam; see [Wrapper Functions -- VELTURB (Original VADCP)](#velturb----original-vadcp-trdi).
 
 #### VELTURB -- VADCP-B (Nortek Signature 55)
 
@@ -237,7 +242,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
@@ -259,33 +264,6 @@ are listed in the [References](#references) section.
 
 ---
 
-::: ion_functions.data.adcp_functions.vadcp_beam_vertical_est
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-06-25 | Christopher Wingard | Initial code |
-| 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions |
-| 2015-06-22 | Russell Desiderio | Renamed data product |
-| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
-| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.adcp_functions.vadcp_beam_vertical_true
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-06-25 | Christopher Wingard | Initial code |
-| 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions |
-| 2015-06-22 | Russell Desiderio | Renamed data product |
-| 2015-06-25 | Russell Desiderio | Added beam 5 fill value to NaN conversion |
-| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
-| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
 ## Wrapper Functions
 
 ### VELPROF -- Beam Coordinates
@@ -296,7 +274,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
@@ -312,7 +290,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
 | 2014-03-28 | Russell Desiderio | Documentation correction |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
@@ -329,7 +307,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions |
@@ -364,7 +342,7 @@ implementation.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Removed depth dependence from magnetic declination |
@@ -385,7 +363,7 @@ implementation.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Removed depth dependence from magnetic declination |
@@ -424,7 +402,7 @@ implementation.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code (as adcp_beam_eastward) |
-| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
@@ -440,7 +418,7 @@ implementation.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code (as adcp_beam_northward) |
-| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
 | 2014-03-28 | Russell Desiderio | Documentation correction |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
@@ -476,6 +454,71 @@ implementation.
 | 2015-06-25 | Russell Desiderio | Added beam 5 fill value to NaN conversion |
 | 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
 | 2025-02-19 | Samuel Dahlberg | Duplicated and modified for VADCP-B beam geometry, units, and transformation matrix |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+### VELTURB -- Original VADCP (TRDI)
+
+::: ion_functions.data.adcp_functions.vadcp_beam_eastward
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-06-25 | Christopher Wingard | Initial code |
+| 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
+| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.adcp_functions.vadcp_beam_northward
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-06-25 | Christopher Wingard | Initial code |
+| 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
+| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.adcp_functions.vadcp_beam_vertical_est
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-06-25 | Christopher Wingard | Initial code |
+| 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions |
+| 2015-06-22 | Russell Desiderio | Renamed data product |
+| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.adcp_functions.vadcp_beam_vertical_true
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-06-25 | Christopher Wingard | Initial code |
+| 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions |
+| 2015-06-22 | Russell Desiderio | Renamed data product |
+| 2015-06-25 | Russell Desiderio | Added beam 5 fill value to NaN conversion |
+| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.adcp_functions.vadcp_beam_error
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-06-25 | Christopher Wingard | Initial code |
+| 2015-06-10 | Russell Desiderio | Moved beam conditioning to helper function |
+| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
 | 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
@@ -656,53 +699,6 @@ future refactor.
 
 ---
 
-## Deprecated Functions
-
-!!! warning "Deprecated"
-    The functions in this section are deprecated. They implement the original
-    VADCP processing pipeline (Teledyne RDI Workhorse Sentinel) using
-    `adcp_beam2ins` and `adcp_ins2earth`. They have been superseded by the
-    VADCP-B wrapper functions (`vadcp_b_beam_eastward`,
-    `vadcp_b_beam_northward`) for new deployments. `vadcp_beam_vertical_est`
-    and `vadcp_beam_vertical_true` are **not** deprecated; see
-    [Core Functions](#core-functions).
-
-::: ion_functions.data.adcp_functions.vadcp_beam_eastward
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-06-25 | Christopher Wingard | Initial code |
-| 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
-| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
-| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.adcp_functions.vadcp_beam_northward
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-06-25 | Christopher Wingard | Initial code |
-| 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
-| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
-| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.adcp_functions.vadcp_beam_error
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-06-25 | Christopher Wingard | Initial code |
-| 2015-06-10 | Russell Desiderio | Moved beam conditioning to helper function |
-| 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
-| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
 ## References
 
 OOI (2013). Data Product Specification for Turbulent Velocity Profile and Echo
@@ -713,7 +709,15 @@ OOI (2020). Data Product Specification for Velocity Profile and Echo
 Intensity. Document Control Number 1341-00750.
 https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf
 
-Roquet, F., G. Madec, T.J. McDougall, P.M. Barker, 2015: Accurate polynomial
+Alken, P., Thebault, E., Beggan, C.D., et al. (2021). International
+Geomagnetic Reference Field: the thirteenth generation. *Earth Planets Space*,
+73, 49. <https://doi.org/10.1186/s40623-020-01288-x>
+
+Strom, K.M., and Reistad, H. (2024). ppigrf: Python package for computing
+the International Geomagnetic Reference Field (IGRF).
+<https://github.com/IAGA-VMOD/ppigrf>
+
+Rouget, F., G. Madec, T.J. McDougall, P.M. Barker, 2015: Accurate polynomial
 expressions for the density and specific volume of seawater using the TEOS-10
 standard. Ocean Modelling.
 
