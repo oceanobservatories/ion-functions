@@ -1,102 +1,101 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.prs_functions
-@file ion_functions/data/prs_functions.py
-@author Russell Desiderio, Chris Wingard
-@brief Module containing calculations related to instruments in the Seafloor
-    Pressure family.
+Module containing calculations related to instruments in the Seafloor
+Pressure (PRS) family.
+
+Functions are organized by instrument subsystem:
+
+  BOTTILT -- Seafloor High-Resolution Tilt (Applied Geomechanics LILY):
+
+    prs_bottilt_ccmp -- computes BOTTILT-CCMP_L1
+    prs_bottilt_tmag -- computes BOTTILT-TMAG_L1
+    prs_bottilt_tdir -- computes BOTTILT-TDIR_L1
+
+  BOTSFLU -- Seafloor Uplift and Subsidence:
+
+    prs_botsflu_time15s   -- computes TIME15S-AUX
+    prs_botsflu_meanpres  -- computes BOTSFLU-MEANPRES_L2
+    prs_botsflu_predtide  -- computes BOTSFLU-PREDTIDE_L2
+    prs_botsflu_meandepth -- computes BOTSFLU-MEANDEPTH_L2
+    prs_botsflu_5minrate  -- computes BOTSFLU-5MINRATE_L2
+    prs_botsflu_10minrate -- computes BOTSFLU-10MINRATE_L2
+    prs_botsflu_time24h   -- computes TIME24H-AUX
+    prs_botsflu_daydepth  -- computes BOTSFLU-DAYDEPTH_L2
+    prs_botsflu_4wkrate   -- computes BOTSFLU-4WKRATE_L2
+    prs_botsflu_8wkrate   -- computes BOTSFLU-8WKRATE_L2
+
+  BOTSFLU helper functions:
+
+    prs_botsflu_daydepth_from_15s_meandepth
+    prs_botsflu_4wkrate_from_daydepth
+    prs_botsflu_8wkrate_from_daydepth
+    anchor_bin_raw_data_to_15s
+    anchor_bin_detided_data_to_24h
+    calc_meandepth_plus
+    calculate_sliding_means
+    calculate_sliding_slopes
+
+  Deprecated functions (retained for reference):
+
+    prs_tsunami_detection
+    prs_eruption_imminent
+    prs_eruption_occurred
+    anchor_bin
+    calc_daydepth_plus
+    calculate_all_sliding_slopes_then_Nan
+    calculate_sliding_slopes__MoorePenrose
+
+Authors: Russell Desiderio, Christopher Wingard
 """
 import pkg_resources
 import numpy as np
 import scipy.io as spio
 from scipy import signal
 
-"""
-    Listing of BOTPT functions, in order encountered.
-
-    Functions calculating data products.
-
-      BOTTILT:
-
-        prs_bottilt_ccmp -- computes the BOTTILT-CCMP_L1 data product
-        prs_bottilt_tmag -- computes the BOTTILT-TMAG_L1 data product
-        prs_bottilt_tdir -- computes the BOTTILT-TDIR_L1 data product
-
-      BOTSFLU:
-
-        prs_botsflu_time15s -- computes the TIME15S-AUX auxiliary data product
-        prs_botsflu_meanpres -- computes the BOTSFLU-MEANPRES_L2 data product
-        prs_botsflu_predtide -- computes the BOTSFLU-PREDTIDE_L2 data product
-        prs_botsflu_meandepth -- computes the BOTSFLU-MEANDEPTH_L2 data product
-        prs_botsflu_5minrate -- computes the BOTSFLU-5MINRATE_L2 data product
-        prs_botsflu_10minrate -- computes the BOTSFLU-10MINRATE_L2 data product
-        prs_botsflu_time24h -- computes the TIME24H-AUX auxiliary data product
-        prs_botsflu_daydepth -- computes the BOTSFLU-DAYDEPTH_L2 data product
-        prs_botsflu_4wkrate -- computes the BOTSFLU-4WKRATE_L2 data product
-        prs_botsflu_8wkrate -- computes the BOTSFLU-8WKRATE_L2 data product
-
-    Worker functions called by functions calculating data products.
-
-      BOTSFLU:
-
-        anchor_bin_raw_data_to_15s
-        anchor_bin_detided_data_to_24h
-        calc_meandepth_plus
-        calculate_sliding_means
-        calculate_sliding_slopes
-
-    Functions calculating event notifications; they return either True or False.
-
-      BOTSFLU:
-
-        prs_tsunami_detection -- event notification specified by DPS
-        prs_eruption_imminent -- event notification specified by DPS
-        prs_eruption_occurred -- event notification specified by DPS
-"""
+from ion_functions import deprecated
 
 
+#**********************************************************************
+#.. BOTTILT: Core functions
+#**********************************************************************
 def prs_bottilt_ccmp(scmp, sn):
     """
-    Description:
+    Compute the corrected compass direction BOTTILT-CCMP_L1 [degrees].
 
-        OOI Level 1 Seafloor High-Resolution tilt (BOTTILT) core data product,
-        derived from data output by the Applied Geomechanics LILY tilt sensor
-        on board the Bottom Pressure Tilt (BOTPT) instruments on the Regional
-        Scale Nodes (RSN) at Axial Seamount. This function computes
-        BOTTILT-CCMP_L1.
+    Applies a sensor-specific lookup table to correct the L0 compass
+    reading for calibration offsets and magnetic declination at Axial
+    Seamount, as specified in DPS 1341-00060.
 
-    Implemented by:
+    Parameters
+    ----------
+    scmp : array_like
+        Uncorrected sensor compass direction (BOTTILT-SCMP_L0) [degrees].
+    sn : array_like
+        LILY tiltmeter serial number for each sample [unitless].
 
-        2013-06-10: Christopher Wingard. Initial code.
-        2014-03-20: Russell Desiderio. Alternate code: faster, but less direct.
+    Returns
+    -------
+    ccmp : ndarray
+        Corrected compass direction (BOTTILT-CCMP_L1) [integer degrees
+        CW from north].
 
-    Usage:
-
-        ccmp = prs_bottilt_ccmp(scmp, sn)
-
-            where
-
-        ccmp = Corrected compass direction (BOTTILT-CCMP_L1) [degrees]
-        scmp = Uncorrected sensor compass direction (BOTTILT-SCMP_L0) [degrees]
-        sn = LILY sensor serial number [unitless]
-
-    References:
-
-        OOI (2013). Data Product Specification for Seafloor High-Resolution
-            Tilt. Document Control Number 1341-00060.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00060_Data_Product_SPEC_BOTTILT_OOI.pdf)
+    Notes
+    -----
+    The lookup table is stored in prs_functions_ccmp.py as cmp_lookup,
+    keyed on (serial_number, rounded_scmp) pairs. The L0 compass value
+    is rounded to the nearest integer before lookup, as specified in
+    the DPS.
     """
-
     """
         Currently, there are two coded algorithms:
-            (1) the straightforward original, which uses a two-element keyed dictionary;
-            (2) a faster version, which uses serial number keys to the dictionary.
+            (1) the straightforward original, which uses a two-element keyed
+                dictionary;
+            (2) a faster version, which uses serial number keys to the
+                dictionary.
 
-        Since each algorithm uses its own dictionary, the corresponding import statements
-            are TEMPORARILY placed at the beginning of their respective code sections
-            instead of at module top.
+        Since each algorithm uses its own dictionary, the corresponding
+        import statements are TEMPORARILY placed at the beginning of their
+        respective code sections instead of at module top.
     """
     ###  Original coding, using a dictionary constructed with 2-element keys.
 
@@ -148,74 +147,54 @@ def prs_bottilt_ccmp(scmp, sn):
 
 def prs_bottilt_tmag(x_tilt, y_tilt):
     """
-    Description:
+    Compute the resultant tilt magnitude BOTTILT-TMAG_L1 [microradians].
 
-        OOI Level 1 Seafloor High-Resolution Tilt (BOTTILT) core data product,
-        derived from data output by the Applied Geomechanics LILY tilt sensor
-        on board the Bottom Pressure Tilt (BOTPT) instruments on the Regional
-        Scale Nodes (RSN) at Axial Seamount. This function computes
-        BOTTILT-TMAG_L1.
+    Computes the vector magnitude of the X- and Y-tilt L0 components as
+    specified in DPS 1341-00060.
 
-    Implemented by:
+    Parameters
+    ----------
+    x_tilt : array_like
+        Sensor X-tilt (BOTTILT-XTLT_L0) [microradians].
+    y_tilt : array_like
+        Sensor Y-tilt (BOTTILT-YTLT_L0) [microradians].
 
-        2013-06-10: Christopher Wingard. Initial code.
-
-    Usage:
-
-        tmag = prs_bottilt(x_tilt, y_tilt)
-
-            where
-
-        tmag = Resultant tilt magnitude (BOTTILT-TMAG_L1) [microradians]
-        x_tilt = Sensor X_tilt (BOTTILT-XTLT_L0) [microradians]
-        y_tilt = Sensor Y_tilt (BOTTILT-YTLT_L0) [microradians]
-
-    References:
-
-        OOI (2013). Data Product Specification for Seafloor High-Resolution
-            Tilt. Document Control Number 1341-00060.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00060_Data_Product_SPEC_BOTTILT_OOI.pdf)
-     """
+    Returns
+    -------
+    tmag : ndarray
+        Resultant tilt magnitude (BOTTILT-TMAG_L1) [microradians].
+    """
     tmag = np.sqrt(x_tilt**2 + y_tilt**2)
     return tmag
 
 
 def prs_bottilt_tdir(x_tilt, y_tilt, ccmp):
     """
-    Description:
+    Compute the resultant tilt direction BOTTILT-TDIR_L1 [degrees].
 
-        OOI Level 1 Seafloor High-Resolution Tilt (BOTTILT) core data product,
-        derived from data output by the Applied Geomechanics LILY tilt sensor
-        on board the Bottom Pressure Tilt (BOTPT) instruments on the Regional
-        Scale Nodes (RSN) at Axial Seamount. This function computes
-        BOTTILT-TDIR_L1.
+    Computes the azimuth of the downward tilt vector using arctan2 and
+    the corrected compass direction, as specified in DPS 1341-00060.
 
-    Implemented by:
+    Parameters
+    ----------
+    x_tilt : array_like
+        Sensor X-tilt (BOTTILT-XTLT_L0) [microradians].
+    y_tilt : array_like
+        Sensor Y-tilt (BOTTILT-YTLT_L0) [microradians].
+    ccmp : array_like
+        Corrected compass direction (BOTTILT-CCMP_L1) [degrees].
 
-        2013-06-10: Christopher Wingard. Initial code.
-        2014-03-20: Russell Desiderio. Replaced initial code with arctan2 implementation.
+    Returns
+    -------
+    tdir : ndarray
+        Resultant tilt direction (BOTTILT-TDIR_L1) [integer degrees
+        CW from north].
 
-    Usage:
-
-        tdir = prs_bottilt(x_tilt, y_tilt, ccmp)
-
-            where
-
-        tdir = Resultant tilt direction (BOTTILT-TDIR_L1) [degrees]
-        x_tilt = Sensor X_tilt (BOTTILT-XTLT_L0) [microradians]
-        y_tilt = Sensor Y_tilt (BOTTILT-YTLT_L0) [microradians]
-        ccmp = Corrected compass direction (BOTTILT-CCMP_L1) [degrees]
-
-    References:
-
-        OOI (2013). Data Product Specification for Seafloor High-Resolution
-            Tilt. Document Control Number 1341-00060.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00060_Data_Product_SPEC_BOTTILT_OOI.pdf)
-     """
+    Notes
+    -----
+    The addend of 450 (= 90 + 360) ensures a positive argument to the
+    modulo operation before rounding to integer degrees.
+    """
     ### As originally coded, according to the algorithm specified in the DPS:
 
     ## Calculate the angle to use in the tilt direction formula
@@ -253,45 +232,34 @@ def prs_bottilt_tdir(x_tilt, y_tilt, ccmp):
 
 
 #**********************************************************************
-#.. BOTSFLU: Functions calculating data products
+#.. BOTSFLU: Core functions
 #**********************************************************************
 def prs_botsflu_time15s(timestamp, botpres):
     """
-    Description:
+    Compute the auxiliary BOTSFLU timestamp product TIME15S-AUX.
 
-        Calculates the auxiliary BOTSFLU data product TIME15S-AUX. These are timestamps
-        anchored at multiples of 15 seconds past the minute which correspond to the time
-        base for the BOTSFLU data products which are binned on 15 seconds.
+    Returns timestamps anchored at multiples of 15 seconds past the
+    minute, corresponding to the time base for the BOTSFLU data products
+    binned on 15-second intervals.
 
-    Implemented by:
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia]. Used to discard timestamps
+        associated with bad (NaN or non-positive) raw pressure values.
 
-        2015-01-13: Russell Desiderio. Initial code.
-        2017-05-15: Russell Desiderio. Included botpres as an input argument so that
-                    timestamps associated with bad rawdata values could be deleted.
+    Returns
+    -------
+    time15s : ndarray
+        15-second-anchored timestamps (TIME15S-AUX) [sec since
+        1900-01-01].
 
-    Usage
-
-        time15s = prs_botsflu_time15s(timestamp, botpres)
-
-            where
-
-        time15s = BOTSFLU-TIME15S-AUX [sec since 01-01-1900]
-        timestamp = OOI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-
-    Notes:
-
-        The BOTSFLU data products associated with this timebase are:
-        MEANPRES
-        PREDTIDE
-        MEANDEPTH
-        5MINRATE
-        10MINRATE
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Notes
+    -----
+    The BOTSFLU data products on this time base are: MEANPRES, PREDTIDE,
+    MEANDEPTH, 5MINRATE, and 10MINRATE.
     """
     # botpres is required to eliminate timestamps of bad input values
     time15s, _, _ = anchor_bin_raw_data_to_15s(timestamp, botpres)
@@ -301,32 +269,25 @@ def prs_botsflu_time15s(timestamp, botpres):
 
 def prs_botsflu_meanpres(timestamp, botpres):
     """
-    Description:
+    Compute the BOTSFLU mean pressure product BOTSFLU-MEANPRES_L2 [psi].
 
-        Calculates the BOTSFLU data product MEANPRES_L1.
+    Bins raw 20 Hz bottom pressure data into 15-second mean values.
 
-    Implemented by:
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
 
-        2015-01-13: Russell Desiderio. Initial code.
+    Returns
+    -------
+    meanpres : ndarray
+        15-second mean bottom pressure (BOTSFLU-MEANPRES_L2) [psi].
 
-    Usage
-
-        meanpres = prs_botsflu_meanpres(timestamp, botpres)
-
-            where
-
-        meanpres = BOTSFLU-MEANPRES_L2 [psi]
-        timestamp = OOI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME15S.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Notes
+    -----
+    The associated time base data product is TIME15S-AUX.
     """
     _, meanpres, _ = anchor_bin_raw_data_to_15s(timestamp, botpres)
 
@@ -335,47 +296,37 @@ def prs_botsflu_meanpres(timestamp, botpres):
 
 def prs_botsflu_predtide(time):
     """
-    Description:
+    Compute the BOTSFLU predicted tide product BOTSFLU-PREDTIDE_L2 [m].
 
-        Assigns tide values for the 3 BOTPT instrument sites about 500 km west of Astoria.
+    Assigns predicted tide heights for the three BOTPT instrument sites
+    at Axial Seamount by positional indexing into a precomputed lookup
+    table.
 
-        When the input argument is the data product TIME15S, the output of this function
-        will be the BOTSFLU data product PREDTIDE.
+    Parameters
+    ----------
+    time : array_like
+        BOTSFLU 15-second timestamps (TIME15S-AUX) [sec since
+        1900-01-01].
 
-    Implemented by:
+    Returns
+    -------
+    tide : ndarray
+        Predicted tide height (BOTSFLU-PREDTIDE_L2) [m].
 
-        2015-01-13: Russell Desiderio. Initial code.
+    Notes
+    -----
+    The lookup table is stored in
+    prs_functions_tides_2014_thru_2019.mat and contains tide values
+    every 15 seconds from 2014-01-01 to 2020-01-01 at lat = 45.95547,
+    lon = -130.00957 (Axial Seamount caldera center). Tide values were
+    computed using the Tide Model Driver software with the TPXO7.2
+    global tidal model. The three BOTPT sites are sufficiently close
+    together that a single location is used for all. Tide values are
+    stored as signed 4-byte integers in units of 0.001 mm and scaled to
+    meters on read.
 
-    Usage:
-
-        PREDTIDE = prs_botsflu_predtide(TIME15S)
-
-            where
-
-        PREDTIDE = BOTSFLU-PREDTIDE data product [m]
-        TIME15S = BOTSFLU-TIME15S data product [sec since 01-01-1900].
-
-    Notes:
-
-        Lookup table in binary file: 'ion_functions/data/prs_functions_tides_2014_thru_2019.mat'
-
-        The lookup table contains tide values every 15 seconds from 2014-01-01 to 2020-01-01
-        at lat = 45.95547 lon = -130.00957 calculated by the Tide Model Driver software
-        written in Matlab (Mathworks, Natick, MA) using the TPXO7.2 global model. The tides
-        corresponding to time are determined by positional indexing (the first value is for
-        2014-01-01 00:00:00, the second is for 2014-01-01 00:00:15, etc). The 3 BOTPT sites
-        are close enough together that the caldera center location can be used for all, as
-        above: lat = 45.95547 lon = -130.00957.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
-
-        Matlab code to calculate tides using TPXO7.2 global model:
-            http://polaris.esr.org/ptm_index.html
-        Further documentation for the TPXO7.2 global tide model:
-            http://volkov.oce.orst.edu/tides/global.html
+    A separate unit-test table covering February-April 2011 is loaded
+    automatically when the input timestamps predate 2014-01-01.
     """
     time0 = 3597523200.0  # midnight, 2014-01-01
     time_interval = 15.0  # seconds
@@ -402,37 +353,31 @@ def prs_botsflu_predtide(time):
 
 def prs_botsflu_meandepth(timestamp, botpres, predtide):
     """
-    Description:
+    Compute the BOTSFLU de-tided depth product BOTSFLU-MEANDEPTH_L2 [m].
 
-        Calculates the BOTSFLU data product MEANDEPTH_L2, de-tided bottom depth
-        as a function of time (15sec bins).
+    Converts 15-second mean pressure to depth and removes the predicted
+    tidal signal.
 
-    Implemented by:
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
 
-        2015-01-14: Russell Desiderio. Initial code.
+    Returns
+    -------
+    meandepth : ndarray
+        De-tided bottom depth (BOTSFLU-MEANDEPTH_L2) [m].
 
-    Usage
+    Notes
+    -----
+    The associated time base data product is TIME15S-AUX.
 
-        meandepth = prs_botsflu_meandepth(timestamp, botpres)
-
-            where
-
-        meandepth = BOTSFLU-MEANDEPTH_L2 [m]
-        timestamp = OOI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-        predtide = predicted tide [m]
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME15S.
-
-        The DPS specifies that atmospheric pressure not be subtracted from the
-        L1 pressure data even though its units are [psia].
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Atmospheric pressure is not subtracted from the L1 pressure data
+    even though its units are psia, as specified in DPS 1341-00080.
     """
     _, meandepth, _ = calc_meandepth_plus(timestamp, botpres, predtide)
 
@@ -441,34 +386,36 @@ def prs_botsflu_meandepth(timestamp, botpres, predtide):
 
 def prs_botsflu_5minrate(timestamp, botpres, predtide):
     """
-    Description:
+    Compute the BOTSFLU 5-minute rate product BOTSFLU-5MINRATE_L2
+    [cm/min].
 
-        Calculates the BOTSFLU data product 5MINRATE_L2, the instantaneous rate of
-        depth change using 5 minute backwards-looking meandepth data.
+    Computes the instantaneous rate of depth change using a 5-minute
+    backwards-looking difference of the de-tided depth record.
 
-    Implemented by:
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
 
-        2015-01-14: Russell Desiderio. Initial code.
+    Returns
+    -------
+    botsflu_5minrate : ndarray
+        5-minute instantaneous depth change rate
+        (BOTSFLU-5MINRATE_L2) [cm/min].
 
-    Usage
+    Notes
+    -----
+    The associated time base data product is TIME15S-AUX.
 
-        botsflu_5minrate = pprs_botsflu_5minrate(timestamp, botpres, predtide)
-
-            where
-
-        botsflu_5minrate = BOTSFLU-5MINRATE_L2 [cm/min]
-        timestamp = CI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-        predtide = predicted tide [m]
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME15S.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    For 15-second binned data, 5 minutes corresponds to a lag of 20
+    intervals. The conversion from m/5min to cm/min is a factor of 20.
+    NaN values arising from data gaps are propagated through the
+    difference but are then removed at data dropout positions to maintain
+    1:1 correspondence with the TIME15S time base.
     """
     # calculate de-tided depth and the positions of non-zero bins in the original data.
     _, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres, predtide)
@@ -499,34 +446,34 @@ def prs_botsflu_5minrate(timestamp, botpres, predtide):
 
 def prs_botsflu_10minrate(timestamp, botpres, predtide):
     """
-    Description:
+    Compute the BOTSFLU 10-minute rate product BOTSFLU-10MINRATE_L2
+    [cm/hr].
 
-        Calculates the BOTSFLU data product 10MINRATE_L2, the mean seafloor uplift rate
-        calculated using 10 minute backwards-looking 10 minute running mean depth data.
+    Computes the mean seafloor uplift rate using a 10-minute
+    backwards-looking sliding mean of the de-tided depth record,
+    differenced over 10 minutes.
 
-    Implemented by:
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
 
-        2015-01-14: Russell Desiderio. Initial code.
+    Returns
+    -------
+    botsflu_10minrate : ndarray
+        10-minute mean depth change rate (BOTSFLU-10MINRATE_L2) [cm/hr].
 
-    Usage
+    Notes
+    -----
+    The associated time base data product is TIME15S-AUX.
 
-        botsflu_10minrate = pprs_botsflu_10minrate(timestamp, botpres)
-
-            where
-
-        botsflu_10minrate = BOTSFLU-10MINRATE_L2 [cm/hr]
-        timestamp = OOI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-        predtide = predicted tide [m]
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME15S.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    For 15-second binned data, 10 minutes corresponds to a window of 40
+    intervals. Sliding means are computed by digital convolution. The
+    conversion from m/10min to cm/hr is a factor of 600.
     """
     # calculate de-tided depth and the positions of non-zero bins in the original data.
     _, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres, predtide)
@@ -563,41 +510,29 @@ def prs_botsflu_10minrate(timestamp, botpres, predtide):
 
 def prs_botsflu_time24h(time15s):
     """
-    Description:
+    Compute the auxiliary BOTSFLU timestamp product TIME24H-AUX.
 
-        Calculates the auxiliary BOTSFLU data product TIME24H-AUX. These are
-        timestamps anchored at midnight which correspond to the time base for
-        the BOTSFLU data products which are binned on a day's worth of data
-        (from noon to noon).
+    Returns timestamps anchored at midnight, corresponding to the time
+    base for BOTSFLU data products binned on 24-hour (noon-to-noon)
+    intervals.
 
-    Implemented by:
+    Parameters
+    ----------
+    time15s : array_like
+        15-second-anchored timestamps (TIME15S-AUX) [sec since
+        1900-01-01].
 
-        2015-01-14: Russell Desiderio. Initial code.
-        2017-05-05: Russell Desiderio. Changed time24h time base to span the entire
-                                       dataset including data gaps. This change is
-                                       made in the function call to
-                                       anchor_bin_detided_data_to_24h.
+    Returns
+    -------
+    time24h : ndarray
+        Midnight-anchored daily timestamps (TIME24H-AUX) [sec since
+        1900-01-01].
 
-    Usage
-
-        time24h = prs_botsflu_time24h(time15s)
-
-            where
-
-        time24h = BOTSFLU-TIME24H-AUX [sec since 01-01-1900]
-        time15s = BOTSFLU-TIME15S-AUX [sec since 01-01-1900]
-
-    Notes:
-
-        The BOTSFLU data products associated with this timebase are:
-        DAYDEPTH
-        4WKRATE
-        8WKRATE
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Notes
+    -----
+    The BOTSFLU data products on this time base are: DAYDEPTH, 4WKRATE,
+    and 8WKRATE. The time base spans the entire dataset including data
+    gaps.
     """
     # the second and third calling arguments are placeholders
     time24h, _, _ = anchor_bin_detided_data_to_24h(time15s, None, None)
@@ -607,47 +542,33 @@ def prs_botsflu_time24h(time15s):
 
 def prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage=0.90):
     """
-    Description:
+    Compute the BOTSFLU daily depth product BOTSFLU-DAYDEPTH_L2 [m].
 
-        Calculates the BOTSFLU data product DAYDEPTH_L2, de-tided bottom depth
-        as a function of time (1 day bins).
+    Bins 15-second de-tided depth data into 24-hour (noon-to-noon) mean
+    values anchored at midnight.
 
-    Implemented by:
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+    dday_coverage : float, optional
+        Fractional coverage threshold. Daily bins with fewer than this
+        fraction of the maximum 5760 possible 15-second values are set
+        to NaN. Default is 0.90.
 
-        2015-01-14: Russell Desiderio. Initial code.
-        2017-05-05: Russell Desiderio. Changed time24h time base to span the entire
-                                       dataset including data gaps.
-        2017-05-11: Russell Desiderio. Incorporated daydepth coverage threshold.
-        2020-06-01: Mark Steiner.      Require predtide as an argument and refactor daydepth
-                                       calculation into prs_botsflu_4wkrate_from_daydepth
-                                       to expand API
+    Returns
+    -------
+    daydepth : ndarray
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
 
-    Usage
-
-        daydepth = prs_botsflu_daydepth(timestamp, botpres, dday_coverage)
-
-            where
-
-        daydepth = BOTSFLU-DAYDEPTH_L2 [m]
-        timestamp = OOI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-        dday_coverage = fractional coverage threshold, below which daydepth values
-                        are assigned Nan values.
-        predtide = predicted tide [m]
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME24H.
-
-        Fractional coverage is calculated as the number of non-Nan depth values
-        within a bin divided by the maximum number of possible bin values. For
-        15-second data points within 24-hour bins, this maximum number is
-        necessarily 86400/15 = 5760.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. All days in
+    the record span are represented, including data-gap days.
     """
     # calculate 15sec bin timestamps and de-tided depth.
     time15s, meandepth, _ = calc_meandepth_plus(timestamp, botpres, predtide)
@@ -656,38 +577,115 @@ def prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage=0.90):
     return prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage)
 
 
+def prs_botsflu_4wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75):
+    """
+    Compute the BOTSFLU 4-week rate product BOTSFLU-4WKRATE_L2 [cm/yr].
+
+    Computes the mean rate of seafloor depth change using 4-week
+    backwards-looking linear regressions on the daily depth record.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+    dday_coverage : float, optional
+        Fractional coverage threshold for daily depth bins. Default is
+        0.9.
+    rate_coverage : float, optional
+        Fractional window fill threshold for rate calculation. Windows
+        below this fraction are set to NaN. Default is 0.75.
+
+    Returns
+    -------
+    botsflu_4wkrate : ndarray
+        4-week mean seafloor depth change rate (BOTSFLU-4WKRATE_L2)
+        [cm/yr].
+
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. Regression
+    slopes in m/day are converted to cm/yr by multiplying by 36500.
+    """
+    # calculate daydepth
+    daydepth = prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage)
+
+    return prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage)
+
+
+def prs_botsflu_8wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75):
+    """
+    Compute the BOTSFLU 8-week rate product BOTSFLU-8WKRATE_L2 [cm/yr].
+
+    Computes the mean rate of seafloor depth change using 8-week
+    backwards-looking linear regressions on the daily depth record.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+    dday_coverage : float, optional
+        Fractional coverage threshold for daily depth bins. Default is
+        0.9.
+    rate_coverage : float, optional
+        Fractional window fill threshold for rate calculation. Windows
+        below this fraction are set to NaN. Default is 0.75.
+
+    Returns
+    -------
+    botsflu_8wkrate : ndarray
+        8-week mean seafloor depth change rate (BOTSFLU-8WKRATE_L2)
+        [cm/yr].
+
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. Regression
+    slopes in m/day are converted to cm/yr by multiplying by 36500.
+    """
+    # calculate daydepth
+    daydepth = prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage)
+
+    return prs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage)
+
+
+#**********************************************************************
+#.. BOTSFLU: Helper functions
+#**********************************************************************
 def prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage=0.90):
     """
-    Description:
+    Compute BOTSFLU-DAYDEPTH_L2 [m] from 15-second binned meandepth.
 
-        Calculates the BOTSFLU data product DAYDEPTH_L2 from the 15 second-binned meandepth
+    Bins the 15-second de-tided depth record into 24-hour mean values
+    anchored at midnight. Exposed as a public entry point to allow
+    computation of DAYDEPTH directly from pre-computed MEANDEPTH.
 
-    Implemented by:
+    Parameters
+    ----------
+    time15s : array_like
+        15-second-anchored timestamps (TIME15S-AUX) [sec since
+        1900-01-01].
+    meandepth : array_like
+        De-tided 15-second mean depth (BOTSFLU-MEANDEPTH_L2) [m].
+    dday_coverage : float, optional
+        Fractional coverage threshold. Daily bins with fewer than this
+        fraction of the maximum 5760 possible values are set to NaN.
+        Default is 0.90.
 
-        2020-06-01: Mark Steiner. Extracted directly from the previous version of prs_botsflu_daydepth
-                                  written by Russell Desiderio 2017-05-11 to expand the API and
-                                  facilitate the calculation of this data product directly from the meandepth
+    Returns
+    -------
+    daydepth : ndarray
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
 
-    Usage
-
-        daydepth = prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage)
-
-            where
-
-        daydepth = BOTSFLU-DAYDEPTH_L2 [m]
-        time15s = TIME15S [sec since 01-01-1900]
-        meandepth = BOTSFLU-MEANDEPTH_L2 [m]
-        dday_coverage = fractional coverage threshold, below which daydepth values
-                        are assigned Nan values.
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME24H.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX.
     """
     # bin the 15sec data into 24 hour bins so that the timestamps are at midnight.
     # to calculate daydepth, don't need the time24h timestamps.
@@ -696,88 +694,33 @@ def prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage=0.
     return daydepth
 
 
-def prs_botsflu_4wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75):
-    """
-    Description:
-
-        Calculates the BOTSFLU data product 4WKRATE_L2, the mean rate of seafloor
-        change as calculated by 4-week backwards-looking linear regressions.
-
-    Implemented by:
-
-        2015-01-14: Russell Desiderio. Initial code.
-        2017-05-05: Russell Desiderio. Changed time24h time base to span the entire
-                                       dataset including data gaps. Therefore removed
-                                       the last masking operation that removed the
-                                       values at bins that had zero data.
-        2017-05-12: Russell Desiderio. Incorporated daydepth and rate coverage thresholds.
-        2020-06-01: Mark Steiner.      Require predtide as an argument and refactor rate calculation
-                                       into prs_botsflu_4wkrate_from_daydepth to expand API
-
-    Usage
-
-        botsflu_4wkrate = prs_botsflu_4wkrate(timestamp, botpres,
-                                              predtide, dday_coverage, rate_coverage)
-
-            where
-
-        botsflu_4wkrate = BOTSFLU-4WKRATE_L2 [cm/yr]
-        timestamp = CI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-        predtide = predicted tide [m]
-        dday_coverage = fractional daydepth coverage threshold, below which daydepth
-                        values are assigned Nan values.
-        rate_coverage = fractional rate coverage threshold, below which 4wkrate data
-                        product values are assigned Nan values.
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME24H.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
-    """
-    # calculate daydepth
-    daydepth = prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage)
-
-    return prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage)
-
-
 def prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage=0.75):
     """
-    Description:
+    Compute BOTSFLU-4WKRATE_L2 [cm/yr] from daily depth.
 
-        Calculates the BOTSFLU data product 4WKRATE_L2, the mean rate of seafloor
-        change as calculated by 4-week backwards-looking linear regressions.
+    Applies 4-week backwards-looking linear regression to the daily
+    depth record. Exposed as a public entry point to allow computation
+    of 4WKRATE directly from pre-computed DAYDEPTH.
 
-    Implemented by:
+    Parameters
+    ----------
+    daydepth : array_like
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
+    rate_coverage : float, optional
+        Fractional window fill threshold. Windows below this fraction
+        are set to NaN. Default is 0.75.
 
-        2020-06-01: Mark Steiner. This code was extracted directly from the previous version of the
-                                  prs_botsflu_4wkrate function written by Russell Desiderio (2017-05-12)
-                                  to expand the API and facilitate the generation of this data product
-                                  directly from the daydepth
+    Returns
+    -------
+    botsflu_4wkrate : ndarray
+        4-week mean seafloor depth change rate (BOTSFLU-4WKRATE_L2)
+        [cm/yr].
 
-    Usage
-
-        botsflu_4wkrate = prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage)
-
-            where
-
-        botsflu_4wkrate = BOTSFLU-4WKRATE_L2 [cm/yr]
-        daydepth = BOTSFLU-DAYDEPTH_L2 [m]
-        rate_coverage = fractional rate coverage threshold, below which 4wkrate data
-                        product values are assigned Nan values.
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME24H.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. The window
+    size of 29 days is used. Regression slopes in m/day are converted
+    to cm/yr by multiplying by 36500.
     """
     # 4 weeks of data
     window_size = 29
@@ -790,88 +733,33 @@ def prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage=0.75):
     return botsflu_4wkrate
 
 
-def prs_botsflu_8wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75):
-    """
-    Description:
-
-        Calculates the BOTSFLU data product 8WKRATE_L2, the mean rate of seafloor
-        change as calculated by 8-week backwards-looking linear regressions.
-
-    Implemented by:
-
-        2015-01-14: Russell Desiderio. Initial code.
-        2017-05-05: Russell Desiderio. Changed time24h time base to span the entire
-                                       dataset including data gaps. Therefore removed
-                                       the last masking operation that removed the
-                                       values at bins that had zero data.
-        2017-05-12: Russell Desiderio. Incorporated daydepth and rate coverage thresholds.
-        2020-06-01: Mark Steiner.      Require predtide as an argument and refactor rate calculation
-                                       into prs_botsflu_8wkrate_from_daydepth to expand API
-
-    Usage
-
-        botsflu_8wkrate = pprs_botsflu_8wkrate(timestamp, botpres,
-                                               predtide, dday_coverage, rate_coverage)
-
-            where
-
-        botsflu_8wkrate = BOTSFLU-8WKRATE_L2 [cm/yr]
-        timestamp = OOI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-        predtide = predicted tide [m]
-        dday_coverage = fractional daydepth coverage threshold, below which daydepth
-                        values are assigned Nan values.
-        rate_coverage = fractional rate coverage threshold, below which 8wkrate data
-                        product values are assigned Nan values.
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME24H.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
-    """
-    # calculate daydepth
-    daydepth = prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage)
-
-    return prs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage)
-
-
 def prs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage=0.75):
     """
-    Description:
+    Compute BOTSFLU-8WKRATE_L2 [cm/yr] from daily depth.
 
-        Calculates the BOTSFLU data product 8WKRATE_L2, the mean rate of seafloor
-        change as calculated by 8-week backwards-looking linear regressions.
+    Applies 8-week backwards-looking linear regression to the daily
+    depth record. Exposed as a public entry point to allow computation
+    of 8WKRATE directly from pre-computed DAYDEPTH.
 
-    Implemented by:
+    Parameters
+    ----------
+    daydepth : array_like
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
+    rate_coverage : float, optional
+        Fractional window fill threshold. Windows below this fraction
+        are set to NaN. Default is 0.75.
 
-        2020-06-01: Mark Steiner. This code was extracted directly from the previous version of the
-                                  prs_botsflu_8wkrate function written by Russell Desiderio (2017-05-12)
-                                  to expand the API and facilitate the generation of this data product
-                                  directly from the daydepth
+    Returns
+    -------
+    botsflu_8wkrate : ndarray
+        8-week mean seafloor depth change rate (BOTSFLU-8WKRATE_L2)
+        [cm/yr].
 
-    Usage
-
-        botsflu_8wkrate = pprs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage)
-
-            where
-
-        botsflu_8wkrate = BOTSFLU-8WKRATE_L2 [cm/yr]
-        daydepth = BOTSFLU-DAYDEPTH_L2 [m]
-        rate_coverage = fractional rate coverage threshold, below which 8wkrate data
-                        product values are assigned Nan values.
-
-    Notes:
-
-        The timebase data product associated with this data product is TIME24H.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. The window
+    size of 57 days is used. Regression slopes in m/day are converted
+    to cm/yr by multiplying by 36500.
     """
     # 8 weeks of data
     window_size = 57
@@ -884,57 +772,43 @@ def prs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage=0.75):
     return botsflu_8wkrate
 
 
-#**********************************************************************
-#.. BOTSFLU: Worker functions called by the data product functions
-#**********************************************************************
 def anchor_bin_raw_data_to_15s(time, data):
     """
-    Description:
+    Bin raw 20 Hz BOTPT pressure data into 15-second anchored means.
 
-        Calculates 'anchored' timestamps (see Notes) and bins data based on system
-        timestamps in units of seconds. This routine is hard-coded to bin BOTPT 20hz
-        raw pressure data into 15 second bins.
+    Calculates anchored bin timestamps and mean-binned data using
+    numpy.bincount. Discards NaN values and non-physical (<=0) pressure
+    readings before binning. Empty bins are not represented in the
+    output; the boolean mask records the positions of non-empty bins
+    within the full time span.
 
-    Implemented by:
+    Parameters
+    ----------
+    time : array_like
+        1D array of system timestamps [sec since 1900-01-01].
+    data : array_like
+        1D array of data values to be binned (BOTPRES_L1 [psia]).
 
-        2017-05-05: Russell Desiderio. Initial code from modifying the function anchor_bin.
-                                       This function now traps out input nans and unphysical
-                                       raw pressure readings <= 0.
+    Returns
+    -------
+    bin_timestamps : ndarray
+        1D array of centered timestamps for non-empty bins [sec since
+        1900-01-01].
+    binned_data : ndarray
+        1D array of mean-binned data; no empty bins are represented.
+    mask_nonzero : ndarray
+        Boolean array where True values indicate non-empty bin positions
+        within the full time span (in 15-second units).
 
-    Usage:
+    Notes
+    -----
+    Bin duration is hard-coded to 15 seconds. Timestamps are anchored
+    at the quarter-minute (0, 15, 30, 45 seconds past the minute); each
+    bin encompasses data 7.5 seconds on either side of the center.
 
-        bin_timestamps, binned_data, mask_nonzero = anchor_bin(time, data)
-
-            where
-
-        bin_timestamps = 1D array of centered timestamps for non-empty bins
-        binned_data = 1D array of binned data; no empty bins are represented
-        mask_nonzero = boolean where True values represent locations of non-empty bins
-        time = 1D array of (system) timestamps, units of sec since 01-01-1900
-        data = data to be binned
-
-    Notes:
-
-        The np.bincount routine is used in the same way accumarray in matlab is used
-        to bin data. The key to the routine is to convert the timestamps into elapsed
-        time in units of bin_duration and to construct bins based on the floored
-        bin_duration times. The summing is then carried out by using the weighting
-        feature of the np.bincount function, as described in the example in the
-        numpy.bincount documentation as listed in the References.
-
-        Empty bins are not represented in the 15s timestamps nor in the data products
-        associated with these timestamps. The boolean array mask_nonzero spans the
-        entire time range (in units of 15s) of data into the DPA and has True values
-        according to the locations of the non-empty bins.
-
-        This routine has been constructed to supply centered timestamps 'anchored' at
-        each quadrant of the minute. With a hard-coded bin_duration of 15 sec, all
-        timestamps will be at 00, 15, 30, and 45 seconds past the minute. Each bin will
-        encompass data 7.5 seconds on either side of it.
-
-    References:
-
-        http://docs.scipy.org/doc/numpy-1.8.1/reference/generated/numpy.bincount.html.
+    The binning follows the numpy.bincount accumarray pattern: elapsed
+    time is floored in units of bin duration to assign each sample to a
+    bin index, then bincount sums the weighted values.
     """
     bin_duration = 15.0  # seconds
     half_bin = bin_duration/2.0
@@ -978,55 +852,43 @@ def anchor_bin_raw_data_to_15s(time, data):
 
 def anchor_bin_detided_data_to_24h(time, data, dday_coverage):
     """
-        Calculates 'anchored' timestamps (see Notes) and bins data based on system
-        timestamps in units of seconds. This routine is hard-coded to bin BOTPT 15s
-        pressure data into 24 hour bins (data product daydepth).
+    Bin 15-second BOTSFLU depth data into 24-hour anchored means.
 
-    Implemented by:
+    Calculates midnight-anchored bin timestamps and mean-binned data
+    using numpy.bincount. All days in the record span are represented,
+    including days below the coverage threshold (which receive NaN).
 
-        2017-05-05: Russell Desiderio. Initial code from modifying the function anchor_bin.
+    Parameters
+    ----------
+    time : array_like
+        1D array of 15-second timestamps [sec since 1900-01-01].
+    data : array_like
+        1D array of de-tided depth values to be binned (MEANDEPTH [m]).
+    dday_coverage : float or None
+        Fractional coverage threshold. Bins with fewer than this
+        fraction of the maximum 5760 possible values are set to NaN.
+        Pass None to skip threshold masking (used when computing
+        timestamps only).
 
-    Usage:
+    Returns
+    -------
+    bin_timestamps : ndarray
+        1D array of midnight-anchored daily timestamps [sec since
+        1900-01-01].
+    daydepth : ndarray
+        1D array of daily mean depth values (BOTSFLU-DAYDEPTH_L2) [m].
+        Bins below the coverage threshold contain NaN.
+    raw_bincount : ndarray
+        1D array of the raw count of values in each bin (used as a
+        diagnostic in unit tests).
 
-        bin_timestamps, binned_data, bincount = anchor_bin(time, data, dday_coverage)
+    Notes
+    -----
+    Bin duration is hard-coded to 86400 seconds (one day). Each bin
+    spans noon-to-noon, anchored at midnight. The maximum possible bin
+    count for 15-second data within a 24-hour bin is 5760.
 
-            where
-
-        bin_timestamps = 1D array of centered timestamps
-        binned_data = 1D array of binned data (data product daydepth)
-        bincount = 1D array of the number of data values in each bin
-        time = 1D array of timestamps, units of sec since 01-01-1900
-        data = data to be binned
-        dday_coverage = fractional coverage threshold, below which daydepth values
-                        are assigned Nan values.
-
-    Notes:
-
-        The np.bincount routine is used in the same way accumarray in matlab is used
-        to bin data. The key to the routine is to convert the timestamps into elapsed
-        time in units of bin_duration and to construct bins based on the floored
-        bin_duration times. The summing is then carried out by using the weighting
-        feature of the np.bincount function, as described in the example in the
-        numpy.bincount documentation as listed in the References.
-
-        Within a set of input data, all days will be represented by a timestamp,
-        including days with less than the number of data values required to trigger
-        the dday_coverage threshold.
-
-        This routine has been constructed to supply centered timestamps 'anchored' at mid-
-        night. With the bin_duration hard-coded at 86400 (the number of seconds in a day)
-        all the bins will encompass data from noon-to-noon.
-
-        Fractional coverage is calculated as the number of non-Nan depth values
-        within a bin divided by the maximum number of possible bin values. For
-        15-second data points within 24-hour bins, this maximum number is
-        necessarily 86400/15 = 5760.
-
-        The 3rd output variable, bincount, is used as a diagnostic in the unit tests.
-
-    References:
-
-        http://docs.scipy.org/doc/numpy-1.8.1/reference/generated/numpy.bincount.html.
+    The binning follows the numpy.bincount accumarray pattern.
     """
     bin_duration = 86400.0  # number of seconds in a day
     half_bin = bin_duration/2.0
@@ -1067,45 +929,39 @@ def anchor_bin_detided_data_to_24h(time, data, dday_coverage):
 
 def calc_meandepth_plus(timestamp, botpres, predtide):
     """
-    Description:
+    Compute BOTSFLU-MEANDEPTH_L2 [m] plus auxiliary binning outputs.
 
-        Worker function to calculate the botsflu data product meandepth plus
-        additional variables required to calculate other botsflu data products
-        downstream from meandepth.
+    Bins raw pressure data to 15-second means, converts to de-tided
+    depth, and returns intermediate variables needed by downstream
+    BOTSFLU data product functions.
 
-    Implemented by:
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
 
-        2015-01-14: Russell Desiderio. Initial code.
+    Returns
+    -------
+    time15s : ndarray
+        15-second-anchored timestamps [sec since 1900-01-01].
+    meandepth : ndarray
+        De-tided 15-second mean bottom depth
+        (BOTSFLU-MEANDEPTH_L2) [m].
+    mask_nonzero : ndarray
+        Boolean array marking positions of non-empty 15-second bins
+        within the full time span.
 
-    Usage
-
-        time15s, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres, predtide)
-
-            where
-
-        time15s = TIME15S [sec since 01-01-1900]
-        meandepth = BOTSFLU-MEANDEPTH_L2 [m]
-        mask_nonzero = boolean of positions of non-empty bins in the original data
-        timestamp = OOI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-        predtide = predicted tide [m]
-
-    Notes:
-
-        The DPS specifies that atmospheric pressure not be subtracted from the
-        L1 pressure data even though its units are [psia].
-
-        The DPS convention is that depths are negative, so that to detide the
-        pressure record, the predicted tide is added to the negative depths.
-
-        This function was written as a way to eliminate the execution of time
-        consuming duplicate calculations in the botsflu coding within the
-        OOI CI architecture constraints.
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Notes
+    -----
+    Atmospheric pressure is not subtracted from the L1 pressure data
+    even though its units are psia, as specified in DPS 1341-00080.
+    The conversion factor from psi to depth is -0.67 m/psi. The
+    negative sign reflects the convention that depths are negative,
+    so the predicted tide (positive) is added to de-tide the record.
     """
     # The pressure values do have units of psia. However, historically at these sites
     # atmospheric pressure has *not* been subtracted when converting the pressure data
@@ -1128,32 +984,28 @@ def calc_meandepth_plus(timestamp, botpres, predtide):
 
 def calculate_sliding_means(data, window_size):
     """
-    Description:
+    Compute time-centered sliding means by digital convolution.
 
-        Calculates time-centered means using digital convolution for the
-        BOTSFLU data product 10MINRATE.
+    Used internally for the BOTSFLU 10MINRATE data product.
 
-    Implemented by:
+    Parameters
+    ----------
+    data : array_like
+        1D array of input data.
+    window_size : int
+        Number of samples in the sliding window.
 
-        2015-01-13: Russell Desiderio. Initial code.
-        2017-05-06: Russell Desiderio. Updated to make work with odd window_sizes.
-
-    Usage
-
-        means = calculate_sliding_means(data, window_size)
-
-            where
-
-        means = 1D array of sliding means
-        data = 1D array of data
-        window_size = window size, integer data type
+    Returns
+    -------
+    means : ndarray
+        1D array of sliding window means; boundary elements are set to
+        NaN.
 
     Notes
-
-        The botsflu unit test values were calculated in Matlab, so that the python
-        convolution result for even sized windows is shifted by 1 element to match
-        the matlab result.
-
+    -----
+    For even window sizes, the result is rolled by one sample to match
+    the behavior of MATLAB's convolution, which was used to generate the
+    unit test reference values.
     """
     kk = np.ones(window_size) / window_size
     means = np.convolve(data, kk, 'same')
@@ -1171,49 +1023,37 @@ def calculate_sliding_means(data, window_size):
 
 def calculate_sliding_slopes(data, window_size, coverage_threshold=0.0):
     """
-    Description:
+    Compute backwards-looking sliding linear regression slopes.
 
-        Calculates backwards-looking sliding slopes using the normal linear
-        regression equations rewritten to be less susceptible to round-off
-        error; required for the BOTSFLU data products 4WKRATE and 8WKRATE.
+    Used internally for the BOTSFLU 4WKRATE and 8WKRATE data products.
+    NaN values within a window are excluded from the regression; windows
+    with insufficient valid data are set to NaN.
 
-    Implemented by:
+    Parameters
+    ----------
+    data : array_like
+        1D array of input data (typically daily depth values [m]).
+    window_size : int
+        Nominal window size in samples. If even, incremented by one to
+        enforce an odd window.
+    coverage_threshold : float, optional
+        Minimum fraction of non-NaN values required within a window to
+        compute a slope. Default is 0.0 (no threshold).
 
-        2017-05-03: Russell Desiderio. Initial code. Replaces the much faster Moore-Penrose
-                                       pseudo-inverse method so that nans can be trapped out.
-        2017-05-08: Russell Desiderio. Added the fractional coverage criterion: if the number of
-                                       non-Nan data points in a window is greater than or equal
-                                       to the fractional coverage multiplied by the maximum
-                                       possible number of window points, the slope is calculated.
-
-    Usage
-
-        slopes = calculate_sliding_slopes(data, window_size, coverage_threshold)
-
-            where
-
-        slopes = 1D array of sliding slopes
-        data = 1D array of data
-        window_size = integer
-        coverage_threshold = fractional window fill threshold for calculation of slope values
+    Returns
+    -------
+    slopes : ndarray
+        1D array of backwards-looking regression slopes in units of
+        [data units]/[sample]. Length equals len(data).
 
     Notes
-
-        The robust regression equations are taken from equations 14.2.15-14.2.17 in the Numerical
-        Recipes reference below.
-
-        Before the May 2017 modifications, just one Nan within a window would result in a Nan value
-        for the slope. The routine now will calculate slopes by ignoring Nans, and if the coverage
-        is better than that specified by the coverage_threshold value, a calculated value will result.
-        If the coverage is less than 70%, then the output value is Nan.
-
-        The data vector is padded so that points within a window of the beginning of the data record
-        that satisfy the coverage criterion will have non-Nan data product values.
-
-    References:
-
-        Press, Flannery, Teukolsky and Vetterling. Numerical Recipes, 1986; 1987 reprint.
-        Cambridge University Press. page 507.
+    -----
+    The regression equations are from Press et al. (1986), equations
+    14.2.15-14.2.17. The data vector is front-padded with NaN so that
+    windows near the start of the record that satisfy the coverage
+    criterion produce non-NaN values. Coverage is assessed by
+    calculate_sliding_means on a binary good/bad mask, then shifted to
+    align with the backwards-looking window.
     """
     # ODD WINDOW SIZES are expected; if even, increment by one
     window_size = window_size + 1 - np.mod(window_size, 2)
@@ -1274,25 +1114,30 @@ def calculate_sliding_slopes(data, window_size, coverage_threshold=0.0):
 
 
 #**********************************************************************
-#.. EVENT NOTIFICATION: tsunami detection
+#.. Deprecated functions
 #**********************************************************************
+@deprecated
 def prs_tsunami_detection(botsflu_5minrate, tsunami_detection_threshold=1.0):
     """
-    Implemented by:
+    OOI wrapper returning True if a tsunami event is detected.
 
-        2015-01-14: Russell Desiderio. Initial code.
+    Deprecated. This function was coded from pseudocode in DPS
+    1341-00080, which was never publicly released. Its robustness has
+    not been verified with actual data.
 
-    Usage:
+    Parameters
+    ----------
+    botsflu_5minrate : array_like
+        5-minute instantaneous depth change rate
+        (BOTSFLU-5MINRATE_L2) [cm/min].
+    tsunami_detection_threshold : float, optional
+        Detection threshold [cm/min]. Default is 1.0.
 
-        TF = prs_tsunami_detection(BOTSFLU-5MINRATE_L2)
-
-            where
-
-            TF = True or False; whether a tsunami event has been detected.
-
-    WARNING: This function and its data product input argument were coded as instructed
-             in the DPS using the pseudocode specified. The robustness of this code has
-             not been checked with actual data.
+    Returns
+    -------
+    boolean_tsunami_detection : bool
+        True if any value of botsflu_5minrate meets or exceeds the
+        threshold in absolute value; False otherwise.
     """
     # units of variable and threshold are [cm/min]
     boolean_tsunami_detection = False
@@ -1303,26 +1148,27 @@ def prs_tsunami_detection(botsflu_5minrate, tsunami_detection_threshold=1.0):
     return boolean_tsunami_detection
 
 
-#**********************************************************************
-#.. EVENT NOTIFICATION: eruption imminent
-#**********************************************************************
+@deprecated
 def prs_eruption_imminent(botsflu_10minrate, eruption_imminent_threshold=5.0):
     """
-    Implemented by:
+    OOI wrapper returning True if a volcanic eruption is imminent.
 
-        2015-01-14: Russell Desiderio. Initial code.
+    Deprecated. This function was coded from pseudocode in DPS
+    1341-00080, which was never publicly released. Its robustness has
+    not been verified with actual data.
 
-    Usage:
+    Parameters
+    ----------
+    botsflu_10minrate : array_like
+        10-minute mean depth change rate (BOTSFLU-10MINRATE_L2) [cm/hr].
+    eruption_imminent_threshold : float, optional
+        Detection threshold [cm/hr]. Default is 5.0.
 
-        TF = prs_eruption_imminent(BOTSFLU-10MINRATE_L2)
-
-            where
-
-            TF = True or False; whether an eruption event is imminent.
-
-    WARNING: This function and its data product input argument were coded as instructed
-             in the DPS using the pseudocode specified. The robustness of this code has
-             not been checked with actual data.
+    Returns
+    -------
+    boolean_eruption_imminent : bool
+        True if any value of botsflu_10minrate meets or exceeds the
+        threshold; False otherwise.
     """
     # units of variable and threshold are [cm/hr]
     boolean_eruption_imminent = False
@@ -1333,26 +1179,27 @@ def prs_eruption_imminent(botsflu_10minrate, eruption_imminent_threshold=5.0):
     return boolean_eruption_imminent
 
 
-#**********************************************************************
-#.. EVENT NOTIFICATION: eruption occurred
-#**********************************************************************
+@deprecated
 def prs_eruption_occurred(botsflu_10minrate, eruption_occurred_threshold=-5.0):
     """
-    Implemented by:
+    OOI wrapper returning True if a volcanic eruption has occurred.
 
-        2015-01-14: Russell Desiderio. Initial code.
+    Deprecated. This function was coded from pseudocode in DPS
+    1341-00080, which was never publicly released. Its robustness has
+    not been verified with actual data.
 
-    Usage:
+    Parameters
+    ----------
+    botsflu_10minrate : array_like
+        10-minute mean depth change rate (BOTSFLU-10MINRATE_L2) [cm/hr].
+    eruption_occurred_threshold : float, optional
+        Detection threshold [cm/hr]. Default is -5.0.
 
-        TF = prs_eruption_occurred(BOTSFLU-10MINRATE_L2)
-
-            where
-
-            TF = True or False; whether an eruption event has occurred.
-
-    WARNING: This function and its data product input argument were coded as instructed
-             in the DPS using the pseudocode specified. The robustness of this code has
-             not been checked with actual data.
+    Returns
+    -------
+    boolean_eruption_occurred : bool
+        True if any value of botsflu_10minrate is at or below the
+        threshold; False otherwise.
     """
     # units of variable and threshold are [cm/hr]
     boolean_eruption_occurred = False
@@ -1363,96 +1210,40 @@ def prs_eruption_occurred(botsflu_10minrate, eruption_occurred_threshold=-5.0):
     return boolean_eruption_occurred
 
 
-#**********************************************************************
-#.. BOTSFLU functions deprecated in May 2017 but retained
-#.. for future re-use and/or documentation.
-#**********************************************************************
-
-
+@deprecated
 def anchor_bin(time, data, bin_duration, mode):
     """
-    Description:
+    Bin BOTPT data into anchored time bins (general-purpose).
 
-        Calculates 'anchored' timestamps (see Notes) and binned data based on timestamps
-        in units of seconds since midnight. Written explicitly for the BOTSFLU DPA which
-        requires two stages of binning: 20hz data on 15 seconds, then the 15sec data on 24 hours.
+    Deprecated May 2017. Superseded by anchor_bin_raw_data_to_15s and
+    anchor_bin_detided_data_to_24h, which handle the raw-data bad-value
+    check and extended 24-hour timestamp records respectively.
 
-    Implemented by:
+    Parameters
+    ----------
+    time : array_like
+        1D array of timestamps [sec since 1900-01-01].
+    data : array_like or None
+        1D array of data to be binned, or None when mode is 'time'.
+    bin_duration : float
+        Bin size [s].
+    mode : str
+        Output mode. One of 'time' (timestamps only), 'data' (binned
+        data and mask only), or 'both' (timestamps, binned data, and
+        mask).
 
-        2015-01-13: Russell Desiderio. Initial code.
-        2015-01-14: Russell Desiderio. Changed output arguments and incorporated conditionals
-                                       to improve program efficiency.
-        2017-05-05: Russell Desiderio. Deprecated because the new code requires different
-                                       modifications to the rawdata and detided data binning:
-                                       (1) bad value check in the rawdata
-                                       (2) 'extended' 24hr timestamp records to incorporate
-                                           non-Nan coverage thresholds for the detided data.
+    Returns
+    -------
+    Depends on mode:
+    'time'  : bin_timestamps
+    'data'  : binned_data, mask_nonzero
+    'both'  : bin_timestamps, binned_data, mask_nonzero
 
-    Usage (1):
-
-        bin_timestamps = anchor_bin(time, None, bin_duration, 'time')
-
-            where
-
-        bin_timestamps = 1D array of centered timestamps for non-empty bins
-        time = 1D array of timestamps, units of sec since 01-01-1900
-        None = not used; python placeholder object
-        bin_duration = size of bin [s]
-        mode = the string 'time'
-
-    Usage (2):
-
-        binned_data, mask_nonzero = anchor_bin(time, data, bin_duration, 'data')
-
-            where
-
-        binned_data = 1D array of binned data; no empty bins are represented
-        mask_nonzero = boolean where True values represent locations of non-empty bins
-        time = 1D array of timestamps, units of sec since 01-01-1900
-        data = data to be binned
-        bin_duration = size of bin [s]
-        mode = the string 'data'
-
-    Usage (3):
-
-        bin_timestamps, binned_data, mask_nonzero = anchor_bin(time, data, bin_duration, 'both')
-
-            where
-
-        bin_timestamps = 1D array of centered timestamps for non-empty bins
-        binned_data = 1D array of binned data; no empty bins are represented
-        mask_nonzero = boolean where True values represent locations of non-empty bins
-        time = 1D array of timestamps, units of sec since 01-01-1900
-        data = data to be binned
-        bin_duration = size of bin [s]
-        mode = the string 'both'
-
-    Notes:
-
-        The conditional construction is used so that only necessary statements are executed;
-        when multiple years' worth of 20 Hz data is operated on, each np.bincount operation
-        may take multiple tens of seconds to execute.
-
-        The np.bincount routine is used in the same way accumarray in matlab is used
-        to bin data. The key to the routine is to convert the timestamps into elapsed
-        time in units of bin_duration and to construct bins based on the floored
-        bin_duration times. The summing is then carried out by using the weighting
-        feature of the np.bincount function, as described in the example in the
-        numpy.bincount documentation as listed in the References.
-
-        The BOTSFLU data products require binning at two stages. Bin results both with
-        and without empty bins are required. The output arguments have been selected to
-        provide this flexibility (in particular mask_nonzero).
-
-        This routine has been constructed to supply 'anchored' timestamps. For example,
-        if the bin_duration is 86400 (the number of seconds in a day) then the start time
-        will be half a bin earlier than the first day of data (at noon) and all timestamps
-        will be 'anchored' at midnight. Similarly, if the bin_duration is 15 sec, all
-        timestamps will be at 00, 15, 30, and 45 seconds past the minute.
-
-    References:
-
-        http://docs.scipy.org/doc/numpy-1.8.1/reference/generated/numpy.bincount.html.
+    Notes
+    -----
+    Timestamps are anchored so that bin centers fall at integral
+    multiples of bin_duration after midnight (e.g., at 0, 15, 30, 45
+    seconds past the minute for bin_duration = 15 s).
     """
     half_bin = bin_duration/2.0
     # anchor time-centered bins by determining the start time to be half a bin
@@ -1496,36 +1287,27 @@ def anchor_bin(time, data, bin_duration, mode):
         return bin_timestamps, binned_data, mask_nonzero
 
 
+@deprecated
 def calc_daydepth_plus(timestamp, botpres, predtide):
     """
-    Description:
+    Compute BOTSFLU-DAYDEPTH_L2 [m] plus a non-empty bin mask.
 
-        Worker function to calculate the botsflu data product daydepth plus an
-        additional boolean mask required to calculate other botsflu data products
-        downstream from daydepth.
+    Deprecated May 2017. Superseded by calc_meandepth_plus and
+    prs_botsflu_daydepth.
 
-    Implemented by:
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide [m].
 
-        2015-01-14: Russell Desiderio. Initial code.
-
-    Usage
-
-        daydepth, mask_nonzero = calc_daydepth_plus(timestamp, botpres, predtide)
-
-            where
-
-        daydepth = BOTSFLU-DAYDEPTH_L2 [m]
-        mask_nonzero = boolean of positions of non-empty 24 hr bins
-        timestamp = OOI system timestamps [sec since 01-01-1900]
-        botpres = BOTPRES_L1 [psia]
-        predtide = predicted tide [m]
-
-    Notes:
-
-    References:
-
-        OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence
-            (BOTSFLU) from the BOTPT instrument. Document Control Number 1341-00080.
+    Returns
+    -------
+    daydepth : ndarray
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
     """
     # calculate 15sec bin timestamps and de-tided depth.
     time15s, meandepth, _ = calc_meandepth_plus(timestamp, botpres, predtide)
@@ -1539,49 +1321,35 @@ def calc_daydepth_plus(timestamp, botpres, predtide):
     return daydepth
 
 
+@deprecated
 def calculate_all_sliding_slopes_then_Nan(data, window_size, coverage_threshold):
     """
-    Description:
+    Compute backwards-looking sliding slopes, then NaN below coverage.
 
-        Calculates backwards-looking sliding slopes using the normal linear
-        regression equations rewritten to be less susceptible to round-off
-        error; required for the BOTSFLU data products 4WKRATE and 8WKRATE.
+    Deprecated May 2017. Superseded by calculate_sliding_slopes, which
+    pre-filters windows by fractional coverage before computing slopes
+    rather than computing all slopes first and then applying NaN masking.
 
-    Implemented by:
+    Parameters
+    ----------
+    data : array_like
+        1D array of input data.
+    window_size : int
+        Nominal window size in samples. If even, incremented by one.
+    coverage_threshold : float
+        Minimum fraction of non-NaN values required within a window.
+        Windows below this threshold are set to NaN after computation.
 
-        2017-05-03: Russell Desiderio. Initial code. Replaces the much faster Moore-Penrose
-                                       pseudo-inverse method so that nan-masking can be
-                                       incorporated.
-        2017-05-08: Russell Desiderio. Added the coverage criterion.
-
-    Usage
-
-        slopes = calculate_sliding_slopes(data, window_size, coverage_threshold)
-
-            where
-
-        slopes = 1D array of sliding slopes
-        data = 1D array of data
-        window_size = integer
-        coverage = fractional window fill threshold for calculation of slope values
+    Returns
+    -------
+    slopes : ndarray
+        1D array of backwards-looking regression slopes. Length equals
+        len(data).
 
     Notes
-
-        The robust regression equations are taken from equations 14.2.15-14.2.17 in the Numerical
-        Recipes reference below.
-
-        Before the May 2017 modifications, just one Nan within a window would result in a Nan value
-        for the slope. The routine now will calculate slopes by ignoring Nans, and if the coverage
-        is 70% or better, a calculated value will result. If the coverage is less than 70%, then the
-        output value is Nan.
-
-        The data vector is padded so that bins within a window of the beginning of the data record
-        that satisfy the coverage criterion will have non-Nan data product values.
-
-    References:
-
-        Press, Flannery, Teukolsky and Vetterling. Numerical Recipes, 1986; 1987 reprint.
-        Cambridge University Press. page 507.
+    -----
+    The regression equations are from Press et al. (1986), equations
+    14.2.15-14.2.17.
     """
     # ODD WINDOW SIZES are expected; if even, increment by one
     window_size = window_size + 1 - np.mod(window_size, 2)
@@ -1629,41 +1397,36 @@ def calculate_all_sliding_slopes_then_Nan(data, window_size, coverage_threshold)
     return slopes
 
 
+@deprecated
 def calculate_sliding_slopes__MoorePenrose(data, window_size):
     # DEPRECATED because nan-masking cannot be implemented with this algorithm #
     """
-    Description:
+    Compute backwards-looking sliding slopes via Moore-Penrose pseudoinverse.
 
-        Calculates backwards-looking sliding slopes using Moore_Penrose
-        pseudo-inverse matrices; required for the BOTSFLU data products
-        4WKRATE and 8WKRATE.
+    Deprecated May 2017. Superseded by calculate_sliding_slopes. The
+    Moore-Penrose pseudoinverse method cannot accommodate NaN values in
+    the data window.
 
-    Implemented by:
+    Parameters
+    ----------
+    data : array_like
+        1D array of input data.
+    window_size : int
+        Number of samples in the sliding window.
 
-        2015-01-13: Russell Desiderio. Initial code.
-        2017-05-03: Russell Desiderio. Deprecated because nan-masking cannot
-                                       be implemented with this algorithm.
-
-    Usage
-
-        slopes = calculate_sliding_slopes(data, window_size)
-
-            where
-
-        slopes = 1D array of sliding slopes
-        data = 1D array of data
-        window_size = integer
+    Returns
+    -------
+    slopes : ndarray
+        1D array of backwards-looking regression slopes. The first
+        window_size - 1 elements are NaN.
 
     Notes
-
-        Code lifted from John D'Errico's response on Matlab Central (thread 49181)
-        to a query on how to calculate vectorized rolling regressions. For a more
-        generalized application of the pinv\filter method, see D'Errico's 2007 code
-        for movingslope.m on Matlab Central's file exchange (16997).
-
-        The slopes are backwards-looking, not centered. The first non-nan value occurs
-        at (python) index window_size, and is the slope of a regression of the first
-        window_size points.
+    -----
+    Algorithm from John D'Errico's response on Matlab Central (thread
+    49181). The first non-NaN value occurs at index window_size - 1 and
+    is the slope of the regression of the first window_size points. If
+    time-centered slopes are needed, circularly shift the result by half
+    a window.
     """
     column1 = np.ones((window_size, 1))
     column2 = -np.arange(float(window_size)).reshape(-1, 1)
@@ -1675,4 +1438,3 @@ def calculate_sliding_slopes__MoorePenrose(data, window_size):
     # if time-centered slopes are desired, circularly shift this by half a window.
 
     return slopes
-

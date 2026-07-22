@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.sfl_functions
-@file ion_functions/data/sfl_functions.py
-@author Christopher Wingard, Russell Desiderio
-@brief Module containing Seafloor Properties related data-calculations.
+Module containing Seafloor Properties data processing functions for the
+Ocean Observatories Initiative. Covers the THSPH, TRHPH, PRESF, and PREST
+instrument families.
 """
 
 import numpy as np
@@ -21,49 +20,57 @@ from ion_functions.data.sfl_functions_surface import tdat, sdat, cdat
 def sfl_thsph_ph(counts_ysz, counts_agcl, temperature, e2l_ysz, e2l_agcl,
                  arr_hgo, arr_agcl, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3, chl):
     """
-    Description:
+    Compute vent fluid pH (THSPHPH-PH_L2) using measured AgCl reference
+    electrode and chloride from TRHPHCC_L2.
 
-        Calculates the THSPHPH-PH_L2 data product, one of the 4 THSPHPH data
-        products for the THSPH instruments. The PH data product algorithm
-        calculates pH assuming good chloride data is available from
-        TRHPH (TRHPHCC_L2) and a working AgCl reference electrode.
+    Parameters
+    ----------
+    counts_ysz : array_like
+        Raw counts from YSZ electrode (THSPHPH-YSZ_L0) [counts].
+    counts_agcl : array_like
+        Raw counts from AgCl reference electrode (THSPHPH-AGCL_L0) [counts].
+    temperature : array_like
+        Temperature near sample inlet (THSPHTE-TH_L1) [deg_C].
+    e2l_ysz : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting YSZ electrode engineering values to lab
+        calibrated values.
+    e2l_agcl : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting AgCl electrode engineering values to lab
+        calibrated values.
+    arr_hgo : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for electrode material response to temperature.
+    arr_agcl : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for AgCl electrode material response to temperature.
+    arr_tac : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tac (=tbc0).
+    arr_tbc1 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc1.
+    arr_tbc2 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc2.
+    arr_tbc3 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc3.
+    chl : array_like
+        Vent fluid chloride concentration from TRHPHCC_L2 [mmol kg^-1].
 
-    Implemented by:
+    Returns
+    -------
+    pH : ndarray
+        Vent fluid pH (THSPHPH-PH_L2) [dimensionless].
 
-        2014-07-08: Russell Desiderio. Initial Code.
-        2015-07-24: Russell Desiderio. Incorporated calculate_vent_pH function.
-
-    Usage:
-
-        pH = sfl_thsph_ph(counts_ysz, counts_agcl, temperature, e2l_ysz, e2l_agcl,
-                          arr_hgo, arr_agcl, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3, chl)
-
-            where
-
-        pH = vent fluid pH: THSPHPH-PH_L2) [unitless]
-        counts_ysz =  raw data recorded by ysz electrode THSPHPH-YSZ_L0 [counts]
-        counts_agcl =  raw data recorded by AgCl electrode THSPHPH-AGCL_L0 [counts]
-        temperature = temperature near sample inlet THSPHTE-TH_L1 [deg_C].
-        e2l_ysz =     array of 5th degree polynomial coefficients to convert the
-                      ysz electrode engineering values to lab calibrated values.
-        e2l_agcl =    array of 5th degree polynomial coefficients to convert the
-                      agcl electrode engineering values to lab calibrated values.
-        arr_hgo =     array of 5th degree polynomial coefficients to calculate the
-                      electrode material response to temperature.
-        arr_agcl =    array of 5th degree polynomial coefficients to calculate the
-                      AgCl electrode material response to temperature.
-        arr_tac = array containing the 5th degree polynomial coefficients to calculate tac (=tbc0).
-        arr_tbc1 = array containing the 5th degree polynomial coefficients to calculate tbc1.
-        arr_tbc2 = array containing the 5th degree polynomial coefficients to calculate tbc2.
-        arr_tbc3 = array containing the 5th degree polynomial coefficients to calculate tbc3.
-        chl = vent fluid chloride concentration from TRHPHCC_L2 [mmol kg-1].
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid pH. Document Control
-            Number 1341-00190. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI>> Controlled >> 1000 System Level >>
-            1341-00190_Data_Product_Spec_THSPHPH_OOI.pdf)
+    Notes
+    -----
+    Uses measured AgCl reference electrode and chloride from TRHPHCC_L2.
+    Values with electrode potential outside [-0.7, 0.0] V or pH outside
+    [3.0, 7.0] are set to NaN. See calculate_vent_pH for the shared core
+    algorithm.
     """
     # calculate lab calibrated electrode response [V]
     v_labcal_ysz = v_labcal(counts_ysz, e2l_ysz)
@@ -81,51 +88,55 @@ def sfl_thsph_ph(counts_ysz, counts_agcl, temperature, e2l_ysz, e2l_agcl,
 def sfl_thsph_ph_acl(counts_ysz, counts_agcl, temperature, e2l_ysz, e2l_agcl,
                      arr_hgo, arr_agcl, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3):
     """
-    Description:
+    Compute vent fluid pH (THSPHPH-PH-ACL_L2) using measured AgCl reference
+    electrode and assumed chloride concentration.
 
-        Calculates the THSPHPH-PH-ACL_L2 data product, one of the 4 THSPHPH
-        data products for the THSPH instruments. The PH-ACL data product
-        algorithm calculates pH assuming no good chloride data available from
-        TRHPH (TRHPHCC_L2) (assumes instead a pre-determined chloride concentration
-        which is set in the chloride_activity function). The data from the AgCl
-        reference electrode is also assumed to be good and used in this
-        calculation.
+    Parameters
+    ----------
+    counts_ysz : array_like
+        Raw counts from YSZ electrode (THSPHPH-YSZ_L0) [counts].
+    counts_agcl : array_like
+        Raw counts from AgCl reference electrode (THSPHPH-AGCL_L0) [counts].
+    temperature : array_like
+        Temperature near sample inlet (THSPHTE-TH_L1) [deg_C].
+    e2l_ysz : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting YSZ electrode engineering values to lab
+        calibrated values.
+    e2l_agcl : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting AgCl electrode engineering values to lab
+        calibrated values.
+    arr_hgo : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for electrode material response to temperature.
+    arr_agcl : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for AgCl electrode material response to temperature.
+    arr_tac : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tac (=tbc0).
+    arr_tbc1 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc1.
+    arr_tbc2 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc2.
+    arr_tbc3 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc3.
 
-    Implemented by:
+    Returns
+    -------
+    pH : ndarray
+        Vent fluid pH (THSPHPH-PH-ACL_L2) [dimensionless].
 
-        2014-07-08: Russell Desiderio. Initial Code.
-        2015-07-24: Russell Desiderio. Incorporated calculate_vent_pH function.
-
-    Usage:
-
-        pH = sfl_thsph_ph_acl(counts_ysz, counts_agcl, temperature, e2l_ysz, e2l_agcl,
-                              arr_hgo, arr_agcl, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3)
-
-            where
-
-        pH = vent fluid pH: THSPHPH-PH-ACL_L2) [unitless]
-        counts_ysz =  raw data recorded by ysz electrode THSPHPH-YSZ_L0 [counts]
-        counts_agcl =  raw data recorded by AgCl electrode THSPHPH-AGCL_L0 [counts]
-        temperature = temperature near sample inlet THSPHTE-TH_L1 [deg_C].
-        e2l_ysz =     array of 5th degree polynomial coefficients to convert the
-                      ysz electrode engineering values to lab calibrated values.
-        e2l_agcl =    array of 5th degree polynomial coefficients to convert the
-                      agcl electrode engineering values to lab calibrated values.
-        arr_hgo =     array of 5th degree polynomial coefficients to calculate the
-                      electrode material response to temperature.
-        arr_agcl =    array of 5th degree polynomial coefficients to calculate the
-                      AgCl electrode material response to temperature.
-        arr_tac = array containing the 5th degree polynomial coefficients to calculate tac (=tbc0).
-        arr_tbc1 = array containing the 5th degree polynomial coefficients to calculate tbc1.
-        arr_tbc2 = array containing the 5th degree polynomial coefficients to calculate tbc2.
-        arr_tbc3 = array containing the 5th degree polynomial coefficients to calculate tbc3.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid pH. Document Control
-            Number 1341-00190. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI>> Controlled >> 1000 System Level >>
-            1341-00190_Data_Product_Spec_THSPHPH_OOI.pdf)
+    Notes
+    -----
+    Uses measured AgCl reference electrode and a default chloride
+    concentration of 250.0 mmol/kg (set in chloride_activity). Values with
+    electrode potential outside [-0.7, 0.0] V or pH outside [3.0, 7.0] are
+    set to NaN. See calculate_vent_pH for the shared core algorithm.
     """
     # calculate lab calibrated electrode response [V]
     v_labcal_ysz = v_labcal(counts_ysz, e2l_ysz)
@@ -144,50 +155,56 @@ def sfl_thsph_ph_acl(counts_ysz, counts_agcl, temperature, e2l_ysz, e2l_agcl,
 def sfl_thsph_ph_noref(counts_ysz, temperature, arr_agclref, e2l_ysz, arr_hgo,
                        arr_agcl, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3, chl):
     """
-    Description:
+    Compute vent fluid pH (THSPHPH-PH-NOREF_L2) using a theoretical reference
+    electrode potential and chloride from TRHPHCC_L2.
 
-        Calculates the THSPHPH-PH-NOREF_L2 data product, one of the 4 THSPHPH
-        data products for the THSPH instruments. The PH-NOREF data product
-        algorithm calculates pH assuming no good reference (AgCl) electrode data
-        (uses instead a theoretical value calculated from vent temperature) and
-        also uses (presumably good) chloride data from TRHPH (TRHPHCC_L2).
+    Parameters
+    ----------
+    counts_ysz : array_like
+        Raw counts from YSZ electrode (THSPHPH-YSZ_L0) [counts].
+    temperature : array_like
+        Temperature near sample inlet (THSPHTE-TH_L1) [deg_C].
+    arr_agclref : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate the theoretical reference electrode
+        potential from temperature.
+    e2l_ysz : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting YSZ electrode engineering values to lab
+        calibrated values.
+    arr_hgo : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for electrode material response to temperature.
+    arr_agcl : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for AgCl electrode material response to temperature.
+    arr_tac : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tac (=tbc0).
+    arr_tbc1 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc1.
+    arr_tbc2 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc2.
+    arr_tbc3 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc3.
+    chl : array_like
+        Vent fluid chloride concentration from TRHPHCC_L2 [mmol kg^-1].
 
-    Implemented by:
+    Returns
+    -------
+    pH : ndarray
+        Vent fluid pH (THSPHPH-PH-NOREF_L2) [dimensionless].
 
-        2014-07-08: Russell Desiderio. Initial Code.
-        2015-07-24: Russell Desiderio. Incorporated calculate_vent_pH function.
-
-    Usage:
-
-        pH = sfl_thsph_ph_noref(counts_ysz, temperature, arr_agclref, e2l_ysz, arr_hgo,
-                                arr_agcl, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3, chl)
-
-            where
-
-        pH = vent fluid pH: THSPHPH-PH-NOREF_L2) [unitless]
-        counts_ysz =  raw data recorded by ysz electrode THSPHPH-YSZ_L0 [counts]
-        temperature = temperature near sample inlet THSPHTE-TH_L1 [deg_C].
-        arr_agclref = array of 5th degree polynomial coefficients to calculate the
-                      theoretical reference electrode potential, replacing measured
-                      reference AgCl electrode potential values.
-        e2l_ysz =     array of 5th degree polynomial coefficients to convert the
-                      ysz electrode engineering values to lab calibrated values.
-        arr_hgo =     array of 5th degree polynomial coefficients to calculate the
-                      electrode material response to temperature.
-        arr_agcl =    array of 5th degree polynomial coefficients to calculate the
-                      AgCl electrode material response to temperature.
-        arr_tac = array containing the 5th degree polynomial coefficients to calculate tac (=tbc0).
-        arr_tbc1 = array containing the 5th degree polynomial coefficients to calculate tbc1.
-        arr_tbc2 = array containing the 5th degree polynomial coefficients to calculate tbc2.
-        arr_tbc3 = array containing the 5th degree polynomial coefficients to calculate tbc3.
-        chl = vent fluid chloride concentration from TRHPHCC_L2 [mmol kg-1].
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid pH. Document Control
-            Number 1341-00190. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI>> Controlled >> 1000 System Level >>
-            1341-00190_Data_Product_Spec_THSPHPH_OOI.pdf)
+    Notes
+    -----
+    Uses a theoretical reference electrode potential computed from vent
+    temperature (arr_agclref) in place of a measured AgCl electrode signal,
+    and chloride from TRHPHCC_L2. Values with electrode potential outside
+    [-0.7, 0.0] V or pH outside [3.0, 7.0] are set to NaN. See
+    calculate_vent_pH for the shared core algorithm.
     """
     # calculate lab calibrated electrode response [V]
     v_labcal_ysz = v_labcal(counts_ysz, e2l_ysz)
@@ -205,51 +222,55 @@ def sfl_thsph_ph_noref(counts_ysz, temperature, arr_agclref, e2l_ysz, arr_hgo,
 def sfl_thsph_ph_noref_acl(counts_ysz, temperature, arr_agclref, e2l_ysz, arr_hgo,
                            arr_agcl, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3):
     """
-    Description:
+    Compute vent fluid pH (THSPHPH-PH-NOREF-ACL_L2) using a theoretical
+    reference electrode potential and assumed chloride concentration.
 
-        Calculates the THSPHPH-PH-NOREF-ACL_L2 data product, one of the 4 THSPHPH
-        data products for the THSPH instruments. The PH-NOREF-ACL data product
-        algorithm calculates pH assuming no good reference (AgCl) electrode data
-        (uses instead a theoretical value calculated from vent temperature) and
-        assuming no good chloride data from TRHPH (TRHPHCC_L2) (assumes instead a
-        pre-determined chloride concentration which is set in the chloride_activity
-        function).
+    Parameters
+    ----------
+    counts_ysz : array_like
+        Raw counts from YSZ electrode (THSPHPH-YSZ_L0) [counts].
+    temperature : array_like
+        Temperature near sample inlet (THSPHTE-TH_L1) [deg_C].
+    arr_agclref : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate the theoretical reference electrode
+        potential from temperature.
+    e2l_ysz : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting YSZ electrode engineering values to lab
+        calibrated values.
+    arr_hgo : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for electrode material response to temperature.
+    arr_agcl : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for AgCl electrode material response to temperature.
+    arr_tac : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tac (=tbc0).
+    arr_tbc1 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc1.
+    arr_tbc2 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc2.
+    arr_tbc3 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc3.
 
-    Implemented by:
+    Returns
+    -------
+    pH : ndarray
+        Vent fluid pH (THSPHPH-PH-NOREF-ACL_L2) [dimensionless].
 
-        2014-07-08: Russell Desiderio. Initial Code.
-        2015-07-24: Russell Desiderio. Incorporated calculate_vent_pH function.
-
-    Usage:
-
-        pH = sfl_thsph_ph_noref_acl(counts_ysz, temperature, arr_agclref, e2l_ysz, arr_hgo,
-                                    arr_agcl, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3)
-
-            where
-
-        pH = vent fluid pH: THSPHPH-PH-NOREF-ACL_L2) [unitless]
-        counts_ysz =  raw data recorded by ysz electrode THSPHPH-YSZ_L0 [counts]
-        temperature = temperature near sample inlet THSPHTE-TH_L1 [deg_C].
-        arr_agclref = array of 5th degree polynomial coefficients to calculate the
-                      theoretical reference electrode potential, replacing measured
-                      reference AgCl electrode potential values.
-        e2l_ysz =     array of 5th degree polynomial coefficients to convert the
-                      ysz electrode engineering values to lab calibrated values.
-        arr_hgo =     array of 5th degree polynomial coefficients to calculate the
-                      electrode material response to temperature.
-        arr_agcl =    array of 5th degree polynomial coefficients to calculate the
-                      AgCl electrode material response to temperature.
-        arr_tac = array containing the 5th degree polynomial coefficients to calculate tac (=tbc0).
-        arr_tbc1 = array containing the 5th degree polynomial coefficients to calculate tbc1.
-        arr_tbc2 = array containing the 5th degree polynomial coefficients to calculate tbc2.
-        arr_tbc3 = array containing the 5th degree polynomial coefficients to calculate tbc3.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid pH. Document Control
-            Number 1341-00190. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI>> Controlled >> 1000 System Level >>
-            1341-00190_Data_Product_Spec_THSPHPH_OOI.pdf)
+    Notes
+    -----
+    Uses a theoretical reference electrode potential computed from vent
+    temperature (arr_agclref) in place of a measured AgCl electrode signal,
+    and a default chloride concentration of 250.0 mmol/kg (set in
+    chloride_activity). Values with electrode potential outside [-0.7, 0.0] V
+    or pH outside [3.0, 7.0] are set to NaN. See calculate_vent_pH for the
+    shared core algorithm.
     """
     # calculate lab calibrated electrode response [V]
     v_labcal_ysz = v_labcal(counts_ysz, e2l_ysz)
@@ -267,41 +288,39 @@ def sfl_thsph_ph_noref_acl(counts_ysz, temperature, arr_agclref, e2l_ysz, arr_hg
 
 def calculate_vent_pH(e_ph, e_ref, temperature, arr_hgo, arr_agcl, act_chl):
     """
-    Description:
+    Compute vent fluid pH for the THSPH instrument.
 
-        Worker function to calculate the vent fluid pH for the THSPH instruments. This
-        function is called by
-            sfl_thsph_ph
-            sfl_thsph_ph_acl
-            sfl_thsph_ph_noref
-            sfl_thsph_ph_noref_acl.
+    Called by sfl_thsph_ph, sfl_thsph_ph_acl, sfl_thsph_ph_noref, and
+    sfl_thsph_ph_noref_acl.
 
-    Implemented by:
+    Parameters
+    ----------
+    e_ph : array_like
+        Lab-calibrated YSZ electrode potential [V].
+    e_ref : array_like
+        Reference electrode potential, either measured (AgCl) or
+        theoretical [V].
+    temperature : array_like
+        Temperature near sample inlet (THSPHTE-TH_L1) [deg_C].
+    arr_hgo : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for electrode material response to temperature.
+    arr_agcl : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for AgCl electrode material response to temperature.
+    act_chl : array_like
+        Chloride activity computed by chloride_activity [dimensionless].
 
-        2015-07-24: Russell Desiderio. Initial Code.
+    Returns
+    -------
+    pH : ndarray
+        Vent fluid pH [dimensionless]. Values with electrode potential
+        outside [-0.7, 0.0] V or pH outside [3.0, 7.0] are set to NaN.
 
-    Usage:
-
-        pH = calculate_vent_pH(e_ph, e_ref, temperature, arr_hgo, arr_agcl, act_chl)
-
-            where
-
-        pH = vent fluid pH
-        e_ph = intermediate pH potential uncorrected for reference
-        e_ref = reference pH potential, either measured or calculated
-        temperature = temperature near sample inlet THSPHTE-TH_L1 [deg_C].
-        arr_hgo = array of 5th degree polynomial coefficients to calculate the
-                  electrode material response to temperature.
-        arr_agcl = array of 5th degree polynomial coefficients to calculate the
-                  AgCl electrode material response to temperature.
-        act_chl = calculated chloride activity.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid pH. Document Control
-            Number 1341-00190. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI>> Controlled >> 1000 System Level >>
-            1341-00190_Data_Product_Spec_THSPHPH_OOI.pdf)
+    Notes
+    -----
+    Out-of-range checks on both the electrode potential difference and the
+    final pH are applied as specified in the unreleased DPS (1341-00190).
     """
     # fill value local to this function to avoid python warnings when nans are encountered
     # in boolean expressions. the masking will convert values derived from this local fill
@@ -338,54 +357,48 @@ def calculate_vent_pH(e_ph, e_ref, temperature, arr_hgo, arr_agcl, act_chl):
 def sfl_thsph_sulfide(counts_hs, counts_ysz, temperature, e2l_hs, e2l_ysz, arr_hgo,
                       arr_logkfh2g, arr_eh2sg, arr_yh2sg):
     """
-    Description:
+    Compute vent fluid hydrogen sulfide concentration (THSPHHS_L2).
 
-        Calculates the THSPHHS_L2 data product (hydrogen sulfide concentration) for
-        the THSPH instruments from vent temperature and from data from its sulfide
-        and YSZ electrodes. Note that the chemical formula for hydrogen is H2, and
-        that for hydrogen sulfide is H2S; this could lead to confusion in the
-        variable and array names from the DPS if care is not taken. Note also that
-        this hydrogen sulfide DPA does use an intermediate data product and its
-        'calibration' coefficients (hydrogen fugacity) that are also used in the
-        hydrogen concentration DPA.
+    Parameters
+    ----------
+    counts_hs : array_like
+        Raw counts from sulfide electrode (THSPHHS_L0) [counts].
+    counts_ysz : array_like
+        Raw counts from YSZ electrode (THSPHPH-YSZ_L0) [counts].
+    temperature : array_like
+        Temperature near sample inlet (THSPHTE-TH_L1) [deg_C].
+    e2l_hs : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting sulfide electrode engineering values to lab
+        calibrated values.
+    e2l_ysz : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting YSZ electrode engineering values to lab
+        calibrated values.
+    arr_hgo : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for electrode material response to temperature.
+    arr_logkfh2g : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for equilibrium hydrogen fugacity as a function of
+        temperature.
+    arr_eh2sg : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for theoretical potential of gas phase H2S; pad unused
+        high-degree terms with zeros: [0., 0., 0., 0., c1, c0].
+    arr_yh2sg : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for the fugacity/concentration quotient yh2sg.
 
-    Implemented by:
+    Returns
+    -------
+    h2s : ndarray
+        Hydrogen sulfide concentration at the vent (THSPHHS_L2) [mmol kg^-1].
 
-        2014-07-08: Russell Desiderio. Initial Code.
-
-    Usage:
-
-        h2s = sfl_thsph_sulfide(counts_hs, counts_ysz, temperature, e2l_hs, e2l_ysz,
-                                arr_hgo, arr_logkfh2g, arr_eh2sg, arr_yh2sg)
-
-            where
-
-        h2s = hydrogen sulfide concentration at the vent: THSPHHS_L2 [mmol kg-1]
-        counts_hs = raw data recorded by sulfide electrode THSPHHS_L0 [counts]
-        counts_ysz = raw data recorded by ysz electrode THSPHPH-YSZ_L0 [counts]
-        temperature = temperature near sample inlet THSPHTE-TH_L1 [deg_C].
-        e2l_hs  = array of 5th degree polynomial coefficients to convert the
-                  sulfide electrode engineering values to lab calibrated values.
-        e2l_ysz = array of 5th degree polynomial coefficients to convert the
-                  ysz electrode engineering values to lab calibrated values.
-        arr_hgo = array of 5th degree polynomial coefficients to calculate the
-                  electrode material response to temperature.
-        arr_logkfh2g = array of 5th degree polynomial coefficients to calculate the
-                  equilibrium hydrogen fugacity as a function of temperature.
-        arr_eh2sg  = array of 5th degree polynomial coefficients to calculate the
-                  theoretical potential of gas phase hydrogen sulfide to temperature;
-                  in the current DPS, highest degree term is first order, so pad
-                  this array with entries of zero [0., 0., 0., 0., c1, c0].
-        arr_yh2sg  = array of 5th degree polynomial coefficients to calculate the
-                  fugacity/concentration quotient yh2sg from hydrogen fugacity.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid Hydrogen Sulfide
-            Concentration. Document Control Number 1341-00200.
-            https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI>> Controlled >> 1000 System Level >>
-            1341-00200_Data_Product_Spec_THSPHHS_OOI.pdf)
+    Notes
+    -----
+    The DPS document for THSPHHS (1341-00200) was never publicly released.
+    The algorithm is documented from the code and code comments only.
     """
     # calculate lab calibrated electrode responses [V]
     v_labcal_hs = v_labcal(counts_hs, e2l_hs)
@@ -417,40 +430,41 @@ def sfl_thsph_sulfide(counts_hs, counts_ysz, temperature, e2l_hs, e2l_ysz, arr_h
 def sfl_thsph_hydrogen(counts_h2, counts_ysz, temperature, e2l_h2, e2l_ysz, arr_hgo,
                        arr_logkfh2g):
     """
-    Description:
+    Compute vent fluid hydrogen concentration (THSPHHC_L2).
 
-        Calculates the THSPHHC_L2 data product (hydrogen concentration) for the THSPH
-        instruments from vent temperature and from data from its hydrogen and YSZ
-        electrodes.
+    Parameters
+    ----------
+    counts_h2 : array_like
+        Raw counts from hydrogen electrode (THSPHHC_L0) [counts].
+    counts_ysz : array_like
+        Raw counts from YSZ electrode (THSPHPH-YSZ_L0) [counts].
+    temperature : array_like
+        Temperature near sample inlet (THSPHTE-TH_L1) [deg_C].
+    e2l_h2 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting hydrogen electrode engineering values to lab
+        calibrated values.
+    e2l_ysz : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients converting YSZ electrode engineering values to lab
+        calibrated values.
+    arr_hgo : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for electrode material response to temperature.
+    arr_logkfh2g : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients for equilibrium hydrogen fugacity as a function of
+        temperature.
 
-    Implemented by:
+    Returns
+    -------
+    h2 : ndarray
+        Hydrogen concentration at the vent (THSPHHC_L2) [mmol kg^-1].
 
-        2014-07-08: Russell Desiderio. Initial Code.
-
-    Usage:
-
-        h2 = sfl_thsph_hydrogen(counts_h2, counts_ysz, temperature, e2l_h2, e2l_ysz, arr_hgo,
-                                arr_logkfh2g)
-
-            where
-
-        h2 = hydrogen concentration at the vent: THSPHHC_L2 [mmol kg-1]
-        counts_h2 = raw data recorded by hydrogen electrode THSPHHC_L0 [counts]
-        counts_ysz = raw data recorded by ysz electrode THSPHPH-YSZ_L0 [counts]
-        temperature = temperature near sample inlet THSPHTE-TH_L1 [deg_C].
-        e2l_h2  = array of 5th degree polynomial coefficients to convert the
-                  hydrogen electrode engineering values to lab calibrated values.
-        e2l_ysz = array of 5th degree polynomial coefficients to convert the
-                  ysz electrode engineering values to lab calibrated values.
-        arr_hgo = array of 5th degree polynomial coefficients to calculate the
-                  electrode material response to temperature.
-        arr_logkfh2g = array of 5th degree polynomial coefficients to calculate the
-                  equilibrium hydrogen fugacity as a function of temperature.
-
-        OOI (2014). Data Product Specification for Vent Fluid Hydrogen Concentration.
-            Document Control Number 1341-00210. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI>> Controlled >> 1000 System Level >>
-            1341-00210_Data_Product_Spec_THSPHHC_OOI.pdf)
+    Notes
+    -----
+    The DPS document for THSPHHC (1341-00210) was never publicly released.
+    The algorithm is documented from the code and code comments only.
     """
     # calculate lab calibrated electrode responses [V]
     v_labcal_h2 = v_labcal(counts_h2, e2l_h2)
@@ -475,33 +489,35 @@ def sfl_thsph_hydrogen(counts_h2, counts_ysz, temperature, e2l_h2, e2l_ysz, arr_
     return h2
 
 
-def chloride_activity(temperature, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3, chloride=250.0):
+def chloride_activity(temperature, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3,
+                      chloride=250.0):
     """
-    Description:
+    Compute chloride activity for THSPHPH_L2 data products.
 
-        Subfunction to calculate the chloride activity as a function of temperature
-        needed by the THSPHPH_L2 data products for the THSPH instruments. The chloride
-        value can either come from the TRHPHCC_L2 data product or the default value
-        of 250.0 mmol/kg can be used.
+    Parameters
+    ----------
+    temperature : array_like
+        Temperature near sample inlet (THSPHTE-TH_L1) [deg_C].
+    arr_tac : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tac (=tbc0).
+    arr_tbc1 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc1.
+    arr_tbc2 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc2.
+    arr_tbc3 : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients to calculate tbc3.
+    chloride : array_like, optional
+        Vent fluid chloride concentration from TRHPHCC_L2 [mmol kg^-1].
+        Defaults to 250.0 mmol/kg when not supplied.
 
-    Implemented by:
-
-        2014-07-08: Russell Desiderio. Initial Code.
-
-    Usage:
-
-        act_chl = chloride_activity(temperature, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3[, chloride])
-
-            where
-
-        act_chl = calculated chloride activity.
-        temperature = temperature near sample inlet THSPHTE-TH_L1 [deg_C].
-        arr_tac = array containing the 5th degree polynomial coefficients to calculate tac (=tbc0).
-        arr_tbc1 = array containing the 5th degree polynomial coefficients to calculate tbc1.
-        arr_tbc2 = array containing the 5th degree polynomial coefficients to calculate tbc2.
-        arr_tbc3 = array containing the 5th degree polynomial coefficients to calculate tbc3.
-        chloride [optional] = if specified, vent fluid chloride concentration from TRHPH
-                              (TRHPHCC_L2) [mmol kg-1], else a value of 250.0 mmol/kg will be used.
+    Returns
+    -------
+    act_chl : ndarray
+        Chloride activity [dimensionless].
     """
     # find number of data packets to be processed;
     # this also works if temperature is not an np.array.
@@ -537,37 +553,31 @@ def chloride_activity(temperature, arr_tac, arr_tbc1, arr_tbc2, arr_tbc3, chlori
 
 def v_labcal(counts, array_e2l_coeff):
     """
-    Description:
+    Convert raw THSPH electrode counts to lab-calibrated voltage.
 
-        Calculates any one of the 4 "lab calibrated" voltages from electrode sensor
-        (not thermistor nor thermocouple) raw data used in the THSPH instruments.
-        For use with the THSPH L2 data products (THSPHHC, THSPHHS, THSPHPH).
+    Used by all THSPH L2 data products (THSPHHC, THSPHHS, THSPHPH).
 
-    Implemented by:
+    Parameters
+    ----------
+    counts : array_like
+        L0 decimal counts from one of the four THSPH electrodes
+        (THSPHPH-YSZ_L0, THSPHPH-AGC_L0, THSPHHC_L0, THSPHHS_L0)
+        [counts].
+    array_e2l_coeff : array_like
+        Calibration coefficient. 6-element array of 5th-degree polynomial
+        coefficients (descending order) converting engineering values to lab
+        calibrated values.
 
-        2014-07-08: Russell Desiderio. Initial Code.
-        2015-07-22: Russell Desiderio. Added call to replace_fill_with_nan.
+    Returns
+    -------
+    v_labcal_electrode : ndarray
+        Lab-calibrated electrode voltage (V_actual) [V].
 
-    Usage:
-
-        v_labcal_electrode = v_labcal(counts, array_e2l_coeff)
-
-            where
-
-        v_labcal_electrode = lab calibrated value ("V_actual" in DPS) for the electrode [V].
-        counts = L0 output of one of the 4 electrodes:
-                 THSPHPH-YSZ_L0, THSPHPH-AGC_L0, THSPHHC_L0, THSPHHS_L0 [decimal counts].
-        array_e2l_coeff = 6 element array containing the 5th degree polynomial calibration
-                          coefficients for the electrode for which the lab cal values are
-                          desired. The coefficients are assumed to be stored in descending
-                          order.
-
-    Notes:
-
-        All the THSPH L2 data products call v_labcal to process raw count input data. The
-        action of the replace_fill_with_nan call in this code therefore replaces system fill
-        values with nans for all of these DPAs.
-
+    Notes
+    -----
+    System fill values in counts are replaced with NaN before conversion,
+    so fill value replacement applies to all THSPH L2 data products that
+    call this function.
     """
     counts = replace_fill_with_nan(None, counts)
 
@@ -583,26 +593,19 @@ def v_labcal(counts, array_e2l_coeff):
 
 def nernst(temperature):
     """
-    Description:
+    Compute the temperature-dependent term of the Nernst equation.
 
-        Calculates the value of the temperature dependent term of the Nernst
-        equation to provide the link between measured electrode potentials and
-        concentration. For use with the THSPH L2 data products (THSPHHC, THSPHHS,
-        THSPHPH), all of which use electrodes to provide the raw data. The
-        temperature to be used is specified in the DPSs to be THSPHTE-TH.
+    Used by all THSPH L2 data products (THSPHHC, THSPHHS, THSPHPH).
 
-    Implemented by:
+    Parameters
+    ----------
+    temperature : array_like
+        Temperature near sample inlet (THSPHTE-TH_L1) [deg_C].
 
-        2014-07-08: Russell Desiderio. Initial Code.
-
-    Usage:
-
-        e_nernst = nernst(temperature)
-
-            where
-
-        e_nernst = value of the temperature dependent term of the Nernst equation [V]
-        temperature = temperature near sample inlet THSPHTE-TH_L1 [deg_C]
+    Returns
+    -------
+    e_nernst : ndarray
+        Temperature-dependent Nernst factor [V].
     """
     # e_nernst = ln(10) * (gas constant) * (temperature, Kelvin)/(Faraday's constant)
     #          = 2.30259 * 8.31446 [J/mole/K] / 96485.3 [coulombs/mole] * (T + 273.15)
@@ -616,46 +619,37 @@ def nernst(temperature):
 
 def sfl_thsph_temp_th(tc_rawdec_H, e2l_H, l2s_H, ts_rawdec_r, e2l_r, l2s_r, s2v_r):
     """
-    Description:
+    Compute vent fluid temperature at the sample inlet (THSPHTE-TH_L1).
 
-        OOI Level 1 THSPH data product THSPHTE-TH (final temperature at position
-        "H" near sample inlet), which is calculated using data from the Hydrothermal
-        Vent Fluid In-situ Chemistry (THSPH) instrument, series A (one series for all
-        instruments).
+    Parameters
+    ----------
+    tc_rawdec_H : array_like
+        H thermocouple decimal counts (THSPHTE-TCH_L0) [counts].
+    e2l_H : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        H thermocouple engineering values to lab calibrated values.
+    l2s_H : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        H thermocouple lab calibrated values to scientific values [deg_C].
+    ts_rawdec_r : array_like
+        Reference thermistor decimal counts (THSPHTE-REF_L0) [counts].
+    e2l_r : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        reference thermistor engineering values to lab calibrated values.
+    l2s_r : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        reference thermistor lab calibrated values to scientific values
+        [deg_C].
+    s2v_r : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        reference thermistor scientific values to thermocouple equivalent
+        voltage [mV].
 
-    Implemented by:
-
-        2014-05-01: Russell Desiderio. Initial Code
-        2014-06-30: Russell Desiderio. DPS modifications to cal equations implemented.
-
-    Usage:
-
-        T_H = sfl_thsph_temp_th(tc_rawdec_H, e2l_H, l2s_H, ts_rawdec_r, e2l_r, l2s_r, s2v_r)
-
-            where
-
-        T_H = final temperature "H" near sample inlet THSPHTE-TH_L1 [deg_C]
-        #
-        tc_rawdec_H = "H" thermocouple, decimal counts (THSPHTE-TCH_L0) [counts]
-        e2l_H = array of calibration coefficients to convert the 'H' thermocouple
-                engineering values to lab calibrated values.
-        l2s_H = array of calibration coefficients to convert the 'H' thermocouple
-                lab calibrated values to scientific values.
-        ts_rawdec_r = reference thermistor, decimal counts (THSPHTE-REF_L0) [counts]
-        e2l_r = array of calibration coefficients to convert the 'r' thermistor
-                engineering values to lab calibrated values.
-        l2s_r = array of calibration coefficients to convert the 'r' thermistor
-                lab calibrated values to scientific values.
-        s2v_r = array of calibration coefficients to convert the 'r' thermistor
-                scientific values to thermocouple equivalent voltage [mV].
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid Temperature from
-            THSPH. Document Control Number 1341-00120.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00120_Data_Product_Specification_THSPHTE_OOI.pdf)
+    Returns
+    -------
+    T_H : ndarray
+        Final temperature at position H near sample inlet
+        (THSPHTE-TH_L1) [deg_C].
     """
     # calculate intermediate product V_tc_actual_H (= V_tc_labcal_H)
     V_tc_actual_H = sfl_thsph_temp_labcal_h(tc_rawdec_H, e2l_H)
@@ -673,46 +667,36 @@ def sfl_thsph_temp_th(tc_rawdec_H, e2l_H, l2s_H, ts_rawdec_r, e2l_r, l2s_r, s2v_
 
 def sfl_thsph_temp_tl(tc_rawdec_L, e2l_L, l2s_L, ts_rawdec_r, e2l_r, l2s_r, s2v_r):
     """
-    Description:
+    Compute vent fluid temperature near the vent (THSPHTE-TL_L1).
 
-        OOI Level 1 THSPH data product THSPHTE-TL (final temperature at position
-        "L" near vent), which is calculated using data from the Hydrothermal Vent
-        Fluid In-situ Chemistry (THSPH) instrument, series A (one series for all
-        instruments).
+    Parameters
+    ----------
+    tc_rawdec_L : array_like
+        L thermocouple decimal counts (THSPHTE-TCL_L0) [counts].
+    e2l_L : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        L thermocouple engineering values to lab calibrated values.
+    l2s_L : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        L thermocouple lab calibrated values to scientific values [deg_C].
+    ts_rawdec_r : array_like
+        Reference thermistor decimal counts (THSPHTE-REF_L0) [counts].
+    e2l_r : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        reference thermistor engineering values to lab calibrated values.
+    l2s_r : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        reference thermistor lab calibrated values to scientific values
+        [deg_C].
+    s2v_r : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        reference thermistor scientific values to thermocouple equivalent
+        voltage [mV].
 
-    Implemented by:
-
-        2014-05-01: Russell Desiderio. Initial Code
-        2014-06-30: Russell Desiderio. DPS modifications to cal equations implemented.
-
-    Usage:
-
-        T_L = sfl_thsph_temp_tl(tc_rawdec_L, e2l_L, l2s_L, ts_rawdec_r, e2l_r, l2s_r, s2v_r)
-
-            where
-
-        T_L = final temperature "L" near vent THSPHTE-TL_L1 [deg_C]
-        #
-        tc_rawdec_L = "L" thermocouple, decimal counts (THSPHTE-TCL_L0) [counts]
-        e2l_L = array of calibration coefficients to convert the 'L' thermocouple
-                engineering values to lab calibrated values.
-        l2s_L = array of calibration coefficients to convert the 'L' thermocouple
-                lab calibrated values to scientific values.
-        ts_rawdec_r = reference thermistor, decimal counts (THSPHTE-REF_L0) [counts]
-        e2l_r = array of calibration coefficients to convert the 'r' thermistor
-                engineering values to lab calibrated values.
-        l2s_r = array of calibration coefficients to convert the 'r' thermistor
-                lab calibrated values to scientific values.
-        s2v_r = array of calibration coefficients to convert the 'r' thermistor
-                scientific values to thermocouple equivalent voltage [mV].
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid Temperature from
-            THSPH. Document Control Number 1341-00120.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00120_Data_Product_Specification_THSPHTE_OOI.pdf)
+    Returns
+    -------
+    T_L : ndarray
+        Final temperature at position L near vent (THSPHTE-TL_L1) [deg_C].
     """
     # calculate intermediate product V_tc_actual_L (= V_tc_labcal_L)
     V_tc_actual_L = sfl_thsph_temp_labcal_l(tc_rawdec_L, e2l_L)
@@ -730,38 +714,25 @@ def sfl_thsph_temp_tl(tc_rawdec_L, e2l_L, l2s_L, ts_rawdec_r, e2l_r, l2s_r, s2v_
 
 def sfl_thsph_temp_tch(tc_rawdec_H, e2l_H, l2s_H):
     """
-    Description:
+    Compute intermediate thermocouple temperature at position H
+    (THSPHTE-TCH_L1).
 
-        OOI Level 1 THSPH data product THSPHTE-TCH (intermediate thermocouple
-        temperature at position "H"), which is calculated using data from the
-        Hydrothermal Vent Fluid In-situ Chemistry (THSPH) instrument, series A
-        (one series for all instruments).
+    Parameters
+    ----------
+    tc_rawdec_H : array_like
+        H thermocouple decimal counts (THSPHTE-TCH_L0) [counts].
+    e2l_H : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        H thermocouple engineering values to lab calibrated values.
+    l2s_H : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        H thermocouple lab calibrated values to scientific values [deg_C].
 
-    Implemented by:
-
-        2014-05-01: Russell Desiderio. Initial Code
-        2014-06-30: Russell Desiderio. DPS modifications to cal equations implemented.
-
-    Usage:
-
-        T_tc_H = sfl_thsph_temp_tch(tc_rawdec_H, e2l_H, l2s_H)
-
-            where
-
-        T_tc_H = intermediate thermocouple temperature "H" THSPHTE-TCH_L1 [deg_C]
-        tc_rawdec_H = "H" thermocouple, decimal counts (THSPHTE-TCH_L0) [counts]
-        e2l_H = array of calibration coefficients to convert the 'H' thermocouple
-                engineering values to lab calibrated values.
-        l2s_H = array of calibration coefficients to convert the 'H' thermocouple
-                lab calibrated values to scientific values.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid Temperature from
-            THSPH. Document Control Number 1341-00120.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00120_Data_Product_Specification_THSPHTE_OOI.pdf)
+    Returns
+    -------
+    T_tc_H : ndarray
+        Intermediate thermocouple temperature at position H
+        (THSPHTE-TCH_L1) [deg_C].
     """
     # convert raw decimal output to lab calibrated values [mV]
     V_tc_actual_H = sfl_thsph_temp_labcal_h(tc_rawdec_H, e2l_H)
@@ -774,38 +745,25 @@ def sfl_thsph_temp_tch(tc_rawdec_H, e2l_H, l2s_H):
 
 def sfl_thsph_temp_tcl(tc_rawdec_L, e2l_L, l2s_L):
     """
-    Description:
+    Compute intermediate thermocouple temperature at position L
+    (THSPHTE-TCL_L1).
 
-        OOI Level 1 THSPH data product THSPHTE-TCL (intermediate thermocouple
-        temperature at position "L"), which is calculated using data from the
-        Hydrothermal Vent Fluid In-situ Chemistry (THSPH) instrument, series A
-        (one series for all instruments).
+    Parameters
+    ----------
+    tc_rawdec_L : array_like
+        L thermocouple decimal counts (THSPHTE-TCL_L0) [counts].
+    e2l_L : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        L thermocouple engineering values to lab calibrated values.
+    l2s_L : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        L thermocouple lab calibrated values to scientific values [deg_C].
 
-    Implemented by:
-
-        2014-05-01: Russell Desiderio. Initial Code
-        2014-06-30: Russell Desiderio. DPS modifications to cal equations implemented.
-
-    Usage:
-
-        T_tc_L = sfl_thsph_temp_tcl(tc_rawdec_L, e2l_L, l2s_L)
-
-            where
-
-        T_tc_L = intermediate thermocouple temperature "L" THSPHTE-TCL_L1 [deg_C]
-        tc_rawdec_L = "L" thermocouple, decimal counts (THSPHTE-TCL_L0) [counts]
-        e2l_L = array of calibration coefficients to convert the 'L' thermocouple
-                engineering values to lab calibrated values.
-        l2s_L = array of calibration coefficients to convert the 'L' thermocouple
-                lab calibrated values to scientific values.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid Temperature from
-            THSPH. Document Control Number 1341-00120.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00120_Data_Product_Specification_THSPHTE_OOI.pdf)
+    Returns
+    -------
+    T_tc_L : ndarray
+        Intermediate thermocouple temperature at position L
+        (THSPHTE-TCL_L1) [deg_C].
     """
     # convert raw decimal output to lab calibrated values [mV]
     V_tc_actual_L = sfl_thsph_temp_labcal_l(tc_rawdec_L, e2l_L)
@@ -818,40 +776,24 @@ def sfl_thsph_temp_tcl(tc_rawdec_L, e2l_L, l2s_L):
 
 def sfl_thsph_temp_ref(ts_rawdec_r, e2l_r, l2s_r):
     """
-    Description:
+    Compute reference thermistor temperature (THSPHTE-REF_L1).
 
-        OOI Level 1 THSPH data product THSPHTE-REF (reference thermistor
-        temperature), which is calculated using data from the Hydrothermal
-        Vent Fluid In-situ Chemistry (THSPH) instrument, series A (one series
-        for all instruments).
+    Parameters
+    ----------
+    ts_rawdec_r : array_like
+        Reference thermistor decimal counts (THSPHTE-REF_L0) [counts].
+    e2l_r : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        reference thermistor engineering values to lab calibrated values.
+    l2s_r : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        reference thermistor lab calibrated values to scientific values
+        [deg_C].
 
-    Implemented by:
-
-        2014-05-01: Russell Desiderio. Initial Code
-        2014-06-30: Russell Desiderio. DPS modifications to cal equations implemented.
-        2015-07-24: Russell Desiderio. Added call to replace_fill_with_nan.
-                                       Cleaned up error-checking.
-
-    Usage:
-
-        T_ts_r = sfl_thsph_temp_ref(ts_rawdec_r, e2l_r, l2s_r)
-
-            where
-
-        T_ts_r = reference thermistor temperature THSPHTE-REF_L1 [deg_C]
-        ts_rawdec_r = reference thermistor, decimal counts (THSPHTE-REF_L0) [counts]
-        e2l_r = array of calibration coefficients to convert the 'r' thermistor
-                engineering values to lab calibrated values.
-        l2s_r = array of calibration coefficients to convert the 'r' thermistor
-                lab calibrated values to scientific values.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid Temperature from
-            THSPH. Document Control Number 1341-00120.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00120_Data_Product_Specification_THSPHTE_OOI.pdf)
+    Returns
+    -------
+    T_ts_r : ndarray
+        Reference thermistor temperature (THSPHTE-REF_L1) [deg_C].
     """
     ts_rawdec_r = replace_fill_with_nan(None, ts_rawdec_r)
 
@@ -874,40 +816,23 @@ def sfl_thsph_temp_ref(ts_rawdec_r, e2l_r, l2s_r):
 
 def sfl_thsph_temp_int(ts_rawdec_b, e2l_b, l2s_b):
     """
-    Description:
+    Compute internal board thermistor temperature (THSPHTE-INT_L1).
 
-        OOI Level 1 THSPH data product THSPHTE-INT (internal board thermistor
-        temperature), which is calculated using data from the Hydrothermal
-        Vent Fluid In-situ Chemistry (THSPH) instrument, series A (one series
-        for all instruments).
+    Parameters
+    ----------
+    ts_rawdec_b : array_like
+        Board thermistor decimal counts (THSPHTE-INT_L0) [counts].
+    e2l_b : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        board thermistor engineering values to lab calibrated values.
+    l2s_b : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        board thermistor lab calibrated values to scientific values [deg_C].
 
-    Implemented by:
-
-        2014-05-01: Russell Desiderio. Initial Code
-        2014-06-30: Russell Desiderio. DPS modifications to cal equations implemented.
-        2015-07-24: Russell Desiderio. Added call to replace_fill_with_nan.
-                                       Cleaned up error-checking.
-
-    Usage:
-
-        T_ts_b = sfl_thsph_temp_int(ts_rawdec_b, e2l_b, l2s_b)
-
-            where
-
-        T_ts_b = board thermistor temperature THSPHTE-INT_L1 [deg_C]
-        ts_rawdec_b = board thermistor, decimal counts (THSPHTE-INT_L0) [counts]
-        e2l_b = array of calibration coefficients to convert the 'b' thermistor
-                engineering values to lab calibrated values.
-        l2s_b = array of calibration coefficients to convert the 'b' thermistor
-                lab calibrated values to scientific values.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid Temperature from
-            THSPH. Document Control Number 1341-00120.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00120_Data_Product_Specification_THSPHTE_OOI.pdf)
+    Returns
+    -------
+    T_ts_b : ndarray
+        Board thermistor temperature (THSPHTE-INT_L1) [deg_C].
     """
     ts_rawdec_b = replace_fill_with_nan(None, ts_rawdec_b)
 
@@ -931,34 +856,22 @@ def sfl_thsph_temp_int(ts_rawdec_b, e2l_b, l2s_b):
 
 def sfl_thsph_temp_labcal_h(tc_rawdec_H, e2l_H):
     """
-    Description:
+    Convert H thermocouple raw counts to lab-calibrated voltage.
 
-        OOI Level 1 THSPH data products THSPHTE-TCH and THSPHTE-TH require this subfunction,
-        which calculates lab calibrated mV values for the 'H' thermistor.
+    Called internally by sfl_thsph_temp_th and sfl_thsph_temp_tch.
 
-    Implemented by:
+    Parameters
+    ----------
+    tc_rawdec_H : array_like
+        H thermocouple decimal counts (THSPHTE-TCH_L0) [counts].
+    e2l_H : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        H thermocouple engineering values to lab calibrated values.
 
-        2014-06-30: Russell Desiderio. Initial Code
-        2015-07-24: Russell Desiderio. Added call to replace_fill_with_nan.
-
-    Usage:
-
-        V_tc_labcal_H = sfl_thsph_temp_tch(tc_rawdec_H, e2l_H)
-
-            where
-
-        V_tc_labcal_H = intermediate variable used in calculation of THSPHTE-TCH and THSPHTE-TH.
-        tc_rawdec_H = "H" thermocouple, decimal counts (THSPHTE-TCH_L0) [counts]
-        e2l_H = array of calibration coefficients to convert the 'H' thermocouple
-                engineering values to lab calibrated values.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid Temperature from
-            THSPH. Document Control Number 1341-00120.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00120_Data_Product_Specification_THSPHTE_OOI.pdf)
+    Returns
+    -------
+    V_tc_labcal_H : ndarray
+        Lab-calibrated H thermocouple voltage [mV].
     """
     tc_rawdec_H = replace_fill_with_nan(None, tc_rawdec_H)
 
@@ -974,34 +887,22 @@ def sfl_thsph_temp_labcal_h(tc_rawdec_H, e2l_H):
 
 def sfl_thsph_temp_labcal_l(tc_rawdec_L, e2l_L):
     """
-    Description:
+    Convert L thermocouple raw counts to lab-calibrated voltage.
 
-        OOI Level 1 THSPH data products THSPHTE-TCL and THSPHTE-TL require this subfunction,
-        which calculates lab calibrated mV values for the 'L' thermistor.
+    Called internally by sfl_thsph_temp_tl and sfl_thsph_temp_tcl.
 
-    Implemented by:
+    Parameters
+    ----------
+    tc_rawdec_L : array_like
+        L thermocouple decimal counts (THSPHTE-TCL_L0) [counts].
+    e2l_L : array_like
+        Calibration coefficient. Array of polynomial coefficients converting
+        L thermocouple engineering values to lab calibrated values.
 
-        2014-06-30: Russell Desiderio. Initial Code
-        2015-07-24: Russell Desiderio. Added call to replace_fill_with_nan.
-
-    Usage:
-
-        V_tc_labcal_L = sfl_thsph_temp_tcl(tc_rawdec_L, e2l_L)
-
-            where
-
-        V_tc_labcal_L = intermediate variable used in calculation of THSPHTE-TCL and THSPHTE-TL.
-        tc_rawdec_L = "L" thermocouple, decimal counts (THSPHTE-TCL_L0) [counts]
-        e2l_L = array of calibration coefficients to convert the 'L' thermocouple
-                engineering values to lab calibrated values.
-
-    References:
-
-        OOI (2014). Data Product Specification for Vent Fluid Temperature from
-            THSPH. Document Control Number 1341-00120.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00120_Data_Product_Specification_THSPHTE_OOI.pdf)
+    Returns
+    -------
+    V_tc_labcal_L : ndarray
+        Lab-calibrated L thermocouple voltage [mV].
     """
     tc_rawdec_L = replace_fill_with_nan(None, tc_rawdec_L)
 
@@ -1022,40 +923,31 @@ def sfl_thsph_temp_labcal_l(tc_rawdec_L, e2l_L):
 
 def eval_poly(x, c):
     """
-    Description:
+    Evaluate a 5th-degree polynomial using Horner's algorithm.
 
-        Calculates polynomial values for use with THSPH data products using the
-        Horner algorithm. All coefficient sets are 5th degree (6 terms), so that
-        this function is written to be "vectorized" for speed for multiple data
-        sets.
+    Supports both scalar and vectorized (per-element calibration coefficient)
+    evaluation for THSPH data products.
 
-        The documentation for the numpy v1.7 function to evaluate polynomials
-        was only available in draft form; plus, it won't handle "vectorized"
-        calibration coefficients (2D arrays, in which each row is a separate
-        set of calibration coeffs).
+    Parameters
+    ----------
+    x : scalar or array_like
+        Argument(s) at which to evaluate the polynomial.
+    c : array_like
+        Polynomial coefficients in descending degree order. If x is a
+        scalar, c is a 1D array of length 6. If x is a vector of length N,
+        c is a 2D array of shape (N, 6) where row j contains the
+        coefficients for x[j].
 
-        The standard convention of storing polynomial coefficients in an array
-        is used, namely, the highest degree coefficient is the first element and
-        coefficients are stored in descending order.
+    Returns
+    -------
+    val : ndarray
+        Evaluated polynomial values:
+        c[:,0]*x^5 + c[:,1]*x^4 + ... + c[:,4]*x + c[:,5].
 
-    Implemented by:
-
-        2014-05-01: Russell Desiderio. Initial Code (no arrays).
-        2014-07-02: Russell Desiderio. 2D calcoeff array implementation.
-
-    Usage:
-
-        value = eval_poly(x, c)
-
-            where
-
-        value  = c[:,0]*x^(5) + c[:,1]*x^(4) + ... c[:,4]*x + c[:,5]
-
-        x = the argument(s) of the polynomial to be evaluated; can be a scalar or vector
-        c = array containing the polynomial coefficients:
-                 if x is a scalar, then c is a vector.
-                 if x is a vector, then c is a 2D array, where each row j is a set of
-                                   polynomial coefficients associated with x[j].
+    Notes
+    -----
+    The np.atleast_2d call allows both single and vectorized calls to work
+    with the same implementation.
     """
     # the "c = np.atleast_2d(c)" statement is necessary so that both single and
     # "vectorized" (in the OOI CI sense) calls to the eval_poly subroutine work.
@@ -1071,47 +963,46 @@ def eval_poly(x, c):
 # .............................................................................
 
 
-def sfl_trhph_vfltemp(V_ts, V_tc, tc_slope, ts_slope, c0=0.015, c1=0.0024, c2=7.00e-5, c3=-1.00e-6):
+def sfl_trhph_vfltemp(V_ts, V_tc, tc_slope, ts_slope,
+                      c0=0.015, c1=0.0024, c2=7.00e-5, c3=-1.00e-6):
     """
-    Description:
+    Compute vent fluid temperature from TRHPH (TRHPHTE_L1).
 
-        OOI Level 1 Vent Fluid Temperature from TRHPH (TRHPHTE) data product,
-        which is calculated using data from the Temperature Resistivity Probe
-        (TRHPH) instrument placed in a high temperature hydrothermal vent.
+    Parameters
+    ----------
+    V_ts : array_like
+        Thermistor voltage (TRHPHVS_L0) [V].
+    V_tc : array_like
+        Thermocouple voltage (TRHPHVC_L0) [V].
+    tc_slope : array_like
+        Calibration coefficient. Thermocouple slope.
+    ts_slope : array_like
+        Calibration coefficient. Thermistor slope.
+    c0 : array_like, optional
+        Calibration coefficient. 3rd-degree polynomial correction term.
+        Defaults to 0.015.
+    c1 : array_like, optional
+        Calibration coefficient. 3rd-degree polynomial correction term.
+        Defaults to 0.0024.
+    c2 : array_like, optional
+        Calibration coefficient. 3rd-degree polynomial correction term.
+        Defaults to 7.00e-5.
+    c3 : array_like, optional
+        Calibration coefficient. 3rd-degree polynomial correction term.
+        Defaults to -1.00e-6.
 
-    Implemented by:
+    Returns
+    -------
+    T : ndarray
+        Vent fluid temperature (TRHPHTE_L1) [deg_C].
 
-        2013-05-01: Christopher Wingard. Initial Code
-        2014-02-27: Russell Desiderio. Added documentation.
-                    Implemented Horner's method for polynomial calculation.
-
-    Usage:
-
-        T = sfl_trhph_vfltemp(V_ts, V_tc, tc_slope, ts_slope, c0, c1, c2, c3)
-
-            where
-
-        T = Vent fluid temperature from TRHPH (TRHPHTE_L1) [deg_C]
-        V_ts = Thermistor voltage (TRHPHVS_L0) [volts]
-        V_tc = Thermocouple voltage (TRHPHVC_L0) [volts]
-        tc_slope = thermocouple slope laboratory calibration coefficients
-        ts_slope = thermistor slope laboratory calibration coefficients
-        c0 = coefficient from 3rd degree polynomial fit of laboratory
-            calibration correction curve (not expected to change).
-        c1 = coefficient from 3rd degree polynomial fit of laboratory
-            calibration correction curve (not expected to change).
-        c2 = coefficient from 3rd degree polynomial fit of laboratory
-            calibration correction curve (not expected to change).
-        c3 = coefficient from 3rd degree polynomial fit of laboratory
-            calibration correction curve (not expected to change).
-
-    References:
-
-        OOI (2012). Data Product Specification for Vent Fluid Temperature from
-            TRHPH. Document Control Number 1341-00150.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00150_Data_Product_Spec_TRHPHTE_OOI.pdf)
+    Notes
+    -----
+    Three cases apply based on V_tc and thermistor temperature T_ts:
+    when V_tc <= 0, T = T_ts; when V_tc > 0 and T_ts > 10 deg_C, a
+    polynomial correction is applied; when V_tc > 0 and 0 < T_ts <= 10
+    deg_C, slope-based corrections are used. The default polynomial
+    coefficients (c0-c3) are fixed constants from DPS 1341-00150.
     """
     # Test if polynomial coefficients are scalars (set via defaults), set to
     # same size as other inputs if required. Assumes if 'a' is a default, they
@@ -1149,36 +1040,21 @@ def sfl_trhph_vfltemp(V_ts, V_tc, tc_slope, ts_slope, c0=0.015, c1=0.0024, c2=7.
 
 def sfl_trhph_vfl_thermistor_temp(V_ts):
     """
-    Description:
+    Compute TRHPH thermistor reference temperature (TRHPHTE-T_TS-AUX).
 
-        Calculates TRHPHTE-T_TS-AUX, which is an auxiliary data product (not a
-        core data product) requested by the authors of the TRHPHTE DPS. It is the
-        instrument's thermistor temperature, useful as an important instrument
-        diagnostic. It is the same variable as T_ts in the function
-        sfl_trhph_vfltemp.
+    This auxiliary product is the thermistor temperature alone, without
+    thermocouple correction. It is the same as T_ts computed internally
+    by sfl_trhph_vfltemp and is useful as an instrument diagnostic.
 
-    Implemented by:
+    Parameters
+    ----------
+    V_ts : array_like
+        Thermistor voltage (TRHPHVS_L0) [V].
 
-        2014-02-28: Russell Desiderio. Initial Code
-        2015-01-06: Russell Desiderio. Documented this product as TRHPHTE-T_TS-AUX,
-                    following convention established after initial coding.
-
-    Usage:
-
-        T_ts = sfl_trhph_vfl_thermistor_temp(V_ts)
-
-            where
-
-        T_ts = TRHPHTE-T_TS-AUX, thermistor reference temperature [deg_C]
-        V_ts = Thermistor voltage (TRHPHVS_L0) [volts]
-
-    References:
-
-        OOI (2012). Data Product Specification for Vent Fluid Temperature from
-            TRHPH. Document Control Number 1341-00150.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00150_Data_Product_Spec_TRHPHTE_OOI.pdf)
+    Returns
+    -------
+    T_ts : ndarray
+        Thermistor reference temperature (TRHPHTE-T_TS-AUX) [deg_C].
     """
     # thermistor temperature
     T_ts = 27.50133 - 17.2658 * V_ts + 15.83424 / V_ts
@@ -1187,34 +1063,30 @@ def sfl_trhph_vfl_thermistor_temp(V_ts):
 
 def sfl_trhph_vflorp(V, offset, gain):
     """
-    Description:
+    Compute vent fluid oxidation-reduction potential from TRHPH
+    (TRHPHEH_L1).
 
-        OOI Level 1 Vent Fluid Oxidation-Reduction Potential (ORP) from TRHPH
-        (TRHPHEH_L1) data product, which is calculated using data from the
-        Resistivity- Temperature Probe (TRHPH) instrument.
+    Parameters
+    ----------
+    V : array_like
+        ORP sensor voltage (TRHPHVO_L0) [V].
+    offset : array_like
+        Calibration coefficient. Electronic offset [mV].
+    gain : array_like
+        Calibration coefficient. Gain multiplier [dimensionless].
 
-    Implemented by:
+    Returns
+    -------
+    ORP : ndarray
+        Oxidation-reduction potential (TRHPHEH_L1) [mV].
 
-        2014-02-28: Russell Desiderio. Initial Code
-
-    Usage:
-
-        ORP = sfl_trhph_vflorp(V)
-
-            where
-
-        ORP = Oxidation-Reduction Potential (TRHPHEH_L1) [mV]
-        V = ORP sensor voltage (TRHPHVO_L0) [volts]
-        offset = calibration coefficient; electronic offset [mV]
-        gain = calibration coefficient; gain multiplier [unitless]
-
-    References:
-
-        OOI (2012). Data Product Specification for Vent Fluid Oxidation-
-            Reduction Potential (ORP). Document Control Number 1341-00170.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00170_Data_Product_Spec_TRHPHEH_OOI.pdf)
+    Notes
+    -----
+    Because the reference electrode is not a Standard Hydrogen Electrode,
+    ORP values from this instrument cannot be directly compared with
+    standard in-situ ORP measurements made with a Pt-Ag/AgCl electrode
+    pair. The primary use of this product is to quantify change in ORP
+    with respect to time (DPS 1341-00170).
     """
     # convert sensor voltage V from volts to mV;
     # subtract offset; undo gain multiplier.
@@ -1225,44 +1097,35 @@ def sfl_trhph_vflorp(V, offset, gain):
 
 def sfl_trhph_chloride(V_R1, V_R2, V_R3, T):
     """
-    Description:
+    Compute vent fluid chloride concentration from TRHPH (TRHPHCC_L2).
 
-        OOI Level 2 Vent Fluid Chloride Concentration TRHPHCC data
-        product, which is calculated using data from the Temperature
-        Resistivity Probe (TRHPH) instrument.
+    Parameters
+    ----------
+    V_R1 : array_like
+        Resistivity voltage 1 (TRHPHR1_L0) [V].
+    V_R2 : array_like
+        Resistivity voltage 2 (TRHPHR2_L0) [V].
+    V_R3 : array_like
+        Resistivity voltage 3 (TRHPHR3_L0) [V].
+    T : array_like
+        Vent fluid temperature from TRHPH (TRHPHTE_L1) [deg_C].
 
-    Implemented by:
+    Returns
+    -------
+    Cl : ndarray
+        Vent fluid chloride concentration (TRHPHCC_L2) [mmol kg^-1].
+        Returns NaN where T is outside the calibration surface bounds
+        (103 to 382 deg_C).
 
-        2013-05-01: Christopher Wingard. Initial Code
-        2014-02-28: Russell Desiderio. Modified code to better handle nans and
-                    fill_values. Added more documentation to algorithm.
-        2014-03-10: Russell Desiderio. Removed unnecessary np.vectorized
-                    wrapper function. Improved speed by removing a temperature
-                    conditional statement from inside the for loop and
-                    incorporating it into the range of the for loop.
-        2014-03-26: Russell Desiderio. Incorporated optimization due to Chris
-                    Fortin: calculate Ccurve using scalar T instead of a vector
-                    of constant T values. Sped up execution by factor of 5.
-
-    Usage:
-
-        Cl = sfl_trhph_chloride(V_R1, V_R2, V_R3, T)
-
-            where
-
-        Cl = Vent fluid chloride concentration from TRHPH (TRHPHCC_L2) [mmol kg-1]
-        V_R1 = Resistivity voltage 1 (TRHPHR1_L0) [volts]
-        V_R2 = Resistivity voltage 2 (TRHPHR2_L0) [volts]
-        V_R3 = Resistivity voltage 3 (TRHPHR3_L0) [volts]
-        T = Vent fluid temperature from TRHPH (TRHPHTE_L1) [deg_C]
-
-    References:
-
-        OOI (2012). Data Product Specification for Vent Fluid Chloride
-        Concentration. Document Control Number 1341-00160.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00160_Data_Product_Spec_TRHPHCC_OOI.pdf)
+    Notes
+    -----
+    The three resistivity voltage channels are scaled to different
+    measurement ranges; the optimal channel is selected based on V_R2.
+    Chloride is determined by interpolating a conductivity isotherm from
+    the Larson et al. (2007) temperature-conductivity-chloride calibration
+    surface (imported from sfl_functions_surface.py as tdat, sdat, cdat)
+    at the observed temperature, then mapping the measured conductivity
+    to chloride concentration using RectBivariateSpline and np.interp.
     """
     # load sfl_functions_surface.py This loads the 3-dimensional calibration
     # surface of temperature, chloride, and conductivity reproduced as numpy
@@ -1315,44 +1178,18 @@ def sfl_trhph_chloride(V_R1, V_R2, V_R3, T):
 # .............................................................................
 def sfl_sflpres_rtime(p_psia):
     """
-    Description:
+    Compute real-time seafloor pressure from PRESF (SFLPRES-RTIME_L1).
 
-        The OOI Level 1 Seafloor Pressure core data products, SFLPRES and
-        sub-parameters SFLPRES-RTIME, SFLPRES-TIDE, and SFLPRES-WAVE, are
-        created from the Sea-Bird Electronics SBE 26plus member of the Seafloor
-        Pressure (SFL, PRESF) family of instruments by either a) polling, in
-        real-time, for L0 ASCII text format data output and converting from
-        psia to decibar units or b) converting, after instrument recovery, L0
-        hexadecimal pressure data into decimal format and the resulting tide
-        and wave pressure data in psia to decibar units.
+    Parameters
+    ----------
+    p_psia : array_like
+        Real-time pressure (SFLPRES-RTIME_L0) [psia].
 
-        This code creates the SFLPRES-RTIME data product.
-
-    Implemented by:
-
-        2014-01-31: Craig Risien. Initial Code
-        2014-09-23: Christopher Wingard. Minor edits and adds code for -TIDE
-                    and -WAVE.
-        2015-07-22: Russell Desiderio. There are no type integer input arguments,
-                                       don't need replace_fill_with_nan call.
-        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
-
-    Usage:
-
-        rtime = sfl_sflpres_rtime(p_psia):
-
-            where
-
-        rtime = real-time pressure (SFLPRES-RTIME_L1) (hydrostatic + atmospheric) [dbar]
-        p_psia = pressure (SFLPRES-RTIME_L0) [psia].
-
-    References:
-
-        OOI (2013). Data Product Specification for Seafloor Pressure from
-        Sea-Bird SBE 26PLUS. Document Control Number 1341-00230.
-        https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-        >> Controlled >> 1000 System Level >>
-        1341-00230_Data_Product_SPEC_SFLPRES_OOI.pdf)
+    Returns
+    -------
+    rtime : ndarray
+        Real-time seafloor pressure (SFLPRES-RTIME_L1), hydrostatic plus
+        atmospheric [dbar].
     """
     rtime = p_psia * 0.689475728
     return rtime
@@ -1360,45 +1197,27 @@ def sfl_sflpres_rtime(p_psia):
 
 def sfl_sflpres_tide(p_dec_tide, b, m, slope=1.0, offset=0.0):
     """
-    Description:
+    Compute tidal seafloor pressure from post-recovery PRESF data
+    (SFLPRES-TIDE_L1).
 
-        The OOI Level 1 Seafloor Pressure core data products, SFLPRES and
-        sub-parameters SFLPRES-RTIME, SFLPRES-TIDE, and SFLPRES-WAVE, are
-        created from the Sea-Bird Electronics SBE 26plus member of the Seafloor
-        Pressure (SFL, PRESF) family of instruments by either a) polling, in
-        real-time, for L0 ASCII text format data output and converting from
-        psia to decibar units or b) converting, after instrument recovery, L0
-        hexadecimal pressure data into decimal format and the resulting tide
-        and wave pressure data in psia to decibar units.
+    Parameters
+    ----------
+    p_dec_tide : array_like
+        Tidal pressure decimal number (SFLPRES-TIDE_L0) [counts].
+    b : array_like
+        Calibration coefficient. Pressure scaling parameter B.
+    m : array_like
+        Calibration coefficient. Pressure scaling parameter M.
+    slope : array_like, optional
+        Calibration coefficient. Slope correction factor. Defaults to 1.0.
+    offset : array_like, optional
+        Calibration coefficient. Offset correction factor. Defaults to 0.0.
 
-        This code creates the SFLPRES-TIDE data product.
-
-    Implemented by:
-
-        2014-09-23: Christopher Wingard. Initial code
-        2015-07-22: Russell Desiderio. Added call to replace_fill_with_nan.
-        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
-
-    Usage:
-
-        tide = sfl_sflpres_tide(p_dec_tide, b, m, slope, offset):
-
-            where
-
-        tide = tidal pressure (SFLPRES-TIDE_L1) (hydrostatic + atmospheric) [dbar]
-        p_dec_tide = tidal pressure (SFLPRES-TIDE_L0) [].
-        b = calibration coefficient.
-        m = calibration coefficient.
-        slope = slope correction factor, 1.0 by default
-        offset = offset correction factor, 0.0 by default
-
-    References:
-
-        OOI (2013). Data Product Specification for Seafloor Pressure from
-        Sea-Bird SBE 26PLUS. Document Control Number 1341-00230.
-        https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-        >> Controlled >> 1000 System Level >>
-        1341-00230_Data_Product_SPEC_SFLPRES_OOI.pdf)
+    Returns
+    -------
+    tide : ndarray
+        Tidal seafloor pressure (SFLPRES-TIDE_L1), hydrostatic plus
+        atmospheric [dbar].
     """
     # replace type integer fill values with nans
     p_dec_tide = replace_fill_with_nan(None, p_dec_tide)
@@ -1411,61 +1230,54 @@ def sfl_sflpres_tide(p_dec_tide, b, m, slope=1.0, offset=0.0):
 def sfl_sflpres_wave(ptcn, p_dec_wave, u0, y1, y2, y3, c1, c2, c3, d1, d2,
                      t1, t2, t3, t4, poff, slope=1.0, offset=0.0):
     """
-    Description:
+    Compute wave burst seafloor pressure from post-recovery PRESF data
+    (SFLPRES-WAVE_L1).
 
-        The OOI Level 1 Seafloor Pressure core data products, SFLPRES and
-        sub-parameters SFLPRES-RTIME, SFLPRES-TIDE, and SFLPRES-WAVE, are
-        created from the Sea-Bird Electronics SBE 26plus member of the Seafloor
-        Pressure (SFL, PRESF) family of instruments by either a) polling, in
-        real-time, for L0 ASCII text format data output and converting from
-        psia to decibar units or b) converting, after instrument recovery, L0
-        hexadecimal pressure data into decimal format and the resulting tide
-        and wave pressure data in psia to decibar units.
+    Parameters
+    ----------
+    ptcn : array_like
+        Pressure temperature compensation number [counts].
+    p_dec_wave : array_like
+        Wave burst pressure decimal numbers (SFLPRES-WAVE_L0) [counts].
+        May be 1D (single burst) or 2D (multiple bursts).
+    u0 : array_like
+        Calibration coefficient.
+    y1 : array_like
+        Calibration coefficient.
+    y2 : array_like
+        Calibration coefficient.
+    y3 : array_like
+        Calibration coefficient.
+    c1 : array_like
+        Calibration coefficient.
+    c2 : array_like
+        Calibration coefficient.
+    c3 : array_like
+        Calibration coefficient.
+    d1 : array_like
+        Calibration coefficient.
+    d2 : array_like
+        Calibration coefficient.
+    t1 : array_like
+        Calibration coefficient.
+    t2 : array_like
+        Calibration coefficient.
+    t3 : array_like
+        Calibration coefficient.
+    t4 : array_like
+        Calibration coefficient.
+    poff : array_like
+        Calibration coefficient. Pressure offset.
+    slope : array_like, optional
+        Calibration coefficient. Slope correction factor. Defaults to 1.0.
+    offset : array_like, optional
+        Calibration coefficient. Offset correction factor. Defaults to 0.0.
 
-        This code creates the SFLPRES-WAVE data product.
-
-    Implemented by:
-
-        2014-09-23: Christopher Wingard. Initial code
-        2015-07-20: Russell Desiderio. Modified code to accept p_dec_wave as 2D array.
-        2015-07-22: Russell Desiderio. Added call to replace_fill_with_nan.
-        2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
-
-
-    Usage:
-
-        wave = sfl_sflpres_wave(ptcn, p_dec_wave, u0, y1, y2, y3, c1, c2, c3,
-                                d1, d2, t1, t2, t3, t4, slope, offset)
-
-            where
-
-        wave = wave burst pressure (SFLPRES-WAVE_L1) (hydrostatic + atmospheric) [dbar]
-        ptcn = pressure temperature compensation number
-        p_dec_wave = wave burst pressure (SFLPRES-WAVE_L0) [].
-        u0 = calibration coefficient.
-        y1 = calibration coefficient.
-        y2 = calibration coefficient.
-        y3 = calibration coefficient.
-        c1 = calibration coefficient.
-        c2 = calibration coefficient.
-        c3 = calibration coefficient.
-        d1 = calibration coefficient.
-        d2 = calibration coefficient.
-        t1 = calibration coefficient.
-        t2 = calibration coefficient.
-        t3 = calibration coefficient.
-        t4 = calibration coefficient.
-        poff = pressure offset calibration coefficient
-        slope = slope correction factor, 1.0 by default
-        offset = offset correction factor, 0.0 by default
-
-    References:
-
-        OOI (2013). Data Product Specification for Seafloor Pressure from
-        Sea-Bird SBE 26PLUS. Document Control Number 1341-00230.
-        https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-        >> Controlled >> 1000 System Level >>
-        1341-00230_Data_Product_SPEC_SFLPRES_OOI.pdf)
+    Returns
+    -------
+    wave : ndarray
+        Wave burst seafloor pressure (SFLPRES-WAVE_L1), hydrostatic plus
+        atmospheric [dbar].
     """
     # replace type integer fill values with nans
     p_dec_wave, ptcn = replace_fill_with_nan(None, p_dec_wave, ptcn)
@@ -1504,33 +1316,17 @@ def sfl_sflpres_wave(ptcn, p_dec_wave, u0, y1, y2, y3, c1, c2, c3, d1, d2,
 
 def sfl_sbe26plus_prestmp(t0):
     """
-    Description:
+    Compute seawater temperature from SBE 26plus tide record (PRESTMP_L1).
 
-        Calculates the sea water temperature meta-data product PRESTMP_L1 from
-        the Sea-Bird Electronics SBE26Plus (PRESF) instrument, as specified in
-        the DPS referenced below (sections 4.2.1 and 4.4) for recovered instrument
-        (not DCL) data.
+    Parameters
+    ----------
+    t0 : array_like
+        Temperature number from tide record [hex converted to decimal].
 
-    Implemented by:
-
-        2015-10-28: Russell Desiderio. Initial Code
-
-    Usage:
-
-        t = sfl_sbe26plus_prestmp(t0)
-
-            where
-
-        t = sea water temperature (PRESTMP_L1) [deg_C]
-        t0 = temperature number [hex converted to decimal]
-
-    References:
-
-        OOI (2013). Data Product Specification for Seafloor Pressure from
-        Sea-Bird SBE 26PLUS. Document Control Number 1341-00230.
-        https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-        >> Controlled >> 1000 System Level >>
-        1341-00230_Data_Product_SPEC_SFLPRES_OOI.pdf)
+    Returns
+    -------
+    t : ndarray
+        Seawater temperature (PRESTMP_L1) [deg_C].
     """
 
     t = t0 / 1000.0 - 10.0
