@@ -53,7 +53,7 @@ defined family name noted in parentheses.
 | [FLO](api/flo_functions.md)     | FLORD — 2-wavelength fluorometer (Chl-a, backscatter)<br>FLORT — 3-wavelength fluorometer (Chl-a, CDOM, backscatter) | CHLAFLO, CDOMFLO, FLUBSCT                                                                |
 | [HYD](api/hyd_functions.md)     | HYDBB — broadband passive acoustic receiver, water column<br>HYDLF — broadband passive acoustic receiver, seafloor | HYDAPBB, HYDAPLF                                                                         |
 | MET                             | METBK — bulk meteorology | TEMPAIR, BARPRES, WINDAVG, RELHUMI, SHRTIRR, LONGIRR, PRECIPM, TEMPSRF, CONDSRF, SPECHUM |
-| MSP                             | MASSP — mass spectrometer for dissolved gases in hydrothermal and seep fluids | MASSPEC                                                                                  |
+| [MSP](api/msp_functions.md)     | MASSP — mass spectrometer for dissolved gases in hydrothermal and seep fluids | DISSGAS, CALRANG, TSTAMP, MSINLET, MSWATER, NAFEFF, GASMODE, SMPMODE, TOTLGAS            |
 | [NIT](api/nit_functions.md)     | NUTNR — optical nitrate sensor | NITRTSC                                                                                  |
 | [OBS](api/obs_functions.md)     | OBSBB — broadband seismometer<br>OBSSP — short-period seismometer | GRNDVEL, GRNDACC, SGRDVEL                                                                |
 | [OPT](api/opt_functions.md)     | OPTAA — spectrophotometer (attenuation and absorption)<br>PARAD — photosynthetically active radiation<br>SPKIR — downwelling spectral irradiance | OPTATTN, OPTABSN, OPTPARW, SPECTIR                                                       |

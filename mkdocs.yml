@@ -63,4 +63,5 @@ nav:
   - Inactive Families:
     - FDC Functions: api/fdc_functions.md
     - HYD Functions: api/hyd_functions.md
+    - MSP Functions: api/msp_functions.md
     - OBS Functions: api/obs_functions.md
