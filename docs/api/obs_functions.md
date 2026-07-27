@@ -158,7 +158,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2014-07-09 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of Numexpr library |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -169,7 +169,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2014-07-09 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of Numexpr library |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -180,7 +180,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2014-07-09 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of Numexpr library |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

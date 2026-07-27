@@ -156,7 +156,7 @@ the time-vectorized calibration coefficient mechanism.
 | 2014-05-22 | Craig Risien | Initial code |
 | 2014-05-27 | Craig Risien | Added light vs dark frame filtering |
 | 2015-04-09 | Russell Desiderio | Revised for time-vectorized calibration coefficient arrays; changed fill value to NaN |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

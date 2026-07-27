@@ -198,7 +198,7 @@ are listed in the [References](#references) section.
 | 2013-04-17 | Stuart Pearce | Initial code. |
 | 2013-04-24 | Stuart Pearce | Generalized for all velocity instruments. |
 | 2014-02-05 | Christopher Wingard | Refactored to use generic_functions module. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -208,7 +208,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2015-02-18 | Russell Desiderio | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -223,7 +223,7 @@ algorithm derived independently of the manual.
 | Date | Author | Change |
 |---|---|---|
 | 2015-02-13 | Russell Desiderio | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -238,7 +238,7 @@ algorithm derived independently of the manual.
 | Date | Author | Change |
 |---|---|---|
 | 2015-02-13 | Russell Desiderio | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -248,7 +248,7 @@ algorithm derived independently of the manual.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -264,7 +264,7 @@ code implements the correct unit conversion.
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
 | 2015-06-08 | Russell Desiderio | Corrected input units to mm/s. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -274,7 +274,7 @@ code implements the correct unit conversion.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -291,7 +291,7 @@ warning in the code (R. Desiderio, 2018-06-20).
 | 2014-05-13 | Stuart Pearce | Reimplementation of Nortek (Rusello) code. |
 | 2015-06-02 | Russell Desiderio | Trap fill values in beam config; return NaNs for those records. |
 | 2018-06-19 | Russell Desiderio | Documented that outputs are ENU uncorrected for magnetic declination. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -303,7 +303,7 @@ warning in the code (R. Desiderio, 2018-06-20).
 | Date | Author | Change |
 |---|---|---|
 | 2015-02-18 | Russell Desiderio | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -314,7 +314,7 @@ warning in the code (R. Desiderio, 2018-06-20).
 |---|---|---|
 | 2015-02-16 | Russell Desiderio | Initial code. |
 | 2015-06-01 | Russell Desiderio | Adjusted to process vertically stacked input variables. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -331,7 +331,7 @@ Nortek-supplied code; see the Background section for details.
 |---|---|---|
 | 2014-05-13 | Stuart Pearce | Reimplementation of Nortek (Rusello) code. |
 | 2018-06-18 | Russell Desiderio | Corrected transducer azimuth direction, pitch sign, and heading offset. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -341,7 +341,7 @@ Nortek-supplied code; see the Background section for details.
 | Date | Author | Change |
 |---|---|---|
 | 2014-05-13 | Stuart Pearce | Reimplementation of Nortek (Rusello) code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -352,7 +352,7 @@ Nortek-supplied code; see the Background section for details.
 |---|---|---|
 | 2014-05-13 | Stuart Pearce | Reimplementation of Nortek (Rusello) code. |
 | 2018-06-18 | Russell Desiderio | Corrected heading offset and pitch sign. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -362,7 +362,7 @@ Nortek-supplied code; see the Background section for details.
 | Date | Author | Change |
 |---|---|---|
 | 2015-06-08 | Russell Desiderio | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -372,7 +372,7 @@ Nortek-supplied code; see the Background section for details.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -382,7 +382,7 @@ Nortek-supplied code; see the Background section for details.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -395,7 +395,7 @@ Nortek-supplied code; see the Background section for details.
 |---|---|---|
 | 2015-02-13 | Russell Desiderio | Initial code. |
 | 2015-05-29 | Russell Desiderio | Time-vectorized calcoeffs. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -406,7 +406,7 @@ Nortek-supplied code; see the Background section for details.
 |---|---|---|
 | 2015-02-13 | Russell Desiderio | Initial code. |
 | 2015-05-29 | Russell Desiderio | Time-vectorized calcoeffs. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -416,7 +416,7 @@ Nortek-supplied code; see the Background section for details.
 | Date | Author | Change |
 |---|---|---|
 | 2015-02-18 | Russell Desiderio | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -426,7 +426,7 @@ Nortek-supplied code; see the Background section for details.
 | Date | Author | Change |
 |---|---|---|
 | 2015-02-18 | Russell Desiderio | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -436,7 +436,7 @@ Nortek-supplied code; see the Background section for details.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -446,7 +446,7 @@ Nortek-supplied code; see the Background section for details.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -462,7 +462,7 @@ code implements the correct unit conversion.
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
 | 2015-06-08 | Russell Desiderio | Corrected input units to mm/s. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -478,7 +478,7 @@ code implements the correct unit conversion.
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
 | 2015-06-08 | Russell Desiderio | Corrected input units to mm/s. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -488,7 +488,7 @@ code implements the correct unit conversion.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -498,7 +498,7 @@ code implements the correct unit conversion.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-17 | Stuart Pearce | Initial code. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -515,7 +515,7 @@ warning in the code (R. Desiderio, 2018-06-20).
 | 2014-05-13 | Stuart Pearce | Initial code (Rusello implementation). |
 | 2015-06-03 | Russell Desiderio | Fill value handling for beam config. |
 | 2018-06-18 | Russell Desiderio | Corrected transform errors; added documentation. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -531,7 +531,7 @@ caveats apply.
 | 2014-05-13 | Stuart Pearce | Initial code (Rusello implementation). |
 | 2015-06-03 | Russell Desiderio | Fill value handling for beam config. |
 | 2018-06-18 | Russell Desiderio | Corrected transform errors; added documentation. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -546,7 +546,7 @@ caveats about the stationary case apply.
 |---|---|---|
 | 2014-05-13 | Stuart Pearce | Initial code (Rusello implementation). |
 | 2018-06-18 | Russell Desiderio | Corrected transform errors; added documentation. |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
