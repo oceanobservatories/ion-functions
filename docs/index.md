@@ -49,7 +49,7 @@ defined family name noted in parentheses.
 | [PH (CO2)](api/ph_functions.md) | PHSEN — seawater pH | PHWATER                                                                                  |
 | [CTD](api/ctd_functions.md)     | CTDAV — CTD for AUV<br>CTDBP — CTD with pump<br>CTDGV — CTD for gliders<br>CTDMO — CTD for moorings<br>CTDPF — CTD for profilers | TEMPWAT, PRESWAT, CONDWAT, PRACSAL, DENSITY                                              |
 | [DO2](api/do2_functions.md)     | DOSTA — dissolved oxygen, stable response<br>DOFST — dissolved oxygen, fast response | DOCONCS, DOCONCF, DOXYGEN                                                                |
-| FDC                             | FDCHP — direct covariance flux system | FLUXHOT, FLUXMOM, FLUXWET, WINDTUR, TMPATUR, RELHUMI, MOISTUR                            |
+| [FDC](api/fdc_functions.md)     | FDCHP — direct covariance flux system | FLUXHOT, FLUXMOM, WINDTUR, TMPATUR                                                       |
 | [FLO](api/flo_functions.md)     | FLORD — 2-wavelength fluorometer (Chl-a, backscatter)<br>FLORT — 3-wavelength fluorometer (Chl-a, CDOM, backscatter) | CHLAFLO, CDOMFLO, FLUBSCT                                                                |
 | [HYD](api/hyd_functions.md)     | HYDBB — broadband passive acoustic receiver, water column<br>HYDLF — broadband passive acoustic receiver, seafloor | HYDAPBB, HYDAPLF                                                                         |
 | MET                             | METBK — bulk meteorology | TEMPAIR, BARPRES, WINDAVG, RELHUMI, SHRTIRR, LONGIRR, PRECIPM, TEMPSRF, CONDSRF, SPECHUM |

@@ -61,5 +61,6 @@ nav:
     - ADCP Functions: api/adcp_functions.md
     - WAV Functions: api/wav_functions.md
   - Inactive Families:
+    - FDC Functions: api/fdc_functions.md
     - HYD Functions: api/hyd_functions.md
     - OBS Functions: api/obs_functions.md
