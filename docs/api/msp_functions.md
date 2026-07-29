@@ -1,12 +1,9 @@
 # MSP Functions
 
 !!! note "Inactive Module"
-    These functions were written to process data from the MASSP instrument.
-    As far as can be determined from the codebase and available records,
-    this pipeline was never placed into operational use -- no MASSP
-    instrument deployment has been confirmed to have run through this
-    module. They are retained for reference but are not used in OOI data
-    production.
+    These functions were written in anticipation of an OOI data processing
+    pipeline that was never implemented. They are retained for reference
+    but are not used in OOI data production.
 
 ## Background
 
