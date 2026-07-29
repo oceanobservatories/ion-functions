@@ -10,6 +10,7 @@ import numpy as np
 import gsw
 
 from ion_functions.data.generic_functions import magnetic_declination, magnetic_correction
+from ion_functions import deprecated
 
 ### July 2015
 """ use_velptmn_with_metbk """
@@ -205,31 +206,19 @@ JWARMFL = 1      # 1=do warmlayer calc
 
 def met_barpres(mbar):
     """
-    Description:
+    Computes BARPRES_L1, the OOI Level 1 barometric pressure core data
+    product, by scaling the measured barometric pressure from mbar to
+    Pascals.
 
-        OOI Level 1 Barometric Pressure core data product, which is calculated
-        by scaling the measured barometric pressure from mbar to Pascals.
+    Parameters
+    ----------
+    mbar : array_like
+        Barometric pressure (BARPRES_L0) [mbar].
 
-    Implemented by:
-
-        2014-06-25: Christopher Wingard. Initial code.
-
-    Usage:
-
-        Pa = met_barpres(mbar)
-
-            where
-
-        Pa = Barometric pressure (BARPRES_L1) [Pa]
-        mbar = Barometric pressure (BARPRES_L0) [mbar]
-
-    References:
-
-        OOI (2012). Data Product Specification for L1 Bulk Meterological Data
-            Products. Document Control Number 1341-00360.
-            https://alfresco.oceanobservatories.org/ (See:
-            Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
+    Returns
+    -------
+    Pa : array_like
+        Barometric pressure (BARPRES_L1) [Pa].
     """
     Pa = mbar * 100.
     return Pa
@@ -237,45 +226,14 @@ def met_barpres(mbar):
 
 def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=0.0):
     """
-    Description:
+    OOI single-output wrapper for WINDAVG-VLE_L1. Returns the METBK
+    eastward wind speed [m/s] corrected for magnetic declination and
+    wind speed under-reporting at higher wind speeds.
 
-        Calculates WINDAVG-VLE_L1, the OOI Level 1 core data product for wind
-        speed in the true eastward direction, for the METBK instrument by
-        correcting for magnetic declination.
-
-    Implemented by:
-
-        2014-06-25: Christopher Wingard. Initial code.
-        2014-08-26: Russell Desiderio. Added documentation.
-        2025-10-10: C. Wingard. Converted to wrapper function and added wind
-            speed correction factors.
-
-    Usage:
-
-        uu_cor = met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp,
-                                           zwindsp, spd_corr)
-
-            where
-
-        uu_cor = WINDAVG-VLE_L1 [m/s], METBK eastward wind speed corrected for
-            magnetic declination.
-        uu = WINDAVG-VLE_L0 [m/s], METBK eastward wind speed, uncorrected.
-        vv = WINDAVG-VLN_L0 [m/s], METBK northward wind speed, uncorrected.
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        timestamp = sample date and time value [seconds since 1900-01-01]
-        spd_corr = [optional] list of scale factors for wind speed correction.
-            Default values are [0.0, 1.0], offset and slope, which apply no
-            correction.
-        zwindsp  = [optional] height of wind speed sensor above sea level [m].
-
-    References:
-
-        OOI (2012). Data Product Specification for L1 Bulk Meteorological Data
-            Products. Document Control Number 1341-00360.
-            https://alfresco.oceanobservatories.org/ (See:
-            Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
+    See Also
+    --------
+    met_wind_mag_corr : Core algorithm; use directly for multi-output
+        access to both corrected wind components.
     """
     # calculate the magnetic declination using the WMM model and rotate the vectors
     # from the magnetic to the true compass frame using met_wind_mag_corr
@@ -285,45 +243,14 @@ def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], 
 
 def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=0.0):
     """
-    Description:
+    OOI single-output wrapper for WINDAVG-VLN_L1. Returns the METBK
+    northward wind speed [m/s] corrected for magnetic declination and
+    wind speed under-reporting at higher wind speeds.
 
-        Calculates WINDAVG-VLN_L1, the OOI Level 1 core data product for wind
-        speed in the true northward direction, for the METBK instrument by
-        correcting for magnetic declination.
-
-    Implemented by:
-
-        2014-06-25: Christopher Wingard. Initial code.
-        2014-08-26: Russell Desiderio. Added documentation.
-        2025-10-10: C. Wingard. Converted to wrapper function and added wind
-            speed correction factors.
-
-    Usage:
-
-        vv_cor = met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp,
-                                            zwindsp, spd_corr)
-
-            where
-
-        vv_cor = WINDAVG-VLN_L1 [m/s], METBK northward wind speed corrected for
-            magnetic declination.
-        uu = WINDAVG-VLE_L0 [m/s], METBK eastward wind speed, uncorrected.
-        vv = WINDAVG-VLN_L0 [m/s], METBK northward wind speed, uncorrected.
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        timestamp = sample date and time value [seconds since 1900-01-01]
-        spd_corr = [optional] list of scale factors for wind speed correction.
-            Default values are [0.0, 1.0], offset and slope, which apply no
-            correction.
-        zwindsp = [optional] height of wind speed sensor above sea level [m].
-
-    References:
-
-        OOI (2012). Data Product Specification for L1 Bulk Meteorological Data
-            Products. Document Control Number 1341-00360.
-            https://alfresco.oceanobservatories.org/ (See:
-            Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
+    See Also
+    --------
+    met_wind_mag_corr : Core algorithm; use directly for multi-output
+        access to both corrected wind components.
     """
     # calculate the magnetic declination using the WMM model and rotate the vectors
     # from the magnetic to the true compass frame using met_wind_mag_corr
@@ -333,41 +260,45 @@ def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0],
 
 def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=0.0):
     """
-    Description:
+    Computes WINDAVG_L1 (eastward and northward), the OOI Level 1 core
+    wind speed data product, by correcting the METBK wind measurement
+    for magnetic declination and for wind speed under-reporting at
+    higher wind speeds.
 
-        Calculates WINDAVG_L1 (both eastward and northward), the OOI Level 1
-        core data product for wind speed, for the METBK wind instrument by
-        correcting for the magnetic declination and correcting the "wind speed
-        under-reporting at higher wind speeds" issue.
+    Parameters
+    ----------
+    uu : array_like
+        Eastward wind speed (WINDAVG-VLE_L0), uncorrected [m/s].
+    vv : array_like
+        Northward wind speed (WINDAVG-VLN_L0), uncorrected [m/s].
+    lat : float
+        Instrument deployment latitude [decimal degrees].
+    lon : float
+        Instrument deployment longitude [decimal degrees].
+    timestamp : array_like
+        Sample date and time [seconds since 1900-01-01].
+    spd_corr : array_like, optional
+        Wind speed correction coefficients, shape (n, 2) for a linear
+        offset and slope, or (n, 4) for a piecewise-linear correction
+        (offset, slope, slope change, threshold). Default [0.0, 1.0]
+        applies no correction.
+    zwindsp : float, optional
+        Height of the wind speed sensor above sea level [m]. Default
+        0.0.
 
-    Implemented by:
-        2025-10-10: C. Wingard. Initial code.
+    Returns
+    -------
+    uu_cor : array_like
+        Eastward wind speed (WINDAVG-VLE_L1), corrected for magnetic
+        declination and wind speed under-reporting [m/s].
+    vv_cor : array_like
+        Northward wind speed (WINDAVG-VLN_L1), corrected for magnetic
+        declination and wind speed under-reporting [m/s].
 
-    Usage:
-        uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp,
-                                           spd_corr, zwindsp)
-            where
-
-        uu_cor = WINDAVG-VLE_L1 [m/s], METBK eastward wind speed corrected for
-            magnetic declination and wind speed under-reporting.
-        vv_cor = WINDAVG-VLN_L1 [m/s], METBK northward wind speed corrected for
-            magnetic declination and wind speed under-reporting.
-        uu = WINDAVG-VLE_L0 [m/s], METBK eastward wind speed, uncorrected.
-        vv = WINDAVG-VLN_L0 [m/s], METBK northward wind speed, uncorrected.
-        lat = instrument's deployment latitude [decimal degrees]
-        lon = instrument's deployment longitude [decimal degrees]
-        timestamp = sample date and time value [seconds since 1900-01-01]
-        spd_corr = [optional] list of scale factors for wind speed correction.
-            Default values are [0.0, 1.0], offset and slope, which apply no
-            correction.
-        zwindsp = [optional] height of wind speed sensor above sea level [m].
-
-    References:
-        OOI (2012). Data Product Specification for L1 Bulk Meteorological Data
-            Products. Document Control Number 1341-00360.
-            https://alfresco.oceanobservatories.org/ (See:
-            Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00360_Data_Product_SPEC_BULKMET_OOI.pdf)
+    Notes
+    -----
+    Magnetic declination is calculated using the IGRF-14 model via
+    generic_functions.magnetic_declination.
     """
     # calculate the magnetic declination for the site
     zflag = 1  # denotes that z is a height above sea level.
@@ -419,43 +350,29 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=
 """
 def met_current_direction(vle_water, vln_water, use_velptmn_with_metbk=0):
     """
-    Description:
+    Computes CURRENT_DIR, the direction of the METBK surface current,
+    from the VELPT eastward and northward velocity components.
 
-        Calculates the direction of the surface current using the eastward and northward
-        velocity components from the VELPT mounted on the surface buoy.
+    Parameters
+    ----------
+    vle_water : array_like
+        Eastward surface current (VELPTMN-VLE_L1) [m/s].
+    vln_water : array_like
+        Northward surface current (VELPTMN-VLN_L1) [m/s].
+    use_velptmn_with_metbk : array_like, optional
+        Time-vectorized data quality flag: 0 for bad VELPTMN current
+        data, 1 for good VELPTMN current data. Default 0.
 
-    Implemented by:
+    Returns
+    -------
+    current_dir : array_like
+        Direction of the surface current (CURRENT_DIR) [0, 360)
+        degrees.
 
-        2014-08-27: Russell Desiderio. Initial Code
-        2015-07-10: Russell Desiderio. Added data quality flags (use_velptmn_with_metbk)
-                    to argument list. See Notes to the function met_relwind_speed.
-
-    Usage:
-
-        current_dir = met_current_direction(vle_water, vln_water[, use_velptmn_with_metbk])
-
-            where
-
-        current_dir = direction of the surface current (CURRENT_DIR) [0 360) degrees
-        vle_water = eastward surface current (VELPTMN-VLE_L1) [m/s]
-        vln_water = northward surface current (VELPTMN-VLN_L1) [m/s]
-        use_velptmn_with_metbk = time-vectorized data quality flag:
-                                 0 -> bad  velptmn current data
-                                 1 -> good velptmn current data
-
-    Notes:
-
-        The auxiliary data product calculated by this function is not used in any of
-        the METBK functions in this module. It is calculated because it is of scientific
-        interest. See also the Notes to the function met_relwind_speed.
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Not used by any other function in this module; calculated for
+    its scientific interest. See Notes to met_relwind_speed.
     """
     # replace aliased current values with nans.
     vle_water, vln_water = vet_velptmn_data(vle_water, vln_water, use_velptmn_with_metbk)
@@ -478,55 +395,29 @@ def met_current_direction(vle_water, vln_water, use_velptmn_with_metbk=0):
 
 def met_current_speed(vle_water, vln_water, use_velptmn_with_metbk=0):
     """
-    Description:
+    Computes CURRENT_SPD, the magnitude of the METBK surface current,
+    from the VELPT eastward and northward velocity components.
 
-        Estimate the magnitude of the surface current using the eastward and northward
-        velocity components from the VELPT mounted on the surface buoy. This is the
-        meta-data "product" CURRENT specified by the DPS referenced below (Section 4.3,
-        step 4). This product is not used in the METBK code; rather, the magnitude of
-        the vector difference of the wind and current vectors is the fundamental
-        variable used in the METBK calculations (see RELWIND_SPD-AUX).
+    Parameters
+    ----------
+    vle_water : array_like
+        Eastward surface current (VELPTMN-VLE_L1) [m/s].
+    vln_water : array_like
+        Northward surface current (VELPTMN-VLN_L1) [m/s].
+    use_velptmn_with_metbk : array_like, optional
+        Time-vectorized data quality flag: 0 for bad VELPTMN current
+        data, 1 for good VELPTMN current data. Default 0.
 
-        Because the direction of the current will also be calculated so as to be
-        made available, the CURRENT metadata product is sub-divided into:
-        CURRENT_SPD (calculated by this code) and
-        CURRENT_DIR.
+    Returns
+    -------
+    current_spd : array_like
+        Magnitude of the surface current (CURRENT_SPD) [m/s].
 
-    Implemented by:
-
-        2014-06-26: Chris Wingard. Initial Code
-        2014-08-27: Russell Desiderio. Added documentation, changed variable names.
-        2015-07-10: Russell Desiderio. Added data quality flags (use_velptmn_with_metbk)
-                    to argument list. See Notes to the function met_relwind_speed.
-        2023-08-15: Samuel Dahlberg. Removed use of numexpr
-
-    Usage:
-
-        current_spd = met_current_speed(vle_water, vln_water[, use_velptmn_with_metbk])
-
-            where
-
-        current_spd = magnitude (speed) of the surface current (CURRENT_SPD) [m/s]
-        vle_water = eastward surface current (VELPTMN-VLE_L1) [m/s]
-        vln_water = northward surface current (VELPTMN-VLN_L1) [m/s]
-        use_velptmn_with_metbk = time-vectorized data quality flag:
-                                 0 -> bad  velptmn current data
-                                 1 -> good velptmn current data
-
-    Notes:
-
-        The auxiliary data product calculated by this function is not used in any of
-        the METBK functions in this module. It is calculated because it is of scientific
-        interest and because the DPS specified it. See also the Notes to the function
-        met_relwind_speed.
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Not used elsewhere in this module; the vector difference of wind
+    and current is used instead (see RELWIND_SPD-AUX). See Notes to
+    met_relwind_speed.
     """
     # replace aliased current values with nans.
     vle_water, vln_water = vet_velptmn_data(vle_water, vln_water, use_velptmn_with_metbk)
@@ -537,48 +428,36 @@ def met_current_speed(vle_water, vln_water, use_velptmn_with_metbk=0):
 
 def met_relwind_direction(vle_wind, vln_wind, vle_water=None, vln_water=None, use_velptmn_with_metbk=0):
     """
-    Description:
+    Computes RELWIND_DIR-AUX, the direction of the vector difference
+    between METBK wind velocity and VELPT surface current velocity.
 
-        Calculates RELWIND_DIR-AUX, the direction of the vector difference of wind velocity
-        (from METBK measurements) and surface current (from VELPT measurements).
+    Parameters
+    ----------
+    vle_wind : array_like
+        Eastward wind speed (WINDAVG-VLE_L1) [m/s].
+    vln_wind : array_like
+        Northward wind speed (WINDAVG-VLN_L1) [m/s].
+    vle_water : array_like, optional
+        Eastward surface current (VELPTMN-VLE_L1) [m/s]. If not
+        supplied, current is treated as unavailable and nan is
+        returned.
+    vln_water : array_like, optional
+        Northward surface current (VELPTMN-VLN_L1) [m/s]. If not
+        supplied, current is treated as unavailable and nan is
+        returned.
+    use_velptmn_with_metbk : array_like, optional
+        Time-vectorized data quality flag: 0 for bad VELPTMN current
+        data, 1 for good VELPTMN current data. Default 0.
 
-        It is anticipated that the wind measurements will be roughly each minute and that the
-        current measurements will be broadcast to that resolution.
+    Returns
+    -------
+    u_dir : array_like
+        Direction of relative wind (RELWIND_DIR-AUX) [0, 360) degrees.
 
-    Implemented by:
-
-        2014-08-26: Russell Desiderio. Initial Code.
-        2015-07-10: Russell Desiderio. Set default calling water velocity values and implemented
-                                       use_velptmn_with_metbk switch.
-
-    Usage:
-
-        u_dir = met_relwind_direction(vle_wind, vln_wind[, vle_water, vln_water[, use_velptmn_with_metbk]])
-
-            where
-
-        u_dir = direction of relative wind (RELWIND_DIR-AUX) [0 360) degrees
-        vle_wind  = eastward wind speed (WINDAVG-VLE_L1) [m/s]
-        vln_wind  = northward wind speed (WINDAVG-VLN_L1) [m/s]
-        vle_water = eastward surface current (VELPTMN-VLE_L1) [m/s]
-        vln_water = northward surface current (VELPTMN-VLN_L1) [m/s]
-        use_velptmn_with_metbk = time-vectorized data quality flag:
-                                 0 -> bad  velptmn current data
-                                 1 -> good velptmn current data
-
-    Notes:
-
-        The auxiliary data product calculated by this function is not used in any of
-        the METBK functions in this module. It is calculated because it is of scientific
-        interest. See also the Notes to the function met_relwind_speed.
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Not used elsewhere in this module; calculated for its scientific
+    interest. See Notes to met_relwind_speed.
     """
     # if this function is called without using surface current data, return nan
     if vle_water is None or vln_water is None:
@@ -606,72 +485,39 @@ def met_relwind_direction(vle_wind, vln_wind, vle_water=None, vln_water=None, us
 
 def met_relwind_speed(vle_wind, vln_wind, vle_water=None, vln_water=None, use_velptmn_with_metbk=0):
     """
-    Description:
+    Computes RELWIND_SPD-AUX, wind speed relative to water, as the
+    magnitude of the vector difference between METBK wind velocity and
+    VELPT surface current velocity. This is the fundamental wind speed
+    variable used by the METBK toga-coare algorithms.
 
-        Calculates RELWIND_SPD-AUX, the relative windspeed over water, calculated as the
-        magnitude of the vector difference of surface current velocity (from VELPT
-        measurements) subtracted from wind velocity (from METBK measurements).
+    Parameters
+    ----------
+    vle_wind : array_like
+        Eastward wind speed (WINDAVG-VLE_L1) [m/s].
+    vln_wind : array_like
+        Northward wind speed (WINDAVG-VLN_L1) [m/s].
+    vle_water : array_like, optional
+        Eastward surface current (VELPTMN-VLE_L1) [m/s]. If not
+        supplied, current is treated as 0.
+    vln_water : array_like, optional
+        Northward surface current (VELPTMN-VLN_L1) [m/s]. If not
+        supplied, current is treated as 0.
+    use_velptmn_with_metbk : array_like, optional
+        Time-vectorized data quality flag: 0 for bad VELPTMN current
+        data, 1 for good VELPTMN current data. Default 0.
 
-        This is the fundamental windspeed variable used in the METBK toga-coare algorithms.
+    Returns
+    -------
+    u_rel : array_like
+        Magnitude of wind speed relative to water (RELWIND_SPD-AUX)
+        [m/s].
 
-        It is anticipated that the wind measurements will be roughly each minute and that the
-        current measurements will be broadcast to that resolution.
-
-    Implemented by:
-
-        2014-08-26: Russell Desiderio. Initial Code.
-        2015-07-10: Russell Desiderio. Set default calling water velocity values.
-                    Added the switch use_velptmn_with_metbk and code to vet surface current data.
-
-    Usage:
-
-        u_rel = met_relwind_speed(vle_wind, vln_wind[, vle_water, vln_water[, use_velptmn_with_metbk]])
-
-            where
-
-        u_rel = magnitude of windspeed relative to the ocean (RELWIND_SPD-AUX) [m/s]
-        vle_wind  = eastward wind speed (WINDAVG-VLE_L1) [m/s]
-        vln_wind  = northward wind speed (WINDAVG-VLN_L1) [m/s]
-        vle_water = eastward surface current (VELPTMN-VLE_L1) [m/s]
-        vln_water = northward surface current (VELPTMN-VLN_L1) [m/s]
-        use_velptmn_with_metbk = time-vectorized data quality flag:
-                                 0 -> bad  velptmn current data
-                                 1 -> good velptmn current data
-
-    Notes:
-
-        Previous fortran and matlab implementations of the toga-coare algorithms (not associated with
-        OOI) often used windspeed rather than windspeed relative to water, presumably because surface
-        current data were not available. And, the only surface moorings which do have surface current
-        meters are 4 Endurance moorings; however, at this time (July 2015) their compass readings are
-        aliased because of the proximity of their VELPT current meters to iron mooring ballast.
-
-        Therefore if current data are aliased or missing, met_relwind_speed will set current=0 and use
-        the actual windspeed in place of the windspeed relative to water (as the DPS also specifies).
-        This is only done in the routine met_relwind_speed, and not in met_relwind_direction,
-        met_current_direction, nor met_current_speed. In these latter 3 routines, bad or missing
-        current values are set to nan.
-
-        This treatment of current data allows the following two relative wind calculation cases to
-        be differentiated. Both cases calculate relative wind using the surface current values
-        vle_water=0 and vln_water=0:
-
-            (1) These 0 values came from actual VELPT data. In this case CURRENT_SPD calculated by
-                met_current_speed will be 0.
-            (2) These 0 values for current were used because the VELPT data were bad or missing. In
-                this case CURRENT_SPD calculated by met_current_speed will be a nan.
-
-        Implementation of the use_velptmn_with_metbk variable will require that it be treated as a
-        "platform/instrument instance specific metadata parameter changeable in time". It has been
-        coded to accept time-vectorized input.
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Unlike met_relwind_direction, met_current_direction, and
+    met_current_speed, bad or missing current data are set to 0 (not
+    nan) here so actual wind speed is used in place of relative wind
+    speed, per the DPS. See docs site for full discussion.
     """
     # If the surface current velocities are missing or invalid, the actual windspeed
     # will be used in place of the relative windspeed over water to calculate the METBK
@@ -702,36 +548,26 @@ def met_relwind_speed(vle_wind, vln_wind, vle_water=None, vln_water=None, use_ve
     return u_rel
 
 
+@deprecated
 def met_timeflx(timestamp):
     """
-    Description:
+    Computes TIMEFLX-AUX, the UTC timestamps corresponding to the
+    hourly averaged METBK data products [seconds since 1900-01-01].
 
-        Calculates TIMEFLX-AUX, the UTC timestamps corresponding to the hourly averaged
-        METBK data products. The units of the timestamps are seconds since 01-01-1900.
+    Parameters
+    ----------
+    timestamp : array_like
+        Sample date and time [seconds since 1900-01-01].
 
-        The timestamp values are selected to be at the midpoint of the bin intervals,
-        starting half an hour after the timestamp of the first data record to be
-        processed. For example, if the first data record for 30 days of data is at
-        4:45 AM on a given day, the first timeflx stamp will be at 5:15 AM on that
-        day, and all succeeding timestamps for the rest of the data will all be at
-        15 minutes past the hour.
+    Returns
+    -------
+    fluxtime_hourly : array_like
+        UTC timestamp for hourly data [seconds since 1900-01-01].
 
-    Implemented by:
-
-        2014-10-22: Russell Desiderio. Initial Code.
-
-    Usage:
-
-        fluxtime_hourly = met_timeflx(timestamp)
-
-            where
-
-        fluxtime_hourly = UTC timestamp for hourly data [seconds since 01-01-1900]
-        timestamp = seconds since 01-01-1900 [UTC]
-
-    References:
-
-        See documentation in this module for the function make_hourly_data.
+    Notes
+    -----
+    Timestamps mark the midpoint of each hourly bin, starting a half
+    hour after the first data record. See make_hourly_data.
     """
     # here, the output of make_hourly_data is a list,
     # the only element of which is the desired rank 1 np.array
@@ -761,36 +597,25 @@ def met_timeflx(timestamp):
 
 def met_netsirr(shortwave_down):
     """
-    Description:
+    Computes NETSIRR_L2, the net downward shortwave radiation (0.3 to
+    3.0 um wavelengths), by subtracting the reflected component from
+    the measured downward shortwave irradiance. Calculated on the
+    native METBK timebase (roughly per minute).
 
-        Calculates NETSIRR_L2, the OOI core data product net shortwave radiation
-        (wavelengths between 0.3 and 3.0 um) in the downward direction, for the METBK
-        instrument. This data product may have been misclassified (it looks like L1).
+    Parameters
+    ----------
+    shortwave_down : array_like
+        Measured downward shortwave radiation (SHRTIRR_L1) [W/m^2].
 
-        This data product is calculated on its native timebase (roughly per minute)
+    Returns
+    -------
+    net_shortwave_down : array_like
+        Net downward shortwave radiation (NETSIRR_L2) [W/m^2].
 
-    Implemented by:
-
-        2014-08-27: Russell Desiderio. Initial code.
-        2017-02-03: Russell Desiderio. Added timebase documentation.
-
-    Usage:
-
-        net_shortwave_down = met_netsirr(shortwave_down)
-
-            where
-
-        net_shortwave_down = net shortwave radiation in the downward direction
-                             (NETSIRR_L2) [W/m^2]
-        shortwave_down = measured downward shortwave radiation (SHRTIRR_L1) [W/m^2]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Uses a fixed albedo of 0.055, the reflection coefficient used in
+    the original toga-coare code.
     """
     # net down = total down - reflected up
     albedo = 0.055    # value for reflection coefficient used in toga-coare code
@@ -799,37 +624,25 @@ def met_netsirr(shortwave_down):
     return net_shortwave_down
 
 
+@deprecated
 def met_netsirr_hourly(shortwave_down, timestamp):
     """
-    Description:
+    Computes NETSIRR_HOURLY_L2, the net downward shortwave radiation
+    (0.3 to 3.0 um wavelengths), binned to an hourly timebase. Does
+    not require the coolskin/warmlayer algorithms.
 
-        Calculates NETSIRR_HOURLY_L2, the OOI core data product net shortwave radiation
-        (wavelengths between 0.3 and 3.0 um) in the downward direction, for the METBK
-        instrument on an hourly time base. This data product does not require the
-        coolskin/warmlayer algorithms.
+    Parameters
+    ----------
+    shortwave_down : array_like
+        Measured downward shortwave radiation (SHRTIRR_L1) [W/m^2].
+    timestamp : array_like
+        Sample date and time [seconds since 1900-01-01].
 
-    Implemented by:
-
-        2017-02-03: Russell Desiderio. Initial code.
-
-    Usage:
-
-        net_shortwave_down_hourly = met_netsirr_hourly(shortwave_down, timestamp)
-
-            where
-
-        net_shortwave_down_hourly = net shortwave radiation in the downward direction
-                                    on an hourly time base (NETSIRR_HOURLY_L2) [W/m^2]
-        shortwave_down = measured downward shortwave radiation (SHRTIRR_L1) [W/m^2]
-        timestamp = sample date and time value [seconds since 1900-01-01]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Returns
+    -------
+    net_shortwave_down_hourly : array_like
+        Net downward shortwave radiation, hourly (NETSIRR_HOURLY_L2)
+        [W/m^2].
     """
     shortwave_down, timestamp = condition_data(shortwave_down, timestamp)
 
@@ -840,37 +653,26 @@ def met_netsirr_hourly(shortwave_down, timestamp):
     return net_shortwave_down_hourly
 
 
+@deprecated
 def met_rainrte(cumulative_precipitation, timestamp):
     """
-    Description:
+    Computes RAINRTE_L2, rain rate, binned to an hourly timebase.
 
-        Calculates RAINRTE_L2 (probably really an L1 product), the OOI core data
-        product rain rate, for the METBK instrument. The DPS requires that the
-        output data be hourly; METBK is set up to give roughly one data record
-        per minute for the data needed to calculate RAINRTE.
+    Parameters
+    ----------
+    cumulative_precipitation : array_like
+        Measured cumulative rain level (PRECIPM_L1) [mm].
+    timestamp : array_like
+        Sample date and time [seconds since 1900-01-01].
 
-    Implemented by:
+    Returns
+    -------
+    rainrte : array_like
+        Rain rate, hourly (RAINRTE_L2) [mm/hr].
 
-        2014-08-27: Russell Desiderio. Initial code.
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        rainrte = met_rainrte(cumulative_precipitation, timestamp)
-
-            where
-
-        rainrte = rain rate (RAINRTE_L2) [mm/hr]
-        cumulative_precipitation = measured rain level (PRECIPM_L1) [mm]
-        timestamp = sample date and time value [seconds since 1900-01-01]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Likely an L1 product despite the L2 designation in the DPS.
     """
     cumulative_precipitation, timestamp = condition_data(cumulative_precipitation, timestamp)
 
@@ -887,38 +689,24 @@ def met_rainrte(cumulative_precipitation, timestamp):
 
 def met_salsurf(cond, tC_sea, ztmpwat):
     """
-    Description:
+    Computes SALSURF_L2, the OOI Level 2 sea surface practical
+    salinity (PSS-78), using TEOS-10 (GSW) with METBK conductivity
+    and temperature measurements.
 
-        OOI Level 2 Sea Surface Salinity core data product, which is calculated
-        using the Thermodynamic Equations of Seawater - 2010 (TEOS-10) Version
-        3.0, with data from the conductivity, temperature and depth (CTD)
-        family of instruments.
+    Parameters
+    ----------
+    cond : array_like
+        Sea surface conductivity (CONDSRF_L1) [S/m].
+    tC_sea : array_like
+        Sea surface temperature (TEMPSRF_L1) [deg_C].
+    ztmpwat : array_like
+        Depth of the conductivity and temperature measurements,
+        serving as a proxy for pressure [m].
 
-    Implemented by:
-
-        2014-06-25: Christopher Wingard. Initial code.
-        2014-08-26: Russell Desiderio. Changed variable names.
-        2023-08-15: Samuel Dahlberg. Replaced incompatible pygsw with GSW library.
-
-    Usage:
-
-        SP = met_salsurf(cond, tC_sea, p_sea)
-
-            where
-
-        SP = practical salinity, PSS-78, (SALSURF_L2) [unitless]
-        cond = sea surface conductivity (CONDSRF_L1) [S m-1]
-        tC_sea = sea surface temperature (TEMPSRF_L1) [deg_C]
-        ztmpwat = depth of conductivity and temperature measurements [m].
-                the depth is near the surface and serves as a proxy for
-                pressure [db].
-
-    References:
-
-        OOI (2012). Data Product Specification for Salinity. Document Control
-            Number 1341-00040. https://alfresco.oceanobservatories.org/ (See: 
-            Company Home >> OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf)
+    Returns
+    -------
+    SP : array_like
+        Practical salinity, PSS-78 (SALSURF_L2) [unitless].
     """
     # Convert L1 Conductivity from S/m to mS/cm
     C10 = cond * 10.0
@@ -930,34 +718,23 @@ def met_salsurf(cond, tC_sea, ztmpwat):
 
 def met_spechum(tC_air, pr_air, relhum):
     """
-    Description:
+    Computes SPECHUM_L2, the OOI air specific humidity core data
+    product. Not to be confused with SPHUM2M_L2.
 
-        Calculates SPECHUM_L2, the OOI air specific humidity core data
-        product, for the METBK instrument. Not to be confused with the
-        SPHUM2M_L2 data product.
+    Parameters
+    ----------
+    tC_air : array_like
+        Air temperature (TEMPAIR_L1) [deg_C].
+    pr_air : array_like
+        Air pressure (BARPRES_L0) [mbar]. Note this is BARPRES_L0,
+        not BARPRES_L1 [Pa].
+    relhum : array_like
+        Relative humidity (RELHUMI_L1) [%].
 
-    Implemented by:
-
-        2014-08-26: Russell Desiderio. Initial code.
-
-    Usage:
-
-        q_air = met_spechum(tC_air, pr_air, relhum)
-
-            where
-
-        q_air = air specific humidity (SPECHUM_L2) [g/kg]
-        tC_air = air temperature (TEMPAIR_L1) [deg_C]
-        pr_air = air pressure (BARPRES_L0) [mbar] {*NOT* BARPRES_L1 [Pa]}
-        relhum = relative humidity (RELHUMI_L1) [%]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Returns
+    -------
+    q_air : array_like
+        Air specific humidity (SPECHUM_L2) [g/kg].
     """
     # calculate saturated vapor pressure es in mbar
     es = 6.1121 * np.exp(17.502 * tC_air/(tC_air+240.97)) * (1.0007 + 3.46e-6 * pr_air)
@@ -996,63 +773,20 @@ def met_spechum(tC_air, pr_air, relhum):
 """
 
 
+@deprecated
 def met_buoyfls(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for BUOYFLS_L2. Returns the sonic
+    buoyancy flux [W/m^2], computed using sonic temperature rather
+    than virtual temperature. Not specified in the original DPS.
 
-        Calculates the sonic buoyancy flux (proposed) data product BUOYFLS_L2 using the
-        sonic temperature instead of the virtual temperature. The FDCHP instrument
-        calculates the analogous FLUXHOT_L2 data product also as a buoyancy flux using
-        the sonic temperature. In contrast, the (METBK) proposed data product BUOYFLX_L2
-        uses the virtual temperature in its calculation of buoyancy flux.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor height, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        buoyfls = met_buoyfls(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
-                           zwindsp, ztmpair, zhumair, lat, pr_air,
-                           Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        buoyfls = sonic buoyancy flux BUOYFLS_L2[W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1082,61 +816,20 @@ def met_buoyfls(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return hsbb
 
 
+@deprecated
 def met_buoyflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for BUOYFLX_L2. Returns the buoyancy
+    flux [W/m^2], computed using virtual temperature. Not specified
+    in the original DPS.
 
-        Calculates the buoyancy flux (proposed) data product BUOYFLX_L2 using
-        the virtual temperature. This is the more fundamental quantity for
-        buoyancy flux (rather than using the sonic temperature).
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor height, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        buoyflx = met_buoyflx(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                          ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                          pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        buoyflx = buoyancy flux BUOYFLX_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1166,59 +859,19 @@ def met_buoyflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return hbb
 
 
+@deprecated
 def met_frshflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for FRSHFLX_L2. Returns the upward
+    freshwater flux [mm/hr].
 
-        Calculates the freshwater upward flux data product FRSHFLX_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor height, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        frshflx = met_frshflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
-                           zwindsp, ztmpair, zhumair, lat, pr_air,
-                           Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        frshflx = upward freshwater flux FRSHFLX_L2 [mm/hr]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1250,59 +903,21 @@ def met_frshflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return frshflx
 
 
+@deprecated
 def met_heatflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for HEATFLX_L2. Returns the total net
+    upward heat flux [W/m^2].
 
-        Calculates the total net upward heat flux data product HEATFLX_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor height, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        heatflx = met_heatflx(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        heatflx = total net upward heat flux HEATFLX_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
+    met_heatflx_minute : Same calculation on the native per-minute
+        timebase, not binned to hourly.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1337,59 +952,21 @@ def met_heatflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return heatflx
 
 
+@deprecated
 def met_latnflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for LATNFLX_L2. Returns the upward
+    latent heat flux [W/m^2].
 
-        Calculates the upward latent heat flux data product LATNFLX_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor height, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        latnflx = met_latnflx(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        latnflx = upward latent heat flux LATNFLX_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
+    met_latnflx_minute : Same calculation on the native per-minute
+        timebase, not binned to hourly.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1421,60 +998,20 @@ def met_latnflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return hlb
 
 
+@deprecated
 def met_mommflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for MOMMFLX_L2. Returns the absolute
+    value of the momentum flux, also called the wind stress tau
+    [N/m^2].
 
-        Calculates (the absolute value of) the momentum flux MOMMFLX_L2,
-        also called the wind stress tau.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        mommflx = met_mommflx(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        mommflx = the momentum flux MOMMFLX_L2 [N/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1501,59 +1038,21 @@ def met_mommflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return tau
 
 
+@deprecated
 def met_netlirr(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for NETLIRR_L2. Returns the net upward
+    longwave irradiance [W/m^2].
 
-        Calculates the net upward longwave irradiance NETLIRR_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        netlirr = met_netlirr(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        netlirr = net upward longwave irradiance NETLIRR_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
+    met_netlirr_minute : Same calculation on the native per-minute
+        timebase, not binned to hourly.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1579,63 +1078,20 @@ def met_netlirr(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return Rnl
 
 
+@deprecated
 def met_rainflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for RAINFLX_L2. Returns the net upward
+    rain heat flux [W/m^2].
 
-        Calculates the net upward rain heat flux RAINFLX_L2.
-
-        A new derivation for rain heat flux is used, as calculated in the
-        subroutine rain_heat_flux.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-        2014-10-28: Russell Desiderio. Incorporated new subroutine for rain heat flux.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        rainflx = met_rainflx(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        rainflx = net upward rain heat flux RAINFLX_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
+    rain_heat_flux : Underlying rain heat flux calculation.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1664,59 +1120,21 @@ def met_rainflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return rainflx
 
 
+@deprecated
 def met_sensflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for SENSFLX_L2. Returns the net upward
+    sensible heat flux [W/m^2].
 
-        Calculates the net upward sensible heat flux SENSFLX_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        sensflx = met_sensflx(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        sensflx = net upward sensible heat flux SENSFLX_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
+    met_sensflx_minute : Same calculation on the native per-minute
+        timebase, not binned to hourly.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1743,59 +1161,19 @@ def met_sensflx(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return hsb
 
 
+@deprecated
 def met_sphum2m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for SPHUM2M_L2. Returns the modelled
+    specific humidity at a reference height of 2 m [g/kg].
 
-        Calculates the modelled specific humidity at a reference height of 2m SPHUM2M_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        sphum2m = met_sphum2m(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        sphum2m = modelled specific humidity at 2m SPHUM2M_L2 [g/kg]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
     """
     zrefht = 2.0  # [m]
 
@@ -1822,59 +1200,19 @@ def met_sphum2m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return sphum2m
 
 
+@deprecated
 def met_stablty(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for STABLTY_L2. Returns the
+    Monin-Obukhov stability parameter [unitless].
 
-        Calculates the Monin-Obukhov stability parameter metadata product STABLTY_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        stablty = met_stablty(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        stablty = Monin-Obukhov stability parameter STABLTY_L2 [unitless]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1897,59 +1235,19 @@ def met_stablty(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return zwindsp / L
 
 
+@deprecated
 def met_tempa2m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for TEMPA2M_L2. Returns the modelled
+    air temperature at a reference height of 2 m [degC].
 
-        Calculates the modelled air temperature at a reference height of 2m TEMPA2M_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        tempa2m = met_tempa2m(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        tempa2m = modelled air temperature at 2m TEMPA2M_L2 [degC]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
     """
     zrefht = 2.0  # [m]
 
@@ -1976,60 +1274,20 @@ def met_tempa2m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return tempa2m
 
 
+@deprecated
 def met_tempskn(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for TEMPSKN_L2. Returns the skin sea
+    surface temperature [degC], from the warmlayer and coolskin
+    (coare35vn) model.
 
-        Calculates the skin sea temperature based on the warmlayer and coolskin (coare35vn)
-        model: metadata product TEMPSKN_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        tempskn = met_tempskn(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        tempskn = skin seasurface temperature TEMPSKN_L2 [degC]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -2056,59 +1314,19 @@ def met_tempskn(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return tempskn
 
 
+@deprecated
 def met_wind10m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                 Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                 zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for WIND10M_L2. Returns the modelled
+    wind speed at a reference height of 10 m [m/s].
 
-        Calculates the modelled windspeed at a reference height of 10m WIND10M_L2.
-
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial Code
-        2014-09-19: Russell Desiderio. Added front end to convert eachminute data to hourly.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        wind10m = met_wind10m(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                              ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                              pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        wind10m = modelled windspeed at 10m WIND10M_L2 [degC]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
     """
     zrefht = 10.0  # [m]
 
@@ -2151,66 +1369,26 @@ def met_wind10m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
 """
 
 
+@deprecated
 def met_heatflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                        zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                        Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                        zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for HEATFLX_MINUTE_L2. Returns the
+    total net upward heat flux [W/m^2] on the native METBK per-minute
+    timebase. Not specified in the DPS.
 
-        Calculates the total net upward heat flux data product HEATFLX_MINUTE_L2,
-        calculated on the native METBK time base (per minute).
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
+    met_heatflx : Same calculation binned to hourly averages.
 
-    Implemented by:
-
-        2017-02-13: Russell Desiderio. Initial code.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor height, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        heatflx_minute = met_heatflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                                            ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                                            pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        heatflx_minute = total net upward heat flux HEATFLX_MINUTE_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    Notes:
-
-        This data product is not specifically included in the DPS.
-
-        This routine differs from met_heatflx only in that the function
-        make_hourly_data is not called to bin the input data into hourly bins.
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Differs from met_heatflx only in that make_hourly_data is not
+    called to bin the input data into hourly bins.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -2243,66 +1421,26 @@ def met_heatflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return heatflx
 
 
+@deprecated
 def met_latnflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                        zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                        Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                        zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for LATNFLX_MINUTE_L2. Returns the
+    upward latent heat flux [W/m^2] on the native METBK per-minute
+    timebase. Not specified in the DPS.
 
-        Calculates the upward latent heat flux data product LATNFLX_MINUTE_L2,
-        calculated on the native METBK time base (per minute).
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
+    met_latnflx : Same calculation binned to hourly averages.
 
-    Implemented by:
-
-        2017-02-13: Russell Desiderio. Initial code.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor height, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        latnflx_minute = met_latnflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                                            ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                                            pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        latnflx_minute = upward latent heat flux LATNFLX_MINUTE_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    Notes:
-
-        This data product is not specifically included in the DPS.
-
-        This routine differs from met_latnflx only in that the function
-        make_hourly_data is not called to bin the input data into hourly bins.
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Differs from met_latnflx only in that make_hourly_data is not
+    called to bin the input data into hourly bins.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -2332,66 +1470,26 @@ def met_latnflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return hlb
 
 
+@deprecated
 def met_netlirr_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                        zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                        Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                        zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for NETLIRR_MINUTE_L2. Returns the net
+    upward longwave irradiance [W/m^2] on the native METBK per-minute
+    timebase. Not specified in the DPS.
 
-        Calculates the data product NETLIRR_MINUTE_L2, the net upward longwave irradiance
-        calculated on the native METBK time base (per minute).
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
+    met_netlirr : Same calculation binned to hourly averages.
 
-    Implemented by:
-
-        2017-02-13: Russell Desiderio. Initial code.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        netlirr_minute = met_netlirr_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                                            ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                                            pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        netlirr_minute = net upward longwave irradiance NETLIRR_MINUTE_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    Notes:
-
-        This data product is not specifically included in the DPS.
-
-        This routine differs from met_netlirr only in that the function
-        make_hourly_data is not called to bin the input data into hourly bins.
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Differs from met_netlirr only in that make_hourly_data is not
+    called to bin the input data into hourly bins.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -2415,66 +1513,26 @@ def met_netlirr_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     return Rnl_native
 
 
+@deprecated
 def met_sensflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                        zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
                        Rshort_down=150.0, Rlong_down=370.0, cumu_prcp=0.0,
                        zinvpbl=600.0, jwarm=JWARMFL, jcool=JCOOLFL):
     """
-    Description:
+    OOI single-output wrapper for SENSFLX_MINUTE_L2. Returns the net
+    upward sensible heat flux [W/m^2] on the native METBK per-minute
+    timebase. Not specified in the DPS.
 
-        Calculates the net upward sensible heat flux SENSFLX_MINUTE_L2.
-        calculated on the native METBK time base (per minute).
+    See Also
+    --------
+    seasurface_skintemp_correct : Core algorithm; use directly for
+        multi-output access.
+    met_sensflx : Same calculation binned to hourly averages.
 
-    Implemented by:
-
-        2017-02-13: Russell Desiderio. Initial code.
-
-    Usage:
-
-        Normally this routine will be called with all input arguments populated except
-        for the last 3: zinvpbl is not a sensor input, and the jwarm and jcool switches
-        should always be globally set to 1.
-
-        The values for ztwmpwat, zwindsp, ztmpair, and zhumair
-        may be dependent on mooring type.
-
-        sensflx_minute = met_sensflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon,
-                                            ztmpwat, zwindsp, ztmpair, zhumair, lat,
-                                            pr_air, Rshort_down, Rlong_down, cumu_prcp]
-
-            where
-
-        sensflx_minute = net upward sensible heat flux SENSFLX_MINUTE_L2 [W/m^2]
-        tC_sea = sea temperature TEMPSRF_L1 [degC]
-        wnd = windspeed relative to current RELWIND_SPD-AUX [m/s]
-        tC_air = air temperature TEMPAIR [degC]
-        relhum = relative humidity RELHUMI [%]
-        timestamp = seconds since 01-01-1900
-        lon = longitude of METBK instrument. East, positive; West, negative. [deg]
-        ztmpwat = depth of sea temperature measurement TEMPSRF [m]
-        zwindsp = height of windspeed measurement WINDAVG_L0 [m]
-        ztmpair = height of air temperature measurement TEMPAIR [m]
-        zhumair = height of air humidity measurement RELHUMI [m]
-        lat = latitude of METBK instrument [deg]
-        pr_air = air pressure BARPRES_L0 [mb] (mb, not pascal)
-        Rshort_down = downwelling shortwave irradiation SHRTIRR_L1 [W/m^2]
-        Rlong_down = downwelling longwave irradiation LONGIRR_L1 [W/m^2]
-        cumu_prcp = cumulative precipitation PRECIPM_L1 [mm]
-
-    Notes:
-
-        This data product is not specifically included in the DPS.
-
-        This routine differs from met_sensflx only in that the function
-        make_hourly_data is not called to bin the input data into hourly bins.
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Differs from met_sensflx only in that make_hourly_data is not
+    called to bin the input data into hourly bins.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -2516,7 +1574,6 @@ def met_sensflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     psit_26
     psiu_26
     rain_heat_flux
-    rain_heat_flux_FLAWED (DPS code; not used in calculations)
     sea_spechum
     spechum_at_refheight
     water_thermal_expansion
@@ -2529,24 +1586,21 @@ def met_sensflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
 
 def air_density(tC_air, air_pressure_mbar, relhum):
     """
-    Description
+    Returns the density of air.
 
-            Returns the density of air.
+    Parameters
+    ----------
+    tC_air : array_like
+        Air temperature (TEMPAIR_L1) [deg_C].
+    air_pressure_mbar : array_like
+        Barometric pressure (BARPRES_L0) [mbar].
+    relhum : array_like
+        Relative humidity of air (RELHUMI_L1) [%].
 
-   Implemented by:
-
-        2014-08-29: Russell Desiderio. Initial Code.
-
-    Usage:
-
-        rho_air = air_density(tC_air, air_pressure_mbar, relhum)
-
-            where
-
-        rho_air = the density of air [kg/m^3]
-        tC_air = air temperature (TEMPAIR_L1) [deg_C].
-        air_pressure_mbar = barometric pressure (BARPRES_L0) [mbar]
-        relhum = relative humidity of air (RELHUMI_L1) [%]
+    Returns
+    -------
+    rho_air : array_like
+        Density of air [kg/m^3].
     """
     Rgas = 287.05  # gas constant [J/kg/K] for dry(!) air
     c2k = 273.15  # celsius to kelvin temperature constant
@@ -2559,9 +1613,33 @@ def air_density(tC_air, air_pressure_mbar, relhum):
 
 def airtemp_at_refheight(tC_air, tsr, zrefht, ztmpair, L, lat):
     """
-        Formulation from J. Edson's coare35vn version 3.5 coded here is
-        equivalent to code in section A.3.3 in the DPS, except that the
-        Edson code includes the "lapse" term.
+    Computes air temperature at an arbitrary reference height using
+    the Monin-Obukhov similarity profile.
+
+    Parameters
+    ----------
+    tC_air : array_like
+        Air temperature at the measurement height [deg_C].
+    tsr : array_like
+        Temperature scaling parameter [K].
+    zrefht : float
+        Reference height at which to compute air temperature [m].
+    ztmpair : array_like
+        Height of the air temperature measurement [m].
+    L : array_like
+        Obukhov length scale [m].
+    lat : float
+        Latitude, used to compute the lapse rate correction [deg].
+
+    Returns
+    -------
+    temp : array_like
+        Air temperature at zrefht [deg_C].
+
+    Notes
+    -----
+    Equivalent to DPS section A.3.3, with the addition of a lapse-rate
+    term present in J. Edson's coare35vn v3.5 code.
     """
     von = 0.4      # von Karman constant
     cpa = 1004.67  # heat capacity of dry air [J/kg/K]
@@ -2575,33 +1653,26 @@ def airtemp_at_refheight(tC_air, tsr, zrefht, ztmpair, L, lat):
 
 def calc_rain_rate(cumulative_precipitation, timestamp):
     """
-    Description:
+    Computes rain rate from cumulative precipitation and timestamp.
+    Not itself the formal RAINRTE data product, but used by
+    met_rainrte and by the warmlayer routine.
 
-        Calculates rain rate [mm/hr]. This routine does not calculate the formal
-        data product RAINRTE, but is used in the routine that does (and in several
-        others).
+    Parameters
+    ----------
+    cumulative_precipitation : array_like
+        Measured cumulative rain level (PRECIPM_L1) [mm].
+    timestamp : array_like
+        Sample date and time [seconds since 1900-01-01].
 
-    Implemented by:
+    Returns
+    -------
+    rain_rate : array_like
+        Rain rate [mm/hr].
 
-        2014-09-19: Russell Desiderio. Initial code.
-
-    Usage:
-
-        rain_rate = calc_rain_rate(cumulative_precipitation, timestamp)
-
-            where
-
-        rain_rate = rain rate [mm/hr]
-        cumulative_precipitation = measured rain level (PRECIPM_L1) [mm]
-        timestamp = sample date and time value [seconds since 1900-01-01]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Negative rates (from sensor resets or evaporation exceeding
+    precipitation) are set to 0, per the DPS.
     """
     # trap out scalar case; return a value of 0
     if cumulative_precipitation.size == 1:
@@ -2626,25 +1697,21 @@ def calc_rain_rate(cumulative_precipitation, timestamp):
 
 def gravity(lat):
     """
-    Description
+    Returns acceleration due to gravity as a function of latitude.
 
-            Returns acceleration due to gravity as a function of latitude.
+    Parameters
+    ----------
+    lat : array_like
+        Latitude [degrees].
 
-    Implemented by:
+    Returns
+    -------
+    g : array_like
+        Acceleration due to gravity [m/s/s].
 
-        2014-06-26: Chris Wingard. Initial Code.
-        2014-08-26: Russell Desiderio. Optimized.
-
-    Usage:
-
-        g = gravity(lat)
-
-            where
-
-        g = acceleration due to gravity [m/s/s]
-        lat = latitude [degrees]
-
-    from grv.m in the TOGA COARE 3.0 Matlab Toolbox
+    Notes
+    -----
+    From grv.m in the TOGA COARE 3.0 MATLAB toolbox.
     """
     gamma = 9.7803267715
     c1 = 0.0052790414
@@ -2662,71 +1729,45 @@ def gravity(lat):
 
 def latent_heat_vaporization_pure_water(tC_water):
     """
-    Description
+    Returns the latent heat of vaporization of pure water.
 
-            Returns the latent heat of vaporization of pure water.
+    Parameters
+    ----------
+    tC_water : array_like
+        Water temperature [deg_C].
 
-   Implemented by:
-
-        2014-08-29: Russell Desiderio. Initial Code.
-
-    Usage:
-
-        Le_water = latent_heat_vaporization_pure_water(tC_water)
-
-            where
-
-        Le_water is the latent heat of vaporization of pure water [J/kg]
-        tC_water is the water temperature [degC].
-
+    Returns
+    -------
+    Le_water : array_like
+        Latent heat of vaporization of pure water [J/kg].
     """
     return (2500.8 - 2.37 * tC_water) * 1000.0
 
 
 def net_longwave_up(tC_water, total_longwave_down):
     """
-    Description:
+    Computes the net upward longwave radiation flux from water
+    temperature and downward longwave radiation.
 
-        Calculates the net upward longwave radiation flux. Note, this routine
-        by itself does not calculate the related L2 data product NETLIRR, which
-        specifically requires input sea surface skin temperatures corrected for
-        warmlayer and coolskin effects.
+    Parameters
+    ----------
+    tC_water : array_like
+        Water temperature [deg_C].
+    total_longwave_down : array_like
+        Measured downward longwave radiation (LONGIRR_L1), positive
+        downward [W/m^2].
 
-    Implemented by:
+    Returns
+    -------
+    Rnl : array_like
+        Net longwave radiation, positive upward [W/m^2].
 
-        2014-09-01: Russell Desiderio. Initial code.
-
-    Usage:
-
-        Rnl = net_longwave_up(tC_water, total_longwave_down)
-
-            where
-
-        Rnl = net longwave radiation [W/m^2]; positive in the upward direction
-        tC_water = water temperature [deg_C]
-        total_longwave_down = measured downward longwave radiation (LONGIRR_L1)
-                              [W/m^2]; positive in the downward direction.
-
-
-        eps(ilon) is the blackbody emissivity; a loose application of Kirchoff's
-        thermal radiation law sets the IR reflection coefficient as (1 - eps).
-
-        total longwave radiation down                 = IR
-        reflected longwave radiation up               = (1-eps) * IR
-        blackbody energy radiated up from sea surface = eps * sigma * Tsea^4
-
-        Rnl(net upward) = IR_up - total_IR_down
-                        = eps*sigma*T^4 + (1-eps)*IR - IR
-                        = eps * (sigma*T^4 - IR)
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
-        """
+    Notes
+    -----
+    Does not by itself compute NETLIRR_L2, which requires the sea
+    surface skin temperature corrected for warmlayer and coolskin
+    effects. Uses a fixed blackbody emissivity of 0.97.
+    """
     sigma = 5.67e-8  # Stefan-Boltzmann constant [W/(m^2 K^4)]
     eps = 0.97
     c2k = 273.15  # degC to kelvin conversion constant
@@ -2737,37 +1778,19 @@ def net_longwave_up(tC_water, total_longwave_down):
 
 def psit_26(zet):
     """
-    Description
+    Computes the temperature structure function, used to calculate
+    air temperature and specific humidity at reference heights above
+    sea level.
 
-        Computes the temperature structure function and is used to calculate
-        air temperature and specific humidity at reference heights above sea
-        level.
+    Parameters
+    ----------
+    zet : array_like
+        Monin-Obukhov stability parameter (zu/L) [dimensionless].
 
-    Implemented by:
-
-        2014-06-26: Chris Wingard. Initial Code
-        2014-09-02: Russell Desiderio. Prevented the possibility of raising
-                    a negative number to a fractional power.
-
-    Usage:
-
-        psit = psit_26(zet)
-
-            where
-
-        psit = temperature structure function value at zet
-        zet = Monin-Obukhov stability parameter (zu/L) [dimensionless]
-
-    References:
-
-        Edson, J.B., V. Jampana, R.A. Weller, S.P. Bigorre, A.J. Plueddemann,
-            C.W. Fairall, S.D. Miller, L. Mahrt, D. Vickers, and H. Hersbach,
-            (2013). On the exchange of momentum over the open ocean. Journal of
-            Physical Oceanography, 43, 1589-1610.
-
-        Fairall, C.W. (2013). Vectorized version of COARE 3 code with
-            modification based on the CLIMODE, MBL and CBLAST experiments.
-            ftp://ftp.etl.noaa.gov/users/cfairall/bulkalg/cor3_5/coare35vn.m
+    Returns
+    -------
+    psit : array_like
+        Temperature structure function value at zet.
     """
     # force the shape of the input to a 1D array.
     zet = np.atleast_1d(zet)
@@ -2802,34 +1825,18 @@ def psit_26(zet):
 
 def psiu_26(zet):
     """
-    Description
+    Computes the velocity structure function, used to calculate wind
+    speed at reference heights above sea level.
 
-        Computes the velocity structure function and is used to calculate
-        wind speed at reference heights above sea level.
+    Parameters
+    ----------
+    zet : array_like
+        Monin-Obukhov stability parameter (zu/L) [dimensionless].
 
-    Implemented by:
-
-        2014-09-03: Russell Desiderio. Initial Code
-
-    Usage:
-
-        psiu = psiu_26(zet)
-
-            where
-
-        psiu = velocity structure function value at zet
-        zet = Monin-Obukhov stability parameter (zu/L) [dimensionless]
-
-    References:
-
-        Edson, J.B., V. Jampana, R.A. Weller, S.P. Bigorre, A.J. Plueddemann,
-            C.W. Fairall, S.D. Miller, L. Mahrt, D. Vickers, and H. Hersbach,
-            (2013). On the exchange of momentum over the open ocean. Journal of
-            Physical Oceanography, 43, 1589-1610.
-
-        Fairall, C.W. (2013). Vectorized version of COARE 3 code with
-            modification based on the CLIMODE, MBL and CBLAST experiments.
-            ftp://ftp.etl.noaa.gov/users/cfairall/bulkalg/cor3_5/coare35vn.m
+    Returns
+    -------
+    psiu : array_like
+        Velocity structure function value at zet.
     """
     # force the shape of the input to a 1D array.
     zet = np.atleast_1d(zet)
@@ -2860,100 +1867,37 @@ def psiu_26(zet):
 
 def rain_heat_flux(rainrate, Tsea, Tair, relhum, pr_air):
     """
-    Description:
+    Computes the rain heat flux, the heat flux due to rain falling
+    into the ocean; positive values indicate heat flowing from the
+    ocean to the atmosphere (rain cools the ocean).
 
-        Calculates the rain heat flux, which is the heat flux due to rain falling
-        into the ocean. Positive heat flux means that the heat is flowing from
-        the ocean to the atmosphere (the rain cools the ocean).
+    Parameters
+    ----------
+    rainrate : array_like
+        Rain fall rate [mm/hr].
+    Tsea : array_like
+        Bulk sea surface temperature, corrected for warmlayer only
+        [deg_C].
+    Tair : array_like
+        Air temperature [deg_C].
+    relhum : array_like
+        Relative humidity [%].
+    pr_air : array_like
+        Air pressure [mb].
 
-        This code represents a new derivation for the calculation of rain heat flux.
-        See the documentation for the function rain_heat_flux_FLAWED following,
-        for details of the problems with implementation of the old calculation.
+    Returns
+    -------
+    RHF : array_like
+        Rain heat flux [W/m^2].
 
-    Implemented by:
-
-        2014-10-28: Russell Desiderio. New derivation. Initial code.
-
-    Usage:
-
-        RHF = rain_heat_flux(rainrate, Tsea, Tair, relhum, pr_air)
-
-            where
-
-        RHF = rain heat flux [W/m^2]
-        rainrate = rainfall [mm/hr]
-        Tsea = bulk sea surface temperature corrected for warmlayer only [degC]
-        Tair = air temperature [degC]
-        relhum = relative humidity [%]
-        pr_air = air pressure [mb]
-
-    References:
-
-        Gosnell, R., C.W. Fairall, and P.J. Webster. The sensible heat of rainfall in
-        the tropical ocean. JGR (100)(C9) pp 18437-18442. 1995.
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
-
-    Derivation:
-
-        This derivation follows that of the Gosnell et al reference cited above. The
-        difference is that the wetbulb temperature (assumed to be that of the raindrop)
-        is approximated by a Taylor series expansion at the air temperature, as suggested
-        by Simon de Szoeke, instead of at the sea temperature, as done in the reference.
-        This will be a more accurate calculation of the rain heat flux for normal (rainfall)
-        conditions; as Simon pointed out, when Twetbulb < Tair < Tsea, expanding about Tair
-        rather than Tsea will give a value closer to the actual wetbulb temperature.
-
-        Equation numbers are from Gosnell et al, cited above. Note that their equations
-        (9) and (13) are missing factors of the ratio of the diffusivities.
-
-
-        The sensible rain heat flux is given by (eqn (5)):
-
-            RHF = cp_rain * R * (Tsea - Train) * rho_rain
-
-                RHF = rain heat flux [W/m^2]
-                cp_rain = specific heat of fresh water [J/kg/K]
-                R  = rain rate [mm/hr]
-                Tsea = bulk sea temperature [degC]
-                Train = raindrop temperature, approximated by the wetbulb temperature [degC]
-                rho_rain = density of rainwater [kg/m^3] (needed to get RHF in units of W/m^2)
-
-                Units check:
-
-                RHF = J/kg/K * mm/hr * K * kg/m^3 = J/(3600*sec) /(1000*m^2)
-                    = W/m^2/3600/1000  (rho_rain=1000, which will cancel)
-
-        To find Train = Twet, use the psychrometric equation (eqn (6)):
-
-            Train = Tair - psi * (qsat_air(Train) - qair)
-
-                Tair = air temperature
-                qsat_air = saturation humidity of air as f(temperature)
-                qair = ambient specific humidity of air
-                psi = (Lv/cp_air)*(dv/dh)
-                    Lv = latent heat of vaporization of fresh water at Tair
-                    cp_air = specific heat of air
-                    dv = water vapor diffusivity
-                    dh = heat diffusivity
-
-        Expand qsat_air(Train) as a Taylor series expansion at T = Tair:
-
-            qsat_air(Train) = qsat_air(Tair) + qsat_air'(Tair) * (Train - Tair)
-
-        All terms of the expansion are known; the qsat_air derivative qsat_air'
-        is the Clausius-Clapeyron (CC) equation to be evaluated at T=Tair.
-
-        Solve for Train:
-
-            Train = Tair - psi * (qsat_air(Tair) - qair) / (1 + psi * CC(Tair))
-
-        Use this expression for Train in eqn (5) above to calculate RHF.
-
+    Notes
+    -----
+    Follows Gosnell, Fairall, and Webster (1995), with the raindrop
+    wetbulb temperature approximated by a Taylor series expansion at
+    the air temperature rather than the sea temperature, per a
+    correction suggested by Simon de Szoeke. See
+    rain_heat_flux_FLAWED [removed] for the superseded derivation this
+    replaced.
     """
     c2k = 273.15       # celsius to kelvin temperature constant
     Rgas_air = 287.05  # gas constant [J/kg/K] for air
@@ -2989,106 +1933,28 @@ def rain_heat_flux(rainrate, Tsea, Tair, relhum, pr_air):
     return RHF
 
 
-def rain_heat_flux_FLAWED(rain_rate, tC_sea, tC_air, relhum, pr_air, dter, dqer, dsea):
-    """
-        2014-Oct-28.
-        THIS CALCULATION OF RAIN HEAT FLUX IS INCORRECT AND NOT USED IN THIS MODULE.
-
-            (1) The original derivation (Gosnell, Fairall, and Webster, JGR(100)(C9)
-                18437-18442 1995) dropped a factor of the ratio of the heat and vapor
-                diffusivities from eqns (9) and (13). (Verified, personal communication,
-                C. Fairall, 2014). This paper's equations were used as they appeared in
-                the text when the original coare algorithms were coded so that this error
-                has propagated through all versions of the code up to this point.
-
-            (2) The original derivation used a Taylor series expansion at Tsea. Therefore
-                the whoi expression for the Clausius-Clapeyron equation is more correct
-                than the Edson expression.
-
-            (3) The expansion involves the saturation humidity Qsat of air, the environment
-                through which the raindrops are falling, not the saturation humidity of the
-                'sea' (of the air directly above the sea surface). Occurrences of the variables
-                Qsea and dqer in the original code are incorrect. (If the original derivation
-                is to be followed, Qsea should be replaced by Qsat of air at 100% relative
-                humidity evaluated at the temperature T=Tsea; dqer would not appear at all).
-
-            (4) The versions of the old code also used the specific heat of seawater instead
-                of fresh rain water (almost 5% error).
-
-            (5) The new derivation coded in a separate function follows the suggestion made
-                by Simon de Szoeke and features a Taylor series expansion at the air
-                temperature instead of at the sea temperature. This is more accurate and
-                as an added benefit will avoid the confusion that arose when the sea temperature
-                was used as the expansion temperature.
-
-        Incorrectly calculates net upward rain heat flux.
-
-    """
-    Rgas = 287.05  # gas constant [J/kg/K] for dry(!) air
-    c2k = 273.15   # celsius to kelvin temperature constant
-    cpa = 1004.67  # specific heat capacity of (dry) air [J/kg/K]
-    cpw = 4000.0   # specific heat capacity of sw at T=20 degC, S=35 [J/kg/K]
-
-    rhoa = air_density(tC_air, pr_air, relhum)               # units kg/m^3
-    Le = latent_heat_vaporization_pure_water(tC_sea + dsea)  # units J/kg
-    Qair = met_spechum(tC_air, pr_air, relhum)/1000.0        # units kg/kg
-    Qsea = sea_spechum(tC_sea + dsea, pr_air)/1000.0         # units kg/kg
-
-    dwat = 2.11e-5 * ((tC_air + c2k) / c2k) ** 1.94        # water vapour diffusivity
-
-    dtmp = (1.0 + 3.309e-3 * tC_air -
-            1.44e-6 * tC_air * tC_air) * 0.02411 / (rhoa * cpa)  # heat diffusivity
-
-    # in Clausius-Clayperon eqn, whoi (DPS) and fortran uses tC_sea (+ dsea);
-    # jim edson and archived whoi rain_flux.m use tC_air;
-    # some versions include dter in this expression
-
-    # this expression affects *most* of the unit tests!
-    # this is because rain_heat_flux is used in the warmlayer algorithm, so
-    # any data product which uses warmmlayer will fail if a switch is made.
-
-    #dqs_dt = Qair * Le / (Rgas * (tC_air + c2k) ** 2)      # Clausius-Clapeyron
-    dqs_dt = Qsea * Le / (Rgas * (tC_sea + dsea + c2k) ** 2)      # Clausius-Clapeyron
-
-    alfac = 1.0 / (1.0 + 0.622 * (dqs_dt * Le * dwat) / (cpa * dtmp))  # wet bulb factor
-
-    factor = rain_rate * alfac * cpw / 3600.0
-    rain_heat_flux = factor * ((tC_sea + dsea - tC_air - dter) +
-                               (Qsea - Qair - dqer) * Le / cpa)
-
-    return rain_heat_flux
-
-
 def sea_spechum(tC_sea, p_air):
     """
-    Description:
+    Computes the sea surface value of specific humidity, Qsea. Not to
+    be confused with any of the specific humidity in air variables
+    (e.g. Qair).
 
-        Calculates the surface value of specific humidity Qsea. Not to be confused
-        with any of the specific humidity in air variables (for example, Qair). In
-        the original edson coare35vn version 3.5 matlab code, the equivalent function
-        is named qsat26sea; in the v3.0 DPS code, qsee.
+    Parameters
+    ----------
+    tC_sea : array_like
+        Seawater temperature [deg_C].
+    p_air : array_like
+        Air pressure (BARPRES_L0) [mbar].
 
-    Implemented by:
+    Returns
+    -------
+    q_sea : array_like
+        Sea surface specific humidity [g/kg].
 
-        2014-09-01: Russell Desiderio. Initial code.
-
-    Usage:
-
-        q_sea = sea_spechum(tC_sea, p_air)
-
-            where
-
-        q_sea = sea surface specific humidity [g/kg]
-        tC_sea = seawater temperature [deg_C]
-        p_air = air pressure (BARPRES_L0) [mbar]
-
-    References:
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
+    Notes
+    -----
+    Named qsat26sea in J. Edson's coare35vn v3.5 MATLAB code and qsee
+    in the v3.0 DPS code.
     """
     # calculate saturated vapor pressure es in mbar
     es = 6.1121 * np.exp(17.502 * tC_sea/(tC_sea + 240.97)) * (1.0007 + 3.46e-6 * p_air)
@@ -3104,11 +1970,36 @@ def sea_spechum(tC_sea, p_air):
 
 def spechum_at_refheight(tC_air, pr_air, relhum, qsr, zrefht, zhumair, L):
     """
-        Formulation from J. Edson's coare35vn version 3.5 coded here is
-        equivalent to code in section A.3.3 in the DPS.
-    """
+    Computes specific humidity at an arbitrary reference height using
+    the Monin-Obukhov similarity profile.
 
-    # qsr coming in to routine has units of kg/kg
+    Parameters
+    ----------
+    tC_air : array_like
+        Air temperature at the measurement height [deg_C].
+    pr_air : array_like
+        Air pressure (BARPRES_L0) [mbar].
+    relhum : array_like
+        Relative humidity (RELHUMI_L1) [%].
+    qsr : array_like
+        Specific humidity scaling parameter [kg/kg].
+    zrefht : float
+        Reference height at which to compute specific humidity [m].
+    zhumair : array_like
+        Height of the humidity measurement [m].
+    L : array_like
+        Obukhov length scale [m].
+
+    Returns
+    -------
+    spechum : array_like
+        Specific humidity at zrefht [g/kg].
+
+    Notes
+    -----
+    Equivalent to DPS section A.3.3, per J. Edson's coare35vn v3.5
+    code.
+    """
     qsr = qsr * 1000.0  # change units to g/kg for this calculation
     von = 0.4      # von Karman constant
     Q_air = met_spechum(tC_air, pr_air, relhum)
@@ -3120,23 +2011,19 @@ def spechum_at_refheight(tC_air, pr_air, relhum, qsr, zrefht, zhumair, L):
 
 def water_thermal_expansion(tC_water):
     """
-    Description
+    Returns the thermal expansion coefficient of water. Used in both
+    the warmlayer and coolskin algorithms.
 
-            Returns the thermal expansion of water. Used in both the warmlayer
-            and coolskin algorithms.
+    Parameters
+    ----------
+    tC_water : array_like
+        Water temperature [deg_C].
 
-   Implemented by:
-
-        2014-08-29: Russell Desiderio. Initial Code.
-
-    Usage:
-
-        Al = water_thermal_expansion(tC_water)
-
-            where
-
-        Al = water thermal expansion coefficient; no documentation as to units.
-        tC_water = water temperature [degC].
+    Returns
+    -------
+    Al : array_like
+        Water thermal expansion coefficient. Units not documented in
+        the original code.
     """
 
     return 2.1e-5 * (tC_water + 3.2)**0.79
@@ -3144,8 +2031,33 @@ def water_thermal_expansion(tC_water):
 
 def windspeed_at_refheight(wnd, usr, ut, zrefht, zwindsp, L):
     """
-        Formulation from J. Edson's coare35vn version 3.5 coded here is
-        equivalent to code in section A.3.3 in the DPS.
+    Computes wind speed at an arbitrary reference height using the
+    Monin-Obukhov similarity profile.
+
+    Parameters
+    ----------
+    wnd : array_like
+        Wind speed relative to current (RELWIND_SPD-AUX) [m/s].
+    usr : array_like
+        Friction velocity including gustiness [m/s].
+    ut : array_like
+        Effective relative wind speed including gustiness [m/s].
+    zrefht : float
+        Reference height at which to compute wind speed [m].
+    zwindsp : array_like
+        Height of the wind speed measurement [m].
+    L : array_like
+        Obukhov length scale [m].
+
+    Returns
+    -------
+    windspeed : array_like
+        Wind speed at zrefht [m/s].
+
+    Notes
+    -----
+    Equivalent to DPS section A.3.3, per J. Edson's coare35vn v3.5
+    code.
     """
     von = 0.4      # von Karman constant
 
@@ -3169,131 +2081,109 @@ def windspeed_at_refheight(wnd, usr, ut, zrefht, zwindsp, L):
 """
 
 
+@deprecated
 def seasurface_skintemp_correct(*args):
     """
-    Description:
+    Wrapper that applies the METBK sea surface skin temperature
+    correction algorithms -- warmlayer and coolskin (coare35vn) -- to
+    compute the friction velocity, temperature and humidity scaling
+    parameters, and other fundamental bulk parameters needed by the
+    L2 BULKFLX data products. Applies both corrections by OOI default
+    (JWARMFL = JCOOLFL = 1); the switch construct is retained for
+    generality. Warmlayer corrections (dsea) are added to, and
+    coolskin corrections (dter, dqer) are subtracted from, the bulk
+    sea temperature.
 
-        Wrapper function which by OOI default applies both of the METBK seasurface
-        skin temperature correction algorithms (warmlayer, coolskin in coare35vn).
-        This behavior is set by the global switches JWARMFL=1 and JCOOLFL=1. The
-        switch construction is retained for generality.
+    Parameters
+    ----------
+    args : tuple
+        Positional arguments, in order:
 
-        Most of the METBK L2 data products and 2 of the metadata products require
-        the skin corrections to be applied before their values can be calculated.
+        rain_rate : array_like
+            Rain rate [mm/hr].
+        timestamp : array_like
+            Sample date and time [seconds since 1900-01-01].
+        lon : array_like
+            Longitude [deg].
+        ztmpwat : array_like
+            Depth of the bulk sea temperature measurement [m].
+        tC_sea : array_like
+            Bulk sea surface temperature [deg_C].
+        wnd : array_like
+            Wind speed relative to current [m/s].
+        zwindsp : array_like
+            Height of the wind speed measurement [m].
+        tC_air : array_like
+            Air temperature [deg_C].
+        ztmpair : array_like
+            Height of the air temperature measurement [m].
+        relhum : array_like
+            Relative humidity [%].
+        zhumair : array_like
+            Height of the air humidity measurement [m].
+        pr_air : array_like
+            Air pressure [mb].
+        Rshort_down : array_like
+            Downwelling shortwave irradiation [W/m^2].
+        Rlong_down : array_like
+            Downwelling longwave irradiation [W/m^2].
+        lat : array_like
+            Latitude [deg].
+        zinvpbl : array_like
+            Planetary boundary layer inversion height, default 600 m
+            [m].
+        jcool : array_like
+            Coolskin algorithm switch (hardwired to 1 for OOI).
+        jwarm : array_like
+            Warmlayer algorithm switch (hardwired to 1 for OOI).
 
-        Warmlayer corrections dsea are added.
-        Coolskin corrections dter and dqer are subtracted.
+    Returns
+    -------
+    usr : array_like
+        Friction velocity including gustiness [m/s].
+    tsr : array_like
+        Temperature scaling parameter [K].
+    qsr : array_like
+        Specific humidity scaling parameter [kg/kg].
+    ut : array_like
+        Effective relative wind speed including gustiness [m/s].
+    dter : array_like
+        Coolskin temperature depression [deg_C].
+    dqer : array_like
+        Coolskin humidity depression [kg/kg].
+    tkt : array_like
+        Coolskin thickness [m].
+    L : array_like
+        Obukhov length scale [m].
+    zou : array_like
+        Wind roughness length [m].
+    zot : array_like
+        Thermal roughness length [m].
+    zoq : array_like
+        Moisture roughness length [m].
+    dt_wrm : array_like
+        Warming across the entire warmlayer [deg_C].
+    tk_pwp : array_like
+        Warmlayer thickness [m].
+    dsea : array_like
+        Additive warmlayer temperature correction [deg_C].
 
-    Implemented by:
+    See Also
+    --------
+    warmlayer : Computes dt_wrm, tk_pwp, dsea.
+    coare35vn : Computes usr, tsr, qsr, ut, dter, dqer, tkt, L, zou,
+        zot, zoq.
 
-        2014-09-01: Russell Desiderio. Initial code.
-
-    Usage (command line spaced out for clarity):
-
-        (usr, tsr, qsr, ut, dter, dqer, tkt, L, zou, zot, zoq,     # coare35vn output
-        dt_wrm, tk_pwp, dsea) =                                    # warmlayer output
-
-        seasurface_skintemp_correct
-
-        (rain_rate, timestamp, lon, ztmpwat, tC_sea, wnd, zwindsp,
-            tC_air, ztmpair, relhum, zhumair, pr_air, Rshort_down,
-            Rlong_down, lat, zinvpbl, jcool, jwarm)
-
-
-            where
-
-        OUTPUTS (documentation from coare35vn matlab code):
-
-            usr = friction veclocity that includes gustiness [m/s]
-            tsr = temperature scaling parameter [K]
-            qsr = specific humidity scaling parameter [g/g, I changed this from Edson code]
-            ut = not an output of the original code
-            dter = coolskin temperature depression [degC]
-            dqer = coolskin humidity depression [kg/kg]
-            tkt = coolskin thickness [m]
-            L = Obukhov length scale [m]
-            zou = wind roughness length [m]
-            zot = thermal roughness length [m]
-            zoq = moisture roughness length [m]
-
-        OUTPUTS (documentation from coare35vnWarm matlab code):
-
-            dt_wrm = warming across entire warmlayer [degC]
-            tk_pwp = warmlayer thickness [m]
-            dsea = additive warmlayer temperature correction [degC];
-                   (this is warmlayer's key output)
-
-        INPUTS:
-
-            rain_rate = rainfall [mm/hr]
-            timestamp = seconds since 01-01-1900
-            lon = longitude [deg]
-            ztmpwat = depth of bulk sea temperature measurement [m]
-            tC_sea = bulk sea surface temperature [degC]
-            wnd = windspeed relative to current [m/s]
-            zwindsp = height of windspeed measurement[m]
-            tC_air = air temperature [degC]
-            ztmpair = height of air temperature measurement [m]
-            relhum = relative humidity [%]
-            zhumair = height of air humidity measurement [m]
-            pr_air = air pressure [mb]
-            Rshort_down = downwelling shortwave irradiation [W/m^2]
-            Rlong_down = downwelling longwave irradiation [W/m^2]
-            lat = latitude [deg]
-            zinvpbl = inversion height; default is 600m [m]
-            jcool = switch to activate coolskin algorithm (hardwired to 1 = true)
-            jwarm = switch to activate warmlayer algoritgm (hardwired to 1 = true)
-
-    References:
-
-        Fairall, C.W., E.F. Bradley, J.S. Godfrey, G.A. Wick, J.B. Edson, and G.S. Young
-        (1996) Cool-skin and warm-layer effects on sea surface temperature. JGR, Vol. 101,
-        No. C1, 1295-1308, 1996.
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
-
-        OOI (2014). 1341-00370_BULKFLX Artifacts. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI >> REFERENCE >> Data Product Specification Artifacts
-            >> 1341-00370_BULKFLX  (Original matlab code).
-
-    Notes:
-
-        (1) the jwarm switch selects whether or not the warmlayer code is run.
-            the jcool 'switch' is itself a variable within the (original)
-            coare35vn code; it was used as a multiplicative factor when
-            calculating coolskin corrections, so that when jcool=0, the
-            corrections are set to 0.
-        (2) for OOI jwarm and jcool are always 1, because all of the OOI
-            sea temperature measurements are bulk, not skin, measurements.
-        (3) in the more general case, jwarm = jcool always, because:
-            (a) jcool = 1 indicates that the input sea temperature values are
-                bulk measurements, not surface skin measurements made with
-                an infrared thermometer. in this bulk measurement case, both
-                coolskin and warmlayer corrections to the bulk temperature are
-                required to model the skin temperature (jcool = jwarm = 1).
-            (b) jcool = 0 indicates that the input sea temperature values are
-                surface skin temperatures directly measured with an infrared
-                thermometer, and therefore both the coolskin and warmlayer
-                corrections are not to be applied (jcool = jwarm = 0).
-        (4) however, both switches are retained for generality in case this
-            open source code is appropriated and adapted. (plus, the DPS
-            specified archiving the jwarm and jcool switches as metadata).
-        (5) the OOI cyberinfrastructure model originally required that each data
-            product be specifically calculated by one function. This is the main
-            reason that the wrapper function construct is used. In addition, I've
-            chosen to explicitly write out its output tuple arguments for each
-            data product call, so that the dependence of the various data products
-            on these tuple arguments is obvious (underscores are used as placeholders
-            for those arguments not used in any particular function call). In
-            particular, this construct specifically identifies when coolskin and
-            warmlayer temperature corrections have been applied to various variables
-            in the original code. (For example - the latent heat of vaporization for
-            water depends on water temperature, but only the warmlayer correction is
-            used calculate it).
+    Notes
+    -----
+    When jwarm = jcool = 0, input sea temperatures are treated as
+    already-measured skin temperatures and neither correction is
+    applied; when jwarm = jcool = 1 (the OOI case), the input is
+    treated as a bulk measurement requiring both corrections. Each
+    calling wrapper on this page explicitly unpacks this function's
+    output tuple with underscore placeholders, to make clear which
+    corrections apply to which intermediate variable in a given data
+    product's calculation.
     """
     jwarm = args[-1]    # jwarm (and jcool) are scalars
     if jwarm:
@@ -3325,87 +2215,70 @@ def seasurface_skintemp_correct(*args):
 """
 
 
+@deprecated
 def warmlayer(rain_rate, timestamp, lon, ztmpwat, tC_sea, wnd, zwindsp, tC_air, ztmpair, relhum,
               zhumair, pr_air, Rshort_down, Rlong_down, lat, zinvpbl, jcool):
     """
-    Description:
+    Computes the warmlayer correction to bulk sea surface temperature,
+    accounting for solar heating between the sub-surface temperature
+    sensor and the air-sea interface. Refactored from
+    coare35vnWarm.m.
 
-        Accurate parameterization of air-sea fluxes requires an accurate estimation of the
-        interfacial sea temperature. The warmlayer algorithm accounts for solar heating to
-        correct sea temperature readings, made by a temperature sensor below the sea surface,
-        to the air-sea interface.
+    Parameters
+    ----------
+    rain_rate : array_like
+        Rain rate, hourly [mm/hr].
+    timestamp : array_like
+        Sample date and time, hourly [seconds since 1900-01-01].
+    lon : array_like
+        Longitude [deg].
+    ztmpwat : array_like
+        Depth of the bulk sea temperature measurement [m].
+    tC_sea : array_like
+        Bulk sea surface temperature [deg_C].
+    wnd : array_like
+        Wind speed relative to current [m/s].
+    zwindsp : array_like
+        Height of the wind speed measurement [m].
+    tC_air : array_like
+        Air temperature [deg_C].
+    ztmpair : array_like
+        Height of the air temperature measurement [m].
+    relhum : array_like
+        Relative humidity [%].
+    zhumair : array_like
+        Height of the air humidity measurement [m].
+    pr_air : array_like
+        Air pressure [mb].
+    Rshort_down : array_like
+        Downwelling shortwave irradiation [W/m^2].
+    Rlong_down : array_like
+        Downwelling longwave irradiation [W/m^2].
+    lat : array_like
+        Latitude [deg].
+    zinvpbl : array_like
+        Planetary boundary layer inversion height, default 600 m [m].
+    jcool : array_like
+        Coolskin algorithm switch (hardwired to 1 for OOI).
 
-        Warmlayer code refactored from coare35vnWarm.m (see DPS artifacts in References).
+    Returns
+    -------
+    dt_wrm : array_like
+        Warming across the entire warmlayer [deg_C].
+    tk_pwp : array_like
+        Warmlayer thickness [m].
+    dsea : array_like
+        Additive warmlayer temperature correction [deg_C]; the key
+        warmlayer output.
 
-    Implemented by:
-
-        2014-09-01: Russell Desiderio. Initial code.
-        2015-07-08: Russell Desiderio. Added array subscripts to sensor height arrays ztmpwat,
-                    zwindsp, ztmpair, and zhumair so that now these parameters on input can
-                    either be 1-element 1D arrays or time-vectorized 1D arrays.
-
-    Usage :
-
-        (dt_wrm, tk_pwp, dsea) = warmlayer(rain_rate, timestamp, lon, ztmpwat, tC_sea,
-                                           wnd, zwindsp, tC_air, ztmpair, relhum,
-                                           zhumair, pr_air, Rshort_down, Rlong_down,
-                                           lat, zinvpbl, jcool)
-
-
-            where
-
-        OUTPUTS (documentation from coare35vnWarm matlab code):
-
-            dt_wrm = warming across entire warmlayer [degC]
-            tk_pwp = warmlayer thickness [m]
-            dsea = additive warmlayer temperature correction [degC];
-                   (this is warmlayer's key output)
-
-        INPUTS:
-
-            rain_rate = rainfall [mm/hr]
-            timestamp = seconds since 01-01-1900; hourly
-            lon = longitude [deg]
-            ztmpwat = depth of bulk sea temperature measurement [m]
-            tC_sea = bulk sea surface temperature [degC]
-            wnd = windspeed relative to current [m/s]
-            zwindsp = height of windspeed measurement[m]
-            tC_air = air temperature [degC]
-            ztmpair = height of air temperature measurement [m]
-            relhum = relative humidity [%]
-            zhumair = height of air humidity measurement [m]
-            pr_air = air pressure [mb]
-            Rshort_down = downwelling shortwave irradiation [W/m^2]
-            Rlong_down = downwelling longwave irradiation [W/m^2]
-            lat = latitude [deg]
-            zinvpbl = inversion height; default is 600m [m]
-            jcool = switch to activate coolskin algorithm (hardwired to 1 = true)
-
-    References:
-
-        Fairall, C.W., E.F. Bradley, J.S. Godfrey, G.A. Wick, J.B. Edson, and G.S. Young
-        (1996) Cool-skin and warm-layer effects on sea surface temperature. JGR, Vol. 101,
-        No. C1, 1295-1308, 1996.
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
-
-        OOI (2014). 1341-00370_BULKFLX Artifacts. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI >> REFERENCE >> Data Product Specification Artifacts
-            >> 1341-00370_BULKFLX  (Original matlab code).
-
-    Notes:
-
-        Original code was refactored to produce this version. In-code documentation is a
-        mixture of the original code's documentation and my additions.
-
-        Two noteworthy changes made: local time calculation from longitude no longer can give
-        negative local times; a mystery addend of 7.5 in the local time calculation, resulting
-        in increasing local time by half an hour, was deleted.
-
+    Notes
+    -----
+    Only processes days that have data before a 6 AM local threshold
+    (equatorial sunrise); other days return nan (see
+    warmlayer_time_keys). Refactored from the original code: local
+    time is no longer allowed to go negative, and a spurious
+    half-hour offset present in the original local-time calculation
+    was removed.
     """
     # set constants
     c2k = 273.15        # Converts degC to Kelvin
@@ -3591,105 +2464,87 @@ def warmlayer(rain_rate, timestamp, lon, ztmpwat, tC_sea, wnd, zwindsp, tC_air, 
 """
 
 
+@deprecated
 def coare35vn(tC_sea, wnd, zwindsp, tC_air, ztmpair, relhum, zhumair, pr_air,
               Rshort_down, Rlong_down, lat, zinvpbl, jcool):
     """
-    Description:
+    Iteratively computes the fundamental bulk parameters, with
+    coolskin correction, from which METBK air-sea flux data products
+    are calculated. Transliterated from version 3.5 of coare35vn.m.
+    Unlike the original fortran and MATLAB versions, this function
+    does not directly compute data products; see the wrapper
+    functions on this docs page for the individual L2 products.
 
-        Iteratively calculates fundamental bulk parameters, with coolskin correction,
-        from which air-sea fluxes can be calculated. Transliterated from version 3.5
-        of coare35vn.m (see DPS artifacts in References). In contrast to the original
-        fortran and subsequent matlab versions, this python version does not directly
-        calculate data products.
+    Parameters
+    ----------
+    tC_sea : array_like
+        Bulk sea surface temperature [deg_C].
+    wnd : array_like
+        Wind speed relative to current [m/s].
+    zwindsp : array_like
+        Height of the wind speed measurement [m].
+    tC_air : array_like
+        Air temperature [deg_C].
+    ztmpair : array_like
+        Height of the air temperature measurement [m].
+    relhum : array_like
+        Relative humidity [%].
+    zhumair : array_like
+        Height of the air humidity measurement [m].
+    pr_air : array_like
+        Air pressure [mb].
+    Rshort_down : array_like
+        Downwelling shortwave irradiation [W/m^2].
+    Rlong_down : array_like
+        Downwelling longwave irradiation [W/m^2].
+    lat : array_like
+        Latitude [deg].
+    zinvpbl : array_like
+        Planetary boundary layer inversion height, default 600 m [m].
+    jcool : array_like
+        Coolskin algorithm switch (hardwired to 1 for OOI).
 
-        Accurate parameterization of air-sea fluxes requires an accurate estimation of
-        the interfacial sea temperature. The coolskin algorithm accounts for interfacial
-        cooling due to longwave blackbody radiation, sensible heat flux, and latent heat
-        flux.
+    Returns
+    -------
+    usr : array_like
+        Friction velocity including gustiness [m/s].
+    tsr : array_like
+        Temperature scaling parameter [K].
+    qsr : array_like
+        Specific humidity scaling parameter [kg/kg].
+    ut : array_like
+        Effective relative wind speed including gustiness [m/s]; not
+        an output of the original code.
+    dter : array_like
+        Coolskin temperature depression [deg_C].
+    dqer : array_like
+        Coolskin humidity depression [kg/kg].
+    tkt : array_like
+        Coolskin thickness [m].
+    L : array_like
+        Obukhov length scale [m].
+    zou : array_like
+        Wind roughness length [m].
+    zot : array_like
+        Thermal roughness length [m].
+    zoq : array_like
+        Moisture roughness length [m].
 
-    Implemented by:
+    See Also
+    --------
+    charnock_wind, coolskin_parameters, effective_relwind,
+    obukhov_for_init, obukhov_length_scale, roughness_lengths,
+    roughness_lengths_for_init, scaling_parameters : Per-iteration
+        subroutines called by the loop in this function.
 
-        2014-09-01: Russell Desiderio. Initial code.
-
-    Usage (command line spaced out for clarity):
-
-        (usr, tsr, qsr, ut, dter, dqer, tkt, L, zou, zot, zoq) = coare35vn(
-                            tC_sea, wnd, zwindsp, tC_air, ztmpair, relhum, zhumair,
-                            pr_air, Rshort_down, Rlong_down, lat, zinvpbl, jcool)
-
-            where
-
-        OUTPUTS (documentation from coare35vn matlab code):
-
-            usr = friction veclocity that includes gustiness [m/s]
-            tsr = temperature scaling parameter [K]
-            qsr = specific humidity scaling parameter [g/g, I changed this from Edson code]
-            ut = not an output of the original code
-            dter = coolskin temperature depression [degC]
-            dqer = coolskin humidity depression [kg/kg]
-            tkt = coolskin thickness [m]
-            L = Obukhov length scale [m]
-            zou = wind roughness length [m]
-            zot = thermal roughness length [m]
-            zoq = moisture roughness length [m]
-
-        INPUTS:
-
-            tC_sea = bulk sea surface temperature [degC]
-            wnd = windspeed relative to current [m/s]
-            zwindsp = height of windspeed measurement[m]
-            tC_air = air temperature [degC]
-            ztmpair = height of air temperature measurement [m]
-            relhum = relative humidity [%]
-            zhumair = height of air humidity measurement [m]
-            pr_air = air pressure [mb]
-            Rshort_down = downwelling shortwave irradiation [W/m^2]
-            Rlong_down = downwelling longwave irradiation [W/m^2]
-            lat = latitude [deg]
-            zinvpbl = inversion height; default is 600m [m]
-            jcool = switch to activate coolskin algorithm (hardwired to 1 = true)
-
-    References:
-
-        Fairall, C.W., E.F. Bradley, J.S. Godfrey, G.A. Wick, J.B. Edson, and G.S. Young
-        (1996) Cool-skin and warm-layer effects on sea surface temperature. JGR, Vol. 101,
-        No. C1, 1295-1308, 1996.
-
-        Fairall, C. W., E.F. Bradley, D.P. Rogers, J.B. Edson, and G.S. Young (1996),
-        Bulk Parameterization of air-sea fluxes for Tropical Ocean-Global Atmosphere
-        Coupled-Ocean Atmosphere Response Experiment. JGR Vol. 101 No. C2, 3747-3764.
-
-        Fairall, C.W., E.F. Bradley, J.E. Hare, A.A. Grachev, and J.B. Edson (2003),
-        Bulk parameterization of air sea fluxes: updates and verification for the
-        COARE algorithm. J. Climate, 16, 571-590.
-
-        OOI (2014). Data Product Specification for L2 BULKFLX Data Products.
-            Document Control Number 1341-00370.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >>
-            OOI >> Cyberinfrastructure >> Data Product Specifications >>
-            1341-00370_Data_Product_Spec_BULKFLX_OOI.pdf)
-
-        OOI (2014). 1341-00370_BULKFLX Artifacts. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI >> REFERENCE >> Data Product Specification Artifacts
-            >> 1341-00370_BULKFLX  (Original matlab code).
-
-    Notes:
-
-        The code within the iteration loop was segregated into subroutines to clarify which
-        of the variables were key in that they were recalculated during each iteration, and
-        afterwards used to calculate data products. These subroutine names are somewhat
-        arbitrary in that there was essentially no documentation in the original code for
-        what was being calculated in the loop.
-
-        These key variables are the output of this stripped down version of the original code.
-        This python code is not meant to directly calculate data products; rather, it is to
-        calculate the key variables from which all associated data products can be calculated.
-
-        This approach greatly increases the number of subroutines required for the calculations.
-        However, it also makes explicit which parameters are necessary for the calculation of
-        each data product, and in some cases may expose an inconsistent application of either
-        the coolskin or warmlayer corrections to the bulk seasurface temperature when these
-        data products are calculated.
+    Notes
+    -----
+    Iterates 6 times (hardwired). The per-iteration calculation was
+    split into named subroutines to clarify which intermediate
+    variables are recomputed each pass; the original code carried
+    little documentation of this structure. dter and dqer are forced
+    to 0 when jcool=0, so downstream callers need no jcool
+    multiplicative factor.
     """
     # convert relative humidity to specific humidity [kg/kg]
     Qsea = sea_spechum(tC_sea, pr_air) / 1000.0          # surface water specific humidity
@@ -3835,7 +2690,19 @@ def coare35vn(tC_sea, wnd, zwindsp, tC_air, ztmpair, relhum, zhumair, pr_air,
 #-------------------------------------------------------------------------
 def charnock_wind(u10N):
     """
-        section essentially verbatim from original code.
+    Computes the Charnock coefficient as a function of the 10 m
+    neutral wind speed, following the COARE 3.5 wind-speed
+    parameterization.
+
+    Parameters
+    ----------
+    u10N : array_like
+        10 m neutral wind speed [m/s].
+
+    Returns
+    -------
+    charnC : array_like
+        Charnock coefficient, capped at its value for u10N = 19 m/s.
     """
     umax = 19
     a1 = 0.0017
@@ -3851,7 +2718,59 @@ def charnock_wind(u10N):
 def coolskin_parameters(usr, qsr, tsr, Rnl, Rns, rhoa, cpa, Le, tkt, Al, be,
                         cpw, visw, rhow, bigc, tcw, tC_sea, Qsea, pr_air):
     """
-        section essentially verbatim from original code.
+    Computes the coolskin temperature depression, humidity depression,
+    and layer thickness for one iteration of the coare35vn coolskin
+    loop.
+
+    Parameters
+    ----------
+    usr : array_like
+        Friction velocity including gustiness [m/s].
+    qsr : array_like
+        Specific humidity scaling parameter [kg/kg].
+    tsr : array_like
+        Temperature scaling parameter [K].
+    Rnl : array_like
+        Net upward longwave radiation [W/m^2].
+    Rns : array_like
+        Net downward shortwave radiation [W/m^2].
+    rhoa : array_like
+        Air density [kg/m^3].
+    cpa : float
+        Specific heat capacity of dry air [J/kg/K].
+    Le : array_like
+        Latent heat of vaporization of seawater [J/kg].
+    tkt : array_like
+        Coolskin thickness from the previous iteration [m].
+    Al : array_like
+        Water thermal expansion coefficient.
+    be : float
+        Salinity expansion coefficient.
+    cpw : float
+        Specific heat capacity of seawater [J/kg/K].
+    visw : float
+        Kinematic viscosity of seawater [m^2/s].
+    rhow : float
+        Density of seawater [kg/m^3].
+    bigc : array_like
+        Coolskin scaling constant.
+    tcw : float
+        Thermal conductivity of seawater.
+    tC_sea : array_like
+        Bulk sea surface temperature [deg_C].
+    Qsea : array_like
+        Sea surface specific humidity [kg/kg].
+    pr_air : array_like
+        Air pressure [mb].
+
+    Returns
+    -------
+    dter : array_like
+        Coolskin temperature depression [deg_C].
+    dqer : array_like
+        Coolskin humidity depression [kg/kg].
+    tkt : array_like
+        Coolskin thickness [m].
     """
     #.. dter: coolskin temperature depression
     #.. dqer: coolskin humidity depression
@@ -3880,7 +2799,35 @@ def coolskin_parameters(usr, qsr, tsr, Rnl, Rns, rhoa, cpa, Le, tkt, Al, be,
 #-------------------------------------------------------------------------
 def effective_relwind(tsr, tK_air, qsr, grav, tv, usr, Beta, zinvpbl, wnd):
     """
-        section essentially verbatim from original code.
+    Computes the effective relative wind speed, adding a
+    gustiness contribution to the mean relative wind speed under
+    convective (unstable) conditions.
+
+    Parameters
+    ----------
+    tsr : array_like
+        Temperature scaling parameter [K].
+    tK_air : array_like
+        Air temperature [K].
+    qsr : array_like
+        Specific humidity scaling parameter [kg/kg].
+    grav : array_like
+        Acceleration due to gravity [m/s/s].
+    tv : array_like
+        Virtual air temperature [K].
+    usr : array_like
+        Friction velocity including gustiness [m/s].
+    Beta : float
+        Gustiness coefficient.
+    zinvpbl : array_like
+        Planetary boundary layer inversion height [m].
+    wnd : array_like
+        Wind speed relative to current [m/s].
+
+    Returns
+    -------
+    ut : array_like
+        Effective relative wind speed including gustiness [m/s].
     """
     N = wnd.shape[0]
     tvsr = tsr + 0.61 * tK_air * qsr
@@ -3899,7 +2846,46 @@ def effective_relwind(tsr, tK_air, qsr, grav, tv, usr, Beta, zinvpbl, wnd):
 def obukhov_for_init(von, grav, tK_air, dt, dter, dq, ut, zwindsp,
                      ztmpair, zo10, zot10, zinvpbl, Beta):
     """
-        section essentially verbatim from original code.
+    Computes an initial estimate of the Obukhov length scale for the
+    coare35vn iteration loop, and identifies stable-case indices with
+    a Monin-Obukhov length very thin relative to zwindsp.
+
+    Parameters
+    ----------
+    von : float
+        Von Karman constant.
+    grav : array_like
+        Acceleration due to gravity [m/s/s].
+    tK_air : array_like
+        Air temperature [K].
+    dt : array_like
+        Sea-air temperature difference [deg_C].
+    dter : array_like
+        Coolskin temperature depression [deg_C].
+    dq : array_like
+        Sea-air specific humidity difference [kg/kg].
+    ut : array_like
+        Effective relative wind speed including gustiness [m/s].
+    zwindsp : array_like
+        Height of the wind speed measurement [m].
+    ztmpair : array_like
+        Height of the air temperature measurement [m].
+    zo10 : array_like
+        Wind roughness length estimate at 10 m [m].
+    zot10 : array_like
+        Thermal roughness length estimate at 10 m [m].
+    zinvpbl : array_like
+        Planetary boundary layer inversion height [m].
+    Beta : float
+        Gustiness coefficient.
+
+    Returns
+    -------
+    L_init : array_like
+        Initial Obukhov length scale estimate [m].
+    k50 : array_like
+        Indices where the stability parameter exceeds 50 (stable
+        cases with a very thin Monin-Obukhov length).
     """
     #.. calculates an obukhov length scale for loop variable initializations.
     #.. also finds indices (k50) of zetu stability values with very thin
@@ -3929,11 +2915,36 @@ def obukhov_for_init(von, grav, tK_air, dt, dter, dq, ut, zwindsp,
 #-------------------------------------------------------------------------
 def obukhov_length_scale(von, grav, tK_air, Qair, usr, tsr, qsr):
     """
-        DPS documentation:
-        TO EVALUATE OBUKHOV LENGTH FROM AVERAGE TEMP T IN (kelvin)
-        AVERAGE HUMIDITY Q (in air) IN GM/GM,
-        AND FRICTIONAL VEL,TEMP.,HUM. IN MKS UNITS
-        SEE LIU ET AL. (1979)
+    Computes the Obukhov length scale from average air temperature
+    and humidity, and the friction velocity, temperature, and
+    humidity scaling parameters.
+
+    Parameters
+    ----------
+    von : float
+        Von Karman constant.
+    grav : array_like
+        Acceleration due to gravity [m/s/s].
+    tK_air : array_like
+        Air temperature [K].
+    Qair : array_like
+        Air specific humidity [kg/kg].
+    usr : array_like
+        Friction velocity including gustiness [m/s].
+    tsr : array_like
+        Temperature scaling parameter [K].
+    qsr : array_like
+        Specific humidity scaling parameter [kg/kg].
+
+    Returns
+    -------
+    L : array_like
+        Obukhov length scale [m].
+
+    Notes
+    -----
+    Per Liu et al. (1979); DPS documentation cites this as the source
+    formulation.
     """
     tv = tK_air * (1.0 + 0.61 * Qair)
     tvsr = tsr * (1.0 + 0.61 * Qair) + 0.61 * tK_air * qsr
@@ -3953,7 +2964,34 @@ def obukhov_length_scale(von, grav, tK_air, Qair, usr, tsr, qsr):
 #-------------------------------------------------------------------------
 def roughness_lengths(charn, usr, grav, visa):
     """
-        section essentially verbatim from original code.
+    Computes the wind, moisture, and thermal roughness lengths for
+    one iteration of the coare35vn loop.
+
+    Parameters
+    ----------
+    charn : array_like
+        Charnock coefficient.
+    usr : array_like
+        Friction velocity including gustiness [m/s].
+    grav : array_like
+        Acceleration due to gravity [m/s/s].
+    visa : array_like
+        Kinematic viscosity of air [m^2/s].
+
+    Returns
+    -------
+    zo : array_like
+        Wind roughness length [m].
+    zoq : array_like
+        Moisture roughness length [m].
+    zot : array_like
+        Thermal roughness length [m].
+
+    Notes
+    -----
+    The thermal and moisture roughness lengths are set equal, chosen
+    to give Stanton and Dalton numbers that closely approximate
+    COARE 3.0.
     """
     zo = charn * usr**2 / grav + 0.11 * visa / usr  # surface roughness
     rr = zo * usr / visa
@@ -3967,7 +3005,31 @@ def roughness_lengths(charn, usr, grav, visa):
 #-------------------------------------------------------------------------
 def roughness_lengths_for_init(usr, grav, visa, von):
     """
-        section essentially verbatim from original code.
+    Computes initial wind and thermal roughness length estimates at
+    10 m, used to seed the coare35vn iteration loop.
+
+    Parameters
+    ----------
+    usr : array_like
+        Friction velocity estimate [m/s].
+    grav : array_like
+        Acceleration due to gravity [m/s/s].
+    visa : array_like
+        Kinematic viscosity of air [m^2/s].
+    von : float
+        Von Karman constant.
+
+    Returns
+    -------
+    zo10 : array_like
+        Wind roughness length estimate at 10 m [m].
+    zot10 : array_like
+        Thermal roughness length estimate at 10 m [m].
+
+    Notes
+    -----
+    Uses a fixed stand-in Charnock coefficient of 0.011 for this
+    initial estimate only.
     """
     charn_standin = 0.011
     zo10 = charn_standin * usr**2 / grav + 0.11 * visa / usr
@@ -3984,7 +3046,49 @@ def roughness_lengths_for_init(usr, grav, visa, von):
 def scaling_parameters(dter, dqer, von, fdg, zwindsp, zhumair,
                        ztmpair, zou, zoq, zot, L, ut, dq, dt):
     """
-        section essentially verbatim from original code.
+    Computes the friction velocity, specific humidity, and
+    temperature scaling parameters for one iteration of the
+    coare35vn loop.
+
+    Parameters
+    ----------
+    dter : array_like
+        Coolskin temperature depression [deg_C].
+    dqer : array_like
+        Coolskin humidity depression [kg/kg].
+    von : float
+        Von Karman constant.
+    fdg : float
+        Turbulent Prandtl number.
+    zwindsp : array_like
+        Height of the wind speed measurement [m].
+    zhumair : array_like
+        Height of the humidity measurement [m].
+    ztmpair : array_like
+        Height of the air temperature measurement [m].
+    zou : array_like
+        Wind roughness length [m].
+    zoq : array_like
+        Moisture roughness length [m].
+    zot : array_like
+        Thermal roughness length [m].
+    L : array_like
+        Obukhov length scale [m].
+    ut : array_like
+        Effective relative wind speed including gustiness [m/s].
+    dq : array_like
+        Sea-air specific humidity difference [kg/kg].
+    dt : array_like
+        Sea-air temperature difference [deg_C].
+
+    Returns
+    -------
+    usr : array_like
+        Friction velocity including gustiness [m/s].
+    qsr : array_like
+        Specific humidity scaling parameter [kg/kg].
+    tsr : array_like
+        Temperature scaling parameter [K].
     """
     cdhf = von / (np.log(zwindsp / zou) - psiu_26(zwindsp / L))
     cqhf = von * fdg / (np.log(zhumair / zoq) - psit_26(zhumair / L))
@@ -4011,30 +3115,32 @@ def scaling_parameters(dter, dqer, von, fdg, zwindsp, zhumair,
 
 def vet_velptmn_data(vle, vln, use_velptmn):
     """
-    Description:
+    Replaces suspect VELPTMN current values with nan where the data
+    quality flag indicates bad data.
 
-        When an element of the use_velptmn switch is 0, the corresponding elements in
-        vle_in and vln_in are set to Nan.
+    Parameters
+    ----------
+    vle : array_like
+        Eastward surface current speed [m/s].
+    vln : array_like
+        Northward surface current speed [m/s].
+    use_velptmn : array_like
+        Time-vectorized data quality flag: 0 for bad current data, 1
+        for good current data.
 
-        This function is not to be used with met_relwind_speed, where suspect velptmn
-        values are replaced with 0.
+    Returns
+    -------
+    vle_out : array_like
+        Eastward surface current speed, suspect values set to nan
+        [m/s].
+    vln_out : array_like
+        Northward surface current speed, suspect values set to nan
+        [m/s].
 
-    Implemented by:
-
-        2015-07-10: Russell Desiderio. Initial Code
-
-    Usage:
-
-        vle_out, vln_out = vet_velptmn_data(vle, vln, use_velptmn)
-
-            where
-
-        vle_out, vln_out = eastward and northward current speeds with suspect values
-                           returned as nan.
-        vle, vln = input eastward and northward current speeds
-        use_velptmn = time-vectorized data quality flag:
-                      0 -> bad  current data
-                      1 -> good current data
+    Notes
+    -----
+    Not for use with met_relwind_speed, which replaces suspect values
+    with 0 instead of nan.
     """
     # expand use_velptmn_with_metbk if it is called as a scalar
     if np.atleast_1d(use_velptmn).shape[0] == 1:
@@ -4054,45 +3160,29 @@ def vet_velptmn_data(vle, vln, use_velptmn):
 
 def condition_data(*args):
     """
-    Description:
+    Conditions the input argument list for the warmlayer/coolskin
+    algorithm: coerces all arguments to at least 1D arrays, expands
+    scalar-default arguments (including sensor heights ztmpwat,
+    zwindsp, ztmpair, zhumair) to match the length of the
+    time-vectorized arguments, and reduces the jcool/jwarm switches
+    to single-element arrays.
 
-        (1) Makes sure that all relevant variables are at least 1D np.arrays.
+    Parameters
+    ----------
+    *args : array_like
+        Argument list of input data.
 
-        (2) For missing input variables with default scalar values set in the
-            input argument list, this routine expands the size of those variable
-            arrays from 1 element to the size of that of the other variables.
+    Returns
+    -------
+    args_out : list of array_like
+        Argument list of conditioned output data.
 
-        (3) Also expands (time-vectorizes) sensor heights ztmpwat, zwindsp, ztmpair,
-            and zhumair to maintain compatibility with scalar sensor height inputs.
-
-        (4) Conditions the jcool and jwarm input variables; see code documentation.
-
-    Implemented by:
-
-        2014-09-19: Russell Desiderio. Initial code.
-        2015-07-08: Russell Desiderio. Added sensor height indices [3, 6, 8, 10]
-                    for [ztmpwat, zwindsp, ztmpair, zhumair] to idx_of_args_to_expand
-                    so that now these parameters on input can either be 1-element 1D
-                    arrays or time-vectorized 1D arrays. Also conditioned the jcool
-                    and jwarm variables to convert them into 1-element switches if
-                    they are input as time-vectorized variables.
-
-    Usage:
-
-        args_out = condition_data(*args_in)
-
-            where
-
-        args_out = argument list of conditioned output data
-        args_in = argument list of input data
-
-    Notes:
-
-        This routine will be called at the front end of each DPA that requires
-        the warmlayer/coolskin algorithm. It may also be called in other instances
-        (for example, for rainrte) that may not require variable expansion, in
-        which case the number of arguments will be less than number_of_bulk_vars.
-
+    Notes
+    -----
+    Called at the front end of every function that requires the
+    warmlayer/coolskin algorithm. May also be called with fewer than
+    the full 18-argument set (e.g. for met_rainrte), in which case
+    only array-shape coercion is performed.
     """
     # to enable modification of the input arguments in place,
     # make sure that the args are in a list
@@ -4133,78 +3223,32 @@ def condition_data(*args):
 
 def make_hourly_data(*args):
     """
-    Description:
+    Computes hourly averages of the variables passed in the argument
+    list, binned by timestamp. Works for sporadically spaced data and
+    for data with time gaps; no records are produced for missing time
+    bins.
 
-        Calculates hourly averaged data for the variables passed in the
-        argument list based on timestamp. This routine will work for
-        sporadically spaced data and for data with time gaps; in the latter
-        case, no records are produced for the missing time bins.
+    Parameters
+    ----------
+    *args : array_like
+        Argument list of each-minute data. All arguments must be 1D
+        arrays of the same length. Timestamp (seconds) must be the
+        second element unless it is the only argument. If the
+        argument count is 18 (the warmlayer/coolskin input set),
+        constant and switch arguments are not averaged.
 
-        The timestamp for each hour of data is calculated as the midpoint
-        of the bin interval. If this is changed to either the beginning or
-        end of the interval (the latter may be more appropriate given that
-        the warmlayer routine numerically calculates integrals over time)
-        then the check values in the unit tests may also need to be changed.
+    Returns
+    -------
+    args_out : list of array_like
+        Argument list of hourly-averaged data.
 
-        Note also that the first hourly timestamp will be one half hour after
-        the timestamp of the first datum in, so that in the general case the
-        hourly timestamps will not correspond to times at the top of the hour
-        (ie, the hourly timestamps will not correspond to 6:00, 7:00, 8:00, etc).
-
-    Implemented by:
-
-        2014-09-18: Russell Desiderio. Initial code.
-        2014-10-22: Russell Desiderio. Added capability to process timestamps if
-                    it is the only input argument. This was added so that a
-                    simple call could be made to this function for the purposes
-                    of calculating an hourly timestamp metadata product not
-                    included in the DPS but which I anticipate will be needed.
-        2015-07-08: Russell Desiderio. Deleted sensor height indices [3, 6, 8, 10]
-                    for [ztmpwat, zwindsp, ztmpair, zhumair] from idx_to_skip
-                    so that now these parameters on input can either be 1-element 1D
-                    arrays or time-vectorized 1D arrays.
-
-    Usage
-
-        args_out = make_hourly_data(*args_in)
-
-            where
-
-        args_out = argument list of hourly data
-        args_in = argument list of each minute data
-
-
-        Timestamps in units of seconds must be the second element in args_in, unless
-        it is the only input in the argument list; this was dictated by convenience for
-        the ordering of the input arguments into the seasurface_skintemp_correct routine.
-
-        If the number of arguments in is 18, then the inputs are data to be
-        prepared for running in the warmlayer and coolskin routines, and so not
-        all of the input arguments are to be processed (for example, switches
-        and the sensor heights). The variables to be processed is determined by
-        a hard-wired list argument index number idx. For any other args_in sized
-        input, all inputs are processed.
-
-        All arguments must be 1D arrays of the same length.
-
-    Notes:
-
-        The np.bincount routine is used in much the same way accumarray in matlab
-        would be used to construct the hourly data. np.histogram could also have
-        been used.
-
-        The key to the routine is to convert the timestamps into elapsed hours
-        [0.0, 0.1, 0.7, 1.3, 1.7, 3.1, 3.3] so that when these values are floored
-        [ 0 ,  0 ,  0 ,  1 ,  1 ,  3 ,  3 ] the entry at an index represents the
-        bin number into which the various variables with that index will belong.
-
-        The summing is carried out by using the weighting feature of the np.bincount
-        function, as described in the example in the numpy.bincount documentation at:
-        http://docs.scipy.org/doc/numpy-1.8.1/reference/generated/numpy.bincount.html.
-
-        The same lines of code are executed when calculating the hourly timestamps
-        regardless of the number of input arguments, so that if the current method
-        is changed only the code at the end of this routine needs to be modified.
+    Notes
+    -----
+    Each hourly timestamp marks the midpoint of its bin; the first
+    hourly timestamp is a half hour after the first each-minute
+    datum, so hourly timestamps do not in general fall on the top of
+    the hour. Uses np.bincount, weighted, to sum and average values
+    per bin.
     """
     args = list(args)
 
@@ -4267,58 +3311,34 @@ def make_hourly_data(*args):
 
 def warmlayer_time_keys(localdate):
     """
-    Description:
+    Computes indices and flags used by the warmlayer routine to
+    identify which days of local-time data qualify for warmlayer
+    processing.
 
-        Calculates time variables for the warmlayer routine. See the
-        documentation in the Usage and Notes sections below.
+    Parameters
+    ----------
+    localdate : array_like
+        Local (not UTC) date and time [seconds since 1900-01-01].
 
-    Implemented by:
-
-        2014-10-22: Russell Desiderio. Initial code.
-
-    Usage
-
-        idx_warm, newday, nanmask = warmlayer_time_keys(localdate)
-
-            where
-
-        idx_warm = indices of data records to be processed by the warmlayer routine;
-                   these are data for days for which there are data before a threshold
-                   time value early in the morning (set to 6AM).
-        newday = boolean array: true for the first record of a day, false otherwise.
-        nanmask = boolean array: true for indices of data records not to be processed
-                  by the warmlayer routine.
-        localdate = local (not UTC) date and time [sec since 01-01-1900].
+    Returns
+    -------
+    idx_warm : array_like
+        Indices of data records to be processed by the warmlayer
+        routine; these are records for days that have data before a
+        6 AM local threshold.
+    newday : array_like of bool
+        True for the first record of each day, False otherwise.
+    nanmask : array_like of bool
+        True for indices of data records not to be processed by the
+        warmlayer routine (days without data before the threshold).
 
     Notes
-
-        Although this routine was written to process hourly data, it will work with
-        data on any time base.
-
-        This function provides a measure of quality control for the automated calculation
-        of metbk data products. One case: if there are data during one day from 5AM to 10AM,
-        then an absence of data so that the next data immediately following are from the
-        next day from 11AM to 4PM, the matlab code will treat these data as all coming from
-        the same day. Using warmlayer_time_keys will result in the first day's data products
-        being calculated as expected and will result in Nans for the second day's data as
-        desired.
-
-        The original fortran and matlab versions of the warmlayer function hard-coded
-        a 6 AM threshold (equatorial sunrise). The OOI routines coded here construct
-        hourly averages from each-minute data and assign a timestamp at the midpoint of
-        the binning interval. So, if a day's first each-minute data record timestamp is
-        at 5:45 AM local, then the the first hourly timestamp will be 6:15 AM, in which
-        case the warmlayer routine would not be run on that day's data.
-
-        The threshold is set here at 6:00 AM local just as it is in the original code. The
-        rationale is that the first day's data should start before sunrise at the beginning
-        of the daily heating cycle. At some point it may be desirable to replace this value
-        with one calculated as a function of time of year, latitude, and perhaps longitude.
-
-        If the timestamp assigned to the hourly intervals is changed to either the first or
-        last time of the binning interval, it may be desirable to also change the warmlayer
-        threshold value.
-
+    -----
+    The 6 AM (equatorial sunrise) threshold matches the original
+    fortran and MATLAB code. Applies a quality-control check the
+    original code lacked: a day is only warmlayer-processed if it has
+    data before the threshold, preventing e.g. a data gap that
+    straddles midnight from being misattributed to the wrong day.
     """
     warmlayer_threshold_OOI = 21600.0  # equatorial sunrise: 6AM
 
