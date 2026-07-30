@@ -45,6 +45,7 @@ nav:
   - Data Product Levels: data_products.md
   - Calibration Coefficients: calibrations.md
   - Function Types: function_types.md
+  - Generic Functions: api/generic_functions.md
   - Instrument Notes:
     - Deep SeapHOx V2: seaphox.md
   - Instrument Families:

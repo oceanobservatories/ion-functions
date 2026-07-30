@@ -165,3 +165,4 @@ should not be used in new code. A future cleanup PR will remove them.
 | `met_functions.py` | `condition_data` | Superseded by the official TOGA-COARE implementation (github.com/NOAA-PSL/COARE-algorithm); not decorated, internal-only helper |
 | `met_functions.py` | `make_hourly_data` | Superseded by the official TOGA-COARE implementation (github.com/NOAA-PSL/COARE-algorithm); not decorated, internal-only helper |
 | `met_functions.py` | `warmlayer_time_keys` | Superseded by the official TOGA-COARE implementation (github.com/NOAA-PSL/COARE-algorithm); not decorated, internal-only helper |
+| `generic_functions.py` | `ntp_to_unix_time` | Superseded by the fixed 2208988800-second NTP/Unix epoch offset constant |
