@@ -2,21 +2,23 @@
 
 ## Background
 
-`generic_functions.py` has no dedicated instrument family or Data Product
-Specification of its own. It holds functions needed by more than one
+The Generic Functions module has no dedicated instrument family or Data Product
+Specification. Rather, this module holds functions needed by more than one
 instrument family's module -- fill-value handling, magnetic declination and
 velocity correction, array utilities, and small comparison helpers used by
 several data products across the codebase.
 
-Magnetic declination is computed from the International Geomagnetic
-Reference Field (IGRF), 14th generation, via the `ppigrf` Python package.
-`igrf_declination` computes declination for a single location and date;
-`magnetic_declination` vectorizes it over arrays of samples. `magnetic_correction`
-applies that declination to rotate a velocity vector from magnetic to true
-compass coordinates, and is shared by several data products (e.g. VELPROF,
-WINDAVG) across multiple instrument classes -- it is not used for the ADCP's
-velocity profiles, which have their own implementation in
-`adcp_functions.adcp_magvar`.
+Of particular importance are the magnetic correction algorithms. Magnetic 
+declination is computed from the International Geomagnetic Reference Field 
+(IGRF), 14th generation, via the `ppigrf` Python package. `igrf_declination` 
+computes declination for a single location and date; `magnetic_declination` 
+vectorizes it over arrays of samples. `magnetic_correction` applies that 
+declination to rotate a velocity vector from magnetic to true compass coordinates, 
+and is shared by several data products (e.g. VELPROF, WINDAVG) across multiple 
+instrument classes -- it is not used for the ADCP's
+velocity profiles, which have their own implementation in 
+`adcp_functions.magnetic_correction` (adjusted to work with velocity profiles, but
+still uses the `magnetic_declination` function defined here).
 
 Full algorithm derivations, calibration procedures, and source references
 are listed in the [References](#references) section.
@@ -25,12 +27,12 @@ are listed in the [References](#references) section.
 
 ## Core Functions
 
-::: ion_functions.data.generic_functions.replace_fill_with_nan
+::: ion_functions.data.generic_functions.igrf_declination
 
 #### History
 | Date | Author | Change |
 |---|---|---|
-| 2026-07-30 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
+| 2026-07-30 | Christopher Wingard | Converted to NumPy docstring format; migrated from pyIGRF to ppigrf (IGRF-14 model); fixed z/zflag sign-check bug; corrected docstring Example, which had `z` and `timestamp` swapped in the call. |
 
 ---
 
@@ -45,16 +47,6 @@ are listed in the [References](#references) section.
 
 ::: ion_functions.data.generic_functions.magnetic_correction
 
-#### Additional Notes
-
-Several callers wrap `magnetic_correction` with `np.vectorize` to apply it
-across arrays of samples (e.g. `met_functions.met_wind_mag_corr`). On the
-current numpy version, this raises `ValueError: setting an array element
-with a sequence`, because `magnetic_correction` returns `cor[0], cor[1]`,
-each a length-1 array rather than a true scalar. This is a pre-existing
-issue, not introduced by any change on this page, and is not fixed here;
-see the ion-functions `CLAUDE.md` Known Issues section.
-
 #### History
 | Date | Author | Change |
 |---|---|---|
@@ -62,24 +54,14 @@ see the ion-functions `CLAUDE.md` Known Issues section.
 
 ---
 
-::: ion_functions.data.generic_functions.igrf_declination
+## Helper Functions
 
-#### Additional Notes
-
-Prior to 2026-07-30 this function used the `pyIGRF` package, which is
-unmaintained and is not installed in the current `ion` conda environment at
-all -- the module could not be imported. It was rewritten to use `ppigrf`,
-which defaults to the IGRF-14 coefficient set (valid 1900-01-01 to
-2030-01-01). The rewrite also fixed a pre-existing sign-check bug: the
-depth/height flip (`if z > 0 & zflag == -1`) used the bitwise `&` operator,
-which binds tighter than the comparison operators here, so the condition
-was always `False` and the sign flip never actually ran regardless of
-input.
+::: ion_functions.data.generic_functions.replace_fill_with_nan
 
 #### History
 | Date | Author | Change |
 |---|---|---|
-| 2026-07-30 | Christopher Wingard | Converted to NumPy docstring format; migrated from pyIGRF to ppigrf (IGRF-14 model); fixed z/zflag sign-check bug; corrected docstring Example, which had `z` and `timestamp` swapped in the call. |
+| 2026-07-30 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
 
@@ -94,11 +76,6 @@ input.
 
 ::: ion_functions.data.generic_functions.select_non_zero_arg
 
-#### Additional Notes
-
-Not called elsewhere in `ion_functions` and has no test coverage in this
-repository; called directly by the external CI stream engine.
-
 #### History
 | Date | Author | Change |
 |---|---|---|
@@ -108,19 +85,12 @@ repository; called directly by the external CI stream engine.
 
 ::: ion_functions.data.generic_functions.select_arg_within_tolerance_of_std
 
-#### Additional Notes
-
-Not called elsewhere in `ion_functions` and has no test coverage in this
-repository; called directly by the external CI stream engine.
-
 #### History
 | Date | Author | Change |
 |---|---|---|
 | 2026-07-30 | Christopher Wingard | Converted to NumPy docstring format; updated documentation. |
 
 ---
-
-## Helper Functions
 
 ::: ion_functions.data.generic_functions.error
 
@@ -131,19 +101,7 @@ repository; called directly by the external CI stream engine.
 
 ---
 
-## Utility Functions
-
-Functions in this section do not fit the Core/Helper/Wrapper classification
-in [Function Types](../function_types.md) -- they are not called by any
-other function in this module or elsewhere in `ion_functions`, and have no
-known external caller.
-
 ::: ion_functions.data.generic_functions.bilinear_interpolation
-
-#### Additional Notes
-
-Not called elsewhere in `ion_functions` and has no test coverage; no known
-external caller has been identified either.
 
 #### History
 | Date | Author | Change |

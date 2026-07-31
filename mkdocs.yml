@@ -36,7 +36,7 @@ plugins:
             show_source: true
             show_root_heading: true
             show_root_full_path: false
-            heading_level: 3
+            heading_level: 4
             members_order: source
 
 nav:
@@ -45,7 +45,6 @@ nav:
   - Data Product Levels: data_products.md
   - Calibration Coefficients: calibrations.md
   - Function Types: function_types.md
-  - Generic Functions: api/generic_functions.md
   - Instrument Notes:
     - Deep SeapHOx V2: seaphox.md
   - Instrument Families:
@@ -53,6 +52,7 @@ nav:
     - PH Functions: api/ph_functions.md
     - CTD Functions: api/ctd_functions.md
     - DO2 Functions: api/do2_functions.md
+    - FDC Functions: api/fdc_functions.md
     - FLO Functions: api/flo_functions.md
     - MET Functions: api/met_functions.md
     - NIT Functions: api/nit_functions.md
@@ -62,8 +62,8 @@ nav:
     - VEL Functions: api/vel_functions.md
     - ADCP Functions: api/adcp_functions.md
     - WAV Functions: api/wav_functions.md
+    - Generic Functions: api/generic_functions.md
   - Inactive Families:
-    - FDC Functions: api/fdc_functions.md
     - HYD Functions: api/hyd_functions.md
     - MSP Functions: api/msp_functions.md
     - OBS Functions: api/obs_functions.md

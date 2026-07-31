@@ -2,9 +2,9 @@
 
 ## Background
 
-The Surface Mooring Bulk Meteorology (METBK) instrument package integrates a suite of sensors
+The Surface Mooring [Bulk Meteorology (METBK) instrument package](https://www.whoi.edu/what-we-do/explore/instruments/instruments-sensors-samplers/air-sea-interaction-meteorology-the-asimet-system/) integrates a suite of sensors
 that measure the surface meteorological and near-surface oceanographic variables needed to
-compute air-sea fluxes at OOI surface moorings.
+compute air-sea fluxes at OOI surface moorings. 
 
 | Data Product | Sensor | Units |
 |---|---|---|
@@ -18,15 +18,14 @@ compute air-sea fluxes at OOI surface moorings.
 | CONDSRF (sea surface conductivity) | Sea-Bird SBE-37 | S/m |
 | TEMPSRF (sea surface temperature) | Sea-Bird SBE-37 | $^\circ$C |
 
-`met_functions.py` covers two distinct processing tiers. A small set of always-active functions
-compute simple L1 conversions and metadata products directly from the sensor readings above; the
-larger remainder of the module implements the TOGA-COARE bulk flux algorithm (warmlayer and
-coolskin corrections feeding the COARE 3.5 iterative solver) used to compute the L2 BULKFLX air-sea
-flux data products. The bulk flux engine and every data product built on it have been deprecated
-(see [Deprecated Functions](#deprecated-functions)) in favor of the official TOGA-COARE reference
-implementation maintained at
-[github.com/NOAA-PSL/COARE-algorithm](https://github.com/NOAA-PSL/COARE-algorithm); users
-requiring bulk air-sea flux products should use that implementation directly.
+`met_functions.py` covers two distinct processing tiers. A small set of functions compute simple 
+L1 conversions and metadata products directly from the sensor readings above recorded at 1-minute 
+resolution; the larger remainder of the module implements the TOGA-COARE bulk flux algorithm (warmlayer 
+and coolskin corrections feeding the COARE 3.5 iterative solver) used to compute the L2 BULKFLX 
+air-sea flux data products. The bulk flux engine and every data product built on it have been deprecated
+(see [Deprecated Functions](#deprecated-functions)) in favor of the official TOGA-COARE reference implementation maintained
+at [github.com/NOAA-PSL/COARE-algorithm](https://github.com/NOAA-PSL/COARE-algorithm); users requiring bulk air-sea flux products should use that 
+implementation directly starting with the 1-minute resolution data defined above.
 
 ### Primary Sources
 
@@ -37,10 +36,9 @@ requiring bulk air-sea flux products should use that implementation directly.
 | 1341-00370 | OOI. Data Product Specification for L2 BULKFLX Data Products. Document Control Number 1341-00370. (Not released.) |
 
 DPS 1341-00370 (BULKFLX), which specifies the L2 bulk flux algorithm and is cited throughout the
-legacy code comments for nearly every product in this module, is not available in the project
-archive. Background content for CURRENT_DIR, CURRENT_SPD, RELWIND_DIR-AUX, RELWIND_SPD-AUX,
-NETSIRR_L2, and SPECHUM_L2 below is therefore derived from the code and its comments only, not
-from the DPS text.
+legacy code comments for nearly every product in this module, was never released. Background content 
+for CURRENT_DIR, CURRENT_SPD, RELWIND_DIR-AUX, RELWIND_SPD-AUX, NETSIRR_L2, and SPECHUM_L2 below is 
+therefore derived from the code and its comments only.
 
 ---
 
@@ -77,9 +75,12 @@ used by the flux algorithms.
 
 Suspect VELPTMN readings are excluded via a time-vectorized quality flag
 (`use_velptmn_with_metbk`), set per-deployment to indicate whether a mooring's VELPT compass is
-considered reliable. A subset of Endurance Array moorings have VELPT current meters mounted
-close enough to iron mooring ballast that their compass readings are aliased; the flag exists to
-exclude that current data from these calculations while it remains unresolved.
+considered reliable. Earlier deployments of Endurance Array moorings have VELPT current meters mounted
+close enough to stainless steel mooring ballast plates that their compass readings were aliased; the 
+flag exists to exclude those current data from the calculations. The stainless steel mooring ballast
+plates were subsequently replaced with lead plates. Pioneer and Global Array surface moorings do not
+have a current meter on the mooring. The closest is located on the midwater platform at 7 or 10 m, 
+respectively.
 
 ### RELWIND_DIR-AUX and RELWIND_SPD-AUX -- Relative Wind Direction and Speed
 
@@ -93,7 +94,7 @@ RELWIND_DIR-AUX, like CURRENT_DIR and CURRENT_SPD, returns nan for suspect curre
 RELWIND_SPD-AUX instead substitutes 0 for suspect or missing current, so that the calculation
 falls back to using the wind speed alone -- matching the DPS-specified behavior for the bulk flux
 inputs and reflecting the fact that, at the time this code was written, most OOI surface moorings
-had no independent surface current measurement at all.
+had no independent surface current measurements.
 
 ### NETSIRR_L2 -- Net Downward Shortwave Radiation
 
@@ -271,7 +272,7 @@ Full algorithm derivations, calibration procedures, and source references are li
     [github.com/NOAA-PSL/COARE-algorithm](https://github.com/NOAA-PSL/COARE-algorithm) and
     should not be used in new code.
 
-### Flux Engine
+### Core Functions
 
 ::: ion_functions.data.met_functions.seasurface_skintemp_correct
 
@@ -304,235 +305,7 @@ Full algorithm derivations, calibration procedures, and source references are li
 
 ---
 
-### Hourly and Minute Products
-
-::: ion_functions.data.met_functions.met_buoyfls
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_buoyflx
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_frshflx
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_heatflx
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_latnflx
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_mommflx
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_netlirr
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_rainflx
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2014-10-28 | Russell Desiderio | Incorporated new subroutine for rain heat flux |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_sensflx
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_sphum2m
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_stablty
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_tempa2m
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_tempskn
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_wind10m
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-09-01 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_heatflx_minute
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2017-02-13 | Russell Desiderio | Initial code |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_latnflx_minute
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2017-02-13 | Russell Desiderio | Initial code |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_netlirr_minute
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2017-02-13 | Russell Desiderio | Initial code |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_sensflx_minute
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2017-02-13 | Russell Desiderio | Initial code |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_timeflx
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-10-22 | Russell Desiderio | Initial code |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_netsirr_hourly
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2017-02-03 | Russell Desiderio | Initial code |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.met_functions.met_rainrte
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-08-27 | Russell Desiderio | Initial code |
-| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
-| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-### Supporting Functions
+### Helper Functions
 
 ::: ion_functions.data.met_functions.air_density
 
@@ -764,6 +537,234 @@ Full algorithm derivations, calibration procedures, and source references are li
 | Date | Author | Change |
 |---|---|---|
 | 2014-10-22 | Russell Desiderio | Initial code |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+### Wrapper Functions
+
+::: ion_functions.data.met_functions.met_buoyfls
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_buoyflx
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_frshflx
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_heatflx
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_latnflx
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_mommflx
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_netlirr
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_rainflx
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2014-10-28 | Russell Desiderio | Incorporated new subroutine for rain heat flux |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_sensflx
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_sphum2m
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_stablty
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_tempa2m
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_tempskn
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_wind10m
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-09-01 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_heatflx_minute
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2017-02-13 | Russell Desiderio | Initial code |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_latnflx_minute
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2017-02-13 | Russell Desiderio | Initial code |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_netlirr_minute
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2017-02-13 | Russell Desiderio | Initial code |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_sensflx_minute
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2017-02-13 | Russell Desiderio | Initial code |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_timeflx
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-10-22 | Russell Desiderio | Initial code |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_netsirr_hourly
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2017-02-03 | Russell Desiderio | Initial code |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.met_functions.met_rainrte
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-08-27 | Russell Desiderio | Initial code |
+| 2014-09-19 | Russell Desiderio | Added front end to convert each-minute data to hourly |
 | 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---

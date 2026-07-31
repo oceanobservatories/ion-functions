@@ -330,13 +330,9 @@ def bilinear_interpolation(x, y, points):
 
     Notes
     -----
-    Not called elsewhere in ion_functions and has no known caller or
-    test coverage. See
-    https://en.wikipedia.org/wiki/Bilinear_interpolation for the
+    See https://en.wikipedia.org/wiki/Bilinear_interpolation for the
     formula.
     """
-    # See formula at:  http://en.wikipedia.org/wiki/Bilinear_interpolation
-
     # order points by x, then by y
     pts = np.sort(points.view('f8,f8,f8'), order=['f0', 'f1'])
     (x1, y1, q11), (_x1, y2, q12), (x2, _y1, q21), (_x2, _y2, q22) = points
@@ -395,11 +391,6 @@ def select_non_zero_arg(a1, a2=None, a1_scale_factor=None, a2_scale_factor=None)
     -------
     out : array_like
         The scaled array containing at least one non-zero element.
-
-    Notes
-    -----
-    Not called elsewhere in ion_functions and has no test coverage;
-    called directly by the external CI stream engine.
     """
     if np.any(a1):
         return a1 * a1_scale_factor if np.any(a1_scale_factor) else a1
@@ -439,11 +430,6 @@ def select_arg_within_tolerance_of_std(a1, a2=None, std=None, tol=0.25,
     out : array_like
         The scaled array containing at least one non-zero element
         with an average within tolerance of the standard.
-
-    Notes
-    -----
-    Not called elsewhere in ion_functions and has no test coverage;
-    called directly by the external CI stream engine.
 
     See Also
     --------

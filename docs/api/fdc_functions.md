@@ -1,10 +1,10 @@
 # FDC Functions
 
-!!! note "Inactive Module"
+!!! note "All Functions Deprecated"
     These functions were used to process data from the FDCHP instrument. They
     are no longer in use because the OOI data system assembles instrument
     bursts in a way that is incompatible with this processing pipeline. They
-    are retained for reference but are not used in OOI data production.
+    are retained for reference but are no longer used in OOI data production.
 
 ## Background
 
@@ -13,7 +13,7 @@ momentum and buoyancy using the motion-corrected direct covariance (MCDC) method
 combines a Gill Windmaster Pro (Model 1561-PK-020) 3-axis sonic anemometer/thermometer with a
 Lord MicroStrain 3DM-GX3-25 Inertial Measurement Unit (IMU, integrating 3-axis linear
 accelerometers, 3-axis angular rate sensors, and a 3-axis magnetometer), forming the FDCHP
-instrument class deployed on select OOI surface buoys. MicroStrain was acquired by Hottinger
+instrument class deployed on select OOI surface buoys. Note, MicroStrain was acquired by Hottinger
 Bruel and Kjaer (HBK) in September 2023 and now operates as MicroStrain by HBK.
 
 FDCHP collects 10 Hz data for 20 minutes out of every hour, yielding roughly 12000 records per
@@ -49,8 +49,7 @@ which multiplies the raw counts by G = 9.80665 (`platform = dcfsdata(13:15,1:L)*
 the module's own docstrings, which label the raw units as counts of 9.80665 m/s$^2$ (i.e. units
 of g). Since the code and the DPS's own reference implementation agree with each other, and
 only the summary table disagrees, `ion-functions` follows the code and Appendix A: raw
-accelerometer counts are multiplied by G = 9.80665 to obtain m/s$^2$. Table 1 is the outlier
-here.
+accelerometer counts are multiplied by G = 9.80665 to obtain m/s$^2$.
 
 Before use, the IMU angular rate (y, z), acceleration (y, z), and heading are negated to
 convert from the IMU's North-East-Down convention to the sonic anemometer's North-West-Up
@@ -67,13 +66,15 @@ $$A(\psi) = \begin{pmatrix}
 \cos\psi & -\sin\psi & 0 \\
 \sin\psi & \cos\psi & 0 \\
 0 & 0 & 1
-\end{pmatrix}, \quad
-A(\theta) = \begin{pmatrix}
+\end{pmatrix}$$
+
+$$A(\theta) = \begin{pmatrix}
 \cos\theta & 0 & \sin\theta \\
 0 & 1 & 0 \\
 -\sin\theta & 0 & \cos\theta
-\end{pmatrix}, \quad
-A(\phi) = \begin{pmatrix}
+\end{pmatrix}$$
+
+$$A(\phi) = \begin{pmatrix}
 1 & 0 & 0 \\
 0 & \cos\phi & -\sin\phi \\
 0 & \sin\phi & \cos\phi
@@ -162,7 +163,9 @@ and cross-wind velocity components are linearly detrended (removing a least-squa
 give the fluctuating components $u'$, $v'$, $w'$, from which the along-wind and cross-wind
 momentum flux components are computed over each 19-minute dataset:
 
-$$\text{FLUXMOM-U\_L2} = \overline{u'w'}, \qquad \text{FLUXMOM-V\_L2} = \overline{v'w'}$$
+$$\text{FLUXMOM-U_L2} = \overline{u'w'}$$
+
+$$\text{FLUXMOM-V_L2} = \overline{v'w'}$$
 
 The along-wind component (FLUXMOM-U_L2) generally carries most of the momentum flux; the
 cross-wind component (FLUXMOM-V_L2) is usually smaller but can approach or exceed the along-wind
@@ -175,16 +178,12 @@ FLUXHOT_L2 is the kinematic form of the buoyancy flux (m/s K), computed as the c
 the detrended vertical wind fluctuation $w'$ with the detrended sonic temperature fluctuation
 $T_s'$:
 
-$$\text{FLUXHOT\_L2} = \overline{w'T_s'}$$
+$$\text{FLUXHOT_L2} = \overline{w'T_s'}$$
 
 The buoyancy flux is properly defined in terms of fluctuations in virtual temperature, which the
 sonic temperature closely approximates; the small correction needed to convert from sonic to
 virtual temperature (using an independent estimate of the latent heat flux) is left to
 post-processing and is not computed by `ion-functions`.
-
-For a discussion of output accuracy, the DPS points to Bigorre et al. (2013) and Bradley and
-Fairall (2006) (Appendix B); neither is cited with enough bibliographic detail elsewhere in the
-DPS to reproduce a full reference here.
 
 Full algorithm derivations, calibration procedures, and source references are listed in the
 [References](#references) section.

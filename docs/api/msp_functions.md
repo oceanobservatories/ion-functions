@@ -9,12 +9,11 @@
 
 The Multi-species Mass Spectrometer (MASSP) measures dissolved gas
 concentrations in hydrothermal vent and cold seep fluids using an
-integrated Residual Gas Analyzer (RGA). `msp_functions.py` (originally
-implemented by Craig Risien) computes the OOI Level 1 Dissolved Gas
-Concentrations (DISSGAS) core data product from the L0 Mass Spectral
-Intensities and the sample temperature, both measured by the MASSP
-instrument. DISSGAS is composed of the dissolved concentrations (uM) of
-seven gases -- methane, ethane, hydrogen, argon, hydrogen sulfide, oxygen,
+integrated Residual Gas Analyzer (RGA). `msp_functions.py` computes the 
+OOI Level 1 Dissolved Gas Concentrations (DISSGAS) core data product from 
+the L0 Mass Spectral Intensities and the sample temperature, both measured 
+by the MASSP instrument. DISSGAS is composed of the dissolved concentrations 
+(uM) of seven gases -- methane, ethane, hydrogen, argon, hydrogen sulfide, oxygen,
 and carbon dioxide -- in up to four fluid sources: the in situ sample
 water, a background water reference, and two shipboard calibration
 solutions. For methane, Nafion mode scan data is used; for the other six
