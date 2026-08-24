@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/hyd_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>HYD Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "HYD Functions";
+        var mkdocs_page_input_path = "api/hyd_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/hyd_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">PH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">HYD Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#hydapbb_l1-broadband-acoustic-pressure-waves">HYDAPBB_L1 — Broadband Acoustic Pressure Waves</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#hydaplf_l1-low-frequency-acoustic-pressure-waves">HYDAPLF_L1 — Low Frequency Acoustic Pressure Waves</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Inactive Families</li>
+      <li class="breadcrumb-item active">HYD Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="hyd-functions">HYD Functions</h1>
+<div class="admonition note">
+<p class="admonition-title">Inactive Module</p>
+<p>These functions were written in anticipation of an OOI data processing
+pipeline that was never implemented. They are retained for reference
+but are not used in OOI data production.</p>
+</div>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys two classes of passive acoustic
+hydrophone instruments as part of the cabled portion of the Coastal Endurance 
+Array and elsewhere in the Regional Cabled Array (RCA) to record underwater 
+sound pressure waves in the frequency ranges relevant to seismic, biological, 
+and anthropogenic sources.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HYDBB</td>
+<td>Ocean Sonics icListen HF</td>
+<td>Moored (fixed depth)</td>
+<td>Hydrophone, Broadband</td>
+</tr>
+<tr>
+<td>HYDLF</td>
+<td>Low-frequency hydrophone</td>
+<td>Moored (fixed depth)</td>
+<td>Hydrophone, Low Frequency</td>
+</tr>
+</tbody>
+</table>
+<p><code>hyd_functions.py</code> converts raw L0 data from both instrument classes into
+their respective L1 data products: Broadband Acoustic Pressure Waves
+(HYDAPBB_L1) and Low Frequency Acoustic Pressure Waves (HYDAPLF_L1). All
+calibration coefficients are from factory calibration sheets supplied with
+individual instruments. Within the OOI data system, HYD functions fall
+under the Water Column and Seafloor/Crust science regimes and the Passive
+Acoustics category.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00820</td>
+<td>OOI (2013). Data Product Specification for Broadband Acoustic Pressure Waves. (Not released.)</td>
+</tr>
+<tr>
+<td>1341-00821</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00821_Data_Product_SPEC_HYDAPLF_OOI.pdf">OOI (2013). Data Product Specification for Low Frequency Acoustic Pressure Waves.</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="hydapbb_l1-broadband-acoustic-pressure-waves">HYDAPBB_L1 — Broadband Acoustic Pressure Waves</h3>
+<p>The HYDBB instrument digitizes the hydrophone signal into a 24-bit WAV
+data stream at up to 200 kHz. Data are streamed over a 10/100BaseT Ethernet
+connection using the icListen RIFF/WAV format with a full-scale range of
+<span class="arithmatex">\(\pm 3\ \text{V}\)</span>.</p>
+<p>The L0 input (<code>wav</code>) arrives as a normalized floating-point value in the
+range <span class="arithmatex">\([-1, 1]\)</span> as encoded in the WAV format. The L1 product is computed in
+two steps.</p>
+<p><strong>Step 1 — Recover voltage from WAV scaling:</strong></p>
+<div class="arithmatex">\[V(t) = \text{wav}(t) \times 3\]</div>
+<p>which maps the normalized WAV values back to the instrument's <span class="arithmatex">\(\pm 3\ \text{V}\)</span>
+full-scale range.</p>
+<p><strong>Step 2 — Remove external gain:</strong></p>
+<p>The instrument header encodes the external gain <span class="arithmatex">\(G\)</span> in dBV. The gain is
+converted from dBV to a linear scale factor and divided out:</p>
+<div class="arithmatex">\[G_\text{linear} = 10^{G/20}\]</div>
+<div class="arithmatex">\[S(t) = \frac{V(t)}{G_\text{linear}}\]</div>
+<p>where <span class="arithmatex">\(S(t)\)</span> is the gain-compensated time-series voltage (HYDAPBB_L1) in
+Volts.</p>
+<p>The OCVR (Open Circuit Voltage Response, or Sensitivity) of the icListen HF
+is a function of frequency and cannot be applied to a broadband time-series
+without frequency-domain filtering. Therefore, the L1 product is
+gain-compensated voltage rather than calibrated pressure. Signal levels are
+accurate to within 1 dB re <span class="arithmatex">\(1\ \mu\text{Pa/V}\)</span>.</p>
+<p>HYDBB instruments are deployed on the RSN system at Hydrate Ridge (PN1A,
+PN1B) and Axial (PN3A, PN3B) Hybrid Mooring subsites, and on the Endurance
+Array Hybrid Mooring subsites PN1C and PN1D.</p>
+<hr />
+<h3 id="hydaplf_l1-low-frequency-acoustic-pressure-waves">HYDAPLF_L1 — Low Frequency Acoustic Pressure Waves</h3>
+<p>The HYDLF hydrophone is attached electrically and physically to the co-located
+OBSBB or OBSBK broadband seismometer. Its analog output is digitized by the
+Guralp DM24 digitizer at up to 1000 samples per second at 24-bit depth. The
+digitized signal is transmitted via SEEDlink protocol as SEED blockettes,
+routed through a US Navy data diversion switch, and made available to OOI via
+an Antelope Orbserver export.</p>
+<p>The L0 input is raw digital counts. The L1 product converts counts to Volts
+using the DM24 bit weight (gain), which has units of <span class="arithmatex">\(\mu\text{V/count}\)</span>:</p>
+<div class="arithmatex">\[S(t) = x(t) \times G \times 10^{-6}\]</div>
+<p>where <span class="arithmatex">\(x(t)\)</span> is the raw count time-series (HYDAPLF_L0), <span class="arithmatex">\(G\)</span> is the Guralp
+DM24 fixed bit weight in <span class="arithmatex">\(\mu\text{V/count}\)</span> (default 3.2), and the
+<span class="arithmatex">\(10^{-6}\)</span> factor converts <span class="arithmatex">\(\mu\text{V}\)</span> to <span class="arithmatex">\(\text{V}\)</span>. <span class="arithmatex">\(S(t)\)</span> is the L1
+time-series (HYDAPLF_L1) in Volts.</p>
+<p>As with HYDAPBB, the frequency-dependent OCVR of the HYDLF hydrophone cannot
+be applied to a broadband time-series without prior frequency-domain
+filtering, so the L1 product is gain-compensated voltage. Resolution is
+better than 0.1 dB re <span class="arithmatex">\(1\ \mu\text{Pa}\)</span>; accuracy is <span class="arithmatex">\(\pm 1\ \text{dB}\)</span>
+re <span class="arithmatex">\(1\ \mu\text{Pa}\)</span>.</p>
+<p>The acoustic signal is digitized at the same rate and with the same
+time-stamp as the co-located seismic channels, facilitating separation of
+the waterborne pressure signal from the solid-earth seismic signal.</p>
+<p>HYDLF instruments are deployed on the RSN system at Hydrate Ridge (PN1A,
+PN1B) and Axial (PN3A, PN3B) subsites.</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.hyd_functions.hyd_bb_acoustic_pwaves" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">hyd_bb_acoustic_pwaves</span><span class="p">(</span><span class="n">wav</span><span class="p">,</span> <span class="n">gain</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the L1 Broadband Acoustic Pressure Waves product (HYDAPBB)
+from the Ocean Sonics icListen HF Broadband Hydrophone (HYDBB).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>wav</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw L0 time-series from the HYDBB instrument encoded as
+normalized WAV floating-point values in the range [-1, 1]
+(HYDAPBB_L0). Shape (n_records, n_samples) or (n_samples,).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gain</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>External gain applied by the instrument signal conditioning
+chain [dBV]. Scalar or shape (n_records,).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>tsv</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>L1 time-series voltage compensated for external gain
+(HYDAPBB_L1) [V]. Shape (n_records, n_samples).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The WAV format encodes samples as normalized values in [-1, 1].
+Multiplying by 3 recovers the physical voltage using the icListen
+HF full-scale range of +/-3 V. The gain in dBV is converted to a
+linear factor via 10^(gain/20) and divided out.</p>
+<p>The frequency-dependent OCVR (Open Circuit Voltage Response) of
+the hydrophone cannot be applied to a broadband time-series without
+prior frequency-domain filtering. HYDAPBB_L1 is therefore
+gain-compensated voltage, not calibrated pressure.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/hyd_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@deprecated</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hyd_bb_acoustic_pwaves</span><span class="p">(</span><span class="n">wav</span><span class="p">,</span> <span class="n">gain</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute the L1 Broadband Acoustic Pressure Waves product (HYDAPBB)</span>
+<span class="sd">    from the Ocean Sonics icListen HF Broadband Hydrophone (HYDBB).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wav : array_like</span>
+<span class="sd">        Raw L0 time-series from the HYDBB instrument encoded as</span>
+<span class="sd">        normalized WAV floating-point values in the range [-1, 1]</span>
+<span class="sd">        (HYDAPBB_L0). Shape (n_records, n_samples) or (n_samples,).</span>
+<span class="sd">    gain : float or array_like</span>
+<span class="sd">        External gain applied by the instrument signal conditioning</span>
+<span class="sd">        chain [dBV]. Scalar or shape (n_records,).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tsv : ndarray</span>
+<span class="sd">        L1 time-series voltage compensated for external gain</span>
+<span class="sd">        (HYDAPBB_L1) [V]. Shape (n_records, n_samples).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The WAV format encodes samples as normalized values in [-1, 1].</span>
+<span class="sd">    Multiplying by 3 recovers the physical voltage using the icListen</span>
+<span class="sd">    HF full-scale range of +/-3 V. The gain in dBV is converted to a</span>
+<span class="sd">    linear factor via 10^(gain/20) and divided out.</span>
+
+<span class="sd">    The frequency-dependent OCVR (Open Circuit Voltage Response) of</span>
+<span class="sd">    the hydrophone cannot be applied to a broadband time-series without</span>
+<span class="sd">    prior frequency-domain filtering. HYDAPBB_L1 is therefore</span>
+<span class="sd">    gain-compensated voltage, not calibrated pressure.</span>
+<span class="sd">    """</span>
+    <span class="c1"># shape inputs to correct dimensions</span>
+    <span class="n">wav</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">wav</span><span class="p">)</span>
+    <span class="n">n_rec</span> <span class="o">=</span> <span class="n">wav</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">gain</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">gain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">gain</span><span class="p">,</span> <span class="p">(</span><span class="n">n_rec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">gain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">gain</span><span class="p">,</span> <span class="p">(</span><span class="n">n_rec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># Convert the gain from dB to a linear value</span>
+    <span class="n">gain</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">gain</span><span class="o">/</span><span class="mf">20.</span><span class="p">)</span>
+
+    <span class="c1"># convert the broadband acoustic pressure wave data to Volts</span>
+    <span class="n">volts</span> <span class="o">=</span> <span class="n">wav</span> <span class="o">*</span> <span class="mf">3.</span>
+
+    <span class="c1"># and correct for the gain</span>
+    <span class="n">tsv</span> <span class="o">=</span> <span class="n">volts</span> <span class="o">/</span> <span class="n">gain</span>
+    <span class="k">return</span> <span class="n">tsv</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>The WAV format encodes audio samples as normalized floating-point values
+in the range <span class="arithmatex">\([-1, 1]\)</span>. The multiply-by-3 step in the code recovers the
+physical voltage by scaling to the icListen HF full-scale range of
+<span class="arithmatex">\(\pm 3\ \text{V}\)</span>. The external gain in dBV is taken from the instrument
+event header; if no external gain is applied the gain value is 0 dB
+(linear factor of 1).</p>
+<h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-16</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr; renamed local variables</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.hyd_functions.hyd_lf_acoustic_pwaves" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">hyd_lf_acoustic_pwaves</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mf">3.2</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the L1 Low Frequency Acoustic Pressure Waves product
+(HYDAPLF) from the Low Frequency Hydrophone (HYDLF).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>raw</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw L0 time-series digitized by the Guralp DM24 digitizer
+[counts] (HYDAPLF_L0).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gain</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>3.2</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Guralp DM24 fixed bit weight [uV/count]. Default is 3.2.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>hydaplf</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>L1 time-series of low frequency acoustic pressure waves
+(HYDAPLF_L1) [V].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The bit weight converts raw counts to microvolts; the result is
+scaled by 1e-6 to return Volts. The frequency-dependent OCVR of
+the hydrophone cannot be applied to a broadband time-series without
+prior frequency-domain filtering. HYDAPLF_L1 is therefore
+gain-compensated voltage, not calibrated pressure.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/hyd_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span>
+<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@deprecated</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hyd_lf_acoustic_pwaves</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mf">3.2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute the L1 Low Frequency Acoustic Pressure Waves product</span>
+<span class="sd">    (HYDAPLF) from the Low Frequency Hydrophone (HYDLF).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    raw : array_like</span>
+<span class="sd">        Raw L0 time-series digitized by the Guralp DM24 digitizer</span>
+<span class="sd">        [counts] (HYDAPLF_L0).</span>
+<span class="sd">    gain : float, optional</span>
+<span class="sd">        Guralp DM24 fixed bit weight [uV/count]. Default is 3.2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hydaplf : ndarray</span>
+<span class="sd">        L1 time-series of low frequency acoustic pressure waves</span>
+<span class="sd">        (HYDAPLF_L1) [V].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The bit weight converts raw counts to microvolts; the result is</span>
+<span class="sd">    scaled by 1e-6 to return Volts. The frequency-dependent OCVR of</span>
+<span class="sd">    the hydrophone cannot be applied to a broadband time-series without</span>
+<span class="sd">    prior frequency-domain filtering. HYDAPLF_L1 is therefore</span>
+<span class="sd">    gain-compensated voltage, not calibrated pressure.</span>
+<span class="sd">    """</span>
+    <span class="c1"># apply the gain correction to convert the signal from counts to V</span>
+    <span class="n">gain</span> <span class="o">=</span> <span class="n">gain</span> <span class="o">*</span> <span class="mf">1.0e-6</span>
+    <span class="n">hydaplf</span> <span class="o">=</span> <span class="n">raw</span> <span class="o">*</span> <span class="n">gain</span>
+    <span class="k">return</span> <span class="n">hydaplf</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-07-09</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Urick, R. J. (1983). Principles of Underwater Sound, 3rd ed., pp. 44-53.
+McGraw-Hill, New York.</p>
+<p>OOI (2013). Data Product Specification for Broadband Acoustic Pressure
+Waves. Document Control Number 1341-00820. (Not released.)</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00821_Data_Product_SPEC_HYDAPLF_OOI.pdf">OOI (2013). Data Product Specification for Low Frequency Acoustic
+Pressure Waves. Document Control Number 1341-00821.</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../generic_functions/" class="btn btn-neutral float-left" title="Generic Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../msp_functions/" class="btn btn-neutral float-right" title="MSP Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../generic_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../msp_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

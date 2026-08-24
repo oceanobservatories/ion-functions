@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/nit_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>NIT Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "NIT Functions";
+        var mkdocs_page_input_path = "api/nit_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/nit_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">PH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">NIT Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#nitrtsc_l2-temperature-and-salinity-corrected-dissolved-nitrate">NITRTSC_L2 — Temperature and Salinity Corrected Dissolved Nitrate</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">NIT Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="nitrate-functions">Nitrate Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys the Sea-Bird Scientific SUNA V2
+(Submersible Ultraviolet Nitrate Analyzer) as its nitrate sensor. The SUNA V2
+is an optical, chemical-free sensor derived from the ISUS (In Situ Ultraviolet
+Spectroscopy) technology developed at MBARI. Prior to 2017, OOI deployed the ISUS
+sensor on fixed depth platforms in the uncabled arrays prior to convert all ISUS
+sensors to the SUNA V2. The OOI instrument class NUTNR (Nutrient Sensor) covers 
+both the original ISUS instruments and the SUNA V2.</p>
+<p><code>nit_functions.py</code> computes a single L2 data product, NITRTSC_L2, from raw
+UV absorption spectra produced by NUTNR instruments. Within the OOI data
+system, NIT functions fall under the Water Column science regime and the
+Nitrate category.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<p>No OOI Data Product Specification exists for the NUTNR data products. The algorithm 
+documented here is derived from the source code, its embedded comments, and the two 
+journal articles cited in the code.</p>
+<hr />
+<h3 id="nitrtsc_l2-temperature-and-salinity-corrected-dissolved-nitrate">NITRTSC_L2 — Temperature and Salinity Corrected Dissolved Nitrate</h3>
+<p>NITRTSC_L2 is the dissolved nitrate concentration (<span class="arithmatex">\(\mu\)</span>M) corrected for
+the temperature and salinity dependence of the seawater UV absorption
+spectrum. It is produced by the NUTNR instrument class using the
+Sakamoto et al. (2009) algorithm.</p>
+<h4 id="l0-data-and-frame-types">L0 Data and Frame Types</h4>
+<p>The SUNA V2 produces two frame types in each measurement cycle:</p>
+<ul>
+<li><strong>Light frames</strong> (frame type <code>SLB</code>) — UV absorption spectra measured
+  through the seawater sample. These are used to compute NITRTSC_L2.</li>
+<li><strong>Dark frames</strong> (frame type <code>SDB</code>, <code>SDF</code>, or <code>NDF</code>) — baseline
+  measurements with the UV lamp off. These are not used by OOI; they are 
+  filled with <code>NaN</code> on output.</li>
+</ul>
+<p>Each frame contains a 256-element UV absorption spectrum (NITROPT_L0)
+covering approximately 190–400 nm, sampled at roughly 0.8 nm intervals.
+The instrument also provides a dark current scalar (<code>dark_value</code>) averaged
+from the previous dark frame measurements.</p>
+<h4 id="calibration-coefficients">Calibration Coefficients</h4>
+<p>Four sets of 256-element wavelength-dependent arrays are supplied from
+factory calibration sheets:</p>
+<ul>
+<li><code>wl</code> — wavelength bins (nm) for each spectral channel</li>
+<li><code>eno3</code> — nitrate molar absorptivity (extinction coefficients) at each
+  wavelength, determined from laboratory standards</li>
+<li><code>eswa</code> — seawater extinction coefficients at each wavelength, at a
+  reference salinity of 35 and the calibration temperature <code>cal_temp</code></li>
+<li><code>di</code> — deionized water reference spectrum, measured in the laboratory
+  at the time of calibration</li>
+</ul>
+<p>A scalar calibration temperature <code>cal_temp</code> (<span class="arithmatex">\(^\circ\)</span>C) specifies the
+temperature at which <code>eswa</code> was determined. All calibration coefficients
+are time-vectorized by the OOI data management system: each coefficient
+array is tiled to shape <span class="arithmatex">\((N, 256)\)</span> where <span class="arithmatex">\(N\)</span> is the number of data packets,
+allowing coefficients to vary across deployments within a single input array.</p>
+<p>Two wavelength limit parameters bound the spectral window used in the
+regression:</p>
+<ul>
+<li><code>wllower</code> — lower wavelength limit (nm); default 217 nm for the
+  1-cm pathlength probe tip or 220 nm for the 4-cm pathlength probe tip</li>
+<li><code>wlupper</code> — upper wavelength limit (nm); default 240 nm for the
+  1-cm pathlength probe tip or 245 nm for the 4-cm pathlength probe tip</li>
+</ul>
+<h4 id="nitrtsc_l2-algorithm">NITRTSC_L2 Algorithm</h4>
+<p>The algorithm follows Sakamoto et al. (2009). For each light frame <span class="arithmatex">\(i\)</span>,
+the computation proceeds as follows.</p>
+<p><strong>Step 1 — Select the spectral fitting window.</strong> Wavelength bins and their
+corresponding calibration arrays are subset to channels where
+<span class="arithmatex">\(\text{wllower} \leq \lambda \leq \text{wlupper}\)</span>:</p>
+<div class="arithmatex">\[\lambda,\ ENO3,\ ESWA,\ DI \gets \text{channels where } \text{wllower} \leq wl \leq \text{wlupper}\]</div>
+<p><strong>Step 2 — Dark-correct the measured spectrum</strong> by subtracting the dark
+current scalar from the raw spectral counts:</p>
+<div class="arithmatex">\[SW_{corr} = SW - dark_value\]</div>
+<p><strong>Step 3 — Compute absorbance</strong> from the ratio of the deionized water
+reference to the dark-corrected seawater spectrum:</p>
+<div class="arithmatex">\[A = \log_{10}\!\left(\frac{DI}{SW_{corr}}\right)\]</div>
+<p><strong>Step 4 — Temperature-correct the seawater extinction coefficients.</strong>
+The in situ temperature (<span class="arithmatex">\(T\)</span>) and calibration temperature (<span class="arithmatex">\(T_{cal}\)</span>) are
+used to scale <code>eswa</code> following Sakamoto et al. (2009), Equation 4. The
+coefficients <span class="arithmatex">\(A_{sak}\)</span>, <span class="arithmatex">\(B_{sak}\)</span>, <span class="arithmatex">\(C_{sak}\)</span>, <span class="arithmatex">\(D_{sak}\)</span> are fixed
+constants from Sakamoto et al. (2009):</p>
+<div class="arithmatex">\[\begin{align}
+A_{sak} &amp;= 1.1500276 \\
+B_{sak} &amp;= 0.02840 \\
+C_{sak} &amp;= -0.3101349 \\
+D_{sak} &amp;= 0.001222
+\end{align}\]</div>
+<div class="arithmatex">\[ESWA_T = ESWA \times \frac{A_{sak} + B_{sak} \times T}{A_{sak} + B_{sak} \times T_{cal}}
+\times \exp\!\left(D_{sak} \times (T - T_{cal}) \times (\lambda - 210)\right)\]</div>
+<p><strong>Step 5 — Subtract the seawater bromide contribution</strong> from the measured
+absorbance. The seawater absorbance is proportional to practical salinity
+<span class="arithmatex">\(S_P\)</span>:</p>
+<div class="arithmatex">\[A_{swa} = S_P \times ESWA_T\]</div>
+<div class="arithmatex">\[A_{comp} = A - A_{swa}\]</div>
+<p><strong>Step 6 — Solve for nitrate concentration</strong> by linear least squares. The
+model matrix <span class="arithmatex">\(M\)</span> includes the nitrate extinction spectrum, a constant
+baseline offset, and a linear wavelength baseline:</p>
+<div class="arithmatex">\[M = \begin{bmatrix} ENO3 &amp; \mathbf{1}/100 &amp; \lambda/1000 \end{bmatrix}\]</div>
+<p>The solution vector <span class="arithmatex">\(C\)</span> is obtained via the Moore-Penrose pseudoinverse:</p>
+<div class="arithmatex">\[C = M^{+} \times A_{comp}\]</div>
+<p>The first element <span class="arithmatex">\(C[0]\)</span> is NITRTSC_L2, the nitrate concentration in
+<span class="arithmatex">\(\mu\)</span>M. The second and third elements capture a linear baseline that
+accounts for residual spectral interference.</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.nit_functions.ts_corrected_nitrate" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">ts_corrected_nitrate</span><span class="p">(</span><span class="n">cal_temp</span><span class="p">,</span> <span class="n">wl</span><span class="p">,</span> <span class="n">eno3</span><span class="p">,</span> <span class="n">eswa</span><span class="p">,</span> <span class="n">di</span><span class="p">,</span> <span class="n">dark_value</span><span class="p">,</span> <span class="n">ctd_t</span><span class="p">,</span> <span class="n">ctd_sp</span><span class="p">,</span> <span class="n">data_in</span><span class="p">,</span> <span class="n">frame_type</span><span class="p">,</span> <span class="n">wllower</span><span class="o">=</span><span class="mi">217</span><span class="p">,</span> <span class="n">wlupper</span><span class="o">=</span><span class="mi">240</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute NITRTSC_L2, dissolved nitrate concentration corrected for
+temperature and salinity.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>cal_temp</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration water temperature [degC]. Scalar value tiled to length
+N by the OOI data management system.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wl</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Wavelength bins for each spectral channel [nm].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eno3</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Nitrate molar absorptivity (extinction coefficients) at each
+wavelength, from factory calibration [1/(M cm)].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eswa</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater extinction coefficients at each wavelength at reference
+salinity 35 and calibration temperature cal_temp, from factory
+calibration [1/(M cm)].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>di</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Deionized water reference spectrum from factory calibration
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dark_value</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Dark current scalar, averaged from dark frame measurements
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ctd_t</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ water temperature from co-located CTD (TEMPWAT_L1)
+[degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ctd_sp</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from co-located CTD (PRACSAL_L2) [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>data_in</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw UV absorption spectrum from the SUNA V2 (NITROPT_L0)
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>frame_type</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Frame type string for each data packet. Light frames ('SLB') are
+processed; dark frames ('SDB', 'SDF', 'NDF') are filled with NaN.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wllower</code></b>
+                  (<code>(<span title="float">float</span> or <span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>, default:
+                      <code>217</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Lower wavelength limit for spectral fitting window [nm]. Default
+is 217 nm (1-cm pathlength probe tip). Use 220 nm for 4-cm
+pathlength probe tips.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wlupper</code></b>
+                  (<code>(<span title="float">float</span> or <span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>, default:
+                      <code>240</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Upper wavelength limit for spectral fitting window [nm]. Default
+is 240 nm (1-cm pathlength probe tip). Use 245 nm for 4-cm
+pathlength probe tips.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>NO3_conc</code></b>(                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>
+)              –
+              <div class="doc-md-description">
+                <p>Temperature and salinity corrected dissolved nitrate concentration
+(NITRTSC_L2) [uM]. Dark frame records are filled with NaN.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Implements the Sakamoto et al. (2009) TS-corrected nitrate algorithm.
+For each light frame, absorbance is computed from the ratio of the
+deionized water reference to the dark-corrected seawater spectrum.
+The seawater bromide contribution is removed using temperature-
+corrected seawater extinction coefficients scaled by practical
+salinity. Nitrate concentration is then obtained by linear least
+squares using a model matrix that includes the nitrate extinction
+spectrum plus a linear baseline in wavelength.</p>
+<p>The four fixed Sakamoto coefficients (Asak=1.1500276, Bsak=0.02840,
+Csak=-0.3101349, Dsak=0.001222) parameterize the absorbance of
+seasalt at 35 salinity vs temperature (Sakamoto et al. 2009, Eq. 4).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/nit_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ts_corrected_nitrate</span><span class="p">(</span><span class="n">cal_temp</span><span class="p">,</span> <span class="n">wl</span><span class="p">,</span> <span class="n">eno3</span><span class="p">,</span> <span class="n">eswa</span><span class="p">,</span> <span class="n">di</span><span class="p">,</span> <span class="n">dark_value</span><span class="p">,</span> <span class="n">ctd_t</span><span class="p">,</span>
+                         <span class="n">ctd_sp</span><span class="p">,</span> <span class="n">data_in</span><span class="p">,</span> <span class="n">frame_type</span><span class="p">,</span> <span class="n">wllower</span><span class="o">=</span><span class="mi">217</span><span class="p">,</span>
+                         <span class="n">wlupper</span><span class="o">=</span><span class="mi">240</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute NITRTSC_L2, dissolved nitrate concentration corrected for</span>
+<span class="sd">    temperature and salinity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cal_temp : array_like, shape (N,)</span>
+<span class="sd">        Calibration water temperature [degC]. Scalar value tiled to length</span>
+<span class="sd">        N by the OOI data management system.</span>
+<span class="sd">    wl : array_like, shape (N, 256)</span>
+<span class="sd">        Wavelength bins for each spectral channel [nm].</span>
+<span class="sd">    eno3 : array_like, shape (N, 256)</span>
+<span class="sd">        Nitrate molar absorptivity (extinction coefficients) at each</span>
+<span class="sd">        wavelength, from factory calibration [1/(M cm)].</span>
+<span class="sd">    eswa : array_like, shape (N, 256)</span>
+<span class="sd">        Seawater extinction coefficients at each wavelength at reference</span>
+<span class="sd">        salinity 35 and calibration temperature cal_temp, from factory</span>
+<span class="sd">        calibration [1/(M cm)].</span>
+<span class="sd">    di : array_like, shape (N, 256)</span>
+<span class="sd">        Deionized water reference spectrum from factory calibration</span>
+<span class="sd">        [counts].</span>
+<span class="sd">    dark_value : array_like, shape (N,)</span>
+<span class="sd">        Dark current scalar, averaged from dark frame measurements</span>
+<span class="sd">        [counts].</span>
+<span class="sd">    ctd_t : array_like, shape (N,)</span>
+<span class="sd">        In situ water temperature from co-located CTD (TEMPWAT_L1)</span>
+<span class="sd">        [degC].</span>
+<span class="sd">    ctd_sp : array_like, shape (N,)</span>
+<span class="sd">        Practical salinity from co-located CTD (PRACSAL_L2) [unitless].</span>
+<span class="sd">    data_in : array_like, shape (N, 256)</span>
+<span class="sd">        Raw UV absorption spectrum from the SUNA V2 (NITROPT_L0)</span>
+<span class="sd">        [counts].</span>
+<span class="sd">    frame_type : array_like, shape (N,)</span>
+<span class="sd">        Frame type string for each data packet. Light frames ('SLB') are</span>
+<span class="sd">        processed; dark frames ('SDB', 'SDF', 'NDF') are filled with NaN.</span>
+<span class="sd">    wllower : float or array_like, shape (N,), optional</span>
+<span class="sd">        Lower wavelength limit for spectral fitting window [nm]. Default</span>
+<span class="sd">        is 217 nm (1-cm pathlength probe tip). Use 220 nm for 4-cm</span>
+<span class="sd">        pathlength probe tips.</span>
+<span class="sd">    wlupper : float or array_like, shape (N,), optional</span>
+<span class="sd">        Upper wavelength limit for spectral fitting window [nm]. Default</span>
+<span class="sd">        is 240 nm (1-cm pathlength probe tip). Use 245 nm for 4-cm</span>
+<span class="sd">        pathlength probe tips.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NO3_conc : ndarray, shape (N,)</span>
+<span class="sd">        Temperature and salinity corrected dissolved nitrate concentration</span>
+<span class="sd">        (NITRTSC_L2) [uM]. Dark frame records are filled with NaN.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Implements the Sakamoto et al. (2009) TS-corrected nitrate algorithm.</span>
+<span class="sd">    For each light frame, absorbance is computed from the ratio of the</span>
+<span class="sd">    deionized water reference to the dark-corrected seawater spectrum.</span>
+<span class="sd">    The seawater bromide contribution is removed using temperature-</span>
+<span class="sd">    corrected seawater extinction coefficients scaled by practical</span>
+<span class="sd">    salinity. Nitrate concentration is then obtained by linear least</span>
+<span class="sd">    squares using a model matrix that includes the nitrate extinction</span>
+<span class="sd">    spectrum plus a linear baseline in wavelength.</span>
+
+<span class="sd">    The four fixed Sakamoto coefficients (Asak=1.1500276, Bsak=0.02840,</span>
+<span class="sd">    Csak=-0.3101349, Dsak=0.001222) parameterize the absorbance of</span>
+<span class="sd">    seasalt at 35 salinity vs temperature (Sakamoto et al. 2009, Eq. 4).</span>
+<span class="sd">    """</span>
+    <span class="n">n_data_packets</span> <span class="o">=</span> <span class="n">data_in</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># make sure that the dimensionalities of wllower and wlupper are consistent</span>
+    <span class="c1"># regardless of whether or not they are specified in the argument list.</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">wllower</span><span class="p">):</span>
+        <span class="n">wllower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">wllower</span><span class="p">,</span> <span class="n">n_data_packets</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">wlupper</span><span class="p">):</span>
+        <span class="n">wlupper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">wlupper</span><span class="p">,</span> <span class="n">n_data_packets</span><span class="p">)</span>
+
+    <span class="c1"># coefficients to equation 4 of Sakamoto et al 2009 that give the</span>
+    <span class="c1"># absorbance of seasalt at 35 salinity versus temperature</span>
+    <span class="n">Asak</span> <span class="o">=</span> <span class="mf">1.1500276</span>
+    <span class="n">Bsak</span> <span class="o">=</span> <span class="mf">0.02840</span>
+    <span class="n">Csak</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.3101349</span>
+    <span class="n">Dsak</span> <span class="o">=</span> <span class="mf">0.001222</span>
+
+    <span class="n">NO3_conc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_data_packets</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_data_packets</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">frame_type</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'SDB'</span> <span class="ow">or</span> <span class="n">frame_type</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'SDF'</span> <span class="ow">or</span> <span class="n">frame_type</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"NDF"</span><span class="p">:</span>
+
+            <span class="c1"># change this to output nans instead.</span>
+            <span class="n">NO3_conc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="c1"># Find wavelength bins that fall between the upper and lower</span>
+            <span class="c1"># limits for spectra fit</span>
+            <span class="n">useindex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">wllower</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">wl</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">wl</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;=</span> <span class="n">wlupper</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="c1"># subset data so that we only use wavelengths between wllower &amp; wlupper</span>
+            <span class="n">WL</span> <span class="o">=</span> <span class="n">wl</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">useindex</span><span class="p">]</span>
+            <span class="n">ENO3</span> <span class="o">=</span> <span class="n">eno3</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">useindex</span><span class="p">]</span>
+            <span class="n">ESWA</span> <span class="o">=</span> <span class="n">eswa</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">useindex</span><span class="p">]</span>
+            <span class="n">DI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">di</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">useindex</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'float64'</span><span class="p">)</span>
+            <span class="n">SW</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data_in</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">useindex</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'float64'</span><span class="p">)</span>
+
+            <span class="c1"># correct each SW intensity for dark current</span>
+            <span class="n">SWcorr</span> <span class="o">=</span> <span class="n">SW</span> <span class="o">-</span> <span class="n">dark_value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="c1"># calculate absorbance</span>
+            <span class="n">Absorbance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">DI</span> <span class="o">/</span> <span class="n">SWcorr</span><span class="p">)</span>
+
+            <span class="c1"># now estimate molar absorptivity of seasalt at in situ temperature</span>
+            <span class="c1"># use Satlantic calibration and correct as in Sakamoto et al. 2009.</span>
+            <span class="n">SWA_Ext_at_T</span> <span class="o">=</span> <span class="p">(</span><span class="n">ESWA</span> <span class="o">*</span> <span class="p">((</span><span class="n">Asak</span> <span class="o">+</span> <span class="n">Bsak</span> <span class="o">*</span> <span class="n">ctd_t</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">Asak</span> <span class="o">+</span> <span class="n">Bsak</span> <span class="o">*</span> <span class="n">cal_temp</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                            <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Dsak</span> <span class="o">*</span> <span class="p">(</span><span class="n">ctd_t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">cal_temp</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">WL</span> <span class="o">-</span> <span class="mf">210.0</span><span class="p">)))</span>
+
+            <span class="c1"># absorbance due to seasalt</span>
+            <span class="n">A_SWA</span> <span class="o">=</span> <span class="n">ctd_sp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">SWA_Ext_at_T</span>
+            <span class="c1"># subtract seasalt absorbance from measured absorbance</span>
+            <span class="n">Acomp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Absorbance</span> <span class="o">-</span> <span class="n">A_SWA</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+            <span class="c1"># ENO3 plus a linear baseline</span>
+            <span class="n">subset_array_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">ENO3</span><span class="p">)</span>
+            <span class="c1"># for the constant in the linear baseline</span>
+            <span class="n">Ones</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">subset_array_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'float64'</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">ENO3</span><span class="p">,</span> <span class="n">Ones</span><span class="p">,</span> <span class="n">WL</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+
+            <span class="c1"># C has NO3, baseline constant, and slope (vs. WL)</span>
+            <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">M</span><span class="p">),</span> <span class="n">Acomp</span><span class="p">)</span>
+
+            <span class="n">NO3_conc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">NO3_conc</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>Dark frames (frame types <code>SDB</code>, <code>SDF</code>, and <code>NDF</code>) produce <code>NaN</code> on output.
+Light frames (frame type <code>SLB</code>) are processed through the full Sakamoto
+et al. (2009) TS-corrected algorithm.</p>
+<p>The <code>wllower</code> and <code>wlupper</code> arguments default to 217 nm and 240 nm
+respectively, matching the 1-cm pathlength probe tip specification. For
+4-cm pathlength probe tips, the OOI system supplies 220 nm and 245 nm via
+the time-vectorized calibration coefficient mechanism.</p>
+<h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-22</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-05-27</td>
+<td>Craig Risien</td>
+<td>Added light vs dark frame filtering</td>
+</tr>
+<tr>
+<td>2015-04-09</td>
+<td>Russell Desiderio</td>
+<td>Revised for time-vectorized calibration coefficient arrays; changed fill value to NaN</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Johnson, K. S. and Coletti, L. J. (2002). In situ ultraviolet
+spectrophotometry for high resolution and long-term monitoring of nitrate,
+bromide and bisulfide in the ocean. Deep-Sea Research I, 49, 1291-1305.</p>
+<p>Sakamoto, C. M., Johnson, K. S., and Coletti, L. J. (2009). Improved
+algorithm for the computation of nitrate concentrations in seawater using
+an in situ ultraviolet spectrophotometer. Limnology and Oceanography:
+Methods, 7, 132-143.</p>
+<p>OOI (2014). Data Product Specification for NUTNR Data Products. Document
+Control Number 1341-00620. (Not released.)</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../met_functions/" class="btn btn-neutral float-left" title="MET Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../opt_functions/" class="btn btn-neutral float-right" title="OPT Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../met_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../opt_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

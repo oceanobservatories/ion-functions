@@ -1,0 +1,3479 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/do2_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>DO2 Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "DO2 Functions";
+        var mkdocs_page_input_path = "api/do2_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/do2_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">PH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">DO2 Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#doconcs_l1-and-doxygen_l2-stable-dissolved-oxygen-dosta">DOCONCS_L1 and DOXYGEN_L2 — Stable Dissolved Oxygen (DOSTA)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#doconcf_l2-fast-dissolved-oxygen-dofst">DOCONCF_L2 — Fast Dissolved Oxygen (DOFST)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#doxygen_l2-seaphox-dissolved-oxygen">DOXYGEN_L2 — SeapHOx Dissolved Oxygen</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#wrapper-functions">Wrapper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">DO2 Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="dissolved-oxygen-functions">Dissolved Oxygen Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys two families of dissolved oxygen
+instruments across its moored, profiling, and mobile platforms. A third
+dissolved oxygen sensor is integrated into the Deep SeapHOx V2 pH instrument
+(PHSEN-G and PHSEN-H). The table below lists the OOI instrument classes
+covered by this module.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform type</th>
+<th>Designator meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DOSTA</td>
+<td>Aanderaa Optode 4831</td>
+<td>Moored (fixed depth) and gliders</td>
+<td>DO, Stable</td>
+</tr>
+<tr>
+<td>DOFST-A</td>
+<td>Sea-Bird Scientific SBE 43</td>
+<td>Moored profiler (CTDPF-A/B)</td>
+<td>DO, Fast, SBE 43</td>
+</tr>
+<tr>
+<td>DOFST-K</td>
+<td>Sea-Bird Scientific SBE 43F</td>
+<td>Moored profiler (CTDPF-C/K/L)</td>
+<td>DO, Fast, SBE 43F</td>
+</tr>
+<tr>
+<td>PHSEN-G/H</td>
+<td>Sea-Bird Scientific Deep SeapHOx V2 (SBE 63)</td>
+<td>Moored (fixed depth)</td>
+<td>pH Sensor (integrated DO)</td>
+</tr>
+</tbody>
+</table>
+<p><code>do2_functions.py</code> processes data from the DOSTA and DOFST instrument classes.
+The dissolved oxygen functions for the PHSEN-G/H integrated SBE 63 sensor live
+in <code>phsen_h_functions.py</code>; they are documented here because the SBE 63 is a
+dissolved oxygen sensor. See <a href="../../seaphox/">Deep SeapHOx V2</a> for instrument
+architecture context.</p>
+<p>All calibration coefficients are from factory calibration sheets supplied with
+individual instruments. Within the OOI data system, dissolved oxygen functions
+fall under the Water Column science regime and the Dissolved O<span class="arithmatex">\(_2\)</span> category.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00520</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00520_Data_Product_SPEC_DOCONCS_OOI.pdf">OOI (2014). Data Product Specification for Oxygen Concentration from "Stable" Instruments.</a></td>
+</tr>
+<tr>
+<td>1341-00521</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00521_Data_Product_Spec_DOCONCF_OOI.pdf">OOI (2013). Data Product Specification for Fast Dissolved Oxygen.</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="doconcs_l1-and-doxygen_l2-stable-dissolved-oxygen-dosta">DOCONCS_L1 and DOXYGEN_L2 — Stable Dissolved Oxygen (DOSTA)</h3>
+<p>The Aanderaa Optode 4831 (DOSTA) measures dissolved oxygen using a
+luminescence quenching principle. The optode's fluorescent foil emits light
+at a frequency that depends on the oxygen partial pressure at the foil surface.
+The instrument measures the phase shift between the excitation and emission
+signals, producing a calibrated phase value (CalPhase, <span class="arithmatex">\(P_t\)</span>) as its L0
+output. The optode also reports the foil temperature (<span class="arithmatex">\(T_{opt}\)</span>) from an
+internal thermistor positioned directly at the foil.</p>
+<p>DOCONCS_L1 is the dissolved oxygen concentration (<span class="arithmatex">\(\mu\)</span>mol L<span class="arithmatex">\(^{-1}\)</span>)
+uncorrected for salinity and pressure. DOXYGEN_L2 is the final
+salinity- and pressure-corrected concentration (<span class="arithmatex">\(\mu\)</span>mol kg<span class="arithmatex">\(^{-1}\)</span>). The
+product was named DOCONCS_L2 in early OOI documentation and renamed DOXYGEN
+in DPS 1341-00520 version 1-02 (2014-04-11); <code>do2_salinity_correction</code>
+produces DOXYGEN_L2.</p>
+<h4 id="l0-data-streams">L0 Data Streams</h4>
+<p>The DOSTA reaches the OOI data system through three distinct hardware
+configurations, each producing a different L0 format:</p>
+<p><strong>Analog output to CTD voltage channel</strong> — The optode outputs <span class="arithmatex">\(P_t\)</span> and
+<span class="arithmatex">\(T_{opt}\)</span> as 0-5 V analog signals routed into CTD auxiliary voltage channels.
+The voltage signals are parsed as DOCONCS-VLT_L0 (phase) and a separate
+temperature voltage, then converted to degrees and <span class="arithmatex">\(^\circ\)</span>C:</p>
+<div class="arithmatex">\[P_t\ [\text{deg}] = 10 + 12 \times P_t\ [\text{V}]\]</div>
+<div class="arithmatex">\[T_{opt}\ [^\circ\text{C}] = -5 + 8 \times T_{opt}\ [\text{V}]\]</div>
+<p>These fixed conversion coefficients are universal for all Aanderaa optodes
+(Shawn Sneddon, Xylem-Aanderaa).</p>
+<p><strong>Digital output via RS-232 to CTD</strong> — The optode reports an oxygen
+concentration directly in internal units transmitted over RS-232 to an SBE
+16Plus V2 CTD, parsed as DOCONCS-CNT_L0:</p>
+<div class="arithmatex">\[\text{DOCONCS_L1}\ [\mu\text{mol/L}] = \frac{\text{DOCONCS-CNT_L0}}{10000} - 10\]</div>
+<p><strong>Autonomous digital output</strong> — The optode operates independently and reports
+<span class="arithmatex">\(P_t\)</span> (DOCONCS-DEG_L0) and <span class="arithmatex">\(T_{opt}\)</span> directly in degrees and <span class="arithmatex">\(^\circ\)</span>C,
+requiring no voltage conversion before the SVU equation.</p>
+<h4 id="doconcs_l1-stern-volmer-uchida-equation">DOCONCS_L1 — Stern-Volmer-Uchida Equation</h4>
+<p>Where DOCONCS-DEG_L0 is available (analog or autonomous configurations),
+DOCONCS_L1 is computed using the Stern-Volmer-Uchida (SVU) equation
+(Uchida et al. 2008). The SVU equation relates the calibrated phase to
+oxygen concentration with a temperature-dependent sensitivity:</p>
+<div class="arithmatex">\[K_{SV} = \text{csv}_1 + \text{csv}_2 \times T_{opt} + \text{csv}_3 \times {T_{opt}}^2\]</div>
+<div class="arithmatex">\[P_0 = \text{csv}_4 + \text{csv}_5 \times T_{opt}\]</div>
+<div class="arithmatex">\[P_c = \text{csv}_6 + \text{csv}_7 \times P_t\]</div>
+<div class="arithmatex">\[O_2 = \frac{(P_0 / P_c) - 1}{K_{SV}}\]</div>
+<p>where <span class="arithmatex">\(T_{opt}\)</span> is the optode foil temperature (<span class="arithmatex">\(^\circ\)</span>C), <span class="arithmatex">\(P_t\)</span> is the
+calibrated phase (degrees), <span class="arithmatex">\(P_0\)</span> is the zero-oxygen phase shift, <span class="arithmatex">\(P_c\)</span> is
+the phase at the current oxygen level, and <span class="arithmatex">\(\text{csv}_1\)</span> through
+<span class="arithmatex">\(\text{csv}_7\)</span> are factory calibration coefficients.</p>
+<p>A secondary calibration (conc_coef = [offset, slope]) is applied after the
+SVU equation:</p>
+<div class="arithmatex">\[O_2 = \text{conc_coef}[0] + \text{conc_coef}[1] \times O_2\]</div>
+<p>Aanderaa applies this two-point correction after refurbishment; for new
+optodes or new SVU foil determinations conc_coef defaults to [0, 1].</p>
+<p>The result is DOCONCS_L1 in <span class="arithmatex">\(\mu\)</span>mol L<span class="arithmatex">\(^{-1}\)</span>. Note: the OOI documentation
+incorrectly lists the units for this product as <span class="arithmatex">\(\mu\)</span>mol kg<span class="arithmatex">\(^{-1}\)</span>.</p>
+<p>The optode foil thermistor temperature (<span class="arithmatex">\(T_{opt}\)</span>) must be used as the
+temperature input to the SVU equation, not CTD temperature. The thermistor is
+situated directly at the foil; the SVU calibration coefficients are derived to
+compensate for changes in oxygen permeability through the foil as a function
+of its temperature. On gliders, differences between CTD and optode temperature
+of 1<span class="arithmatex">\(^\circ\)</span>C correspond to approximately 5% differences in calculated oxygen
+concentration.</p>
+<h4 id="doxygen_l2-salinity-and-pressure-correction">DOXYGEN_L2 — Salinity and Pressure Correction</h4>
+<p>DOCONCS_L1 (<span class="arithmatex">\(\mu\)</span>mol L<span class="arithmatex">\(^{-1}\)</span>) is corrected for salinity and pressure using
+CTD data from the co-located instrument to produce DOXYGEN_L2 (<span class="arithmatex">\(\mu\)</span>mol
+kg<span class="arithmatex">\(^{-1}\)</span>). The correction has three sequential steps.</p>
+<p><strong>Step 1 — Volume to mass conversion.</strong> Potential density <span class="arithmatex">\(\rho\)</span> is computed
+at reference pressure <span class="arithmatex">\(p_{ref} = 0\)</span> dbar from absolute salinity and
+conservative temperature (TEOS-10 GSW library):</p>
+<div class="arithmatex">\[S_A = \text{gsw.SA_from_SP}(S_P, p, \text{lon}, \text{lat})\]</div>
+<div class="arithmatex">\[\Theta = \text{gsw.CT_from_t}(S_A, T, p)\]</div>
+<div class="arithmatex">\[\rho = \text{gsw.rho}(S_A, \Theta, p_{ref})\]</div>
+<div class="arithmatex">\[O_{2,\text{mass}} = \frac{1000 \times O_2 [\mu\text{mol/L}]}{\rho\ [\text{kg/m}^3]}\]</div>
+<p><strong>Step 2 — Pressure correction</strong> (Uchida et al. 2008):</p>
+<div class="arithmatex">\[O_{2,\text{pres}} = \left(1 + \frac{0.032 \times p}{1000}\right) \times O_{2,\text{mass}}\]</div>
+<p><strong>Step 3 — Salinity correction</strong> (Garcia and Gordon 1992, Table 1,
+combined fit):</p>
+<div class="arithmatex">\[t_s = \ln\!\left(\frac{298.15 - T}{273.15 + T}\right)\]</div>
+<div class="arithmatex">\[B(t_s) = B_0 + B_1 t_s + B_2 {t_s}^2 + B_3 {t_s}^3\]</div>
+<div class="arithmatex">\[\text{DOXYGEN_L2} = \exp\!\left[(S_P - S_{ref}) \times B(t_s) + C_0 \times ({S_P}^2 - {S_{ref}}^2)\right] \times O_{2,\text{pres}}\]</div>
+<p>where <span class="arithmatex">\(B_0 = -6.24097 \times 10^{-3}\)</span>, <span class="arithmatex">\(B_1 = -6.93498 \times 10^{-3}\)</span>,
+<span class="arithmatex">\(B_2 = -6.90358 \times 10^{-3}\)</span>, <span class="arithmatex">\(B_3 = -4.29155 \times 10^{-3}\)</span>,
+<span class="arithmatex">\(C_0 = -3.11680 \times 10^{-7}\)</span>, and <span class="arithmatex">\(S_{ref}\)</span> is the reference salinity
+configured in the Aanderaa optode firmware (typically 0 or 35).</p>
+<hr />
+<h3 id="doconcf_l2-fast-dissolved-oxygen-dofst">DOCONCF_L2 — Fast Dissolved Oxygen (DOFST)</h3>
+<p>The Sea-Bird Scientific SBE 43 (DOFST-A) and SBE 43F (DOFST-K) are Clark-type
+polarographic dissolved oxygen sensors integrated into profiling CTD systems.
+The SBE 43 is mounted on the SBE 16Plus V2 CTD (CTDPF-A/B) and reports
+a voltage signal; the SBE 43F is mounted on the SBE 52-MP profiling CTD
+(CTDPF-C/K/L) and reports a frequency signal.</p>
+<p>DOCONCF_L2 is the dissolved oxygen concentration (<span class="arithmatex">\(\mu\)</span>mol kg<span class="arithmatex">\(^{-1}\)</span>)
+corrected for temperature, salinity, and pressure. There is no intermediate
+L1 product; DOCONCF_L0 (counts representing voltage or frequency) is converted
+directly to DOCONCF_L2.</p>
+<h4 id="l0-input-conversion">L0 Input Conversion</h4>
+<p><strong>SBE 43 (DOFST-A):</strong> The raw hex voltage counts are converted to volts:</p>
+<div class="arithmatex">\[V = \frac{\text{DOCONCF-CNT_L0}}{13107}\]</div>
+<p><strong>SBE 43F (DOFST-K):</strong> The raw hex frequency value is used directly as
+<span class="arithmatex">\(F\)</span> [Hz].</p>
+<h4 id="doconcf_l2-algorithm">DOCONCF_L2 Algorithm</h4>
+<p>Sea-Bird uses an algorithm based on Owens and Millard (1985). With the
+derivative term removed by setting tau = 0 (recommended by Sea-Bird and the
+OOI DPS to prevent amplification of residual noise in deep water):</p>
+<p><strong>Step 1 — Oxygen solubility</strong> (Garcia and Gordon 1992, Table 1, 1st column):</p>
+<div class="arithmatex">\[T_s = \ln\!\left(\frac{298.15 - T}{273.15 + T}\right)\]</div>
+<div class="arithmatex">\[\begin{align}
+\text{Oxsol}(T, S) &amp;= \exp\!\big[A_0 + A_1 T_s + A_2 {T_s}^2 + A_3 {T_s}^3
++ A_4 {T_s}^4 + A_5 {T_s}^5 \\
+&amp;\quad + S(B_0 + B_1 T_s + B_2 {T_s}^2 + B_3 {T_s}^3) + C_0 S^2\big]
+\end{align}\]</div>
+<p>where <span class="arithmatex">\(A_0 = 2.00907\)</span>, <span class="arithmatex">\(A_1 = 3.22014\)</span>, <span class="arithmatex">\(A_2 = 4.0501\)</span>, <span class="arithmatex">\(A_3 = 4.94457\)</span>,
+<span class="arithmatex">\(A_4 = -0.256847\)</span>, <span class="arithmatex">\(A_5 = 3.88767\)</span>, <span class="arithmatex">\(B_0 = -0.00624523\)</span>,
+<span class="arithmatex">\(B_1 = -0.00737614\)</span>, <span class="arithmatex">\(B_2 = -0.010341\)</span>, <span class="arithmatex">\(B_3 = -0.00817083\)</span>,
+<span class="arithmatex">\(C_0 = -4.88682 \times 10^{-7}\)</span>.</p>
+<p><strong>Step 2 — Intermediate oxygen concentration</strong> [mL L<span class="arithmatex">\(^{-1}\)</span>]:</p>
+<div class="arithmatex">\[\text{DO_int} = \text{Soc} \times (x + \text{offset}) \times \text{Oxsol}(T, S)
+\times (1 + AT + BT^2 + CT^3) \times e^{EP/K}\]</div>
+<p>where <span class="arithmatex">\(x\)</span> is <span class="arithmatex">\(V\)</span> (SBE 43) or <span class="arithmatex">\(F\)</span> (SBE 43F), <span class="arithmatex">\(K = T + 273.15\)</span> is absolute
+temperature, and Soc, offset, A, B, C, E are factory calibration coefficients.</p>
+<p><strong>Step 3 — Convert to <span class="arithmatex">\(\mu\)</span>mol kg<span class="arithmatex">\(^{-1}\)</span>:</strong></p>
+<p>Potential density <span class="arithmatex">\(\rho_\theta\)</span> is computed using <code>gsw.pot_rho_t_exact</code> with
+a reference pressure of 0 dbar:</p>
+<div class="arithmatex">\[\text{DOCONCF_L2} = \frac{\text{DO_int} \times 44660}{\rho_\theta}\]</div>
+<hr />
+<h3 id="doxygen_l2-seaphox-dissolved-oxygen">DOXYGEN_L2 — SeapHOx Dissolved Oxygen</h3>
+<p>The Sea-Bird Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H) integrates an
+SBE 63 optical dissolved oxygen sensor alongside an SBE 37 MicroCAT CTD and
+a Deep SeaFET pH sensor. The SBE 63 uses a Stern-Volmer fluorescence quenching
+approach with a calibration model distinct from the DOSTA Aanderaa optode.
+Processing depends on the data delivery method.</p>
+<p><strong>Streamed and recovered_instrument</strong>: Raw phase output (<span class="arithmatex">\(\mu\)</span>s) is converted
+directly to DOXYGEN_L2 (<span class="arithmatex">\(\mu\)</span>mol kg<span class="arithmatex">\(^{-1}\)</span>) via <code>dissolved_oxygen</code> in
+<code>phsen_h_functions.py</code>. Salinity and pressure corrections and the conversion
+from mL L<span class="arithmatex">\(^{-1}\)</span> to <span class="arithmatex">\(\mu\)</span>mol kg<span class="arithmatex">\(^{-1}\)</span> using potential density are all
+applied within a single function call.</p>
+<p><strong>Telemetered</strong>: The instrument reports dissolved oxygen in mL L<span class="arithmatex">\(^{-1}\)</span>
+(DOCONCS_L1). The salinity and pressure correction to produce DOXYGEN_L2
+follows the same <code>do2_salinity_correction</code> path as the DOSTA optode. This
+processing path is not yet implemented in <code>do2_functions.py</code>.</p>
+<p>See <a href="../../seaphox/">Deep SeapHOx V2</a> for instrument architecture context.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.do2_functions.do2_SVU" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">do2_SVU</span><span class="p">(</span><span class="n">calphase</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">csv</span><span class="p">,</span> <span class="n">conc_coef</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]))</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute DOCONCS_L1 dissolved oxygen concentration from a DOSTA
+Aanderaa Optode using the Stern-Volmer-Uchida equation.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>calphase</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibrated phase from the Aanderaa optode, DOCONCS-DEG_L0
+[degrees].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>temp</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Optode foil temperature from the optode thermistor [degC].
+See Notes regarding temperature source selection.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>csv</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(..., 7))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Stern-Volmer-Uchida calibration coefficients array. Elements
+are csv[0] through csv[6] corresponding to csv1 through csv7
+in OOI DPS 1341-00520 [various units].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>conc_coef</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(..., 2))</code>, default:
+                      <code><span title="numpy.array">array</span>([0.0, 1.0])</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Secondary calibration coefficients [offset, slope] applied
+after the SVU equation. Default is [0.0, 1.0] (no correction).
+See Notes for details.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>do</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Dissolved oxygen concentration uncorrected for salinity and
+pressure, DOCONCS_L1 [micro-mole/L].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The Stern-Volmer-Uchida equation computes oxygen concentration as:</p>
+<pre><code>Ksv = csv1 + csv2*T + csv3*T^2
+P0  = csv4 + csv5*T
+Pc  = csv6 + csv7*Pt
+O2  = [(P0/Pc) - 1] / Ksv
+</code></pre>
+<p>where T is the optode foil temperature [degC] and Pt is the
+uncorrected (calibrated) phase [degrees].</p>
+<p>The secondary calibration (conc_coef) applies an offset and slope
+correction: DO = conc_coef[0] + conc_coef[1] * DO. Aanderaa uses
+two calibration procedures for the model 4831 optode. The primary
+multi-point calibration determines the SVU foil coefficients (csv).
+The secondary two-point calibration corrects the result against 0%
+and 100% oxygen data points to produce the conc_coef values. For
+new optodes or new SVU foil coefficient determinations, Aanderaa
+sets conc_coef to offset=0 and slope=1 by default. The conc_coef
+correction is applied automatically by the optode firmware but must
+be applied manually when oxygen is calculated externally, as in
+this function.</p>
+<p>The optode thermistor temperature should be used whenever possible.
+For OOI DOSTA model 4831 instruments the thermistor is situated
+directly at the sensor foil and the SVU calibration coefficients
+are derived in part to compensate for the change in oxygen
+permeability through the foil as a function of its temperature. On
+gliders, differences between CTD and optode temperature readings of
+1 degC can translate to approximately 5% differences in calculated
+oxygen concentration.</p>
+<p>The DOCONCS_L1 data product has units of micromole/liter. The OOI
+Software Application Framework (SAF) incorrectly lists the units
+for this L1 product as micromole/kg.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/do2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">do2_SVU</span><span class="p">(</span><span class="n">calphase</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">csv</span><span class="p">,</span> <span class="n">conc_coef</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute DOCONCS_L1 dissolved oxygen concentration from a DOSTA</span>
+<span class="sd">    Aanderaa Optode using the Stern-Volmer-Uchida equation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    calphase : array_like</span>
+<span class="sd">        Calibrated phase from the Aanderaa optode, DOCONCS-DEG_L0</span>
+<span class="sd">        [degrees].</span>
+<span class="sd">    temp : array_like</span>
+<span class="sd">        Optode foil temperature from the optode thermistor [degC].</span>
+<span class="sd">        See Notes regarding temperature source selection.</span>
+<span class="sd">    csv : array_like, shape (..., 7)</span>
+<span class="sd">        Stern-Volmer-Uchida calibration coefficients array. Elements</span>
+<span class="sd">        are csv[0] through csv[6] corresponding to csv1 through csv7</span>
+<span class="sd">        in OOI DPS 1341-00520 [various units].</span>
+<span class="sd">    conc_coef : array_like, shape (..., 2), optional</span>
+<span class="sd">        Secondary calibration coefficients [offset, slope] applied</span>
+<span class="sd">        after the SVU equation. Default is [0.0, 1.0] (no correction).</span>
+<span class="sd">        See Notes for details.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    do : ndarray</span>
+<span class="sd">        Dissolved oxygen concentration uncorrected for salinity and</span>
+<span class="sd">        pressure, DOCONCS_L1 [micro-mole/L].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The Stern-Volmer-Uchida equation computes oxygen concentration as:</span>
+
+<span class="sd">        Ksv = csv1 + csv2*T + csv3*T^2</span>
+<span class="sd">        P0  = csv4 + csv5*T</span>
+<span class="sd">        Pc  = csv6 + csv7*Pt</span>
+<span class="sd">        O2  = [(P0/Pc) - 1] / Ksv</span>
+
+<span class="sd">    where T is the optode foil temperature [degC] and Pt is the</span>
+<span class="sd">    uncorrected (calibrated) phase [degrees].</span>
+
+<span class="sd">    The secondary calibration (conc_coef) applies an offset and slope</span>
+<span class="sd">    correction: DO = conc_coef[0] + conc_coef[1] * DO. Aanderaa uses</span>
+<span class="sd">    two calibration procedures for the model 4831 optode. The primary</span>
+<span class="sd">    multi-point calibration determines the SVU foil coefficients (csv).</span>
+<span class="sd">    The secondary two-point calibration corrects the result against 0%</span>
+<span class="sd">    and 100% oxygen data points to produce the conc_coef values. For</span>
+<span class="sd">    new optodes or new SVU foil coefficient determinations, Aanderaa</span>
+<span class="sd">    sets conc_coef to offset=0 and slope=1 by default. The conc_coef</span>
+<span class="sd">    correction is applied automatically by the optode firmware but must</span>
+<span class="sd">    be applied manually when oxygen is calculated externally, as in</span>
+<span class="sd">    this function.</span>
+
+<span class="sd">    The optode thermistor temperature should be used whenever possible.</span>
+<span class="sd">    For OOI DOSTA model 4831 instruments the thermistor is situated</span>
+<span class="sd">    directly at the sensor foil and the SVU calibration coefficients</span>
+<span class="sd">    are derived in part to compensate for the change in oxygen</span>
+<span class="sd">    permeability through the foil as a function of its temperature. On</span>
+<span class="sd">    gliders, differences between CTD and optode temperature readings of</span>
+<span class="sd">    1 degC can translate to approximately 5% differences in calculated</span>
+<span class="sd">    oxygen concentration.</span>
+
+<span class="sd">    The DOCONCS_L1 data product has units of micromole/liter. The OOI</span>
+<span class="sd">    Software Application Framework (SAF) incorrectly lists the units</span>
+<span class="sd">    for this L1 product as micromole/kg.</span>
+<span class="sd">    """</span>
+    <span class="n">conc_coef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">conc_coef</span><span class="p">)</span>
+    <span class="c1"># this will work for both old and new CI implementations of cal coeffs.</span>
+    <span class="n">csv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">csv</span><span class="p">)</span>
+
+    <span class="c1"># Calculate DO using Stern-Volmer:</span>
+    <span class="n">ksv</span> <span class="o">=</span> <span class="n">csv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">csv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">temp</span> <span class="o">+</span> <span class="n">csv</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">temp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">p0</span> <span class="o">=</span> <span class="n">csv</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">csv</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]</span><span class="o">*</span><span class="n">temp</span>
+    <span class="n">pc</span> <span class="o">=</span> <span class="n">csv</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">csv</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">]</span><span class="o">*</span><span class="n">calphase</span>
+    <span class="n">do</span> <span class="o">=</span> <span class="p">((</span><span class="n">p0</span><span class="o">/</span><span class="n">pc</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">ksv</span>
+
+    <span class="c1"># apply refurbishment calibration</span>
+    <span class="c1"># conc_coef can be a 2D array of either 1 row or do.size rows.</span>
+    <span class="n">do</span> <span class="o">=</span> <span class="n">conc_coef</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">conc_coef</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">do</span>
+    <span class="k">return</span> <span class="n">do</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-26</td>
+<td>Stuart Pearce</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-04-10</td>
+<td>Russell Desiderio</td>
+<td>Revised for CI calibration coefficient implementation</td>
+</tr>
+<tr>
+<td>2015-08-04</td>
+<td>Russell Desiderio</td>
+<td>Added documentation</td>
+</tr>
+<tr>
+<td>2015-08-10</td>
+<td>Russell Desiderio</td>
+<td>Added conc_coef calibration array to argument list</td>
+</tr>
+<tr>
+<td>2015-10-28</td>
+<td>Russell Desiderio</td>
+<td>Added atleast_2d handling for 1D conc_coef arrays</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Renamed local variables to follow naming convention</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.do2_functions.do2_salinity_correction" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">do2_salinity_correction</span><span class="p">(</span><span class="n">DO</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">sref</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pref</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Correct DOCONCS_L1 for salinity and pressure to produce DOXYGEN_L2
+dissolved oxygen concentration.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>DO</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected dissolved oxygen concentration, DOCONCS_L1
+[micro-mole/L].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>P</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Sea pressure from the co-located CTD, PRESWAT_L1 [dbar].
+Interpolated to the DOSTA timestamp.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Water temperature from the co-located CTD, TEMPWAT_L1 [degC].
+Interpolated to the DOSTA timestamp.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>SP</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from the co-located CTD, PRACSAL_L2
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees North].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Longitude of the instrument [decimal degrees East].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sref</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Reference salinity matching the Salinity setting configured
+in the Aanderaa optode firmware [unitless]. Default is 0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pref</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Reference pressure for potential density calculation [dbar].
+Default is 0 dbar.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>DOc</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Dissolved oxygen concentration corrected for salinity and
+pressure, DOXYGEN_L2 [micro-mole/kg].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The correction proceeds in three steps.</p>
+<p>Step 1 -- Volume to mass unit conversion:
+Potential density (rho) referenced to pref is computed from
+absolute salinity and conservative temperature using the TEOS-10
+GSW library. The concentration is converted from per-volume to
+per-mass units:</p>
+<pre><code>DO [umol/kg] = 1000 * DO [umol/L] / rho [kg/m^3]
+</code></pre>
+<p>Step 2 -- Pressure correction (Uchida et al. 2008):</p>
+<pre><code>DO = (1 + 0.032 * P / 1000) * DO
+</code></pre>
+<p>Step 3 -- Salinity correction (Garcia and Gordon 1992, Table 1,
+combined fit):</p>
+<pre><code>ts = ln[(298.15 - T) / (273.15 + T)]
+Bts = B0 + B1*ts + B2*ts^2 + B3*ts^3
+DO = exp[(SP - sref) * Bts + C0 * (SP^2 - sref^2)] * DO
+</code></pre>
+<p>where B0=-6.24097e-3, B1=-6.93498e-3, B2=-6.90358e-3,
+B3=-4.29155e-3, C0=-3.11680e-7.</p>
+<p>The sref parameter corresponds to the preset Salinity setting in
+the Aanderaa optode configuration, typically 0 or 35.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/do2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">do2_salinity_correction</span><span class="p">(</span><span class="n">DO</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">sref</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pref</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Correct DOCONCS_L1 for salinity and pressure to produce DOXYGEN_L2</span>
+<span class="sd">    dissolved oxygen concentration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    DO : array_like</span>
+<span class="sd">        Uncorrected dissolved oxygen concentration, DOCONCS_L1</span>
+<span class="sd">        [micro-mole/L].</span>
+<span class="sd">    P : array_like</span>
+<span class="sd">        Sea pressure from the co-located CTD, PRESWAT_L1 [dbar].</span>
+<span class="sd">        Interpolated to the DOSTA timestamp.</span>
+<span class="sd">    T : array_like</span>
+<span class="sd">        Water temperature from the co-located CTD, TEMPWAT_L1 [degC].</span>
+<span class="sd">        Interpolated to the DOSTA timestamp.</span>
+<span class="sd">    SP : array_like</span>
+<span class="sd">        Practical salinity from the co-located CTD, PRACSAL_L2</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    lat : float or array_like</span>
+<span class="sd">        Latitude of the instrument [decimal degrees North].</span>
+<span class="sd">    lon : float or array_like</span>
+<span class="sd">        Longitude of the instrument [decimal degrees East].</span>
+<span class="sd">    sref : float, optional</span>
+<span class="sd">        Reference salinity matching the Salinity setting configured</span>
+<span class="sd">        in the Aanderaa optode firmware [unitless]. Default is 0.</span>
+<span class="sd">    pref : float, optional</span>
+<span class="sd">        Reference pressure for potential density calculation [dbar].</span>
+<span class="sd">        Default is 0 dbar.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DOc : ndarray</span>
+<span class="sd">        Dissolved oxygen concentration corrected for salinity and</span>
+<span class="sd">        pressure, DOXYGEN_L2 [micro-mole/kg].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The correction proceeds in three steps.</span>
+
+<span class="sd">    Step 1 -- Volume to mass unit conversion:</span>
+<span class="sd">    Potential density (rho) referenced to pref is computed from</span>
+<span class="sd">    absolute salinity and conservative temperature using the TEOS-10</span>
+<span class="sd">    GSW library. The concentration is converted from per-volume to</span>
+<span class="sd">    per-mass units:</span>
+
+<span class="sd">        DO [umol/kg] = 1000 * DO [umol/L] / rho [kg/m^3]</span>
+
+<span class="sd">    Step 2 -- Pressure correction (Uchida et al. 2008):</span>
+
+<span class="sd">        DO = (1 + 0.032 * P / 1000) * DO</span>
+
+<span class="sd">    Step 3 -- Salinity correction (Garcia and Gordon 1992, Table 1,</span>
+<span class="sd">    combined fit):</span>
+
+<span class="sd">        ts = ln[(298.15 - T) / (273.15 + T)]</span>
+<span class="sd">        Bts = B0 + B1*ts + B2*ts^2 + B3*ts^3</span>
+<span class="sd">        DO = exp[(SP - sref) * Bts + C0 * (SP^2 - sref^2)] * DO</span>
+
+<span class="sd">    where B0=-6.24097e-3, B1=-6.93498e-3, B2=-6.90358e-3,</span>
+<span class="sd">    B3=-4.29155e-3, C0=-3.11680e-7.</span>
+
+<span class="sd">    The sref parameter corresponds to the preset Salinity setting in</span>
+<span class="sd">    the Aanderaa optode configuration, typically 0 or 35.</span>
+<span class="sd">    """</span>
+    <span class="c1"># density calculation from GSW toolbox</span>
+    <span class="n">SA</span> <span class="o">=</span> <span class="n">gsw</span><span class="o">.</span><span class="n">SA_from_SP</span><span class="p">(</span><span class="n">SP</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+    <span class="n">CT</span> <span class="o">=</span> <span class="n">gsw</span><span class="o">.</span><span class="n">CT_from_t</span><span class="p">(</span><span class="n">SA</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+    <span class="n">pdens</span> <span class="o">=</span> <span class="n">gsw</span><span class="o">.</span><span class="n">rho</span><span class="p">(</span><span class="n">SA</span><span class="p">,</span> <span class="n">CT</span><span class="p">,</span> <span class="n">pref</span><span class="p">)</span>  <span class="c1"># potential referenced to p=0</span>
+
+    <span class="c1"># Convert from volume to mass units:</span>
+    <span class="n">DO</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">DO</span> <span class="o">/</span> <span class="n">pdens</span>
+
+    <span class="c1"># Pressure correction:</span>
+    <span class="n">DO</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.032</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="n">DO</span>
+
+    <span class="c1"># Salinity correction (Garcia and Gordon, 1992, combined fit):</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mf">298.15</span> <span class="o">-</span> <span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">273.15</span> <span class="o">+</span> <span class="n">T</span><span class="p">))</span>
+    <span class="n">B0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">6.24097e-3</span>
+    <span class="n">B1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">6.93498e-3</span>
+    <span class="n">B2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">6.90358e-3</span>
+    <span class="n">B3</span> <span class="o">=</span> <span class="o">-</span><span class="mf">4.29155e-3</span>
+    <span class="n">C0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.11680e-7</span>
+    <span class="n">Bts</span> <span class="o">=</span> <span class="n">B0</span> <span class="o">+</span> <span class="n">B1</span><span class="o">*</span><span class="n">ts</span> <span class="o">+</span> <span class="n">B2</span><span class="o">*</span><span class="n">ts</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">B3</span><span class="o">*</span><span class="n">ts</span><span class="o">**</span><span class="mi">3</span>
+    <span class="n">DO</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">SP</span> <span class="o">-</span> <span class="n">sref</span><span class="p">)</span> <span class="o">*</span> <span class="n">Bts</span> <span class="o">+</span> <span class="n">C0</span> <span class="o">*</span> <span class="p">(</span><span class="n">SP</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">sref</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">DO</span>
+    <span class="k">return</span> <span class="n">DO</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-26</td>
+<td>Stuart Pearce</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-08-04</td>
+<td>Russell Desiderio</td>
+<td>Added Garcia-Gordon reference</td>
+</tr>
+<tr>
+<td>2021-12-16</td>
+<td>Stuart Pearce</td>
+<td>Added salinity reference parameter</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed numexpr; replaced pygsw with gsw</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.do2_functions.dofst_calc" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">dofst_calc</span><span class="p">(</span><span class="n">do_raw</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">Soc</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute DOCONCF_L2 dissolved oxygen concentration from a DOFST
+(SBE 43 or SBE 43F) sensor using the Sea-Bird algorithm based on
+Owens and Millard (1985).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>do_raw</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Oxygen sensor voltage [V] for the SBE 43, or frequency [Hz]
+for the SBE 43F.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>offset</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Voltage offset [V] for the SBE 43 (Voffset), or frequency
+offset [Hz] for the SBE 43F (Foffset). Calibration coefficient
+1 [V or Hz].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>Soc</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Oxygen signal slope. Calibration coefficient 2. Units are
+V^-1 for voltage input or s for frequency input.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>A</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Residual temperature correction factor A. Calibration
+coefficient 3 [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>B</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Residual temperature correction factor B. Calibration
+coefficient 4 [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>C</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Residual temperature correction factor C. Calibration
+coefficient 5 [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>E</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Pressure correction factor. Calibration coefficient 6
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>P</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Sea pressure from the co-located CTD, PRESWAT_L1 [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Water temperature from the co-located CTD, TEMPWAT_L1 [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>SP</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from the co-located CTD, PRACSAL_L2
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees North].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Longitude of the instrument [decimal degrees East].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>freq</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>True</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True (default), do_raw is frequency [Hz] (SBE 43F path).
+If False, do_raw is voltage [V] (SBE 43 path). This flag is
+retained for compatibility but the conversion from counts to
+volts is performed by the calling wrapper before this function
+is invoked.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>DO</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Dissolved oxygen concentration corrected for temperature,
+salinity, and pressure, DOCONCF_L2 [micro-mole/kg].</p>
+              </div>
+            </li>
+            <li>
+<b><code>DO_int</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Intermediate dissolved oxygen concentration before density
+conversion [mL/L].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The Sea-Bird algorithm (Owens and Millard 1985) with the derivative
+term removed (tau set to zero per DPS recommendation) is:</p>
+<pre><code>Oxsol(T, S) = exp[A0 + A1*Ts + A2*Ts^2 + A3*Ts^3 + A4*Ts^4
+                  + A5*Ts^5 + S*(B0 + B1*Ts + B2*Ts^2
+                  + B3*Ts^3) + C0*S^2]
+</code></pre>
+<p>where Ts = ln[(298.15 - T) / (273.15 + T)] and Oxsol is the
+oxygen saturation value (Garcia and Gordon 1992, Table 1, 1st
+column fit).</p>
+<p>The intermediate oxygen concentration in mL/L is:</p>
+<pre><code>DO_int = Soc * (do_raw + offset) * Oxsol(T, S)
+         * (1 + A*T + B*T^2 + C*T^3) * exp(E*P / K)
+</code></pre>
+<p>where K = T + 273.15. The final DOCONCF_L2 in micro-mole/kg is:</p>
+<pre><code>DO = DO_int * 44660 / pot_rho_t
+</code></pre>
+<p>where pot_rho_t is the potential density of seawater computed from
+absolute salinity, in-situ temperature, and sea pressure using the
+TEOS-10 GSW library (gsw.pot_rho_t_exact).</p>
+<p>The derivative term [tau(T,P) * dV/dt] is removed by setting
+tau = 0, as recommended by Sea-Bird and the OOI DPS, to prevent
+amplification of residual noise especially in deep water.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/do2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dofst_calc</span><span class="p">(</span><span class="n">do_raw</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">Soc</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute DOCONCF_L2 dissolved oxygen concentration from a DOFST</span>
+<span class="sd">    (SBE 43 or SBE 43F) sensor using the Sea-Bird algorithm based on</span>
+<span class="sd">    Owens and Millard (1985).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    do_raw : array_like</span>
+<span class="sd">        Oxygen sensor voltage [V] for the SBE 43, or frequency [Hz]</span>
+<span class="sd">        for the SBE 43F.</span>
+<span class="sd">    offset : float</span>
+<span class="sd">        Voltage offset [V] for the SBE 43 (Voffset), or frequency</span>
+<span class="sd">        offset [Hz] for the SBE 43F (Foffset). Calibration coefficient</span>
+<span class="sd">        1 [V or Hz].</span>
+<span class="sd">    Soc : float</span>
+<span class="sd">        Oxygen signal slope. Calibration coefficient 2. Units are</span>
+<span class="sd">        V^-1 for voltage input or s for frequency input.</span>
+<span class="sd">    A : float</span>
+<span class="sd">        Residual temperature correction factor A. Calibration</span>
+<span class="sd">        coefficient 3 [unitless].</span>
+<span class="sd">    B : float</span>
+<span class="sd">        Residual temperature correction factor B. Calibration</span>
+<span class="sd">        coefficient 4 [unitless].</span>
+<span class="sd">    C : float</span>
+<span class="sd">        Residual temperature correction factor C. Calibration</span>
+<span class="sd">        coefficient 5 [unitless].</span>
+<span class="sd">    E : float</span>
+<span class="sd">        Pressure correction factor. Calibration coefficient 6</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    P : array_like</span>
+<span class="sd">        Sea pressure from the co-located CTD, PRESWAT_L1 [dbar].</span>
+<span class="sd">    T : array_like</span>
+<span class="sd">        Water temperature from the co-located CTD, TEMPWAT_L1 [degC].</span>
+<span class="sd">    SP : array_like</span>
+<span class="sd">        Practical salinity from the co-located CTD, PRACSAL_L2</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    lat : float or array_like</span>
+<span class="sd">        Latitude of the instrument [decimal degrees North].</span>
+<span class="sd">    lon : float or array_like</span>
+<span class="sd">        Longitude of the instrument [decimal degrees East].</span>
+<span class="sd">    freq : bool, optional</span>
+<span class="sd">        If True (default), do_raw is frequency [Hz] (SBE 43F path).</span>
+<span class="sd">        If False, do_raw is voltage [V] (SBE 43 path). This flag is</span>
+<span class="sd">        retained for compatibility but the conversion from counts to</span>
+<span class="sd">        volts is performed by the calling wrapper before this function</span>
+<span class="sd">        is invoked.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DO : ndarray</span>
+<span class="sd">        Dissolved oxygen concentration corrected for temperature,</span>
+<span class="sd">        salinity, and pressure, DOCONCF_L2 [micro-mole/kg].</span>
+<span class="sd">    DO_int : ndarray</span>
+<span class="sd">        Intermediate dissolved oxygen concentration before density</span>
+<span class="sd">        conversion [mL/L].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The Sea-Bird algorithm (Owens and Millard 1985) with the derivative</span>
+<span class="sd">    term removed (tau set to zero per DPS recommendation) is:</span>
+
+<span class="sd">        Oxsol(T, S) = exp[A0 + A1*Ts + A2*Ts^2 + A3*Ts^3 + A4*Ts^4</span>
+<span class="sd">                          + A5*Ts^5 + S*(B0 + B1*Ts + B2*Ts^2</span>
+<span class="sd">                          + B3*Ts^3) + C0*S^2]</span>
+
+<span class="sd">    where Ts = ln[(298.15 - T) / (273.15 + T)] and Oxsol is the</span>
+<span class="sd">    oxygen saturation value (Garcia and Gordon 1992, Table 1, 1st</span>
+<span class="sd">    column fit).</span>
+
+<span class="sd">    The intermediate oxygen concentration in mL/L is:</span>
+
+<span class="sd">        DO_int = Soc * (do_raw + offset) * Oxsol(T, S)</span>
+<span class="sd">                 * (1 + A*T + B*T^2 + C*T^3) * exp(E*P / K)</span>
+
+<span class="sd">    where K = T + 273.15. The final DOCONCF_L2 in micro-mole/kg is:</span>
+
+<span class="sd">        DO = DO_int * 44660 / pot_rho_t</span>
+
+<span class="sd">    where pot_rho_t is the potential density of seawater computed from</span>
+<span class="sd">    absolute salinity, in-situ temperature, and sea pressure using the</span>
+<span class="sd">    TEOS-10 GSW library (gsw.pot_rho_t_exact).</span>
+
+<span class="sd">    The derivative term [tau(T,P) * dV/dt] is removed by setting</span>
+<span class="sd">    tau = 0, as recommended by Sea-Bird and the OOI DPS, to prevent</span>
+<span class="sd">    amplification of residual noise especially in deep water.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Get potential density using the TEOS-10 toolbox</span>
+    <span class="n">SA</span> <span class="o">=</span> <span class="n">gsw</span><span class="o">.</span><span class="n">SA_from_SP</span><span class="p">(</span><span class="n">SP</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+    <span class="n">pot_rho_t</span> <span class="o">=</span> <span class="n">gsw</span><span class="o">.</span><span class="n">pot_rho_t_exact</span><span class="p">(</span><span class="n">SA</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Oxygen saturation value using Garcia and Gordon (1992) fit to</span>
+    <span class="c1"># Benson and Krause data (Table 1, 1st column)</span>
+    <span class="c1">#   empirical polynomial coefficients (not calibration coeffs)</span>
+    <span class="n">A0</span> <span class="o">=</span> <span class="mf">2.00907</span>
+    <span class="n">A1</span> <span class="o">=</span> <span class="mf">3.22014</span>
+    <span class="n">A2</span> <span class="o">=</span> <span class="mf">4.0501</span>
+    <span class="n">A3</span> <span class="o">=</span> <span class="mf">4.94457</span>
+    <span class="n">A4</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.256847</span>
+    <span class="n">A5</span> <span class="o">=</span> <span class="mf">3.88767</span>
+    <span class="n">B0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.00624523</span>
+    <span class="n">B1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.00737614</span>
+    <span class="n">B2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.010341</span>
+    <span class="n">B3</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.00817083</span>
+    <span class="n">C0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.000000488682</span>
+    <span class="n">temp_K</span> <span class="o">=</span> <span class="n">T</span> <span class="o">+</span> <span class="mf">273.15</span>  <span class="c1"># temperature in Kelvin</span>
+    <span class="n">Ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mf">298.15</span> <span class="o">-</span> <span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">temp_K</span><span class="p">))</span>
+    <span class="n">Oxsol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="n">A0</span> <span class="o">+</span> <span class="n">A1</span><span class="o">*</span><span class="n">Ts</span> <span class="o">+</span> <span class="n">A2</span><span class="o">*</span><span class="n">Ts</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">A3</span><span class="o">*</span><span class="n">Ts</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">A4</span><span class="o">*</span><span class="n">Ts</span><span class="o">**</span><span class="mi">4</span> <span class="o">+</span> <span class="n">A5</span><span class="o">*</span><span class="n">Ts</span><span class="o">**</span><span class="mi">5</span> <span class="o">+</span>
+        <span class="n">SP</span> <span class="o">*</span> <span class="p">(</span><span class="n">B0</span> <span class="o">+</span> <span class="n">B1</span><span class="o">*</span><span class="n">Ts</span> <span class="o">+</span> <span class="n">B2</span><span class="o">*</span><span class="n">Ts</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">B3</span><span class="o">*</span><span class="n">Ts</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span>
+        <span class="n">C0</span><span class="o">*</span><span class="n">SP</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">freq</span><span class="p">:</span>
+        <span class="c1"># convert voltage counts to volts</span>
+        <span class="n">do_raw</span> <span class="o">=</span> <span class="n">do_raw</span> <span class="o">/</span> <span class="mf">13107.</span>
+
+    <span class="c1"># Intermediate step: Dissolved Oxygen concentration in [mL/L]</span>
+    <span class="n">DO_int</span> <span class="o">=</span> <span class="p">(</span><span class="n">Soc</span> <span class="o">*</span> <span class="p">(</span><span class="n">do_raw</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span> <span class="o">*</span> <span class="n">Oxsol</span>
+              <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">A</span><span class="o">*</span><span class="n">T</span> <span class="o">+</span> <span class="n">B</span><span class="o">*</span><span class="n">T</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">C</span><span class="o">*</span><span class="n">T</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+              <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">E</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span><span class="o">/</span><span class="n">temp_K</span><span class="p">))</span>
+
+    <span class="c1"># Correct DO_int for Potential Density and convert to [micromole/Kg]</span>
+    <span class="n">DO</span> <span class="o">=</span> <span class="n">DO_int</span> <span class="o">*</span> <span class="mf">44660.</span> <span class="o">/</span> <span class="p">(</span><span class="n">pot_rho_t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">DO</span><span class="p">,</span> <span class="n">DO_int</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-08-20</td>
+<td>Stuart Pearce</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-08-04</td>
+<td>Russell Desiderio</td>
+<td>Added Garcia-Gordon reference</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Added freq variable for CGSN compatibility</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.dissolved_oxygen" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">dissolved_oxygen</span><span class="p">(</span><span class="n">raw_oxygen_phase</span><span class="p">,</span> <span class="n">thermistor</span><span class="p">,</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">salinity</span><span class="p">,</span> <span class="n">c0</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">coeff_e</span><span class="p">,</span> <span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">therm_ta0</span><span class="p">,</span> <span class="n">therm_ta1</span><span class="p">,</span> <span class="n">therm_ta2</span><span class="p">,</span> <span class="n">therm_ta3</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">thermistor_units</span><span class="o">=</span><span class="s1">'volts'</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw SBE 63 oxygen phase to dissolved oxygen in umol/kg.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>raw_oxygen_phase</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw SBE 63 phase value [microseconds].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>thermistor</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw SBE 63 thermistor output used as the temperature reference.
+Units are volts when thermistor_units='volts' or degrees C when
+thermistor_units='C'.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pressure</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Pressure from the co-located SBE 37 MicroCAT [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>salinity</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from the co-located SBE 37 MicroCAT
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>c0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1 for the SBE 63 oxygen sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>c1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2 for the SBE 63 oxygen sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>c2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3 for the SBE 63 oxygen sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>coeff_e</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4. Pressure correction coefficient for
+the SBE 63 oxygen sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 5 for the SBE 63 oxygen sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 6 for the SBE 63 oxygen sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 7 for the SBE 63 oxygen sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>b0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 8 for the SBE 63 oxygen sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>b1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 9 for the SBE 63 oxygen sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm_ta0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1 for the SBE 63 thermistor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm_ta1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2 for the SBE 63 thermistor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm_ta2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3 for the SBE 63 thermistor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm_ta3</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4 for the SBE 63 thermistor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees North].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Longitude of the instrument [decimal degrees East].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>thermistor_units</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;volts&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Units of the thermistor input: 'volts' (default) or 'C'.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>oxygen_umolkg</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Dissolved oxygen concentration [umol/kg].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>When thermistor_units is 'volts', the thermistor output is first
+converted to temperature using convert_sbe63_thermistor. The
+dissolved oxygen is computed from the phase value via a Stern-Volmer
+model with salinity and pressure corrections. The result is
+converted from ml/L to umol/kg using potential density computed
+from the GSW TEOS-10 library. Calibration coefficients are from
+factory calibration sheets supplied by Sea-Bird Scientific.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dissolved_oxygen</span><span class="p">(</span><span class="n">raw_oxygen_phase</span><span class="p">,</span> <span class="n">thermistor</span><span class="p">,</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">salinity</span><span class="p">,</span>
+                     <span class="n">c0</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">coeff_e</span><span class="p">,</span> <span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span>
+                     <span class="n">therm_ta0</span><span class="p">,</span> <span class="n">therm_ta1</span><span class="p">,</span> <span class="n">therm_ta2</span><span class="p">,</span> <span class="n">therm_ta3</span><span class="p">,</span>
+                     <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">thermistor_units</span><span class="o">=</span><span class="s2">"volts"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert raw SBE 63 oxygen phase to dissolved oxygen in umol/kg.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    raw_oxygen_phase : array_like</span>
+<span class="sd">        Raw SBE 63 phase value [microseconds].</span>
+<span class="sd">    thermistor : array_like</span>
+<span class="sd">        Raw SBE 63 thermistor output used as the temperature reference.</span>
+<span class="sd">        Units are volts when thermistor_units='volts' or degrees C when</span>
+<span class="sd">        thermistor_units='C'.</span>
+<span class="sd">    pressure : array_like</span>
+<span class="sd">        Pressure from the co-located SBE 37 MicroCAT [dbar].</span>
+<span class="sd">    salinity : array_like</span>
+<span class="sd">        Practical salinity from the co-located SBE 37 MicroCAT</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    c0 : float</span>
+<span class="sd">        Calibration coefficient 1 for the SBE 63 oxygen sensor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    c1 : float</span>
+<span class="sd">        Calibration coefficient 2 for the SBE 63 oxygen sensor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    c2 : float</span>
+<span class="sd">        Calibration coefficient 3 for the SBE 63 oxygen sensor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    coeff_e : float</span>
+<span class="sd">        Calibration coefficient 4. Pressure correction coefficient for</span>
+<span class="sd">        the SBE 63 oxygen sensor [unitless].</span>
+<span class="sd">    a0 : float</span>
+<span class="sd">        Calibration coefficient 5 for the SBE 63 oxygen sensor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    a1 : float</span>
+<span class="sd">        Calibration coefficient 6 for the SBE 63 oxygen sensor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    a2 : float</span>
+<span class="sd">        Calibration coefficient 7 for the SBE 63 oxygen sensor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    b0 : float</span>
+<span class="sd">        Calibration coefficient 8 for the SBE 63 oxygen sensor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    b1 : float</span>
+<span class="sd">        Calibration coefficient 9 for the SBE 63 oxygen sensor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    therm_ta0 : float</span>
+<span class="sd">        Calibration coefficient 1 for the SBE 63 thermistor [unitless].</span>
+<span class="sd">    therm_ta1 : float</span>
+<span class="sd">        Calibration coefficient 2 for the SBE 63 thermistor [unitless].</span>
+<span class="sd">    therm_ta2 : float</span>
+<span class="sd">        Calibration coefficient 3 for the SBE 63 thermistor [unitless].</span>
+<span class="sd">    therm_ta3 : float</span>
+<span class="sd">        Calibration coefficient 4 for the SBE 63 thermistor [unitless].</span>
+<span class="sd">    lat : float or array_like</span>
+<span class="sd">        Latitude of the instrument [decimal degrees North].</span>
+<span class="sd">    lon : float or array_like</span>
+<span class="sd">        Longitude of the instrument [decimal degrees East].</span>
+<span class="sd">    thermistor_units : str, optional</span>
+<span class="sd">        Units of the thermistor input: 'volts' (default) or 'C'.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    oxygen_umolkg : ndarray</span>
+<span class="sd">        Dissolved oxygen concentration [umol/kg].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    When thermistor_units is 'volts', the thermistor output is first</span>
+<span class="sd">    converted to temperature using convert_sbe63_thermistor. The</span>
+<span class="sd">    dissolved oxygen is computed from the phase value via a Stern-Volmer</span>
+<span class="sd">    model with salinity and pressure corrections. The result is</span>
+<span class="sd">    converted from ml/L to umol/kg using potential density computed</span>
+<span class="sd">    from the GSW TEOS-10 library. Calibration coefficients are from</span>
+<span class="sd">    factory calibration sheets supplied by Sea-Bird Scientific.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">thermistor_units</span> <span class="o">==</span> <span class="s2">"volts"</span><span class="p">:</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">convert_sbe63_thermistor</span><span class="p">(</span>
+            <span class="n">thermistor</span><span class="p">,</span> <span class="n">therm_ta0</span><span class="p">,</span> <span class="n">therm_ta1</span><span class="p">,</span> <span class="n">therm_ta2</span><span class="p">,</span> <span class="n">therm_ta3</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">thermistor_units</span> <span class="o">==</span> <span class="s2">"C"</span><span class="p">:</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">thermistor</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span>
+
+    <span class="n">oxygen_volts</span> <span class="o">=</span> <span class="n">raw_oxygen_phase</span> <span class="o">/</span> <span class="n">OXYGEN_PHASE_TO_VOLTS</span>  <span class="c1"># from the manual</span>
+
+    <span class="n">ksv</span> <span class="o">=</span> <span class="n">c0</span> <span class="o">+</span> <span class="n">c1</span> <span class="o">*</span> <span class="n">temperature</span> <span class="o">+</span> <span class="n">c2</span> <span class="o">*</span> <span class="n">temperature</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="c1"># The following correction coefficients are all constants</span>
+    <span class="n">sol_b0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">6.24523e-3</span>
+    <span class="n">sol_b1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">7.37614e-3</span>
+    <span class="n">sol_b2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0341e-2</span>
+    <span class="n">sol_b3</span> <span class="o">=</span> <span class="o">-</span><span class="mf">8.17083e-3</span>
+    <span class="n">sol_c0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">4.88682e-7</span>
+
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">KELVIN_OFFSET_25C</span> <span class="o">-</span> <span class="n">temperature</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">KELVIN_OFFSET_0C</span> <span class="o">+</span> <span class="n">temperature</span><span class="p">))</span>
+    <span class="n">s_corr_exp</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">salinity</span> <span class="o">*</span> <span class="p">(</span><span class="n">sol_b0</span> <span class="o">+</span> <span class="n">sol_b1</span> <span class="o">*</span> <span class="n">ts</span> <span class="o">+</span> <span class="n">sol_b2</span> <span class="o">*</span> <span class="n">ts</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">sol_b3</span> <span class="o">*</span> <span class="n">ts</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">sol_c0</span> <span class="o">*</span> <span class="n">salinity</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="p">)</span>
+    <span class="n">s_corr</span> <span class="o">=</span> <span class="n">e</span> <span class="o">**</span> <span class="n">s_corr_exp</span>
+
+    <span class="c1"># temperature in Kelvin</span>
+    <span class="n">temperature_k</span> <span class="o">=</span> <span class="n">temperature</span> <span class="o">+</span> <span class="n">KELVIN_OFFSET_0C</span>
+    <span class="n">p_corr_exp</span> <span class="o">=</span> <span class="p">(</span><span class="n">coeff_e</span> <span class="o">*</span> <span class="n">pressure</span><span class="p">)</span> <span class="o">/</span> <span class="n">temperature_k</span>
+    <span class="n">p_corr</span> <span class="o">=</span> <span class="n">e</span> <span class="o">**</span> <span class="n">p_corr_exp</span>
+
+    <span class="n">ox_val</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(((</span><span class="n">a0</span> <span class="o">+</span> <span class="n">a1</span> <span class="o">*</span> <span class="n">temperature</span> <span class="o">+</span> <span class="n">a2</span> <span class="o">*</span> <span class="n">oxygen_volts</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+          <span class="o">/</span> <span class="p">(</span><span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">oxygen_volts</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">ksv</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_corr</span> <span class="o">*</span> <span class="n">p_corr</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Unit calculations to convert from ml/l to umol/kg</span>
+    <span class="n">absolute_salinity</span> <span class="o">=</span> <span class="n">gsw</span><span class="o">.</span><span class="n">SA_from_SP</span><span class="p">(</span><span class="n">salinity</span><span class="p">,</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+    <span class="n">conservative_temp</span> <span class="o">=</span> <span class="n">gsw</span><span class="o">.</span><span class="n">CT_from_t</span><span class="p">(</span><span class="n">salinity</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">)</span>
+    <span class="n">pref</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">potential_density</span> <span class="o">=</span> <span class="n">gsw</span><span class="o">.</span><span class="n">rho</span><span class="p">(</span><span class="n">absolute_salinity</span><span class="p">,</span> <span class="n">conservative_temp</span><span class="p">,</span> <span class="n">pref</span><span class="p">)</span>
+
+    <span class="n">oxygen_umolkg</span> <span class="o">=</span> <span class="p">(</span><span class="n">ox_val</span> <span class="o">*</span> <span class="n">OXYGEN_MLPERL_TO_UMOLPERKG</span><span class="p">)</span> <span class="o">/</span> <span class="n">potential_density</span>
+
+    <span class="k">return</span> <span class="n">oxygen_umolkg</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Initial NumPy docstring; added to DO family documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.do2_functions.dosta_phase_volt_to_degree" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">dosta_phase_volt_to_degree</span><span class="p">(</span><span class="n">phase_volt</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert DOCONCS-VLT_L0 analog voltage to DOCONCS-DEG_L0 calibrated
+phase in degrees for a DOSTA Aanderaa Optode connected to a SBE CTD
+0-5 V analog channel.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>phase_volt</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibrated phase output from an Aanderaa optode converted to
+volts for analog transmission, DOCONCS-VLT_L0 [V].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>phase_degree</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Calibrated phase measured by the Aanderaa optode,
+DOCONCS-DEG_L0 [degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The conversion coefficients (slope 12, offset 10) are universal for
+all Aanderaa optodes. Values were obtained from Shawn Sneddon at
+Xylem-Aanderaa.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/do2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dosta_phase_volt_to_degree</span><span class="p">(</span><span class="n">phase_volt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert DOCONCS-VLT_L0 analog voltage to DOCONCS-DEG_L0 calibrated</span>
+<span class="sd">    phase in degrees for a DOSTA Aanderaa Optode connected to a SBE CTD</span>
+<span class="sd">    0-5 V analog channel.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phase_volt : array_like</span>
+<span class="sd">        Calibrated phase output from an Aanderaa optode converted to</span>
+<span class="sd">        volts for analog transmission, DOCONCS-VLT_L0 [V].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    phase_degree : ndarray</span>
+<span class="sd">        Calibrated phase measured by the Aanderaa optode,</span>
+<span class="sd">        DOCONCS-DEG_L0 [degrees].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The conversion coefficients (slope 12, offset 10) are universal for</span>
+<span class="sd">    all Aanderaa optodes. Values were obtained from Shawn Sneddon at</span>
+<span class="sd">    Xylem-Aanderaa.</span>
+<span class="sd">    """</span>
+    <span class="c1"># These coefficients to convert analog phase from volts to degrees</span>
+    <span class="c1"># are universal for all Aanderaa optodes. Obtained from Shawn</span>
+    <span class="c1"># Sneddon at Xylem-Aanderaa.</span>
+    <span class="n">phase_degree</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">+</span> <span class="mf">12.0</span> <span class="o">*</span> <span class="n">phase_volt</span>
+    <span class="k">return</span> <span class="n">phase_degree</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-08-04</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.do2_functions.dosta_Topt_volt_to_degC" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">dosta_Topt_volt_to_degC</span><span class="p">(</span><span class="n">T_optode_volt</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert DOSTA foil temperature analog voltage to degrees C for an
+Aanderaa Optode connected to a SBE CTD 0-5 V analog channel.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>T_optode_volt</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Optode foil temperature from an Aanderaa optode converted to
+volts for analog transmission [V].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>t_optode_degc</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Optode foil temperature measured by the Aanderaa optode
+thermistor [degC].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The conversion coefficients (slope 8, offset -5) are universal for
+all Aanderaa optodes. Values were obtained from Shawn Sneddon at
+Xylem-Aanderaa.</p>
+<p>The optode thermistor temperature is preferred for calculating
+oxygen concentration from DOSTA Aanderaa optodes because the
+permeability of the sensor foil to oxygen is sensitive to
+temperature and this measurement is situated directly at the foil.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/do2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dosta_Topt_volt_to_degC</span><span class="p">(</span><span class="n">T_optode_volt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert DOSTA foil temperature analog voltage to degrees C for an</span>
+<span class="sd">    Aanderaa Optode connected to a SBE CTD 0-5 V analog channel.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    T_optode_volt : array_like</span>
+<span class="sd">        Optode foil temperature from an Aanderaa optode converted to</span>
+<span class="sd">        volts for analog transmission [V].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    t_optode_degc : ndarray</span>
+<span class="sd">        Optode foil temperature measured by the Aanderaa optode</span>
+<span class="sd">        thermistor [degC].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The conversion coefficients (slope 8, offset -5) are universal for</span>
+<span class="sd">    all Aanderaa optodes. Values were obtained from Shawn Sneddon at</span>
+<span class="sd">    Xylem-Aanderaa.</span>
+
+<span class="sd">    The optode thermistor temperature is preferred for calculating</span>
+<span class="sd">    oxygen concentration from DOSTA Aanderaa optodes because the</span>
+<span class="sd">    permeability of the sensor foil to oxygen is sensitive to</span>
+<span class="sd">    temperature and this measurement is situated directly at the foil.</span>
+<span class="sd">    """</span>
+    <span class="c1"># These coefficients to convert analog T_optode from volts to degC</span>
+    <span class="c1"># are universal for all Aanderaa optodes. Obtained from Shawn</span>
+    <span class="c1"># Sneddon at Xylem-Aanderaa.</span>
+    <span class="n">t_optode_degc</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.0</span> <span class="o">+</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">T_optode_volt</span>
+    <span class="k">return</span> <span class="n">t_optode_degc</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-08-04</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Renamed local variables to follow naming convention</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.do2_functions.o2_counts_to_uM" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">o2_counts_to_uM</span><span class="p">(</span><span class="n">o2_counts</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert DOCONCS-CNT_L0 counts to DOCONCS_L1 dissolved oxygen
+concentration for a DOSTA Aanderaa Optode connected to a SBE 16+
+V2 CTD via RS-232.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>o2_counts</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw oxygen concentration counts from the CTD,
+DOCONCS-CNT_L0 [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>DO</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Dissolved oxygen concentration uncorrected for salinity and
+pressure, DOCONCS_L1 [micro-mole/L].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The DOCONCS_L1 data product has units of micromole/liter. The OOI
+Software Application Framework (SAF) incorrectly lists the units
+for this L1 product as micromole/kg.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/do2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">o2_counts_to_uM</span><span class="p">(</span><span class="n">o2_counts</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert DOCONCS-CNT_L0 counts to DOCONCS_L1 dissolved oxygen</span>
+<span class="sd">    concentration for a DOSTA Aanderaa Optode connected to a SBE 16+</span>
+<span class="sd">    V2 CTD via RS-232.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    o2_counts : array_like</span>
+<span class="sd">        Raw oxygen concentration counts from the CTD,</span>
+<span class="sd">        DOCONCS-CNT_L0 [counts].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DO : ndarray</span>
+<span class="sd">        Dissolved oxygen concentration uncorrected for salinity and</span>
+<span class="sd">        pressure, DOCONCS_L1 [micro-mole/L].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The DOCONCS_L1 data product has units of micromole/liter. The OOI</span>
+<span class="sd">    Software Application Framework (SAF) incorrectly lists the units</span>
+<span class="sd">    for this L1 product as micromole/kg.</span>
+<span class="sd">    """</span>
+    <span class="c1"># replace fill values with nan</span>
+    <span class="n">o2_counts</span> <span class="o">=</span> <span class="n">replace_fill_with_nan</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">o2_counts</span><span class="p">)</span>
+
+    <span class="n">DO</span> <span class="o">=</span> <span class="p">(</span><span class="n">o2_counts</span> <span class="o">/</span> <span class="mf">10000.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">10.0</span>
+    <span class="k">return</span> <span class="n">DO</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-26</td>
+<td>Stuart Pearce</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-04-10</td>
+<td>Russell Desiderio</td>
+<td>Added documentation and fill value handling</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.convert_sbe63_thermistor" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">convert_sbe63_thermistor</span><span class="p">(</span><span class="n">instrument_output</span><span class="p">,</span> <span class="n">therm_ta0</span><span class="p">,</span> <span class="n">therm_ta1</span><span class="p">,</span> <span class="n">therm_ta2</span><span class="p">,</span> <span class="n">therm_ta3</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw SBE 63 thermistor output to temperature in degrees C
+(ITS-90).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>instrument_output</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw thermistor output from the SBE 63 optical dissolved oxygen
+sensor [V].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm_ta0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1 for the SBE 63 thermistor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm_ta1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2 for the SBE 63 thermistor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm_ta2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3 for the SBE 63 thermistor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm_ta3</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4 for the SBE 63 thermistor [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>temperature</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Temperature from the SBE 63 thermistor (ITS-90) [deg_C].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Calibration coefficients are from factory calibration sheets
+supplied by Sea-Bird Scientific.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">convert_sbe63_thermistor</span><span class="p">(</span><span class="n">instrument_output</span><span class="p">,</span>
+                             <span class="n">therm_ta0</span><span class="p">,</span> <span class="n">therm_ta1</span><span class="p">,</span> <span class="n">therm_ta2</span><span class="p">,</span> <span class="n">therm_ta3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert raw SBE 63 thermistor output to temperature in degrees C</span>
+<span class="sd">    (ITS-90).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    instrument_output : array_like</span>
+<span class="sd">        Raw thermistor output from the SBE 63 optical dissolved oxygen</span>
+<span class="sd">        sensor [V].</span>
+<span class="sd">    therm_ta0 : float</span>
+<span class="sd">        Calibration coefficient 1 for the SBE 63 thermistor [unitless].</span>
+<span class="sd">    therm_ta1 : float</span>
+<span class="sd">        Calibration coefficient 2 for the SBE 63 thermistor [unitless].</span>
+<span class="sd">    therm_ta2 : float</span>
+<span class="sd">        Calibration coefficient 3 for the SBE 63 thermistor [unitless].</span>
+<span class="sd">    therm_ta3 : float</span>
+<span class="sd">        Calibration coefficient 4 for the SBE 63 thermistor [unitless].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    temperature : ndarray</span>
+<span class="sd">        Temperature from the SBE 63 thermistor (ITS-90) [deg_C].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Calibration coefficients are from factory calibration sheets</span>
+<span class="sd">    supplied by Sea-Bird Scientific.</span>
+<span class="sd">    """</span>
+    <span class="n">log_raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mi">100000</span> <span class="o">*</span> <span class="n">instrument_output</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.3</span> <span class="o">-</span> <span class="n">instrument_output</span><span class="p">))</span>
+    <span class="n">temperature</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">therm_ta0</span> <span class="o">+</span> <span class="n">therm_ta1</span> <span class="o">*</span> <span class="n">log_raw</span>
+             <span class="o">+</span> <span class="n">therm_ta2</span> <span class="o">*</span> <span class="n">log_raw</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">therm_ta3</span> <span class="o">*</span> <span class="n">log_raw</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">KELVIN_OFFSET_0C</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">temperature</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Initial NumPy docstring; added to DO family documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wrapper-functions">Wrapper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.do2_functions.do2_dofst_volt" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">do2_dofst_volt</span><span class="p">(</span><span class="n">voltage_counts</span><span class="p">,</span> <span class="n">Voffset</span><span class="p">,</span> <span class="n">Soc</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for DOCONCF_L2. Converts DOFST-A (SBE 43) voltage
+counts to dissolved oxygen concentration [micro-mole/kg].</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>voltage_counts</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw oxygen sensor voltage counts from the SBE 43,
+DOCONCF_L0 [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>Voffset</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1. Voltage offset [V].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>Soc</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2. Oxygen signal slope [V^-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>A</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3. Residual temperature correction
+factor A [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>B</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4. Residual temperature correction
+factor B [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>C</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 5. Residual temperature correction
+factor C [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>E</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 6. Pressure correction factor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>P</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Sea pressure from the co-located CTD, PRESWAT_L1 [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Water temperature from the co-located CTD, TEMPWAT_L1 [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>SP</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from the co-located CTD, PRACSAL_L2
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees North].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Longitude of the instrument [decimal degrees East].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>do</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Dissolved oxygen concentration corrected for temperature,
+salinity, and pressure, DOCONCF_L2 [micro-mole/kg].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>dofst_calc : Core algorithm; use directly for multi-output access.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/do2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">do2_dofst_volt</span><span class="p">(</span><span class="n">voltage_counts</span><span class="p">,</span> <span class="n">Voffset</span><span class="p">,</span> <span class="n">Soc</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    OOI wrapper for DOCONCF_L2. Converts DOFST-A (SBE 43) voltage</span>
+<span class="sd">    counts to dissolved oxygen concentration [micro-mole/kg].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    voltage_counts : array_like</span>
+<span class="sd">        Raw oxygen sensor voltage counts from the SBE 43,</span>
+<span class="sd">        DOCONCF_L0 [counts].</span>
+<span class="sd">    Voffset : float</span>
+<span class="sd">        Calibration coefficient 1. Voltage offset [V].</span>
+<span class="sd">    Soc : float</span>
+<span class="sd">        Calibration coefficient 2. Oxygen signal slope [V^-1].</span>
+<span class="sd">    A : float</span>
+<span class="sd">        Calibration coefficient 3. Residual temperature correction</span>
+<span class="sd">        factor A [unitless].</span>
+<span class="sd">    B : float</span>
+<span class="sd">        Calibration coefficient 4. Residual temperature correction</span>
+<span class="sd">        factor B [unitless].</span>
+<span class="sd">    C : float</span>
+<span class="sd">        Calibration coefficient 5. Residual temperature correction</span>
+<span class="sd">        factor C [unitless].</span>
+<span class="sd">    E : float</span>
+<span class="sd">        Calibration coefficient 6. Pressure correction factor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    P : array_like</span>
+<span class="sd">        Sea pressure from the co-located CTD, PRESWAT_L1 [dbar].</span>
+<span class="sd">    T : array_like</span>
+<span class="sd">        Water temperature from the co-located CTD, TEMPWAT_L1 [degC].</span>
+<span class="sd">    SP : array_like</span>
+<span class="sd">        Practical salinity from the co-located CTD, PRACSAL_L2</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    lat : float or array_like</span>
+<span class="sd">        Latitude of the instrument [decimal degrees North].</span>
+<span class="sd">    lon : float or array_like</span>
+<span class="sd">        Longitude of the instrument [decimal degrees East].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    do : ndarray</span>
+<span class="sd">        Dissolved oxygen concentration corrected for temperature,</span>
+<span class="sd">        salinity, and pressure, DOCONCF_L2 [micro-mole/kg].</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    dofst_calc : Core algorithm; use directly for multi-output access.</span>
+<span class="sd">    """</span>
+    <span class="c1"># replace fill values with nan</span>
+    <span class="n">voltage_counts</span> <span class="o">=</span> <span class="n">replace_fill_with_nan</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">voltage_counts</span><span class="p">)</span>
+
+    <span class="c1"># convert voltage counts to volts</span>
+    <span class="n">volts</span> <span class="o">=</span> <span class="n">voltage_counts</span> <span class="o">/</span> <span class="mf">13107.</span>
+
+    <span class="n">do</span><span class="p">,</span> <span class="n">do_int</span> <span class="o">=</span> <span class="n">dofst_calc</span><span class="p">(</span><span class="n">volts</span><span class="p">,</span> <span class="n">Voffset</span><span class="p">,</span> <span class="n">Soc</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">do</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_8">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-08-20</td>
+<td>Stuart Pearce</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-08-05</td>
+<td>Russell Desiderio</td>
+<td>Added fill value conversion to NaN</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.do2_functions.do2_dofst_frequency" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">do2_dofst_frequency</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">Foffset</span><span class="p">,</span> <span class="n">Soc</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for DOCONCF_L2. Converts DOFST-K (SBE 43F) frequency
+to dissolved oxygen concentration [micro-mole/kg].</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>frequency</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw oxygen sensor frequency from the SBE 43F,
+DOCONCF_L0 [Hz].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>Foffset</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1. Frequency offset [Hz].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>Soc</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2. Oxygen signal slope [s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>A</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3. Residual temperature correction
+factor A [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>B</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4. Residual temperature correction
+factor B [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>C</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 5. Residual temperature correction
+factor C [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>E</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 6. Pressure correction factor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>P</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Sea pressure from the co-located CTD, PRESWAT_L1 [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Water temperature from the co-located CTD, TEMPWAT_L1 [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>SP</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from the co-located CTD, PRACSAL_L2
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees North].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Longitude of the instrument [decimal degrees East].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>do</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Dissolved oxygen concentration corrected for temperature,
+salinity, and pressure, DOCONCF_L2 [micro-mole/kg].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>dofst_calc : Core algorithm; use directly for multi-output access.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/do2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">do2_dofst_frequency</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">Foffset</span><span class="p">,</span> <span class="n">Soc</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    OOI wrapper for DOCONCF_L2. Converts DOFST-K (SBE 43F) frequency</span>
+<span class="sd">    to dissolved oxygen concentration [micro-mole/kg].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    frequency : array_like</span>
+<span class="sd">        Raw oxygen sensor frequency from the SBE 43F,</span>
+<span class="sd">        DOCONCF_L0 [Hz].</span>
+<span class="sd">    Foffset : float</span>
+<span class="sd">        Calibration coefficient 1. Frequency offset [Hz].</span>
+<span class="sd">    Soc : float</span>
+<span class="sd">        Calibration coefficient 2. Oxygen signal slope [s].</span>
+<span class="sd">    A : float</span>
+<span class="sd">        Calibration coefficient 3. Residual temperature correction</span>
+<span class="sd">        factor A [unitless].</span>
+<span class="sd">    B : float</span>
+<span class="sd">        Calibration coefficient 4. Residual temperature correction</span>
+<span class="sd">        factor B [unitless].</span>
+<span class="sd">    C : float</span>
+<span class="sd">        Calibration coefficient 5. Residual temperature correction</span>
+<span class="sd">        factor C [unitless].</span>
+<span class="sd">    E : float</span>
+<span class="sd">        Calibration coefficient 6. Pressure correction factor</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    P : array_like</span>
+<span class="sd">        Sea pressure from the co-located CTD, PRESWAT_L1 [dbar].</span>
+<span class="sd">    T : array_like</span>
+<span class="sd">        Water temperature from the co-located CTD, TEMPWAT_L1 [degC].</span>
+<span class="sd">    SP : array_like</span>
+<span class="sd">        Practical salinity from the co-located CTD, PRACSAL_L2</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    lat : float or array_like</span>
+<span class="sd">        Latitude of the instrument [decimal degrees North].</span>
+<span class="sd">    lon : float or array_like</span>
+<span class="sd">        Longitude of the instrument [decimal degrees East].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    do : ndarray</span>
+<span class="sd">        Dissolved oxygen concentration corrected for temperature,</span>
+<span class="sd">        salinity, and pressure, DOCONCF_L2 [micro-mole/kg].</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    dofst_calc : Core algorithm; use directly for multi-output access.</span>
+<span class="sd">    """</span>
+    <span class="c1"># replace fill values with nan</span>
+    <span class="n">frequency</span> <span class="o">=</span> <span class="n">replace_fill_with_nan</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">frequency</span><span class="p">)</span>
+
+    <span class="n">do</span><span class="p">,</span> <span class="n">do_int</span> <span class="o">=</span> <span class="n">dofst_calc</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">Foffset</span><span class="p">,</span> <span class="n">Soc</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">SP</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">do</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_9">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-08-20</td>
+<td>Stuart Pearce</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-08-05</td>
+<td>Russell Desiderio</td>
+<td>Added fill value conversion to NaN</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Aanderaa Data Instruments. <em>TD 269 Operating Manual Oxygen Optode 4330,
+4831, 4835</em>. Bergen: Aanderaa Data Instruments.</p>
+<p>Garcia, H. E. and Gordon, L. I. (1992). Oxygen solubility in seawater:
+Better fitting equations. Limnology and Oceanography, 37(6), 1307-1312.</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00520_Data_Product_SPEC_DOCONCS_OOI.pdf">OOI (2014). Data Product Specification for Oxygen Concentration from
+"Stable" Instruments. Document Control Number 1341-00520.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00521_Data_Product_Spec_DOCONCF_OOI.pdf">OOI (2013). Data Product Specification for Fast Dissolved Oxygen.
+Document Control Number 1341-00521.</a></p>
+<p>Owens, W. B. and Millard, R. C. (1985). A new algorithm for CTD oxygen
+calibration. Journal of Physical Oceanography, 15, 621-631.</p>
+<p>Sea-Bird Scientific. <em>SBE 43 Dissolved Oxygen Sensor User's Manual</em>.
+Bellevue, WA: Sea-Bird Scientific.</p>
+<p>Sea-Bird Scientific. <em>SBE 43F Dissolved Oxygen Sensor User's Manual</em>.
+Bellevue, WA: Sea-Bird Scientific.</p>
+<p>Sea-Bird Scientific. <em>SBE 63 Optical Dissolved Oxygen Sensor User's
+Manual</em>. Bellevue, WA: Sea-Bird Scientific.</p>
+<p>Sea-Bird Scientific. <em>Deep SeapHOx V2 Ocean CT(D)-pH-DO Sensor</em>.
+Data sheet DS.53.May25. Bellevue, WA: Sea-Bird Scientific.</p>
+<p>Uchida, H., Kawano, T., Kaneko, I., and Fukasawa, M. (2008). In situ
+calibration of optode-based oxygen sensors. Journal of Atmospheric and
+Oceanic Technology, 25, 2271-2281.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../ctd_functions/" class="btn btn-neutral float-left" title="CTD Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../fdc_functions/" class="btn btn-neutral float-right" title="FDC Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../ctd_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../fdc_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

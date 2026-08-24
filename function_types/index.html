@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/function_types/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Function Types - ion-functions</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Function Types";
+        var mkdocs_page_input_path = "function_types.md";
+        var mkdocs_page_url = "/ion-functions/function_types/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="..">
+          <img src="../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Function Types</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#wrapper-functions">Wrapper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#deprecated-functions">Deprecated Functions</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/ph_functions/">PH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Function Types</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="function-types">Function Types</h1>
+<p>Instrument family functions are grouped according to their usage within the
+OOI system.</p>
+<h2 id="core-functions">Core Functions</h2>
+<p>These are the primary functions used in the calculation of oceanographic 
+parameters by OOI from the different instrument families. They were built from 
+multiple sources (e.g., vendor code and/or documentation, published algorithms, 
+pseudocode developed by OOI Project Scientists, etc.). </p>
+<h2 id="helper-functions">Helper Functions</h2>
+<p>Some of the core functions require additional functions that are used
+within the core function as part of the processing workflow. These are grouped 
+as <strong>helper</strong> functions within each instrument family. For example, 
+the <a href="../api/flo_functions/#core-functions"><code>flo_bback_total</code></a> function calls a 
+total of four <a href="../api/flo_functions/#helper-functions">helper functions</a>: 
+<code>flo_zhang_scatter_coeffs</code>, <code>flo_reactive_index</code>, <code>flo_isotherm_compress</code> and 
+<code>flo_density_seawater</code>.   </p>
+<p>Helper functions are documented alongside their core counterparts in each
+instrument family page (where applicable), under a collapsed "Helper 
+Functions" section.</p>
+<h2 id="wrapper-functions">Wrapper Functions</h2>
+<p>Some modules expose thin wrapper functions in addition to the core and helper
+functions. These wrappers exist because the OOI data management system 
+historically imposed constraints on function outputs. For each function, the
+system could only accept one output, while the core and helper functions
+could return multiple outputs. External users should use the <strong>core</strong> and 
+<strong>helper</strong> functions directly as they will be more efficient.</p>
+<p>Two wrapper patterns appear in the codebase:</p>
+<p><strong>Single-output wrappers</strong> extract one value from a core function that returns
+multiple outputs. The OOI data management system historically required one
+output per function call; the core function is the right entry point for
+external use since it returns all outputs at once.</p>
+<p><strong>Named-product wrappers</strong> call a single shared implementation function under
+instrument-specific or product-specific names. For example, <code>flo_chla</code>,
+<code>flo_cdom</code>, and <code>flo_beta</code> are all thin wrappers around <code>flo_scale_and_offset</code>,
+which is the actual computation. The named wrappers exist so that each OOI data
+product has a uniquely named function; external users should call
+<code>flo_scale_and_offset</code> directly with the appropriate calibration coefficients.</p>
+<p>Wrapper functions are documented alongside their core counterparts in each
+instrument family page (where applicable), under a collapsed "Wrapper 
+Functions" section.</p>
+<h2 id="deprecated-functions">Deprecated Functions</h2>
+<p>These functions are considered deprecated, and are no longer used by OOI to derive
+data products. They are retained to provide historical provenance for already released
+datasets. The Core, Helper, and Wrapper designations are retained under the Deprecated 
+Functions heading to provide the historical context of their usage.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../calibrations/" class="btn btn-neutral float-left" title="Calibration Coefficients"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../seaphox/" class="btn btn-neutral float-right" title="Deep SeapHOx V2">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../calibrations/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../seaphox/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

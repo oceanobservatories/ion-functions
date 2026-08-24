@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/seaphox/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Deep SeapHOx V2 - ion-functions</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Deep SeapHOx V2";
+        var mkdocs_page_input_path = "seaphox.md";
+        var mkdocs_page_url = "/ion-functions/seaphox/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="..">
+          <img src="../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Deep SeapHOx V2</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#instrument-architecture">Instrument Architecture</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#processing-functions-by-sub-instrument">Processing Functions by Sub-instrument</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#internal-sensor-functions">Internal Sensor Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/ph_functions/">PH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Notes</li>
+      <li class="breadcrumb-item active">Deep SeapHOx V2</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="deep-seaphox-v2">Deep SeapHOx V2</h1>
+<p>The Sea-Bird Scientific Deep SeapHOx V2 is an integrated moored instrument
+that combines three sensors into a single, integrated instrument: an SBE
+37 MicroCAT CTD, an SBE 63 optical dissolved oxygen sensor, and a Deep
+SeaFET V2 ISFET pH sensor. OOI deploys the Deep SeapHOx V2 under two
+instrument class designators that differ only in pressure rating:</p>
+<table>
+<thead>
+<tr>
+<th>OOI Class</th>
+<th>Pressure Rating</th>
+<th>Depth Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PHSEN-G</td>
+<td>350 m</td>
+<td>Shallow moored platforms</td>
+</tr>
+<tr>
+<td>PHSEN-H</td>
+<td>2000 m</td>
+<td>Deep moored platforms</td>
+</tr>
+</tbody>
+</table>
+<p>Both classes produce the same data products using the same processing
+functions.</p>
+<h2 id="instrument-architecture">Instrument Architecture</h2>
+<p>The Deep SeapHOx V2 is described by Sea-Bird Scientific as an <a href="https://www.seabird.com/products/deep-seaphox-v2-ph-sensor">Ocean
+CT(D)-pH-DO Sensor</a>. 
+From the user perspective it behaves as a single instrument, but internally it 
+comprises three sensor subsystems that each require their own calibration coefficients 
+and processing functions:</p>
+<table>
+<thead>
+<tr>
+<th>Sub-instrument</th>
+<th>Measurements</th>
+<th>OOI Data Products</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SBE 37 MicroCAT</td>
+<td>Temperature, pressure, conductivity</td>
+<td>TEMPWAT, PRESWAT, CONDWAT, PRACSAL, DENSITY</td>
+</tr>
+<tr>
+<td>SBE 63 Optical DO</td>
+<td>Dissolved oxygen, thermistor temperature</td>
+<td>DOCONCS, DOXYGEN</td>
+</tr>
+<tr>
+<td>Deep SeaFET V2</td>
+<td>ISFET voltage</td>
+<td>PHWATER</td>
+</tr>
+</tbody>
+</table>
+<p>The SBE 37 provides the temperature, pressure, and salinity context required
+by both the SBE 63 oxygen algorithm and the Deep SeaFET pH algorithm. The
+SBE 63 uses its own internal thermistor as the primary temperature input for
+the oxygen calculation; the SBE 37 provides the salinity and pressure
+corrections. The Deep SeaFET uses the SBE 37 temperature, pressure, and
+salinity as inputs to the pH algorithm.</p>
+<h2 id="processing-functions-by-sub-instrument">Processing Functions by Sub-instrument</h2>
+<p>Because the Deep SeapHOx V2 contains three sensor types, its processing
+functions are split across three instrument family documentation pages
+rather than collected on a single page (although they are all collected in a 
+single python module, <code>phsen_h_functions.py</code>). Each sub-instrument's functions 
+are documented with the family they belong to scientifically:</p>
+<p><strong>SBE 37 MicroCAT (CTD)</strong> — Raw A/D counts to calibrated temperature,
+pressure, and conductivity. The SBE 37 uses the same calibration polynomial
+families as other Sea-Bird MicroCAT instruments. See
+<a href="../api/ctd_functions/#seaphox-ctd-functions">CTD Functions — SeapHOx CTD Functions</a>.</p>
+<p>Functions: <code>temperature_raw_conversion</code>, <code>pressure_raw_conversion</code>,
+<code>conductivity_raw_conversion</code> (all in <code>phsen_h_functions.py</code>).</p>
+<p><strong>SBE 63 Optical DO Sensor</strong> — Raw phase and thermistor counts to dissolved
+oxygen concentration in <span class="arithmatex">\(\mu\)</span>mol kg<span class="arithmatex">\(^{-1}\)</span>. Uses a Stern-Volmer fluorescence
+quenching model with salinity and pressure corrections. See
+<a href="../api/do2_functions/#phsen-h-dissolved-oxygen-sbe-63-optical-sensor">DO Functions — PHSEN-H Dissolved Oxygen</a>.</p>
+<p>Functions: <code>dissolved_oxygen</code>, <code>convert_sbe63_thermistor</code>
+(both in <code>phsen_h_functions.py</code>).</p>
+<p><strong>Deep SeaFET V2 ISFET (pH)</strong> — Raw ISFET voltage counts to pH on the total
+hydrogen ion scale (PHWATER_L2). See
+<a href="../api/ph_functions/#sea-bird-scientific-deep-seaphox-v2">pH Functions — Sea-Bird Scientific Deep SeapHOx V2</a>.</p>
+<p>Functions: <code>convert_ph_voltage_counts</code>, <code>ph_total</code>
+(both in <code>phsen_h_functions.py</code>).</p>
+<h2 id="internal-sensor-functions">Internal Sensor Functions</h2>
+<p>The Deep SeapHOx V2 housing includes an internal SHT-series sensor that
+monitors the instrument's internal environment. These functions process that
+sensor's raw output and are not associated with any OOI science data product.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.internal_temperature" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">internal_temperature</span><span class="p">(</span><span class="n">temp_counts</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw Deep SeapHOx V2 internal temperature counts to degrees C.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>temp_counts</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw internal temperature counts from the Deep SeapHOx V2
+instrument [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>temperature</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Internal instrument temperature [deg_C].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The conversion uses a 16-bit ADC with a fixed slope of 175.72 and
+offset of -46.85 derived from the SHT sensor calibration.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">internal_temperature</span><span class="p">(</span><span class="n">temp_counts</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert raw Deep SeapHOx V2 internal temperature counts to degrees C.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    temp_counts : array_like</span>
+<span class="sd">        Raw internal temperature counts from the Deep SeapHOx V2</span>
+<span class="sd">        instrument [counts].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    temperature : ndarray</span>
+<span class="sd">        Internal instrument temperature [deg_C].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The conversion uses a 16-bit ADC with a fixed slope of 175.72 and</span>
+<span class="sd">    offset of -46.85 derived from the SHT sensor calibration.</span>
+<span class="sd">    """</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="mf">175.72</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="o">-</span><span class="mf">46.85</span>
+    <span class="n">int_16bit</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">**</span> <span class="mi">16</span>
+    <span class="n">temperature</span> <span class="o">=</span> <span class="n">temp_counts</span> <span class="o">/</span> <span class="n">int_16bit</span> <span class="o">*</span> <span class="n">slope</span> <span class="o">+</span> <span class="n">offset</span>
+
+    <span class="k">return</span> <span class="n">temperature</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025-05-15</td>
+<td>Christopher Wingard</td>
+<td>Initial NumPy docstring</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.internal_humidity" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">internal_humidity</span><span class="p">(</span><span class="n">humidity_counts</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw Deep SeapHOx V2 internal humidity counts to relative
+humidity in percent.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>humidity_counts</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw relative humidity counts from the Deep SeapHOx V2
+instrument [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>temperature</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Internal instrument temperature from internal_temperature
+[deg_C].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>relative_humidity</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Relative humidity, clipped to the range [0, 100][percent].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Uncompensated relative humidity is first computed from the raw
+counts using a 16-bit ADC with slope 125 and offset -6. A
+temperature compensation of -0.15 percent per degree C deviation
+from 25 deg_C is then applied. Values outside [0, 119] percent
+before compensation are left unmodified; the final result is
+clipped to [0, 100] percent.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">internal_humidity</span><span class="p">(</span><span class="n">humidity_counts</span><span class="p">,</span> <span class="n">temperature</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert raw Deep SeapHOx V2 internal humidity counts to relative</span>
+<span class="sd">    humidity in percent.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    humidity_counts : array_like</span>
+<span class="sd">        Raw relative humidity counts from the Deep SeapHOx V2</span>
+<span class="sd">        instrument [counts].</span>
+<span class="sd">    temperature : array_like</span>
+<span class="sd">        Internal instrument temperature from internal_temperature</span>
+<span class="sd">        [deg_C].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    relative_humidity : ndarray</span>
+<span class="sd">        Relative humidity, clipped to the range [0, 100] [percent].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Uncompensated relative humidity is first computed from the raw</span>
+<span class="sd">    counts using a 16-bit ADC with slope 125 and offset -6. A</span>
+<span class="sd">    temperature compensation of -0.15 percent per degree C deviation</span>
+<span class="sd">    from 25 deg_C is then applied. Values outside [0, 119] percent</span>
+<span class="sd">    before compensation are left unmodified; the final result is</span>
+<span class="sd">    clipped to [0, 100] percent.</span>
+<span class="sd">    """</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="mi">125</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="o">-</span><span class="mi">6</span>
+    <span class="n">int_16bit</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">**</span> <span class="mi">16</span>
+    <span class="n">max_humidity</span> <span class="o">=</span> <span class="mi">119</span>
+    <span class="n">temperature_coefficient</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.15</span>
+    <span class="n">temperature_25c</span> <span class="o">=</span> <span class="mi">25</span>
+
+    <span class="c1"># Uncompensated relative humidity</span>
+    <span class="n">relative_humidity</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">humidity_counts</span> <span class="o">/</span> <span class="n">int_16bit</span> <span class="o">+</span> <span class="n">offset</span>
+
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">humidity</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">relative_humidity</span><span class="p">):</span>
+        <span class="c1"># Theoretically, uncompensated relative humidity can be up to 119%</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">humidity</span> <span class="o">&lt;</span> <span class="n">max_humidity</span><span class="p">:</span>
+            <span class="n">relative_humidity</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">humidity</span> <span class="o">+</span> <span class="n">temperature_coefficient</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="n">temperature_25c</span> <span class="o">-</span> <span class="n">temperature</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+            <span class="p">)</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">relative_humidity</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">relative_humidity</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025-05-15</td>
+<td>Christopher Wingard</td>
+<td>Initial NumPy docstring</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p><a href="https://www.seabird.com/products/deep-seaphox-v2-ph-sensor">Sea-Bird Scientific. <em>Deep SeapHOx V2. pH, Conductivity, Temperature, Pressure, Dissolved
+Oxygen</em>. User Manual, 2025-04-29, Rev E. Bellevue, WA.</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../function_types/" class="btn btn-neutral float-left" title="Function Types"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api/co2_functions/" class="btn btn-neutral float-right" title="CO2 Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../function_types/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../api/co2_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

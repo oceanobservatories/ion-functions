@@ -1,0 +1,2312 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/wav_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>WAV Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "WAV Functions";
+        var mkdocs_page_input_path = "api/wav_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/wav_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">PH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">WAV Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#wavstat-data-products">WAVSTAT Data Products</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#frequency-vector-reconstruction">Frequency Vector Reconstruction</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#platform-motion-time-reconstruction">Platform Motion Time Reconstruction</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#magnetic-declination-correction">Magnetic Declination Correction</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#wrapper-functions">Wrapper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">WAV Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="wav-functions">WAV Functions</h1>
+<h2 id="background">Background</h2>
+<p>The WAV instrument family consists of the TRIAXYS OEM Directional Wave Sensor
+(WAVSS), manufactured by AXYS Technologies, Inc. The WAVSS measures
+three-dimensional acceleration, rotation rate, and orientation in the Earth's
+magnetic field. From these measurements the instrument reconstructs the motion
+of the sea surface in the wave field. All wave statistics computations are
+performed internally by the instrument's proprietary firmware; ion-functions
+does not re-implement those algorithms.</p>
+<p>The WAVSS acquires accelerations over a sampling interval (typically 20 minutes) 
+and produces a single set of wave property values representing that interval, 
+along with a time series of platform displacement over the course of the 
+acquisition.</p>
+<p>Wave statistics are also measured by Teledyne RDI acoustic Doppler current
+profilers (ADCPs) mounted on the seafloor at the shallowest OOI Endurance
+and Pioneer Mid-Atlantic Bight (MAB) locations. Those instruments collect raw 
+ping-level data which RDI's WavesMon software processes into derived wave 
+statistics. This measurement method is used at those sites because the moorings 
+are shallow enough for a bottom-mounted ADCP to accurately measure wave parameters. 
+The WavesMon outputs map to the same WAVSTAT product namespace as the WAVSS outputs; 
+ion-functions is not involved in the WavesMon processing pipeline.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00450_Data_Product_SPEC_WAVSTAT_OOI.pdf">1341-00450</a></td>
+<td>OOI (2012). Data Product Specification for Wave Statistics. Document Control Number 1341-00450.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="wavstat-data-products">WAVSTAT Data Products</h3>
+<p>The WAVSS and WavesMon pipelines together produce a set of wave statistics
+under the collective product name WAVSTAT. Most WAVSS products are extracted
+directly from the instrument's NMEA output sentences without further
+computation by ion-functions. WavesMon products are computed by RDI's
+WavesMon software from raw ADCP data and are not processed by
+ion-functions. The table below lists all WAVSTAT sub-products, their units,
+and their source(s).</p>
+<table style="table-layout:fixed;width:100%;border-collapse:collapse;border-spacing:0">
+<colgroup>
+<col style="width:20%">
+<col style="width:30%">
+<col style="width:12%">
+<col style="width:38%">
+</colgroup>
+<thead>
+<tr>
+<th style="white-space:normal;padding:6px 8px;border-bottom:2px solid #e1e4e5;text-align:left">Product ID</th>
+<th style="white-space:normal;padding:6px 8px;border-bottom:2px solid #e1e4e5;text-align:left">Description</th>
+<th style="white-space:normal;padding:6px 8px;border-bottom:2px solid #e1e4e5;text-align:left">Units</th>
+<th style="white-space:normal;padding:6px 8px;border-bottom:2px solid #e1e4e5;text-align:left">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-N0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Number of zero crossings in displacement data (QC use)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">--</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HMAX</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Maximum wave height</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hmax</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HAVG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean significant wave height</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hm</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TAVG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Period associated with mean significant wave height</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Tz</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HSIG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height (average of highest 1/3)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: H13</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HM0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height from spectral moments</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hs</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TSIG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave period (average period of Hsig waves)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: T13</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-H10</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Average height of highest 1/10 of waves</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: H1/10</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-T10</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Average period of H10 waves</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: T1/10</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TP</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak wave period</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Tp (see also WAVSTAT-TSIG, WAVSTAT-TP5)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TP5</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak wave period via Read method (alternative to TP)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Tp (see also WAVSTAT-TP, WAVSTAT-TSIG)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TMAX</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Maximum peak wave period</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Tmax</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-D_L0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean wave direction (magnetic)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-D_L2</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean wave direction (true north)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_correct_mean_wave_direction</code>. WavesMon: Dp (reported to true north; no correction applied by ion-functions)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DMEAN</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean peak wave direction</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Dmean</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DS</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean directional spread of wave field</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DEPTH</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Water depth from pressure sensor</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Depth Water level</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TP_SEA</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak period in sea region of power spectrum</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Tp_Sea</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-D_SEA</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak direction in sea region at peak period</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Dp_Sea</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HSIG_SEA</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height in sea region of power spectrum</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Hs_Sea</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TP_SWELL</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak period in swell region of power spectrum</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Tp_Swell</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-D_SWELL</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Peak swell direction at peak period in swell region</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Dp_Swell</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HSIG_SWELL</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height in swell region of power spectrum</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: Hs_Swell</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-PND</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Power spectral density, non-directional spectra</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m<sup>2</sup> Hz<sup>-1</sup></td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPNA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-FND_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Frequency values for non-directional spectral bins</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Hz</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_nondir_freq</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-FDS_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Frequency values for directional spectral bins</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Hz</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_dir_freq</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-PDS</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Power spectral density, directional spectra</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m<sup>2</sup> Hz<sup>-1</sup></td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA. WavesMon: directional spectrum (mm<sup>2</sup> Hz<sup>-1</sup> per cycle, 90 directions x 128 frequencies)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DDS_L0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Wave directions from directional spectra (magnetic)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DDS_L2</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Wave directions from directional spectra (true north)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_correct_directional_wave_direction</code>. WavesMon: directional spectrum directions (reported to true north; no correction applied by ion-functions)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-SDS</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Directional spread from directional spectra</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTX_L0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Eastward buoy displacement (magnetic frame)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPHA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTX_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Eastward buoy displacement (true east)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_magcor_buoymotion_x</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTY_L0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Northward buoy displacement (magnetic frame)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPHA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTY_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Northward buoy displacement (true north)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_magcor_buoymotion_y</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTZ</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Vertical buoy displacement</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPHA</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-MOTT_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Time of each buoy displacement measurement</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">seconds since 1900-01-01</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_buoymotion_time</code></td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-VELPROF</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Current magnitude at each depth level</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m s<sup>-1</sup></td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WavesMon: depthlevel1..N magnitude</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px">WAVSTAT-DIRPROF</td><td style="white-space:normal;padding:6px 8px">Current direction at each depth level</td><td style="white-space:normal;padding:6px 8px">deg</td><td style="white-space:normal;padding:6px 8px">WavesMon: depthlevel1..N direction</td></tr>
+</tbody>
+</table>
+
+<h3 id="frequency-vector-reconstruction">Frequency Vector Reconstruction</h3>
+<p>WAVSTAT-FND_L1 and WAVSTAT-FDS_L1 are the frequency axis vectors for the
+non-directional and directional power spectral density arrays, respectively.
+Rather than transmitting every frequency value, the instrument reports only
+the number of bins, the initial frequency, and the uniform frequency spacing.
+ion-functions reconstructs the full frequency vector from these three values.</p>
+<p>For the non-directional spectrum, all data packets share the same number of
+frequency bins, so the reconstruction is vectorized across packets. For the
+directional spectrum, the number of active bins (nfreq_dir) can vary between
+data packets as a function of ocean conditions -- it is always less than or
+equal to the number of non-directional bins. The output array is therefore
+sized to the (fixed) non-directional bin count, with fill values occupying
+unused positions.</p>
+<p>The reconstruction for both products follows:</p>
+<div class="arithmatex">\[f_i = f_0 + (i - 1) \times \Delta f, \quad i = 1, 2, \ldots, N\]</div>
+<p>where <span class="arithmatex">\(f_0\)</span> is the initial frequency [Hz], <span class="arithmatex">\(\Delta f\)</span> is the frequency spacing
+[Hz], and <span class="arithmatex">\(N\)</span> is the number of active bins for that data packet.</p>
+<h3 id="platform-motion-time-reconstruction">Platform Motion Time Reconstruction</h3>
+<p>WAVSTAT-MOTT_L1 is the time axis corresponding to the WAVSTAT-MOTX,
+WAVSTAT-MOTY, and WAVSTAT-MOTZ displacement time series. The instrument
+reports the NTP timestamp of the data sentence, the elapsed time to the first
+displacement sample, and the uniform sampling interval. ion-functions
+reconstructs the absolute NTP time of each sample:</p>
+<div class="arithmatex">\[t_i = t_0 + t_{init} + (i - 1) \times \Delta t, \quad i = 1, 2, \ldots, N\]</div>
+<p>where <span class="arithmatex">\(t_0\)</span> is the NTP timestamp from the $TSPHA sentence [s since 1900-01-01],
+<span class="arithmatex">\(t_{init}\)</span> is the initial time offset to the first sample [s], <span class="arithmatex">\(\Delta t\)</span> is
+the time spacing between samples [s], and <span class="arithmatex">\(N\)</span> is the number of displacement
+measurements.</p>
+<h3 id="magnetic-declination-correction">Magnetic Declination Correction</h3>
+<p>The WAVSS contains an internal compass. Wave directions (WAVSTAT-D and
+WAVSTAT-DDS) and buoy displacement components (WAVSTAT-MOTX and WAVSTAT-MOTY)
+are reported in the magnetic reference frame. ion-functions corrects these to
+true north using the IGRF-14 magnetic declination model via
+<code>generic_functions.magnetic_declination</code>.</p>
+<p>The direction correction applies a rotation modulo 360 deg:</p>
+<div class="arithmatex">\[D_{true} = (D_{mag} + \theta + 360) \bmod 360\]</div>
+<p>where <span class="arithmatex">\(\theta\)</span> is the magnetic declination [deg] at the instrument's location
+and time. The same formula applies element-wise to the WAVSTAT-DDS array;
+fill-valued positions are preserved through the operation.</p>
+<p>The buoy displacement correction rotates the (X, Y) coordinate pair by
+<span class="arithmatex">\(\theta\)</span> using a 2-D rotation matrix:</p>
+<div class="arithmatex">\[\begin{align}
+X_{true} &amp;= X_{mag} \times \cos\theta + Y_{mag} \times \sin\theta \\
+Y_{true} &amp;= -X_{mag} \times \sin\theta + Y_{mag} \times \cos\theta
+\end{align}\]</div>
+<p>The WAVSS is a surface sensor; the depth parameter for the declination
+calculation defaults to 0 (sea level).</p>
+<p>Full algorithm derivations, processing references, and source documentation
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.wav_functions.wav_triaxys_nondir_freq" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">wav_triaxys_nondir_freq</span><span class="p">(</span><span class="n">nfreq</span><span class="p">,</span> <span class="n">freq0</span><span class="p">,</span> <span class="n">delta_freq</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute frequency values for non-directional wave spectral bins
+(WAVSTAT-FND_L1) for the WAVSS instrument class.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>nfreq</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Number of non-directional frequency bins, from the value specified
+in the WAVSS $TSPNA data sentence. All data packets must have the
+same value.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>freq0</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Initial frequency [Hz], from the value specified in the WAVSS
+$TSPNA data sentence.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>delta_freq</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Frequency spacing [Hz], from the value specified in the WAVSS
+$TSPNA data sentence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>fnd</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Frequency values for non-directional wave spectral bins
+(WAVSTAT-FND_L1) [Hz]. Shape is (npackets, nfreq).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The frequency vector is reconstructed from the initial frequency and
+uniform spacing reported by the instrument. All data packets share the
+same number of non-directional frequency bins, so the reconstruction
+is fully vectorized across packets.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/wav_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wav_triaxys_nondir_freq</span><span class="p">(</span><span class="n">nfreq</span><span class="p">,</span> <span class="n">freq0</span><span class="p">,</span> <span class="n">delta_freq</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute frequency values for non-directional wave spectral bins</span>
+<span class="sd">    (WAVSTAT-FND_L1) for the WAVSS instrument class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nfreq : array_like</span>
+<span class="sd">        Number of non-directional frequency bins, from the value specified</span>
+<span class="sd">        in the WAVSS $TSPNA data sentence. All data packets must have the</span>
+<span class="sd">        same value.</span>
+<span class="sd">    freq0 : array_like</span>
+<span class="sd">        Initial frequency [Hz], from the value specified in the WAVSS</span>
+<span class="sd">        $TSPNA data sentence.</span>
+<span class="sd">    delta_freq : array_like</span>
+<span class="sd">        Frequency spacing [Hz], from the value specified in the WAVSS</span>
+<span class="sd">        $TSPNA data sentence.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fnd : ndarray</span>
+<span class="sd">        Frequency values for non-directional wave spectral bins</span>
+<span class="sd">        (WAVSTAT-FND_L1) [Hz]. Shape is (npackets, nfreq).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The frequency vector is reconstructed from the initial frequency and</span>
+<span class="sd">    uniform spacing reported by the instrument. All data packets share the</span>
+<span class="sd">    same number of non-directional frequency bins, so the reconstruction</span>
+<span class="sd">    is fully vectorized across packets.</span>
+<span class="sd">    """</span>
+    <span class="c1"># condition input variables</span>
+    <span class="n">nfreq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nfreq</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">freq0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">freq0</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">delta_freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">delta_freq</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># each set of data inputs will call for the same number of frequency values nfreq.</span>
+    <span class="c1"># therefore can vectorize (without using forloop as had to be done for the</span>
+    <span class="c1"># directional frequencies case) by setting up all variables as 2D arrays</span>
+    <span class="c1"># of size(npackets, nfreq).</span>
+    <span class="n">npackets</span> <span class="o">=</span> <span class="n">nfreq</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_freqs</span> <span class="o">=</span> <span class="n">nfreq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># orient arrays such that lead index indexes each set of data inputs</span>
+    <span class="n">freq0_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">freq0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_freqs</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">delta_freq_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">delta_freq</span><span class="p">,</span> <span class="p">(</span><span class="n">n_freqs</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">steps_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_freqs</span><span class="p">),</span> <span class="p">(</span><span class="n">npackets</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">fnd</span> <span class="o">=</span> <span class="n">freq0_2d</span> <span class="o">+</span> <span class="n">steps_2d</span> <span class="o">*</span> <span class="n">delta_freq_2d</span>
+
+    <span class="k">return</span> <span class="n">fnd</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-04-03</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.wav_functions.wav_triaxys_dir_freq" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">wav_triaxys_dir_freq</span><span class="p">(</span><span class="n">nfreq_nondir</span><span class="p">,</span> <span class="n">nfreq_dir</span><span class="p">,</span> <span class="n">freq0</span><span class="p">,</span> <span class="n">delta_freq</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute frequency values for directional wave spectral bins
+(WAVSTAT-FDS_L1) for the WAVSS instrument class.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>nfreq_nondir</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Number of non-directional wave frequency bins, from the value
+specified in the WAVSS $TSPNA data sentence. All data packets must
+have the same value; this sets the output array width.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>nfreq_dir</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Number of directional wave frequency bins, from the value specified
+in the WAVSS $TSPMA data sentence. May vary between data packets.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>freq0</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Initial frequency [Hz], from the value specified in the WAVSS
+$TSPMA data sentence.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>delta_freq</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Frequency spacing [Hz], from the value specified in the WAVSS
+$TSPMA data sentence.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>fds</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Frequency values for directional wave spectral bins
+(WAVSTAT-FDS_L1) [Hz]. Shape is (npackets, nfreq_nondir), with
+fill values in positions beyond nfreq_dir for each packet.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The number of active directional frequency bins (nfreq_dir) can vary
+between data packets as a function of measured ocean conditions at
+fixed instrument settings. The output array is sized to the fixed
+non-directional bin count, with fill values in unused positions. This
+variable-length behavior also affects the WAVSTAT-PDS and WAVSTAT-SDS
+arrays and the WAVSTAT-DDS_L2 product.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/wav_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wav_triaxys_dir_freq</span><span class="p">(</span><span class="n">nfreq_nondir</span><span class="p">,</span> <span class="n">nfreq_dir</span><span class="p">,</span> <span class="n">freq0</span><span class="p">,</span> <span class="n">delta_freq</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute frequency values for directional wave spectral bins</span>
+<span class="sd">    (WAVSTAT-FDS_L1) for the WAVSS instrument class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nfreq_nondir : array_like</span>
+<span class="sd">        Number of non-directional wave frequency bins, from the value</span>
+<span class="sd">        specified in the WAVSS $TSPNA data sentence. All data packets must</span>
+<span class="sd">        have the same value; this sets the output array width.</span>
+<span class="sd">    nfreq_dir : array_like</span>
+<span class="sd">        Number of directional wave frequency bins, from the value specified</span>
+<span class="sd">        in the WAVSS $TSPMA data sentence. May vary between data packets.</span>
+<span class="sd">    freq0 : array_like</span>
+<span class="sd">        Initial frequency [Hz], from the value specified in the WAVSS</span>
+<span class="sd">        $TSPMA data sentence.</span>
+<span class="sd">    delta_freq : array_like</span>
+<span class="sd">        Frequency spacing [Hz], from the value specified in the WAVSS</span>
+<span class="sd">        $TSPMA data sentence.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fds : ndarray</span>
+<span class="sd">        Frequency values for directional wave spectral bins</span>
+<span class="sd">        (WAVSTAT-FDS_L1) [Hz]. Shape is (npackets, nfreq_nondir), with</span>
+<span class="sd">        fill values in positions beyond nfreq_dir for each packet.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The number of active directional frequency bins (nfreq_dir) can vary</span>
+<span class="sd">    between data packets as a function of measured ocean conditions at</span>
+<span class="sd">    fixed instrument settings. The output array is sized to the fixed</span>
+<span class="sd">    non-directional bin count, with fill values in unused positions. This</span>
+<span class="sd">    variable-length behavior also affects the WAVSTAT-PDS and WAVSTAT-SDS</span>
+<span class="sd">    arrays and the WAVSTAT-DDS_L2 product.</span>
+<span class="sd">    """</span>
+    <span class="c1"># condition input variables.</span>
+    <span class="c1"># all delta_freq and freq0 values will be floats.</span>
+    <span class="n">nfreq_nondir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nfreq_nondir</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">nfreq_dir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nfreq_dir</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">freq0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">freq0</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">delta_freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">delta_freq</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># each data packet may call for a different number of directional frequency values nfreq_dir.</span>
+    <span class="c1"># however, this number will always be &lt;= nfreq_nondir, and all the nfreq_nondir values will be identical.</span>
+    <span class="n">npackets</span> <span class="o">=</span> <span class="n">nfreq_nondir</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">fds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">npackets</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">nfreq_nondir</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="o">+</span> <span class="n">fill_value</span>
+
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">npackets</span><span class="p">):</span>
+        <span class="n">fds</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nfreq_dir</span><span class="p">[</span><span class="n">ii</span><span class="p">]]</span> <span class="o">=</span> <span class="n">freq0</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nfreq_dir</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span> <span class="o">*</span> <span class="n">delta_freq</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">fds</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>The number of active directional frequency bins (nfreq_dir) can vary between
+data packets as a function of measured ocean conditions at fixed instrument
+settings. As a result, the size of the WAVSTAT-FDS_L1 output array, and
+correspondingly of the WAVSTAT-PDS and WAVSTAT-SDS arrays and the
+WAVSTAT-DDS_L2 product, is not fixed across packets. The output is sized to
+the (fixed) non-directional bin count, with fill values in unused positions.</p>
+<h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-04-03</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.wav_functions.wav_triaxys_buoymotion_time" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">wav_triaxys_buoymotion_time</span><span class="p">(</span><span class="n">ntp_timestamp</span><span class="p">,</span> <span class="n">ntime</span><span class="p">,</span> <span class="n">time0</span><span class="p">,</span> <span class="n">delta_time</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute NTP timestamps for buoy displacement measurements
+(WAVSTAT-MOTT_L1) for the WAVSS instrument class.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ntp_timestamp</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>NTP timestamp of the $TSPHA data sentence [s since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ntime</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Number of displacement time values, from the value specified in
+the WAVSS $TSPHA data sentence.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>time0</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Elapsed time between ntp_timestamp and the first displacement
+sample, from the value specified in the WAVSS $TSPHA data sentence
+("Initial Time") [s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>delta_time</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Time interval between successive displacement measurements, from
+the value specified in the WAVSS $TSPHA data sentence
+("Time Spacing") [s].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>mott</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>NTP timestamps corresponding to buoy displacement measurements
+(WAVSTAT-MOTT_L1) [s since 1900-01-01]. Shape is
+(npackets, ntime).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The time vector is reconstructed from the sentence timestamp, initial
+time offset, and uniform sampling interval reported by the instrument.
+The resulting timestamps correspond element-wise to the
+WAVSTAT-MOTX, WAVSTAT-MOTY, and WAVSTAT-MOTZ displacement arrays.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/wav_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wav_triaxys_buoymotion_time</span><span class="p">(</span><span class="n">ntp_timestamp</span><span class="p">,</span> <span class="n">ntime</span><span class="p">,</span> <span class="n">time0</span><span class="p">,</span> <span class="n">delta_time</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute NTP timestamps for buoy displacement measurements</span>
+<span class="sd">    (WAVSTAT-MOTT_L1) for the WAVSS instrument class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ntp_timestamp : array_like</span>
+<span class="sd">        NTP timestamp of the $TSPHA data sentence [s since 1900-01-01].</span>
+<span class="sd">    ntime : array_like</span>
+<span class="sd">        Number of displacement time values, from the value specified in</span>
+<span class="sd">        the WAVSS $TSPHA data sentence.</span>
+<span class="sd">    time0 : array_like</span>
+<span class="sd">        Elapsed time between ntp_timestamp and the first displacement</span>
+<span class="sd">        sample, from the value specified in the WAVSS $TSPHA data sentence</span>
+<span class="sd">        ("Initial Time") [s].</span>
+<span class="sd">    delta_time : array_like</span>
+<span class="sd">        Time interval between successive displacement measurements, from</span>
+<span class="sd">        the value specified in the WAVSS $TSPHA data sentence</span>
+<span class="sd">        ("Time Spacing") [s].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mott : ndarray</span>
+<span class="sd">        NTP timestamps corresponding to buoy displacement measurements</span>
+<span class="sd">        (WAVSTAT-MOTT_L1) [s since 1900-01-01]. Shape is</span>
+<span class="sd">        (npackets, ntime).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The time vector is reconstructed from the sentence timestamp, initial</span>
+<span class="sd">    time offset, and uniform sampling interval reported by the instrument.</span>
+<span class="sd">    The resulting timestamps correspond element-wise to the</span>
+<span class="sd">    WAVSTAT-MOTX, WAVSTAT-MOTY, and WAVSTAT-MOTZ displacement arrays.</span>
+<span class="sd">    """</span>
+    <span class="c1"># condition input variables;</span>
+    <span class="c1"># make sure time interval is not type integer</span>
+    <span class="n">ntime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ntime</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">time0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">time0</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">delta_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">delta_time</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'float'</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># this algorithm is almost identical to that contained in def wav_wavss_nondir_freq above.</span>
+    <span class="c1"># these are the dimensions of all the 2D arrays used in the calculation</span>
+    <span class="n">npackets</span> <span class="o">=</span> <span class="n">ntime</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_time_values</span> <span class="o">=</span> <span class="n">ntime</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># orient the lead index to iterate over the data packet number</span>
+    <span class="n">ntp0_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">ntp_timestamp</span> <span class="o">+</span> <span class="n">time0</span><span class="p">,</span> <span class="p">(</span><span class="n">n_time_values</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">delta_time_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">delta_time</span><span class="p">,</span> <span class="p">(</span><span class="n">n_time_values</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">steps_2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_time_values</span><span class="p">),</span> <span class="p">(</span><span class="n">npackets</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">mott</span> <span class="o">=</span> <span class="n">ntp0_2d</span> <span class="o">+</span> <span class="n">steps_2d</span> <span class="o">*</span> <span class="n">delta_time_2d</span>
+
+    <span class="k">return</span> <span class="n">mott</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-04-07</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.wav_functions.wav_triaxys_correct_mean_wave_direction" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">wav_triaxys_correct_mean_wave_direction</span><span class="p">(</span><span class="n">dir_raw</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_ts</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute mean wave direction corrected for magnetic declination
+(WAVSTAT-D_L2) for the WAVSS instrument class.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dir_raw</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected mean wave direction (WAVSTAT-D_L0) [deg, [0, 360)].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Deployment latitude of the instrument [decimal deg]. North is
+positive, South is negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Deployment longitude of the instrument [decimal deg]. East is
+positive, West is negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ntp_ts</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>NTP timestamp from the data particle [s since 1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>dir_cor</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Mean wave direction corrected for magnetic declination
+(WAVSTAT-D_L2) [deg, [0, 360)].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Magnetic declination is computed using the IGRF-14 model via
+generic_functions.magnetic_declination. The WAVSS is a surface sensor;
+depth defaults to 0 (sea level) in the declination calculation.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/wav_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wav_triaxys_correct_mean_wave_direction</span><span class="p">(</span><span class="n">dir_raw</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_ts</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute mean wave direction corrected for magnetic declination</span>
+<span class="sd">    (WAVSTAT-D_L2) for the WAVSS instrument class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir_raw : array_like</span>
+<span class="sd">        Uncorrected mean wave direction (WAVSTAT-D_L0) [deg, [0, 360)].</span>
+<span class="sd">    lat : array_like</span>
+<span class="sd">        Deployment latitude of the instrument [decimal deg]. North is</span>
+<span class="sd">        positive, South is negative.</span>
+<span class="sd">    lon : array_like</span>
+<span class="sd">        Deployment longitude of the instrument [decimal deg]. East is</span>
+<span class="sd">        positive, West is negative.</span>
+<span class="sd">    ntp_ts : array_like</span>
+<span class="sd">        NTP timestamp from the data particle [s since 1900-01-01].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dir_cor : ndarray</span>
+<span class="sd">        Mean wave direction corrected for magnetic declination</span>
+<span class="sd">        (WAVSTAT-D_L2) [deg, [0, 360)].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Magnetic declination is computed using the IGRF-14 model via</span>
+<span class="sd">    generic_functions.magnetic_declination. The WAVSS is a surface sensor;</span>
+<span class="sd">    depth defaults to 0 (sea level) in the declination calculation.</span>
+<span class="sd">    """</span>
+    <span class="c1"># calculate the magnetic declination using the IGRF-14 model</span>
+    <span class="c1"># the WAVSS is a surface wave sensor, so that height above sealevel = 0,</span>
+    <span class="c1"># which is the default value used in the magnetic_declination calculation.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">magnetic_declination</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_ts</span><span class="p">)</span>
+
+    <span class="c1"># directions are [0,360) degrees; and magnetic declinations can be positive or negative</span>
+    <span class="n">dir_cor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">dir_raw</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">360</span><span class="p">,</span> <span class="mi">360</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dir_cor</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-04-08</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.wav_functions.wav_triaxys_correct_directional_wave_direction" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">wav_triaxys_correct_directional_wave_direction</span><span class="p">(</span><span class="n">dir_raw</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_ts</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute directional wave directions corrected for magnetic declination
+(WAVSTAT-DDS_L2) for the WAVSS instrument class.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dir_raw</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected directional wave directions (WAVSTAT-DDS_L0)
+[deg, [0, 360)]. Expected as a 2-D array of shape
+(npackets, nfreq_nondir) with fill values in unused positions.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Deployment latitude of the instrument [decimal deg]. North is
+positive, South is negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Deployment longitude of the instrument [decimal deg]. East is
+positive, West is negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ntp_ts</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>NTP timestamp from the data particle [s since 1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>dir_cor</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Directional wave directions corrected for magnetic declination
+(WAVSTAT-DDS_L2) [deg, [0, 360)]. Same shape as dir_raw; fill
+values in unused positions are preserved.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Magnetic declination is computed using the IGRF-14 model via
+generic_functions.magnetic_declination. The WAVSS is a surface sensor;
+depth defaults to 0 (sea level) in the declination calculation.</p>
+<p>The number of active directional frequency bins can vary between data
+packets. Fill values mark unused positions; they are converted to NaN
+before the correction and restored afterward so that array operations
+do not alter those positions.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/wav_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wav_triaxys_correct_directional_wave_direction</span><span class="p">(</span><span class="n">dir_raw</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_ts</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute directional wave directions corrected for magnetic declination</span>
+<span class="sd">    (WAVSTAT-DDS_L2) for the WAVSS instrument class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir_raw : array_like</span>
+<span class="sd">        Uncorrected directional wave directions (WAVSTAT-DDS_L0)</span>
+<span class="sd">        [deg, [0, 360)]. Expected as a 2-D array of shape</span>
+<span class="sd">        (npackets, nfreq_nondir) with fill values in unused positions.</span>
+<span class="sd">    lat : array_like</span>
+<span class="sd">        Deployment latitude of the instrument [decimal deg]. North is</span>
+<span class="sd">        positive, South is negative.</span>
+<span class="sd">    lon : array_like</span>
+<span class="sd">        Deployment longitude of the instrument [decimal deg]. East is</span>
+<span class="sd">        positive, West is negative.</span>
+<span class="sd">    ntp_ts : array_like</span>
+<span class="sd">        NTP timestamp from the data particle [s since 1900-01-01].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dir_cor : ndarray</span>
+<span class="sd">        Directional wave directions corrected for magnetic declination</span>
+<span class="sd">        (WAVSTAT-DDS_L2) [deg, [0, 360)]. Same shape as dir_raw; fill</span>
+<span class="sd">        values in unused positions are preserved.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Magnetic declination is computed using the IGRF-14 model via</span>
+<span class="sd">    generic_functions.magnetic_declination. The WAVSS is a surface sensor;</span>
+<span class="sd">    depth defaults to 0 (sea level) in the declination calculation.</span>
+
+<span class="sd">    The number of active directional frequency bins can vary between data</span>
+<span class="sd">    packets. Fill values mark unused positions; they are converted to NaN</span>
+<span class="sd">    before the correction and restored afterward so that array operations</span>
+<span class="sd">    do not alter those positions.</span>
+<span class="sd">    """</span>
+    <span class="c1"># assume that the dir_raw data product comes in as a 2D numpy array with fill values</span>
+    <span class="c1"># appropriately placed to account for the cases in which the number of reported</span>
+    <span class="c1"># directional wave frequency bins differs from data packet to data packet (and is</span>
+    <span class="c1"># less than the number of reported non-directional frequency bins).</span>
+    <span class="n">dir_raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dir_raw</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># change fill values to Nans, so that subsequent array operations will leave the</span>
+    <span class="c1"># Nan entries unchanged.</span>
+    <span class="n">dir_raw</span><span class="p">[</span><span class="n">dir_raw</span> <span class="o">==</span> <span class="n">fill_value</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="c1"># calculate the magnetic declination using the IGRF-14 model</span>
+    <span class="c1"># the WAVSS is a surface wave sensor, so that height above sealevel = 0,</span>
+    <span class="c1"># which is the default value used in the magnetic_declination calculation.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">magnetic_declination</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_ts</span><span class="p">)</span>
+
+    <span class="c1"># theta in general will be a vector, so replicate it into a matrix to match the dir_raw dimensions.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="p">(</span><span class="n">dir_raw</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+    <span class="c1"># directions are [0,360) degrees; and magnetic declinations can be positive or negative</span>
+    <span class="n">dir_cor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">dir_raw</span> <span class="o">+</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">360</span><span class="p">,</span> <span class="mi">360</span><span class="p">)</span>
+
+    <span class="c1"># replace Nans with fills</span>
+    <span class="n">dir_cor</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">dir_cor</span><span class="p">)]</span> <span class="o">=</span> <span class="n">fill_value</span>
+
+    <span class="k">return</span> <span class="n">dir_cor</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_1">Additional Notes</h4>
+<p>The variable-length behavior of nfreq_dir described in the Additional Notes
+for <code>wav_triaxys_dir_freq</code> applies equally here: the WAVSTAT-DDS_L2 output
+array is sized to the non-directional bin count, with fill values in unused
+positions. The correction preserves fill-valued positions by converting them
+to NaN before applying the rotation and restoring fills afterward.</p>
+<h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-04-09</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.wav_functions.magnetic_correction_einsum" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">magnetic_correction_einsum</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Correct velocity or displacement profiles for magnetic declination
+using a vectorized 2-D rotation.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>theta</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Magnetic declination at the measurement location [deg]. One value
+per data packet (ensemble).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>u</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected eastward velocity or displacement profiles. Shape must
+be (npackets, nsamples).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>v</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected northward velocity or displacement profiles. Same
+shape as u.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>u_cor</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Eastward component corrected for magnetic declination.</p>
+              </div>
+            </li>
+            <li>
+<b><code>v_cor</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Northward component corrected for magnetic declination.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>This function handles the vectorized case of one magnetic declination
+value per ensemble of (u, v) pairs, i.e. theta=f(i) with u=f(i,j)
+and v=f(i,j). It uses numpy.einsum to apply the rotation matrix to
+all ensembles without a Python for loop.</p>
+<p>The executable code is identical to magnetic_correction_vctrzd in
+adcp_functions.py. It is reproduced here to avoid a cross-module
+dependency within wav_functions.py. The ADCP DPS citations below
+reflect the origin of the rotation algorithm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/wav_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">magnetic_correction_einsum</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Correct velocity or displacement profiles for magnetic declination</span>
+<span class="sd">    using a vectorized 2-D rotation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    theta : array_like</span>
+<span class="sd">        Magnetic declination at the measurement location [deg]. One value</span>
+<span class="sd">        per data packet (ensemble).</span>
+<span class="sd">    u : array_like</span>
+<span class="sd">        Uncorrected eastward velocity or displacement profiles. Shape must</span>
+<span class="sd">        be (npackets, nsamples).</span>
+<span class="sd">    v : array_like</span>
+<span class="sd">        Uncorrected northward velocity or displacement profiles. Same</span>
+<span class="sd">        shape as u.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    u_cor : ndarray</span>
+<span class="sd">        Eastward component corrected for magnetic declination.</span>
+<span class="sd">    v_cor : ndarray</span>
+<span class="sd">        Northward component corrected for magnetic declination.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function handles the vectorized case of one magnetic declination</span>
+<span class="sd">    value per ensemble of (u, v) pairs, i.e. theta=f(i) with u=f(i,j)</span>
+<span class="sd">    and v=f(i,j). It uses numpy.einsum to apply the rotation matrix to</span>
+<span class="sd">    all ensembles without a Python for loop.</span>
+
+<span class="sd">    The executable code is identical to magnetic_correction_vctrzd in</span>
+<span class="sd">    adcp_functions.py. It is reproduced here to avoid a cross-module</span>
+<span class="sd">    dependency within wav_functions.py. The ADCP DPS citations below</span>
+<span class="sd">    reflect the origin of the rotation algorithm.</span>
+<span class="sd">    """</span>
+    <span class="c1"># force shapes of inputs to arrays</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="n">theta_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">cosT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_rad</span><span class="p">)</span>
+    <span class="n">sinT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_rad</span><span class="p">)</span>
+
+    <span class="c1"># set up rotation matrix</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">cosT</span><span class="p">,</span> <span class="n">sinT</span><span class="p">],</span>
+                  <span class="p">[</span><span class="o">-</span><span class="n">sinT</span><span class="p">,</span> <span class="n">cosT</span><span class="p">]])</span>
+
+    <span class="c1"># roll axes so that the lead index represents data packet #.</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># construct the uncorrected velocity matrix.</span>
+    <span class="c1"># the coordinate system is 2D, so the middle dimension is sized at 2.</span>
+    <span class="n">uv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># load the coordinates to be rotated into the appropriate slices</span>
+    <span class="n">uv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">u</span>
+    <span class="n">uv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="c1"># the Einstein summation is here configured to do the matrix</span>
+    <span class="c1"># multiplication uv_cor(i,k) = M(i,j) * uv(j,k) on each slice h.</span>
+    <span class="n">uv_cor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'hij,hjk-&gt;hik'</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">uv</span><span class="p">)</span>
+
+    <span class="n">u_cor</span> <span class="o">=</span> <span class="n">uv_cor</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">v_cor</span> <span class="o">=</span> <span class="n">uv_cor</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">u_cor</span><span class="p">,</span> <span class="n">v_cor</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_2">Additional Notes</h4>
+<p>The executable code in this function is identical to
+<code>magnetic_correction_vctrzd</code> in <code>adcp_functions.py</code>. It was written
+separately to handle the vectorized (i, j) case of one magnetic declination
+per ensemble of (u, v) pairs without a for loop. The ADCP DPS citations in
+the docstring reflect the origin of the rotation algorithm; the function
+operates identically for (X, Y) displacement coordinates as for (u, v)
+velocity components.</p>
+<h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-04-04</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wrapper-functions">Wrapper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.wav_functions.wav_triaxys_magcor_buoymotion_x" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">wav_triaxys_magcor_buoymotion_x</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_timestamp</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for WAVSTAT-MOTX_L1. Returns eastward buoy
+displacement corrected for magnetic declination [m].</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>x</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected eastward buoy displacement (WAVSTAT-MOTX_L0) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>y</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected northward buoy displacement (WAVSTAT-MOTY_L0) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Deployment latitude of the instrument [decimal deg]. North is
+positive, South is negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Deployment longitude of the instrument [decimal deg]. East is
+positive, West is negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ntp_timestamp</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>NTP timestamp of the $TSPHA data sentence [s since 1900-01-01].
+One timestamp per displacement ensemble is sufficient; the maximum
+sampling period (35 min) is short enough that magnetic declination
+does not change meaningfully within an ensemble.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>motx</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Eastward buoy displacement corrected for magnetic declination
+(WAVSTAT-MOTX_L1) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>magnetic_correction_einsum : Core rotation algorithm; returns both
+    corrected components.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/wav_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wav_triaxys_magcor_buoymotion_x</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_timestamp</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    OOI single-output wrapper for WAVSTAT-MOTX_L1. Returns eastward buoy</span>
+<span class="sd">    displacement corrected for magnetic declination [m].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : array_like</span>
+<span class="sd">        Uncorrected eastward buoy displacement (WAVSTAT-MOTX_L0) [m].</span>
+<span class="sd">    y : array_like</span>
+<span class="sd">        Uncorrected northward buoy displacement (WAVSTAT-MOTY_L0) [m].</span>
+<span class="sd">    lat : array_like</span>
+<span class="sd">        Deployment latitude of the instrument [decimal deg]. North is</span>
+<span class="sd">        positive, South is negative.</span>
+<span class="sd">    lon : array_like</span>
+<span class="sd">        Deployment longitude of the instrument [decimal deg]. East is</span>
+<span class="sd">        positive, West is negative.</span>
+<span class="sd">    ntp_timestamp : array_like</span>
+<span class="sd">        NTP timestamp of the $TSPHA data sentence [s since 1900-01-01].</span>
+<span class="sd">        One timestamp per displacement ensemble is sufficient; the maximum</span>
+<span class="sd">        sampling period (35 min) is short enough that magnetic declination</span>
+<span class="sd">        does not change meaningfully within an ensemble.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    motx : ndarray</span>
+<span class="sd">        Eastward buoy displacement corrected for magnetic declination</span>
+<span class="sd">        (WAVSTAT-MOTX_L1) [m].</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    magnetic_correction_einsum : Core rotation algorithm; returns both</span>
+<span class="sd">        corrected components.</span>
+<span class="sd">    """</span>
+    <span class="c1"># force shapes of inputs to arrays</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+    <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
+    <span class="n">ntp_timestamp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">ntp_timestamp</span><span class="p">)</span>
+
+    <span class="c1"># calculate the magnetic declination using the IGRF-14 model.</span>
+    <span class="c1"># the WAVSS surface wave sensor is at sealevel, which is the default z value for mag dec.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">magnetic_declination</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_timestamp</span><span class="p">)</span>
+
+    <span class="c1"># correct for declination by rotating coordinates.</span>
+    <span class="c1"># the function magnetic_correction_einsum was written to correct (u,v) velocities, but</span>
+    <span class="c1"># it also applies to (E,N) coordinates.</span>
+    <span class="n">motx</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">magnetic_correction_einsum</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">motx</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-04-10</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.wav_functions.wav_triaxys_magcor_buoymotion_y" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">wav_triaxys_magcor_buoymotion_y</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_timestamp</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for WAVSTAT-MOTY_L1. Returns northward buoy
+displacement corrected for magnetic declination [m].</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>x</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected eastward buoy displacement (WAVSTAT-MOTX_L0) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>y</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected northward buoy displacement (WAVSTAT-MOTY_L0) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Deployment latitude of the instrument [decimal deg]. North is
+positive, South is negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Deployment longitude of the instrument [decimal deg]. East is
+positive, West is negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ntp_timestamp</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>NTP timestamp of the $TSPHA data sentence [s since 1900-01-01].
+One timestamp per displacement ensemble is sufficient; the maximum
+sampling period (35 min) is short enough that magnetic declination
+does not change meaningfully within an ensemble.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>moty</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Northward buoy displacement corrected for magnetic declination
+(WAVSTAT-MOTY_L1) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>magnetic_correction_einsum : Core rotation algorithm; returns both
+    corrected components.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/wav_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wav_triaxys_magcor_buoymotion_y</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_timestamp</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    OOI single-output wrapper for WAVSTAT-MOTY_L1. Returns northward buoy</span>
+<span class="sd">    displacement corrected for magnetic declination [m].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : array_like</span>
+<span class="sd">        Uncorrected eastward buoy displacement (WAVSTAT-MOTX_L0) [m].</span>
+<span class="sd">    y : array_like</span>
+<span class="sd">        Uncorrected northward buoy displacement (WAVSTAT-MOTY_L0) [m].</span>
+<span class="sd">    lat : array_like</span>
+<span class="sd">        Deployment latitude of the instrument [decimal deg]. North is</span>
+<span class="sd">        positive, South is negative.</span>
+<span class="sd">    lon : array_like</span>
+<span class="sd">        Deployment longitude of the instrument [decimal deg]. East is</span>
+<span class="sd">        positive, West is negative.</span>
+<span class="sd">    ntp_timestamp : array_like</span>
+<span class="sd">        NTP timestamp of the $TSPHA data sentence [s since 1900-01-01].</span>
+<span class="sd">        One timestamp per displacement ensemble is sufficient; the maximum</span>
+<span class="sd">        sampling period (35 min) is short enough that magnetic declination</span>
+<span class="sd">        does not change meaningfully within an ensemble.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    moty : ndarray</span>
+<span class="sd">        Northward buoy displacement corrected for magnetic declination</span>
+<span class="sd">        (WAVSTAT-MOTY_L1) [m].</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    magnetic_correction_einsum : Core rotation algorithm; returns both</span>
+<span class="sd">        corrected components.</span>
+<span class="sd">    """</span>
+    <span class="c1"># force shapes of inputs to arrays</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+    <span class="n">lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
+    <span class="n">ntp_timestamp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">ntp_timestamp</span><span class="p">)</span>
+
+    <span class="c1"># calculate the magnetic declination using the IGRF-14 model.</span>
+    <span class="c1"># the WAVSS surface wave sensor is at sealevel, which is the default z value for mag dec.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">magnetic_declination</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">ntp_timestamp</span><span class="p">)</span>
+
+    <span class="c1"># correct for declination by rotating coordinates.</span>
+    <span class="c1"># the function magnetic_correction_einsum was written to correct (u,v) velocities, but</span>
+    <span class="c1"># it also applies to (E,N) coordinates.</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">moty</span> <span class="o">=</span> <span class="n">magnetic_correction_einsum</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">moty</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-04-10</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00450_Data_Product_SPEC_WAVSTAT_OOI.pdf">OOI (2012). Data Product Specification for Wave Statistics. Document Control
+Number 1341-00450.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf">OOI (2020). Data Product Specification for Velocity Profile and Echo
+Intensity. Document Control Number 1341-00750.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00760_Data_Product_SPEC_VELTURB_ECHOINT_OOI.pdf">OOI (2013). Data Product Specification for Turbulent Velocity Profile and
+Echo Intensity. Document Control Number 1341-00760.</a></p>
+<p>Alken, P., Thebault, E., Beggan, C.D., et al. (2021). International
+Geomagnetic Reference Field: the thirteenth generation. <em>Earth Planets Space</em>,
+73, 49. <a href="https://doi.org/10.1186/s40623-020-01288-x">https://doi.org/10.1186/s40623-020-01288-x</a></p>
+<p>Strom, K.M., and Reistad, H. (2024). ppigrf: Python package for computing
+the International Geomagnetic Reference Field (IGRF).
+<a href="https://github.com/IAGA-VMOD/ppigrf">https://github.com/IAGA-VMOD/ppigrf</a></p>
+<p>AXYS Technologies Inc. <em>TRIAXYS OEM Directional Wave Sensor, User's Manual.</em>
+Sidney, BC: AXYS Technologies Inc. May 2005.</p>
+<p>Teledyne RD Instruments. <em>WavesMon v3.08 User's Guide.</em> P/N 957-6232-00.
+Teledyne RD Instruments.</p>
+<p>Teledyne RD Instruments. <em>Waves Primer: Wave Measurements and the RDI ADCP
+Waves Array Technique.</em> Teledyne RD Instruments.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../adcp_functions/" class="btn btn-neutral float-left" title="ADCP Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../generic_functions/" class="btn btn-neutral float-right" title="Generic Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../adcp_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../generic_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

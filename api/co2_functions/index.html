@@ -1,0 +1,2499 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/co2_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>CO2 Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "CO2 Functions";
+        var mkdocs_page_input_path = "api/co2_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/co2_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">CO2 Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pco2wat_l1-partial-pressure-of-co2-in-seawater">PCO2WAT_L1 — Partial Pressure of CO2 in Seawater</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pco2atm_l1-and-pco2ssw_l1-pco2-in-air-and-surface-seawater">PCO2ATM_L1 and PCO2SSW_L1 — pCO2 in Air and Surface Seawater</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#co2flux_l2-air-sea-flux-of-co2">CO2FLUX_L2 — Air-Sea Flux of CO2</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#wrapper-functions">Wrapper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">PH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">CO2 Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="co2-functions">CO2 Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys two families of CO<span class="arithmatex">\(_2\)</span> instruments
+across its surface and subsurface platforms. The table below lists the OOI
+instrument classes covered by this module.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PCO2W</td>
+<td>Sunburst SAMI-CO2</td>
+<td>Moored (fixed depth) and Profiling</td>
+<td>pCO<span class="arithmatex">\(_2\)</span>, Seawater</td>
+</tr>
+<tr>
+<td>PCO2A</td>
+<td>Pro-Oceanus CO2-Pro</td>
+<td>Surface buoys</td>
+<td>pCO<span class="arithmatex">\(_2\)</span>, Air-Sea</td>
+</tr>
+</tbody>
+</table>
+<p><code>co2_functions.py</code> processes data from both instrument classes and computes
+a third derived product, CO<span class="arithmatex">\(_2\)</span> flux from the ocean to the atmosphere 
+(CO2FLUX_L2), using auxiliary bulk meteorology data from the METBK instrument 
+class. Within the OOI data system, PCO2W instruments fall under the Water
+Column science regime and the Dissolved CO<span class="arithmatex">\(_2\)</span> category. PCO2A instruments
+fall under the Air-Sea Interface and Surface Water regimes and the same
+Dissolved CO<span class="arithmatex">\(_2\)</span> category.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00490</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00490_Data_Product_Spec_PCO2WAT_OOI-2.pdf">OOI (2018). Data Product Specification for Partial Pressure of CO2 in Seawater.</a></td>
+</tr>
+<tr>
+<td>1341-00260</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00260_Data_Product_SPEC_PCO2SSW_PCO2ATM_OOI.pdf">OOI (2012). Data Product Specification for Partial Pressure of CO2 in Air and Surface Seawater.</a></td>
+</tr>
+<tr>
+<td>1341-00270</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00270_Data_Product_SPEC_CO2FLUX_OOI.pdf">OOI (2012). Data Product Specification for Flux of CO2 from the Ocean into the Atmosphere.</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="pco2wat_l1-partial-pressure-of-co2-in-seawater">PCO2WAT_L1 — Partial Pressure of CO<sub>2</sub> in Seawater</h3>
+<p>PCO2WAT_L1 is the partial pressure of CO<span class="arithmatex">\(_2\)</span> (pCO<span class="arithmatex">\(_2\)</span>, <span class="arithmatex">\(\mu\)</span>atm) in 
+seawater at depth, computed from the <a href="https://www.sunburstsensors.com/products/oceanographic-carbon-dioxide-sensor.html">Sunburst SAMI-CO2</a> (PCO2W). The SAMI-CO2 
+uses a bromothymol blue (BTB) pH indicator solution that equilibrates with the
+ambient seawater through a permeable silicone membrane. The equilibrated
+indicator solution passes through an optical cell where absorbance is
+measured at 434 nm and 620 nm — the peak absorbance wavelengths for the
+protonated and deprotonated forms of the indicator. Periodic blank
+measurements (every 3.5 days) correct for drift in the electro-optical
+system.</p>
+<h4 id="l0-inputs-and-blank-normalization">L0 Inputs and Blank Normalization</h4>
+<p>The SAMI-CO2 outputs two record types:</p>
+<ul>
+<li><strong>Type 4</strong> — regular measurement (used to compute PCO2WAT_L1)</li>
+<li><strong>Type 5</strong> — blank measurement (used to correct Type 4 records)</li>
+</ul>
+<p>Each record contains a 434 nm ratio (<code>Ratio434</code>), a 620 nm ratio (<code>Ratio620</code>), 
+and a raw thermistor count (<code>Therm</code>). Raw blank counts from Type 5 records are
+normalized to dimensionless ratios by dividing by 16384:</p>
+<div class="arithmatex">\[A_{434,blank} = \frac{\text{Ratio434}_{blank}}{16384}\]</div>
+<div class="arithmatex">\[A_{620,blank} = \frac{\text{Ratio620}_{blank}}{16384}\]</div>
+<h4 id="thermistor-temperature">Thermistor Temperature</h4>
+<p>The raw thermistor count is converted to degrees C. The conversion depends
+on the SAMI hardware generation (12-bit or 14-bit ADC). For 12-bit hardware
+(full-scale count <span class="arithmatex">\(= 4096\)</span>):</p>
+<div class="arithmatex">\[r_t = \ln\left(\frac{\text{Therm}}{4096 - \text{Therm}} \times 17400\right)\]</div>
+<p>For 14-bit hardware (full-scale count <span class="arithmatex">\(= 16384\)</span>):</p>
+<div class="arithmatex">\[r_t = \ln\left(\frac{\text{Therm}}{16384 - \text{Therm}} \times 17400\right)\]</div>
+<p>In both cases, temperature is then:</p>
+<div class="arithmatex">\[T_C = \frac{1}{0.0010183 + 0.000241 \times r_t + 1.5 \times 10^{-7} \times {r_t}^3} - 273.15\]</div>
+<h4 id="pco2wat_l1-calculation">PCO2WAT_L1 Calculation</h4>
+<p>The L1 pCO<span class="arithmatex">\(_2\)</span> is computed from the blank-corrected absorbances and a
+temperature-corrected SAMI response. The blank-corrected absorbances at
+each wavelength are:</p>
+<div class="arithmatex">\[A_{434} = -\log_{10}\left(\frac{\text{Ratio434}_{meas}}{A_{434,blank}}\right)\]</div>
+<div class="arithmatex">\[A_{620} = -\log_{10}\left(\frac{\text{Ratio620}_{meas}}{A_{620,blank}}\right)\]</div>
+<p>The absorbance ratio is:</p>
+<div class="arithmatex">\[R = \frac{A_{620}}{A_{434}}\]</div>
+<p>The SAMI response (<span class="arithmatex">\(RCO_2\)</span>) and intermediate temperature-correction
+terms are:</p>
+<div class="arithmatex">\[RCO_2 = -\log_{10}\left(\frac{R - e_1}{e_2 - e_3 \times R}\right)\]</div>
+<div class="arithmatex">\[RCO_2 = RCO_2 + 0.007 \times (T_C - \text{CalT})\]</div>
+<div class="arithmatex">\[T_{coeff} = 0.0075778 + 0.0012389 \times RCO_2 - 0.00048757 \times {RCO_2}^2\]</div>
+<div class="arithmatex">\[Tcor\_RCO_2 = RCO_2 + T_{coeff} \times (T_C - \text{CalT})\]</div>
+<p>The final pCO<span class="arithmatex">\(_2\)</span> is obtained from the quadratic calibration curve:</p>
+<div class="arithmatex">\[qcc = \frac{-\text{CalB} + \sqrt{\text{CalB}^2 - 4 \times \text{CalA} \times (\text{CalC} - Tcor\_RCO_2)}}{2 \times \text{CalA}}\]</div>
+<div class="arithmatex">\[pCO_2 = 10^{qcc}\]</div>
+<p>The equilibration constants <span class="arithmatex">\(e_1 = 0.0043\)</span>, <span class="arithmatex">\(e_2 = 2.136\)</span>, <span class="arithmatex">\(e_3 = 0.2105\)</span>
+are fixed values provided by Sunburst Sensors based on laboratory
+determinations with the BTB indicator batch and are not recalculated per
+calibration cycle.</p>
+<p>The instrument-specific calibration coefficients CalT, CalA, CalB, and CalC
+are provided by the manufacturer after each calibration or refurbishment
+cycle and are made available to the <a href="https://github.com/oceanobservatories/asset-management/">OOI Asset Management database via CSV files 
+uploaded to GitHub</a>.</p>
+<p><strong>Algorithm note:</strong> The Python implementation corrects errors present in the
+vendor-supplied Matlab example code distributed with DPS 1341-00490
+(Appendix A, 2018).</p>
+<p>Output accuracy: <span class="arithmatex">\(\pm 3 \times \mu\text{atm}\)</span>; precision <span class="arithmatex">\(&lt;1 \times \mu\text{atm}\)</span>
+(DPS 1341-00490, Appendix B).</p>
+<hr />
+<h3 id="pco2atm_l1-and-pco2ssw_l1-pco2-in-air-and-surface-seawater">PCO2ATM_L1 and PCO2SSW_L1 — pCO<sub>2</sub> in Air and Surface Seawater</h3>
+<p>PCO2ATM_L1 and PCO2SSW_L1 are the partial pressures of CO<span class="arithmatex">\(_2\)</span> (pCO<span class="arithmatex">\(_2\)</span>, <span class="arithmatex">\(\mu\)</span>atm) in
+atmosphere and surface seawater, respectively. Both are computed from the
+<a href="https://pro-oceanus.com/products/pro-series/co2-pro-atm">Pro-Oceanus CO2-Pro Atmosphere</a> (PCO2A) instrument, which determines 
+the CO<span class="arithmatex">\(_2\)</span> mole fraction (xCO<span class="arithmatex">\(_2\)</span>, in ppm) internally by measuring the infrared 
+absorbance of CO<span class="arithmatex">\(_2\)</span> and compensating for pressure, temperature, and humidity
+using onboard firmware. The instrument alternates between air sampling 
+(producing XCO2ATM_L0) and water sampling (producing XCO2SSW_L0).</p>
+<p>The xCO<span class="arithmatex">\(_2\)</span> mole fractions and the internal gas stream pressure (PRESAIR_L0)
+are converted to pCO<span class="arithmatex">\(_2\)</span> (<span class="arithmatex">\(\mu\)</span>atm) using:</p>
+<div class="arithmatex">\[pCO_2 = \frac{\text{xCO}_2 \times p}{\text{STD}}\]</div>
+<p>where <span class="arithmatex">\(p\)</span> is PRESAIR_L0 in mbar and <span class="arithmatex">\(\text{STD} = 1013.25\)</span> mbar/atm, the
+standard atmospheric pressure. Because xCO<span class="arithmatex">\(_2\)</span> is in ppm
+(<span class="arithmatex">\(10^{-6}\)</span>), the result is directly in <span class="arithmatex">\(\mu\)</span>atm without further
+scaling.</p>
+<p>The same function <code>pco2_ppressure</code> computes both PCO2ATM_L1 and PCO2SSW_L1;
+the distinction between air and surface seawater measurements is determined
+by the L0 input supplied (XCO2ATM or XCO2SSW) and the record type flag in
+the serial data stream.</p>
+<p>Output accuracy: <span class="arithmatex">\(\pm 1 \times \mu\text{atm}\)</span>; precision <span class="arithmatex">\(\pm 0.01 \times \mu\text{atm}\)</span>
+(DPS 1341-00260, Appendix B).</p>
+<hr />
+<h3 id="co2flux_l2-air-sea-flux-of-co2">CO2FLUX_L2 — Air-Sea Flux of CO<sub>2</sub></h3>
+<p>CO2FLUX_L2 is the estimate of the flux of CO<span class="arithmatex">\(_2\)</span> across the air-sea 
+interface. It is computed from PCO2SSW_L1 and PCO2ATM_L1 and select 
+L1/L2 bulk meteorology inputs (from the METBK): sea surface
+temperature (TEMPSRF_L1), sea surface salinity (SALSURF_L2), and wind
+speed at 10 m height (WIND10M_L2).</p>
+<p>The flux is positive when directed from the ocean to the atmosphere. The 
+computation follows these steps:</p>
+<p><strong>Step 1</strong> — Convert pCO<span class="arithmatex">\(_2\)</span> (for both air and water) from <span class="arithmatex">\(\mu\)</span>atm to atm.</p>
+<div class="arithmatex">\[pCO_2,air = pCO_2,air \div 10^6\]</div>
+<div class="arithmatex">\[pCO_2,water = pCO_2,water \div 10^6\]</div>
+<p><strong>Step 2</strong> — Compute the Schmidt number <span class="arithmatex">\(S_c\)</span> from sea surface temperature
+<span class="arithmatex">\(t\)</span> (<span class="arithmatex">\(^\circ\)</span>C) (Wanninkhof, 1992, Table A1):</p>
+<div class="arithmatex">\[S_c = 2073.1 - 125.62 \times t + 3.6276 \times t^2 - 0.043219 \times t^3\]</div>
+<p><strong>Step 3</strong> — Compute the gas transfer velocity <span class="arithmatex">\(k\)</span> in cm h<span class="arithmatex">\(^{-1}\)</span> and
+convert to m s<span class="arithmatex">\(^{-1}\)</span> (Sweeney et al., 2007, Fig. 3 and Table 1):</p>
+<div class="arithmatex">\[k = \frac{0.27 \times {u_{10}}^2 \times \sqrt{660 \div S_c}}{100 \times 3600}\]</div>
+<p>where <span class="arithmatex">\(u_{10}\)</span> is the 10 m wind speed in m s<span class="arithmatex">\(^{-1}\)</span>.</p>
+<p><strong>Step 4</strong> — Compute absolute temperature <span class="arithmatex">\(T = t + 273.15\)</span> (K), then
+compute CO<span class="arithmatex">\(_2\)</span> solubility <span class="arithmatex">\(K_0\)</span> in mol atm<span class="arithmatex">\(^{-1}\)</span> m<span class="arithmatex">\(^{-3}\)</span> using the volume
+formulation (Weiss, 1974, Eqn. 12 and Table I):</p>
+<div class="arithmatex">\[T100 = T \div 100\]</div>
+<div class="arithmatex">\[\begin{align}
+K_0 &amp;= 1000 \times \exp(-58.0931 + 90.5069 \times (100 / T) + 22.2940 \times \ln(T100) \\
+&amp;\quad + s \times (0.027766 - 0.025888 \times T100 + 0.0050578 \times T100^2))
+\end{align}\]</div>
+<p>where <span class="arithmatex">\(s\)</span> is the sea surface salinity.</p>
+<p><strong>Step 5</strong> — Compute the flux (Wanninkhof, 1992, Eqn. A2):</p>
+<div class="arithmatex">\[F = k \times K_0 \times (pCO_2,water - pCO_2,air)\]</div>
+<p>The inherent uncertainty of the flux estimate is approximately 10%
+(DPS 1341-00270, Appendix B).</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.co2_functions.pco2_calc_pco2" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pco2_calc_pco2</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="n">therm</span><span class="p">,</span> <span class="n">ea434</span><span class="p">,</span> <span class="n">eb434</span><span class="p">,</span> <span class="n">ea620</span><span class="p">,</span> <span class="n">eb620</span><span class="p">,</span> <span class="n">calt</span><span class="p">,</span> <span class="n">cala</span><span class="p">,</span> <span class="n">calb</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">a434blank</span><span class="p">,</span> <span class="n">a620blank</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute PCO2WAT_L1 from the Sunburst SAMI2-CO2 (PCO2W).</p>
+<p>Calculates the OOI Level 1 Partial Pressure of CO2 in Seawater
+(PCO2WAT_L1) from raw light measurements, thermistor temperature,
+blank corrections, and factory calibration coefficients.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>light</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>, <span title="M">M</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Array of raw light measurements from the SAMI2-CO2 instrument.
+Column 6 is Ratio434 and column 7 is Ratio620.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>PCO2W thermistor temperature (CO2THRM_L1) [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ea434</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eb434</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ea620</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eb620</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>calt</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 5 (temperature reference).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cala</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 6.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>calb</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 7.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>calc</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 8.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a434blank</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Normalized blank at 434 nm (from pco2_blank) [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a620blank</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Normalized blank at 620 nm (from pco2_blank) [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>pco2</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Partial pressure of CO2 in seawater (PCO2WAT_L1) [uatm].
+Blank records (where Ratio434 == Ratio620 after blank
+correction) are set to the system fill value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The e constants (e1=0.0043, e2=2.136, e3=0.2105) are fixed values
+provided by Sunburst Sensors based on lab determinations with the
+bromothymol blue (BTB) indicator solution. They are not recalculated
+per calibration cycle. The final pCO2 is computed from a quadratic
+calibration curve using coefficients CalA, CalB, and CalC (cala,
+calb, calc). All calibration coefficients are from factory
+calibration sheets.</p>
+<p>The Python implementation corrects errors present in the vendor-
+supplied Matlab code (DPS Appendix A, 2018). The corrected algorithm
+was verified against the vendor and is authoritative.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/co2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pco2_calc_pco2</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="n">therm</span><span class="p">,</span> <span class="n">ea434</span><span class="p">,</span> <span class="n">eb434</span><span class="p">,</span> <span class="n">ea620</span><span class="p">,</span> <span class="n">eb620</span><span class="p">,</span>
+                   <span class="n">calt</span><span class="p">,</span> <span class="n">cala</span><span class="p">,</span> <span class="n">calb</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">a434blank</span><span class="p">,</span> <span class="n">a620blank</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute PCO2WAT_L1 from the Sunburst SAMI2-CO2 (PCO2W).</span>
+
+<span class="sd">    Calculates the OOI Level 1 Partial Pressure of CO2 in Seawater</span>
+<span class="sd">    (PCO2WAT_L1) from raw light measurements, thermistor temperature,</span>
+<span class="sd">    blank corrections, and factory calibration coefficients.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    light : array_like, shape (N, M)</span>
+<span class="sd">        Array of raw light measurements from the SAMI2-CO2 instrument.</span>
+<span class="sd">        Column 6 is Ratio434 and column 7 is Ratio620.</span>
+<span class="sd">    therm : array_like</span>
+<span class="sd">        PCO2W thermistor temperature (CO2THRM_L1) [degC].</span>
+<span class="sd">    ea434 : array_like</span>
+<span class="sd">        Calibration coefficient 1.</span>
+<span class="sd">    eb434 : array_like</span>
+<span class="sd">        Calibration coefficient 2.</span>
+<span class="sd">    ea620 : array_like</span>
+<span class="sd">        Calibration coefficient 3.</span>
+<span class="sd">    eb620 : array_like</span>
+<span class="sd">        Calibration coefficient 4.</span>
+<span class="sd">    calt : array_like</span>
+<span class="sd">        Calibration coefficient 5 (temperature reference).</span>
+<span class="sd">    cala : array_like</span>
+<span class="sd">        Calibration coefficient 6.</span>
+<span class="sd">    calb : array_like</span>
+<span class="sd">        Calibration coefficient 7.</span>
+<span class="sd">    calc : array_like</span>
+<span class="sd">        Calibration coefficient 8.</span>
+<span class="sd">    a434blank : array_like</span>
+<span class="sd">        Normalized blank at 434 nm (from pco2_blank) [unitless].</span>
+<span class="sd">    a620blank : array_like</span>
+<span class="sd">        Normalized blank at 620 nm (from pco2_blank) [unitless].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pco2 : ndarray</span>
+<span class="sd">        Partial pressure of CO2 in seawater (PCO2WAT_L1) [uatm].</span>
+<span class="sd">        Blank records (where Ratio434 == Ratio620 after blank</span>
+<span class="sd">        correction) are set to the system fill value.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The e constants (e1=0.0043, e2=2.136, e3=0.2105) are fixed values</span>
+<span class="sd">    provided by Sunburst Sensors based on lab determinations with the</span>
+<span class="sd">    bromothymol blue (BTB) indicator solution. They are not recalculated</span>
+<span class="sd">    per calibration cycle. The final pCO2 is computed from a quadratic</span>
+<span class="sd">    calibration curve using coefficients CalA, CalB, and CalC (cala,</span>
+<span class="sd">    calb, calc). All calibration coefficients are from factory</span>
+<span class="sd">    calibration sheets.</span>
+
+<span class="sd">    The Python implementation corrects errors present in the vendor-</span>
+<span class="sd">    supplied Matlab code (DPS Appendix A, 2018). The corrected algorithm</span>
+<span class="sd">    was verified against the vendor and is authoritative.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Fixed equilibration constants provided by Sunburst Sensors</span>
+    <span class="n">e1</span> <span class="o">=</span> <span class="mf">0.0043</span>
+    <span class="n">e2</span> <span class="o">=</span> <span class="mf">2.136</span>
+    <span class="n">e3</span> <span class="o">=</span> <span class="mf">0.2105</span>
+
+    <span class="c1"># Extract 434 nm and 620 nm ratios from light array</span>
+    <span class="n">ratio434</span> <span class="o">=</span> <span class="n">light</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">]</span>
+    <span class="n">ratio620</span> <span class="o">=</span> <span class="n">light</span><span class="p">[:,</span> <span class="mi">7</span><span class="p">]</span>
+
+    <span class="c1"># Blank-correct the absorbance ratios</span>
+    <span class="n">ar434</span> <span class="o">=</span> <span class="p">(</span><span class="n">ratio434</span> <span class="o">/</span> <span class="n">a434blank</span><span class="p">)</span>
+    <span class="n">ar4620</span> <span class="o">=</span> <span class="p">(</span><span class="n">ratio620</span> <span class="o">/</span> <span class="n">a620blank</span><span class="p">)</span>
+
+    <span class="c1"># Map blank records (ar434 == ar4620) to avoid log domain errors;</span>
+    <span class="c1"># these will be set to fill_value at the end</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ar434</span> <span class="o">==</span> <span class="n">ar4620</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ar434</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.99999</span>
+    <span class="n">ar4620</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.99999</span>
+
+    <span class="c1"># Compute blank-corrected absorbances and their ratio</span>
+    <span class="n">a434</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ar434</span><span class="p">)</span>
+    <span class="n">a620</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ar4620</span><span class="p">)</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">a620</span> <span class="o">/</span> <span class="n">a434</span>
+
+    <span class="c1"># Compute pCO2 via temperature-corrected SAMI response</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">ratio</span> <span class="o">-</span> <span class="n">e1</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">e2</span> <span class="o">-</span> <span class="n">e3</span> <span class="o">*</span> <span class="n">ratio</span>
+    <span class="n">rco21</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">v1</span> <span class="o">/</span> <span class="n">v2</span><span class="p">)</span>
+    <span class="n">rco22</span> <span class="o">=</span> <span class="p">(</span><span class="n">therm</span> <span class="o">-</span> <span class="n">calt</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.007</span> <span class="o">+</span> <span class="n">rco21</span>
+    <span class="n">t_coeff</span> <span class="o">=</span> <span class="mf">0.0075778</span> <span class="o">+</span> <span class="mf">0.0012389</span> <span class="o">*</span> <span class="n">rco22</span> <span class="o">-</span> <span class="mf">0.00048757</span> <span class="o">*</span> <span class="n">rco22</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">t_cor_rco2</span> <span class="o">=</span> <span class="n">rco21</span> <span class="o">+</span> <span class="n">t_coeff</span> <span class="o">*</span> <span class="p">(</span><span class="n">therm</span> <span class="o">-</span> <span class="n">calt</span><span class="p">)</span>
+    <span class="n">pco2</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">((</span><span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">calb</span> <span class="o">+</span> <span class="p">(</span><span class="n">calb</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="mf">4.</span> <span class="o">*</span> <span class="n">cala</span> <span class="o">*</span> <span class="p">(</span><span class="n">calc</span> <span class="o">-</span> <span class="n">t_cor_rco2</span><span class="p">)))</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">cala</span><span class="p">))</span>
+    <span class="n">pco2</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">fill_value</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">pco2</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>The <code>ea434</code>, <code>eb434</code>, <code>ea620</code>, and <code>eb620</code> calibration coefficient
+parameters are accepted as inputs for backward compatibility but are
+not used in the calculation. The original formulation derived <span class="arithmatex">\(e_1\)</span>,
+<span class="arithmatex">\(e_2\)</span>, and <span class="arithmatex">\(e_3\)</span> from these per-instrument values; the current
+algorithm uses fixed constants supplied by Sunburst Sensors
+(<span class="arithmatex">\(e_1 = 0.0043\)</span>, <span class="arithmatex">\(e_2 = 2.136\)</span>, <span class="arithmatex">\(e_3 = 0.2105\)</span>) for all instruments.
+The retained parameters and the commented-out original formulation in
+the code document this evolution.</p>
+<h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unknown</td>
+<td>J. Newton (Sunburst Sensors, LLC)</td>
+<td>Original Matlab code</td>
+</tr>
+<tr>
+<td>2013-04-20</td>
+<td>Christopher Wingard</td>
+<td>Initial Python code</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Christopher Wingard</td>
+<td>Updated comments</td>
+</tr>
+<tr>
+<td>2014-03-19</td>
+<td>Christopher Wingard</td>
+<td>Optimized</td>
+</tr>
+<tr>
+<td>2018-03-04</td>
+<td>Christopher Wingard</td>
+<td>Corrected blank normalization and temperature correction per vendor-revised algorithm</td>
+</tr>
+<tr>
+<td>2023-01-12</td>
+<td>Mark Steiner</td>
+<td>Changed therm argument to degrees C input</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Renamed local variables to follow naming convention</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.co2_functions.pco2_ppressure" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pco2_ppressure</span><span class="p">(</span><span class="n">xco2</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">1013.25</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute PCO2ATM_L1 or PCO2SSW_L1 from the Pro-Oceanus CO2-Pro.</p>
+<p>Converts the L0 CO2 mole fraction (XCO2ATM or XCO2SSW) and L0 gas
+stream pressure (PRESAIR) into the L1 partial pressure of CO2 in
+air (PCO2ATM_L1) or surface seawater (PCO2SSW_L1).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>xco2</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>CO2 mole fraction in air or surface seawater (XCO2ATM_L0 or
+XCO2SSW_L0) [ppm].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>p</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Gas stream pressure (PRESAIR_L0) [mbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>std</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>1013.25</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Standard atmospheric pressure [mbar/atm]. Default is 1013.25.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>ppres</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Partial pressure of CO2 in air or surface seawater
+(PCO2ATM_L1 or PCO2SSW_L1) [uatm].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Because xco2 is in ppm (10^-6), the result of xco2 * p / std is
+directly in uatm without further scaling. The instrument computes
+xco2 internally with pressure, temperature, and humidity
+compensation applied by onboard firmware. All temperature, humidity,
+and pressure compensation is performed onboard; ion-functions
+applies only the final unit conversion. Instrument results are valid
+between 0 and 35 degC.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/co2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pco2_ppressure</span><span class="p">(</span><span class="n">xco2</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">1013.25</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute PCO2ATM_L1 or PCO2SSW_L1 from the Pro-Oceanus CO2-Pro.</span>
+
+<span class="sd">    Converts the L0 CO2 mole fraction (XCO2ATM or XCO2SSW) and L0 gas</span>
+<span class="sd">    stream pressure (PRESAIR) into the L1 partial pressure of CO2 in</span>
+<span class="sd">    air (PCO2ATM_L1) or surface seawater (PCO2SSW_L1).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xco2 : array_like</span>
+<span class="sd">        CO2 mole fraction in air or surface seawater (XCO2ATM_L0 or</span>
+<span class="sd">        XCO2SSW_L0) [ppm].</span>
+<span class="sd">    p : array_like</span>
+<span class="sd">        Gas stream pressure (PRESAIR_L0) [mbar].</span>
+<span class="sd">    std : float, optional</span>
+<span class="sd">        Standard atmospheric pressure [mbar/atm]. Default is 1013.25.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ppres : ndarray</span>
+<span class="sd">        Partial pressure of CO2 in air or surface seawater</span>
+<span class="sd">        (PCO2ATM_L1 or PCO2SSW_L1) [uatm].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Because xco2 is in ppm (10^-6), the result of xco2 * p / std is</span>
+<span class="sd">    directly in uatm without further scaling. The instrument computes</span>
+<span class="sd">    xco2 internally with pressure, temperature, and humidity</span>
+<span class="sd">    compensation applied by onboard firmware. All temperature, humidity,</span>
+<span class="sd">    and pressure compensation is performed onboard; ion-functions</span>
+<span class="sd">    applies only the final unit conversion. Instrument results are valid</span>
+<span class="sd">    between 0 and 35 degC.</span>
+<span class="sd">    """</span>
+    <span class="n">ppres</span> <span class="o">=</span> <span class="n">xco2</span> <span class="o">*</span> <span class="n">p</span> <span class="o">/</span> <span class="n">std</span>
+    <span class="k">return</span> <span class="n">ppres</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-10-27</td>
+<td>Christopher Wingard</td>
+<td>Initial Python code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.co2_functions.pco2_co2flux" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pco2_co2flux</span><span class="p">(</span><span class="n">pco2w</span><span class="p">,</span> <span class="n">pco2a</span><span class="p">,</span> <span class="n">u10</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute CO2FLUX_L2, the air-sea flux of CO2.</p>
+<p>Estimates the OOI Level 2 flux of CO2 from the ocean to the
+atmosphere using L1 partial pressures of CO2 in seawater and air,
+and L1/L2 bulk meteorology inputs.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>pco2w</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Partial pressure of CO2 in seawater (PCO2SSW_L1) [uatm].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pco2a</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Partial pressure of CO2 in air (PCO2ATM_L1) [uatm].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>u10</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Normalized wind speed at 10 m height (WIND10M_L2) [m s^-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>t</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Sea surface temperature (TEMPSRF_L1) [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>s</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Sea surface salinity (SALSURF_L2) [psu].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>flux</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Estimated flux of CO2 from the ocean to the atmosphere
+(CO2FLUX_L2) [mol m^-2 s^-1]. Positive values indicate flux
+from the ocean into the atmosphere.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Follows the bulk formula of Wanninkhof (1992) with the gas transfer
+velocity parameterization of Sweeney et al. (2007) and the CO2
+solubility of Weiss (1974). pco2w and pco2a are converted from uatm
+to atm before computing the flux. The Schmidt number polynomial uses
+Wanninkhof (1992) Table A1 coefficients. Gas transfer velocity k is
+in cm h^-1 from Sweeney et al. (2007) and converted to m s^-1. The
+volume-based solubility formulation of Weiss (1974) is used
+(mol atm^-1 m^-3). An inherent uncertainty of approximately 10% is
+expected in the flux estimate (Wanninkhof, 1992).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/co2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pco2_co2flux</span><span class="p">(</span><span class="n">pco2w</span><span class="p">,</span> <span class="n">pco2a</span><span class="p">,</span> <span class="n">u10</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute CO2FLUX_L2, the air-sea flux of CO2.</span>
+
+<span class="sd">    Estimates the OOI Level 2 flux of CO2 from the ocean to the</span>
+<span class="sd">    atmosphere using L1 partial pressures of CO2 in seawater and air,</span>
+<span class="sd">    and L1/L2 bulk meteorology inputs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pco2w : array_like</span>
+<span class="sd">        Partial pressure of CO2 in seawater (PCO2SSW_L1) [uatm].</span>
+<span class="sd">    pco2a : array_like</span>
+<span class="sd">        Partial pressure of CO2 in air (PCO2ATM_L1) [uatm].</span>
+<span class="sd">    u10 : array_like</span>
+<span class="sd">        Normalized wind speed at 10 m height (WIND10M_L2) [m s^-1].</span>
+<span class="sd">    t : array_like</span>
+<span class="sd">        Sea surface temperature (TEMPSRF_L1) [degC].</span>
+<span class="sd">    s : array_like</span>
+<span class="sd">        Sea surface salinity (SALSURF_L2) [psu].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    flux : ndarray</span>
+<span class="sd">        Estimated flux of CO2 from the ocean to the atmosphere</span>
+<span class="sd">        (CO2FLUX_L2) [mol m^-2 s^-1]. Positive values indicate flux</span>
+<span class="sd">        from the ocean into the atmosphere.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Follows the bulk formula of Wanninkhof (1992) with the gas transfer</span>
+<span class="sd">    velocity parameterization of Sweeney et al. (2007) and the CO2</span>
+<span class="sd">    solubility of Weiss (1974). pco2w and pco2a are converted from uatm</span>
+<span class="sd">    to atm before computing the flux. The Schmidt number polynomial uses</span>
+<span class="sd">    Wanninkhof (1992) Table A1 coefficients. Gas transfer velocity k is</span>
+<span class="sd">    in cm h^-1 from Sweeney et al. (2007) and converted to m s^-1. The</span>
+<span class="sd">    volume-based solubility formulation of Weiss (1974) is used</span>
+<span class="sd">    (mol atm^-1 m^-3). An inherent uncertainty of approximately 10% is</span>
+<span class="sd">    expected in the flux estimate (Wanninkhof, 1992).</span>
+<span class="sd">    """</span>
+    <span class="c1"># Convert uatm to atm</span>
+    <span class="n">pco2a</span> <span class="o">=</span> <span class="n">pco2a</span> <span class="o">/</span> <span class="mf">1.0e6</span>
+    <span class="n">pco2w</span> <span class="o">=</span> <span class="n">pco2w</span> <span class="o">/</span> <span class="mf">1.0e6</span>
+
+    <span class="c1"># Schmidt number (Wanninkhof, 1992, Table A1)</span>
+    <span class="n">Sc</span> <span class="o">=</span> <span class="mf">2073.1</span> <span class="o">-</span> <span class="p">(</span><span class="mf">125.62</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">3.6276</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mf">0.043219</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># Gas transfer velocity in cm h^-1 (Sweeney et al., 2007, Fig. 3 and Table 1),</span>
+    <span class="c1"># converted to m s^-1</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mf">0.27</span> <span class="o">*</span> <span class="n">u10</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">660.0</span> <span class="o">/</span> <span class="n">Sc</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="mf">3600.0</span><span class="p">)</span>
+
+    <span class="c1"># Absolute temperature</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">273.15</span>
+
+    <span class="c1"># CO2 solubility, volume version, mol atm^-1 m^-3</span>
+    <span class="c1"># (Weiss, 1974, Eqn. 12 and Table I)</span>
+    <span class="n">T100</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="mi">100</span>
+    <span class="n">K0</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">58.0931</span> <span class="o">+</span> <span class="p">(</span><span class="mf">90.5069</span> <span class="o">*</span> <span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="n">T</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mf">22.2940</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">T100</span><span class="p">))</span> <span class="o">+</span>
+                       <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.027766</span> <span class="o">-</span> <span class="p">(</span><span class="mf">0.025888</span> <span class="o">*</span> <span class="n">T100</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.0050578</span> <span class="o">*</span> <span class="n">T100</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
+
+    <span class="c1"># Air-sea CO2 flux (Wanninkhof, 1992, Eqn. A2)</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="n">K0</span> <span class="o">*</span> <span class="p">(</span><span class="n">pco2w</span> <span class="o">-</span> <span class="n">pco2a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">flux</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2012-03-28</td>
+<td>Matthias Lankhorst</td>
+<td>Original Matlab code</td>
+</tr>
+<tr>
+<td>2013-04-20</td>
+<td>Christopher Wingard</td>
+<td>Initial Python code</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.co2_functions.pco2_abs434_ratio" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pco2_abs434_ratio</span><span class="p">(</span><span class="n">light</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Extract the L0 absorbance ratio at 434 nm from a PCO2W light array.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>light</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>, <span title="M">M</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Array of raw light measurements from the SAMI2-CO2 instrument.
+Column index 6 contains the 434 nm ratio counts (Ratio434).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>a434ratio</code></b>(                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>
+)              –
+              <div class="doc-md-description">
+                <p>Optical absorbance ratio at 434 nm (CO2ABS1_L0) [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Extracts column index 6 from the instrument light measurement array.
+This L0 value is used by pco2_blank and pco2_calc_pco2 to compute
+the blank-corrected absorbance at 434 nm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/co2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pco2_abs434_ratio</span><span class="p">(</span><span class="n">light</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Extract the L0 absorbance ratio at 434 nm from a PCO2W light array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    light : array_like, shape (N, M)</span>
+<span class="sd">        Array of raw light measurements from the SAMI2-CO2 instrument.</span>
+<span class="sd">        Column index 6 contains the 434 nm ratio counts (Ratio434).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    a434ratio : ndarray, shape (N,)</span>
+<span class="sd">        Optical absorbance ratio at 434 nm (CO2ABS1_L0) [unitless].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Extracts column index 6 from the instrument light measurement array.</span>
+<span class="sd">    This L0 value is used by pco2_blank and pco2_calc_pco2 to compute</span>
+<span class="sd">    the blank-corrected absorbance at 434 nm.</span>
+<span class="sd">    """</span>
+    <span class="n">light</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">light</span><span class="p">)</span>
+    <span class="n">a434ratio</span> <span class="o">=</span> <span class="n">light</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">a434ratio</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-20</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Christopher Wingard</td>
+<td>Updated comments</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.co2_functions.pco2_abs620_ratio" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pco2_abs620_ratio</span><span class="p">(</span><span class="n">light</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Extract the L0 absorbance ratio at 620 nm from a PCO2W light array.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>light</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>, <span title="M">M</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Array of raw light measurements from the SAMI2-CO2 instrument.
+Column index 7 contains the 620 nm ratio counts (Ratio620).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>a620ratio</code></b>(                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="N">N</span>))</code>
+)              –
+              <div class="doc-md-description">
+                <p>Optical absorbance ratio at 620 nm (CO2ABS2_L0) [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Extracts column index 7 from the instrument light measurement array.
+This L0 value is used by pco2_blank and pco2_calc_pco2 to compute
+the blank-corrected absorbance at 620 nm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/co2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pco2_abs620_ratio</span><span class="p">(</span><span class="n">light</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Extract the L0 absorbance ratio at 620 nm from a PCO2W light array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    light : array_like, shape (N, M)</span>
+<span class="sd">        Array of raw light measurements from the SAMI2-CO2 instrument.</span>
+<span class="sd">        Column index 7 contains the 620 nm ratio counts (Ratio620).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    a620ratio : ndarray, shape (N,)</span>
+<span class="sd">        Optical absorbance ratio at 620 nm (CO2ABS2_L0) [unitless].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Extracts column index 7 from the instrument light measurement array.</span>
+<span class="sd">    This L0 value is used by pco2_blank and pco2_calc_pco2 to compute</span>
+<span class="sd">    the blank-corrected absorbance at 620 nm.</span>
+<span class="sd">    """</span>
+    <span class="n">light</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">light</span><span class="p">)</span>
+    <span class="n">a620ratio</span> <span class="o">=</span> <span class="n">light</span><span class="p">[:,</span> <span class="mi">7</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">a620ratio</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-20</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Christopher Wingard</td>
+<td>Updated comments</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.co2_functions.pco2_blank" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pco2_blank</span><span class="p">(</span><span class="n">raw_blank</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert a raw PCO2W blank count to a normalized absorbance blank.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>raw_blank</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw optical absorbance blank counts at 434 or 620 nm [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>blank</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Normalized optical absorbance blank at 434 or 620 nm [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Divides raw blank counts by 16384 (2^14) to normalize to a
+dimensionless ratio consistent with the blank-correction step in
+pco2_calc_pco2. This normalization reflects the vendor-corrected
+algorithm as of 2018.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/co2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pco2_blank</span><span class="p">(</span><span class="n">raw_blank</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert a raw PCO2W blank count to a normalized absorbance blank.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    raw_blank : array_like</span>
+<span class="sd">        Raw optical absorbance blank counts at 434 or 620 nm [counts].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    blank : ndarray</span>
+<span class="sd">        Normalized optical absorbance blank at 434 or 620 nm [unitless].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Divides raw blank counts by 16384 (2^14) to normalize to a</span>
+<span class="sd">    dimensionless ratio consistent with the blank-correction step in</span>
+<span class="sd">    pco2_calc_pco2. This normalization reflects the vendor-corrected</span>
+<span class="sd">    algorithm as of 2018.</span>
+<span class="sd">    """</span>
+    <span class="n">blank</span> <span class="o">=</span> <span class="n">raw_blank</span> <span class="o">/</span> <span class="mf">16384.</span>
+    <span class="k">return</span> <span class="n">blank</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-20</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Christopher Wingard</td>
+<td>Updated comments</td>
+</tr>
+<tr>
+<td>2014-02-28</td>
+<td>Christopher Wingard</td>
+<td>Updated to accept raw blank values from a sparse array</td>
+</tr>
+<tr>
+<td>2018-03-04</td>
+<td>Christopher Wingard</td>
+<td>Updated blank normalization per vendor-corrected algorithm</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.co2_functions.pco2_thermistor" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pco2_thermistor</span><span class="p">(</span><span class="n">traw</span><span class="p">,</span> <span class="n">sami_bits</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw PCO2W thermistor counts to temperature in degrees C.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>traw</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw thermistor counts (CO2THRM_L0) [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sami_bits</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>12</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>ADC resolution of the SAMI hardware. Use 12 for original
+hardware and 14 for upgraded hardware. Default is 12.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>therm</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Thermistor temperature [degC].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The conversion differs by hardware generation. For 12-bit hardware
+the full-scale count is 4096; for 14-bit hardware it is 16384. In
+both cases the thermistor resistance ratio is multiplied by 17400
+before taking the natural log. The log value is used in a three-term
+inverse-temperature polynomial to obtain temperature in Kelvin,
+which is converted to degrees C by subtracting 273.15.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/co2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pco2_thermistor</span><span class="p">(</span><span class="n">traw</span><span class="p">,</span> <span class="n">sami_bits</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert raw PCO2W thermistor counts to temperature in degrees C.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    traw : array_like</span>
+<span class="sd">        Raw thermistor counts (CO2THRM_L0) [counts].</span>
+<span class="sd">    sami_bits : int, optional</span>
+<span class="sd">        ADC resolution of the SAMI hardware. Use 12 for original</span>
+<span class="sd">        hardware and 14 for upgraded hardware. Default is 12.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    therm : ndarray</span>
+<span class="sd">        Thermistor temperature [degC].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The conversion differs by hardware generation. For 12-bit hardware</span>
+<span class="sd">    the full-scale count is 4096; for 14-bit hardware it is 16384. In</span>
+<span class="sd">    both cases the thermistor resistance ratio is multiplied by 17400</span>
+<span class="sd">    before taking the natural log. The log value is used in a three-term</span>
+<span class="sd">    inverse-temperature polynomial to obtain temperature in Kelvin,</span>
+<span class="sd">    which is converted to degrees C by subtracting 273.15.</span>
+<span class="sd">    """</span>
+    <span class="n">traw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">traw</span><span class="p">)</span>
+    <span class="n">sami_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">sami_bits</span><span class="p">)</span>
+
+    <span class="c1"># Conversion depends on whether the SAMI is 12-bit or 14-bit hardware</span>
+    <span class="k">if</span> <span class="n">sami_bits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">14</span><span class="p">:</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">traw</span> <span class="o">/</span> <span class="p">(</span><span class="mf">16384.0</span> <span class="o">-</span> <span class="n">traw</span><span class="p">))</span> <span class="o">*</span> <span class="mf">17400.0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">traw</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4096.</span> <span class="o">-</span> <span class="n">traw</span><span class="p">))</span> <span class="o">*</span> <span class="mf">17400.</span><span class="p">)</span>
+    <span class="n">inv_t</span> <span class="o">=</span> <span class="mf">0.0010183</span> <span class="o">+</span> <span class="mf">0.000241</span> <span class="o">*</span> <span class="n">rt</span> <span class="o">+</span> <span class="mf">0.00000015</span> <span class="o">*</span> <span class="n">rt</span><span class="o">**</span><span class="mi">3</span>
+    <span class="n">therm</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">inv_t</span><span class="p">)</span> <span class="o">-</span> <span class="mf">273.15</span>
+    <span class="k">return</span> <span class="n">therm</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-20</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Christopher Wingard</td>
+<td>Updated comments</td>
+</tr>
+<tr>
+<td>2023-01-12</td>
+<td>Mark Steiner</td>
+<td>Added sami_bits argument to handle 14-bit hardware</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Renamed local variables; replaced numexpr with numpy</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.co2_functions.pco2_battery" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pco2_battery</span><span class="p">(</span><span class="n">braw</span><span class="p">,</span> <span class="n">sami_bits</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw PCO2W battery counts to battery voltage in Volts.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>braw</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw battery voltage counts [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sami_bits</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>ADC resolution of the SAMI hardware. Use 12 for original
+hardware and 14 for upgraded hardware.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>volts</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Battery voltage [V].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The scaling differs by hardware generation. For 14-bit hardware
+the full-scale range is 3 V over 4000 counts. For 12-bit hardware
+the full-scale range is 15 V over 4096 counts.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/co2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pco2_battery</span><span class="p">(</span><span class="n">braw</span><span class="p">,</span> <span class="n">sami_bits</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert raw PCO2W battery counts to battery voltage in Volts.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    braw : array_like</span>
+<span class="sd">        Raw battery voltage counts [counts].</span>
+<span class="sd">    sami_bits : int</span>
+<span class="sd">        ADC resolution of the SAMI hardware. Use 12 for original</span>
+<span class="sd">        hardware and 14 for upgraded hardware.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    volts : ndarray</span>
+<span class="sd">        Battery voltage [V].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The scaling differs by hardware generation. For 14-bit hardware</span>
+<span class="sd">    the full-scale range is 3 V over 4000 counts. For 12-bit hardware</span>
+<span class="sd">    the full-scale range is 15 V over 4096 counts.</span>
+<span class="sd">    """</span>
+    <span class="n">braw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">braw</span><span class="p">)</span>
+    <span class="n">sami_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">sami_bits</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sami_bits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">14</span><span class="p">:</span>
+        <span class="n">volts</span> <span class="o">=</span> <span class="n">braw</span> <span class="o">*</span> <span class="mf">3.</span> <span class="o">/</span> <span class="mf">4000.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">volts</span> <span class="o">=</span> <span class="n">braw</span> <span class="o">*</span> <span class="mf">15.</span> <span class="o">/</span> <span class="mf">4096.</span>
+    <span class="k">return</span> <span class="n">volts</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023-02-23</td>
+<td>Mark Steiner</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wrapper-functions">Wrapper Functions</h2>
+<p><code>pco2_pco2wat</code> is the OOI single-output wrapper for the PCO2WAT_L1 data
+product. It calls <code>pco2_calc_pco2</code> for all records and then sets blank
+measurement records (mtype == 5) to the system fill value, satisfying the
+OOI single-output data product requirement. External users should call
+<code>pco2_calc_pco2</code> directly.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.co2_functions.pco2_pco2wat" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pco2_pco2wat</span><span class="p">(</span><span class="n">mtype</span><span class="p">,</span> <span class="n">light</span><span class="p">,</span> <span class="n">therm</span><span class="p">,</span> <span class="n">ea434</span><span class="p">,</span> <span class="n">eb434</span><span class="p">,</span> <span class="n">ea620</span><span class="p">,</span> <span class="n">eb620</span><span class="p">,</span> <span class="n">calt</span><span class="p">,</span> <span class="n">cala</span><span class="p">,</span> <span class="n">calb</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">a434blank</span><span class="p">,</span> <span class="n">a620blank</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for PCO2WAT_L1; returns fill value for blank records.</p>
+<p>Calls pco2_calc_pco2 for all records, then replaces results for
+blank measurement records (mtype == 5) with the fill value.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>mtype</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Measurement type: 4 for pCO2 measurement, 5 for blank
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>light</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="N">N</span>, <span title="M">M</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Array of raw light measurements from the SAMI2-CO2 instrument.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>PCO2W thermistor temperature (CO2THRM_L1) [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ea434</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eb434</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ea620</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eb620</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>calt</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 5 (temperature reference).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cala</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 6.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>calb</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 7.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>calc</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 8.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a434blank</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Blank measurement at 434 nm (CO2ABS1_L0) [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a620blank</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Blank measurement at 620 nm (CO2ABS2_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>pco2</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Partial pressure of CO2 in seawater (PCO2WAT_L1) [uatm].
+Blank records (mtype == 5) are set to the system fill value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>pco2_calc_pco2 : Core algorithm; use directly for all-record access.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/co2_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pco2_pco2wat</span><span class="p">(</span><span class="n">mtype</span><span class="p">,</span> <span class="n">light</span><span class="p">,</span> <span class="n">therm</span><span class="p">,</span> <span class="n">ea434</span><span class="p">,</span> <span class="n">eb434</span><span class="p">,</span> <span class="n">ea620</span><span class="p">,</span> <span class="n">eb620</span><span class="p">,</span>
+                 <span class="n">calt</span><span class="p">,</span> <span class="n">cala</span><span class="p">,</span> <span class="n">calb</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">a434blank</span><span class="p">,</span> <span class="n">a620blank</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    OOI wrapper for PCO2WAT_L1; returns fill value for blank records.</span>
+
+<span class="sd">    Calls pco2_calc_pco2 for all records, then replaces results for</span>
+<span class="sd">    blank measurement records (mtype == 5) with the fill value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mtype : array_like</span>
+<span class="sd">        Measurement type: 4 for pCO2 measurement, 5 for blank</span>
+<span class="sd">        [unitless].</span>
+<span class="sd">    light : array_like, shape (N, M)</span>
+<span class="sd">        Array of raw light measurements from the SAMI2-CO2 instrument.</span>
+<span class="sd">    therm : array_like</span>
+<span class="sd">        PCO2W thermistor temperature (CO2THRM_L1) [degC].</span>
+<span class="sd">    ea434 : array_like</span>
+<span class="sd">        Calibration coefficient 1.</span>
+<span class="sd">    eb434 : array_like</span>
+<span class="sd">        Calibration coefficient 2.</span>
+<span class="sd">    ea620 : array_like</span>
+<span class="sd">        Calibration coefficient 3.</span>
+<span class="sd">    eb620 : array_like</span>
+<span class="sd">        Calibration coefficient 4.</span>
+<span class="sd">    calt : array_like</span>
+<span class="sd">        Calibration coefficient 5 (temperature reference).</span>
+<span class="sd">    cala : array_like</span>
+<span class="sd">        Calibration coefficient 6.</span>
+<span class="sd">    calb : array_like</span>
+<span class="sd">        Calibration coefficient 7.</span>
+<span class="sd">    calc : array_like</span>
+<span class="sd">        Calibration coefficient 8.</span>
+<span class="sd">    a434blank : array_like</span>
+<span class="sd">        Blank measurement at 434 nm (CO2ABS1_L0) [counts].</span>
+<span class="sd">    a620blank : array_like</span>
+<span class="sd">        Blank measurement at 620 nm (CO2ABS2_L0) [counts].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pco2 : ndarray</span>
+<span class="sd">        Partial pressure of CO2 in seawater (PCO2WAT_L1) [uatm].</span>
+<span class="sd">        Blank records (mtype == 5) are set to the system fill value.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    pco2_calc_pco2 : Core algorithm; use directly for all-record access.</span>
+<span class="sd">    """</span>
+    <span class="n">mtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">mtype</span><span class="p">)</span>
+    <span class="n">light</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">light</span><span class="p">)</span>
+    <span class="n">therm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">therm</span><span class="p">)</span>
+    <span class="n">ea434</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">ea434</span><span class="p">)</span>
+    <span class="n">eb434</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">eb434</span><span class="p">)</span>
+    <span class="n">ea620</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">ea620</span><span class="p">)</span>
+    <span class="n">eb620</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">eb620</span><span class="p">)</span>
+    <span class="n">calt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">calt</span><span class="p">)</span>
+    <span class="n">cala</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">cala</span><span class="p">)</span>
+    <span class="n">calb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">calb</span><span class="p">)</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">calc</span><span class="p">)</span>
+    <span class="n">a434blank</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">a434blank</span><span class="p">)</span>
+    <span class="n">a620blank</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">a620blank</span><span class="p">)</span>
+
+    <span class="n">pco2</span> <span class="o">=</span> <span class="n">pco2_calc_pco2</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="n">therm</span><span class="p">,</span> <span class="n">ea434</span><span class="p">,</span> <span class="n">eb434</span><span class="p">,</span> <span class="n">ea620</span><span class="p">,</span> <span class="n">eb620</span><span class="p">,</span>
+                          <span class="n">calt</span><span class="p">,</span> <span class="n">cala</span><span class="p">,</span> <span class="n">calb</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">a434blank</span><span class="p">,</span> <span class="n">a620blank</span><span class="p">)</span>
+
+    <span class="c1"># Reset blank measurement records to the fill value</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mtype</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">pco2</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">fill_value</span>
+
+    <span class="k">return</span> <span class="n">pco2</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_8">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-20</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Christopher Wingard</td>
+<td>Updated comments</td>
+</tr>
+<tr>
+<td>2014-03-19</td>
+<td>Christopher Wingard</td>
+<td>Optimized</td>
+</tr>
+<tr>
+<td>2017-04-04</td>
+<td>Pete Cable</td>
+<td>Updated to use thermistor/blank counts per DPS</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>DeGrandpre, M. D., Baehr, M. M., and Hammar, T. R. (1999). Calibration-free
+optical chemical sensors. Analytical Chemistry, 71(6), 1152-1159.</p>
+<p>Sweeney, C., Gloor, E., Jacobson, A. R., Key, R. M., McKinley, G.,
+Sarmiento, J. L., and Wanninkhof, R. (2007). Constraining global air-sea
+gas exchange for CO2 with recent bomb 14C measurements. Global
+Biogeochemical Cycles, 21, GB2015.</p>
+<p>Wanninkhof, R. (1992). Relationship between wind speed and gas exchange
+over the ocean. Journal of Geophysical Research, 97(C5), 7373-7382.</p>
+<p>Weiss, R. F. (1974). Carbon dioxide in water and seawater: the solubility
+of a non-ideal gas. Marine Chemistry, 2, 203-215.</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00260_Data_Product_SPEC_PCO2SSW_PCO2ATM_OOI.pdf">OOI (2012). Data Product Specification for Partial Pressure of CO2 in Air
+and Surface Seawater. Document Control Number 1341-00260.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00490_Data_Product_Spec_PCO2WAT_OOI-2.pdf">OOI (2018). Data Product Specification for Partial Pressure of CO2 in
+Seawater. Document Control Number 1341-00490.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00270_Data_Product_SPEC_CO2FLUX_OOI.pdf">OOI (2012). Data Product Specification for Flux of CO2 from the Ocean into
+the Atmosphere. Document Control Number 1341-00270.</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../seaphox/" class="btn btn-neutral float-left" title="Deep SeapHOx V2"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../ph_functions/" class="btn btn-neutral float-right" title="PH Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../../seaphox/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../ph_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

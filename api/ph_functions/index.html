@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/ph_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>PH Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "PH Functions";
+        var mkdocs_page_input_path = "api/ph_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/ph_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">PH Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#phwater_l2-ph-of-seawater">PHWATER_L2 — pH of Seawater</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">PH Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="ph-functions">pH Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys two families of pH instruments
+across its moored platforms. The table below lists the OOI instrument classes
+covered by this module.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PHSEN-A/D/E/F</td>
+<td>Sunburst SAMI-pH</td>
+<td>Moored (fixed depth)</td>
+<td>pH Sensor</td>
+</tr>
+<tr>
+<td>PHSEN-G/H</td>
+<td>Sea-Bird Scientific Deep SeapHOx V2</td>
+<td>Moored (fixed depth)</td>
+<td>pH Sensor</td>
+</tr>
+</tbody>
+</table>
+<p><code>ph_functions.py</code> processes data from the <a href="https://www.sunburstsensors.com/products/oceanographic-ph-sensor.html">Sunburst Sensors SAMI-pH</a>
+(PHSEN-A/D/E/F) and computes the L2 pH of seawater data product 
+(PHWATER_L2). <code>phsen_h_functions.py</code> processes data from the <a href="https://www.seabird.com/products/deep-seaphox-v2-ph-sensor">Sea-Bird 
+Scientific Deep SeapHOx V2</a> 
+(PHSEN-G and PHSEN-H) and computes the same PHWATER_L2 data product. Both 
+instruments measure pH on the total hydrogen ion scale (<span class="arithmatex">\(\text{pH}_T\)</span>). All 
+calibration coefficients are from factory calibration sheets supplied with 
+individual instruments. Within the OOI data system, pH functions fall under
+the Water Column science regime and the pH category.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00510</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_Spec_PHWATER_OOI.pdf">OOI (2012). Data Product Specification for pH of Seawater.</a></td>
+</tr>
+<tr>
+<td>AN99</td>
+<td><a href="https://242648281.fs1.hubspotusercontent-na2.net/hubfs/242648281/Resources/Application%20Notes/AN99-CalculatepH.pdf">Calculating pH from ISFET pH Sensors. SeaFET V2, Shallow SeapHOx V2, Deep SeapHOx V2, Floats</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="phwater_l2-ph-of-seawater">PHWATER_L2 — pH of Seawater</h3>
+<p>PHWATER_L2 is the pH of seawater on the total hydrogen ion scale
+(<span class="arithmatex">\(\text{pH}_T\)</span>). Both PHSEN-A/D/E/F and PHSEN-G/H produce PHWATER_L2 directly 
+from their raw L0 data; there is no intermediate L1 product.</p>
+<h4 id="sunburst-sensors-sami-ph">Sunburst Sensors SAMI-pH</h4>
+<p>The SAMI-pH measures pH using a colorimetric reaction with the pH indicator
+meta-Cresol Purple (mCP). A seawater sample is pumped through a flow cell and
+injected with a pulse of indicator solution. Two LEDs illuminate the
+indicator-sample mixture at 434 nm and 578 nm — the peak absorbance wavelengths
+of the protonated (<span class="arithmatex">\(\text{HI}^-\)</span>) and deprotonated (<span class="arithmatex">\(\text{I}^{2-}\)</span>) forms of
+mCP, respectively. The ratio of the absorbances at these two wavelengths is used
+to compute pH on the total scale.</p>
+<p><strong>L0 Inputs</strong></p>
+<p>Each SAMI-II data record contains two types of raw light measurements:</p>
+<ul>
+<li><strong>Blank measurements</strong> — 4 sets of 4 interleaved readings
+  <span class="arithmatex">\([\text{ref}_{434},\ \text{sig}_{434},\ \text{ref}_{578},\ \text{sig}_{578}]\)</span>
+  collected while pumping pure seawater (16 values total).</li>
+<li><strong>Sample measurements</strong> — 23 sets of 4 interleaved readings in the same
+  arrangement, collected while pumping the seawater–indicator mixture
+  (92 values total).</li>
+</ul>
+<p>Raw signal intensities range from 0 to 4096 counts.</p>
+<p><strong>Thermistor Temperature</strong></p>
+<p>The raw thermistor count is converted to temperature in <span class="arithmatex">\(^\circ\)</span>C. The
+conversion depends on the SAMI hardware generation (12-bit or 14-bit ADC).
+For 12-bit hardware (full-scale count <span class="arithmatex">\(= 4096\)</span>):</p>
+<div class="arithmatex">\[r_t = \ln\left(\frac{\text{Therm}}{4096 - \text{Therm}} \times 17400\right)\]</div>
+<p>For 14-bit hardware (full-scale count <span class="arithmatex">\(= 16384\)</span>):</p>
+<div class="arithmatex">\[r_t = \ln\left(\frac{\text{Therm}}{16384 - \text{Therm}} \times 17400\right)\]</div>
+<p>In both cases temperature is then:</p>
+<div class="arithmatex">\[T_C = \frac{1}{0.0010183 + 0.000241 \times r_t + 1.5 \times 10^{-7} \times {r_t}^3} - 273.15\]</div>
+<p>The 14-bit ADC is a post-DPS hardware change not described in DPS 1341-00510.</p>
+<p><strong>Blank Normalization</strong></p>
+<p>The blank signal intensity ratio at each wavelength is computed from the 4
+blank measurement sets and averaged:</p>
+<div class="arithmatex">\[B_{434} = \frac{1}{4}\sum_{k=1}^{4} \frac{\text{sig}_{434,k}}{\text{ref}_{434,k}}\]</div>
+<div class="arithmatex">\[B_{578} = \frac{1}{4}\sum_{k=1}^{4} \frac{\text{sig}_{578,k}}{\text{ref}_{578,k}}\]</div>
+<p><strong>Absorbance</strong></p>
+<p>The blank-corrected absorbances at each wavelength are computed using
+Beer's Law:</p>
+<div class="arithmatex">\[A_{434} = -\log_{10}\left(\frac{\text{sig}_{434}}{\text{ref}_{434}}\right) - \left(-\log_{10} B_{434}\right)\]</div>
+<div class="arithmatex">\[A_{578} = -\log_{10}\left(\frac{\text{sig}_{578}}{\text{ref}_{578}}\right) - \left(-\log_{10} B_{578}\right)\]</div>
+<p>The absorbance ratio is:</p>
+<div class="arithmatex">\[R = \frac{A_{578}}{A_{434}}\]</div>
+<p><strong>Temperature-Dependent Molar Absorptivities</strong></p>
+<p>The molar absorptivities of the two indicator forms are adjusted for
+temperature using the factory-supplied reference values <span class="arithmatex">\(e_{a434}\)</span>,
+<span class="arithmatex">\(e_{b434}\)</span>, <span class="arithmatex">\(e_{a578}\)</span>, <span class="arithmatex">\(e_{b578}\)</span> at a reference temperature of
+24.788 <span class="arithmatex">\(^\circ\)</span>C:</p>
+<div class="arithmatex">\[E_{a434} = e_{a434} - 26 \times (T_C - 24.788)\]</div>
+<div class="arithmatex">\[E_{a578} = e_{a578} + (T_C - 24.788)\]</div>
+<div class="arithmatex">\[E_{b434} = e_{b434} + 12 \times (T_C - 24.788)\]</div>
+<div class="arithmatex">\[E_{b578} = e_{b578} - 71 \times (T_C - 24.788)\]</div>
+<p>The absorptivity ratios used in the pH equation are:</p>
+<div class="arithmatex">\[e_1 = E_{a578} / E_{a434}, e_2 = E_{b578} / E_{a434}, e_3 = E_{b434} / E_{a434}\]</div>
+<p><strong>pKa</strong></p>
+<p>The apparent dissociation constant of mCP is computed from temperature and
+salinity (Clayton and Byrne, 1993):</p>
+<div class="arithmatex">\[pK'_a = \frac{1245.69}{T_C + 273.15} + 3.8275 + 0.0021 \times (35 - S)\]</div>
+<p>where <span class="arithmatex">\(S\)</span> is the seawater practical salinity from a co-located CTD (default 
+35.0 if no CTD data are available).</p>
+<p><strong>PHWATER_L2 Calculation</strong></p>
+<p>Point-by-point pH values are computed for each of the 23 sample measurement
+sets:</p>
+<div class="arithmatex">\[\text{pH}_\text{point} = pK'_a + \log_{10}\left(\frac{R - e_1}{e_2 - R \times e_3}\right)\]</div>
+<p>Indicator concentrations for the protonated and deprotonated forms are:</p>
+<div class="arithmatex">\[[\text{HI}^-] = \frac{A_{434} \times E_{b578} - A_{578} \times E_{b434}}{E_{a434} \times E_{b578} - E_{b434} \times E_{a578}}\]</div>
+<div class="arithmatex">\[[\text{I}^{2-}] = \frac{A_{578} \times E_{a434} - A_{434} \times E_{a578}}{E_{a434} \times E_{b578} - E_{b434} \times E_{a578}}\]</div>
+<div class="arithmatex">\[C_\text{ind} = [\text{HI}^-] + [\text{I}^{2-}]\]</div>
+<p>The first 5 of the 23 measurement sets are discarded. From the remaining 18,
+the 8 consecutive points with the highest linear <span class="arithmatex">\(R^2\)</span> between <span class="arithmatex">\(C_\text{ind}\)</span>
+and <span class="arithmatex">\(\text{pH}_\text{point}\)</span> are selected. The final PHWATER_L2 value is
+the y-intercept of a linear regression of <span class="arithmatex">\(\text{pH}_\text{point}\)</span> on
+<span class="arithmatex">\(C_\text{ind}\)</span> through those 8 points — i.e., the pH extrapolated to zero
+indicator concentration.</p>
+<p>An impurity correction is applied when the extrapolated pH exceeds 8.2:</p>
+<div class="arithmatex">\[\text{pH}_\text{final} = \text{pH} \times \text{ind_slp} + \text{ind_off}\]</div>
+<p>where <code>ind_slp</code> and <code>ind_off</code> are instrument-specific correction factors
+not described in DPS 1341-00510.</p>
+<p>Output accuracy: <span class="arithmatex">\(\pm 0.01\)</span> pH units; precision <span class="arithmatex">\(\pm 0.005\)</span> pH units
+(DPS 1341-00510, §4.4). Algorithm results are valid between 0 and 35
+<span class="arithmatex">\(^\circ\)</span>C and at salinities of <span class="arithmatex">\(35 \pm 1\)</span>; salinity corrections
+from a co-located CTD extend the valid salinity range (DPS 1341-00510,
+§3.3).</p>
+<hr />
+<h4 id="sea-bird-scientific-deep-seaphox-v2">Sea-Bird Scientific Deep SeapHOx V2</h4>
+<p>The Deep SeapHOx V2 combines the Deep SeaFET V2 ISFET pH sensor with the
+Sea-Bird Electronics SBE 37-SMP-ODO MicroCAT CTD+DO sensor. PHSEN-G and
+PHSEN-H differ only in the pressure rating of their strain-gauge pressure
+sensor (Sea-Bird Scientific Deep SeapHOx V2 data sheet, DS53, May 2025).</p>
+<p>The ISFET external electrochemical cell exhibits a Nernstian response to pH
+and is sensitive to chloride activity. The raw ISFET voltage is digitized
+by a 23-bit ADC with a 2.5 V reference and unity gain and converted to
+volts before the pH calculation (Sea-Bird Scientific Application Note 99).</p>
+<p><strong>PHWATER_L2 Calculation</strong></p>
+<p>The Nernst factor is computed from temperature and fundamental constants
+(Application Note 99):</p>
+<div class="arithmatex">\[S_\text{nernst} = \frac{R \times T \times \ln(10)}{F}\]</div>
+<p>where <span class="arithmatex">\(R = 8.3144621\ \text{J} \times (\text{mol} \times \text{K})^{-1}\)</span>,
+<span class="arithmatex">\(T\)</span> is temperature in K, and <span class="arithmatex">\(F = 96485.365\ \text{C} \times \text{mol}^{-1}\)</span>.</p>
+<p>The pressure response of the sensor is modeled by a 6th-order polynomial
+in pressure <span class="arithmatex">\(P\)</span> (dbar) using factory coefficients <span class="arithmatex">\(f_1\)</span> through <span class="arithmatex">\(f_6\)</span>
+(Application Note 99):</p>
+<div class="arithmatex">\[f(P) = f_1 P + f_2 P^2 + f_3 P^3 + f_4 P^4 + f_5 P^5 + f_6 P^6\]</div>
+<p>The coefficient <span class="arithmatex">\(f_0\)</span> is captured in <span class="arithmatex">\(k_0\)</span> and is not used separately.</p>
+<p>Total pH on the total hydrogen ion scale is then (Application Note 99,
+Johnson et al. 2016, Johnson et al. 2017):</p>
+<div class="arithmatex">\[\begin{align}
+pH_T &amp;= \frac{V_\text{FET/REF} - k_0 - k_2 \times t - f(P)}{S_\text{nernst}} \\
+&amp;\quad + \log_{10}(Cl_T) + 2 \times \log_{10}(\gamma_{\pm\text{HCl}})_{T\&amp;P} \\
+&amp;\quad - \log_{10}\left(1 + \frac{S_T}{K_{S,T\&amp;P}}\right) \\
+&amp;\quad - \log_{10}\left(\frac{1000 - 1.005 \times S}{1000}\right)
+\end{align}\]</div>
+<p>where <span class="arithmatex">\(t\)</span> is temperature in <span class="arithmatex">\(^\circ\)</span>C, <span class="arithmatex">\(S\)</span> is practical salinity,
+<span class="arithmatex">\(Cl_T\)</span> is total chloride, <span class="arithmatex">\((\gamma_{\pm\text{HCl}})_{T\&amp;P}\)</span> is the HCl
+activity coefficient corrected for temperature and pressure, <span class="arithmatex">\(S_T\)</span> is
+total sulfate, and <span class="arithmatex">\(K_{S,T\&amp;P}\)</span> is the acid dissociation constant of
+<span class="arithmatex">\(\text{HSO}_4^-\)</span> corrected for temperature and pressure.</p>
+<p>The intermediate quantities are computed as follows (Application Note 99):</p>
+<p><strong>Total chloride</strong> (Dickson et al. 2007):</p>
+<div class="arithmatex">\[Cl_T = \frac{0.99889}{35.453} \times \frac{S}{1.80655} \times \frac{1000}{1000 - 1.005 \times S}\]</div>
+<p><strong>Sample ionic strength</strong> (Dickson et al. 2007):</p>
+<div class="arithmatex">\[I = \frac{19.924 \times S}{1000 - 1.005 \times S}\]</div>
+<p><strong>Debye-Hückel constant</strong> (Khoo et al. 1977):</p>
+<div class="arithmatex">\[A_{DH} = 3.4286 \times 10^{-6} \times t^2 + 6.7503 \times 10^{-4} \times t + 0.49172143\]</div>
+<p><strong>HCl activity coefficient — temperature only</strong> (Khoo et al. 1977):</p>
+<div class="arithmatex">\[\log(\gamma_{\pm\text{HCl}})_T = \frac{-A_{DH} \times \sqrt{I}}{1 + 1.394 \times \sqrt{I}} + (0.08885 - 0.000111 \times t) \times I\]</div>
+<p><strong>Partial molal volume of HCl</strong> (Millero 1983):</p>
+<div class="arithmatex">\[\bar{V}_\text{HCl} = 17.85 + 0.1044 \times t - 0.0001316 \times t^2\]</div>
+<p><strong>HCl activity coefficient — temperature and pressure</strong> (Johnson et al. 2017):</p>
+<div class="arithmatex">\[\log(\gamma_{\pm\text{HCl}})_{T\&amp;P} = \log(\gamma_{\pm\text{HCl}})_T + \frac{\bar{V}_\text{HCl} \times p}{2 \times \ln(10) \times R \times T \times 10}\]</div>
+<p>where <span class="arithmatex">\(p\)</span> is pressure in bar.</p>
+<p><strong>Total sulfate</strong> (Dickson et al. 2007):</p>
+<div class="arithmatex">\[S_T = \frac{0.1400}{96.062} \times \frac{S}{1.80655}\]</div>
+<p><strong>Acid dissociation constant of HSO<span class="arithmatex">\(_4\)</span><span class="arithmatex">\(^-\)</span> at <span class="arithmatex">\(T\)</span></strong> (Dickson et al. 2007):</p>
+<div class="arithmatex">\[K_S = (1 - 0.001005 \times S) \times \exp(adc)\]</div>
+<p>where <span class="arithmatex">\(adc\)</span> is:</p>
+<div class="arithmatex">\[\begin{align}
+adc &amp;= (\frac{-4276.1}{T} + 141.328 - 23.093 \times \ln(T) \\
+&amp;\quad + \left(\frac{-13856}{T} + 324.57 - 47.986\ln(T)\right) \\
+&amp;\quad \times \sqrt{I} + \left(\frac{35474}{T} - 771.54 + 114.723 \times \ln(T)\right) \\
+&amp;\quad \times I - \frac{2698}{T} \times I^{1.5} + \frac{1776}{T} \times I^2
+\end{align}\]</div>
+<p><strong>Partial molal volume of <span class="arithmatex">\(\text{HSO}_4^-\)</span></strong> (Millero 1983):</p>
+<div class="arithmatex">\[\bar{V}_S = -18.03 + 0.0466 \times t + 0.000316 \times t^2\]</div>
+<p><strong>Compressibility of <span class="arithmatex">\(\text{HSO}_4^-\)</span></strong> (Millero 1983):</p>
+<div class="arithmatex">\[\bar{K}_S = \frac{-4.53 + 0.09 \times t}{1000}\]</div>
+<p><strong>Acid dissociation constant corrected for <span class="arithmatex">\(T\)</span> and <span class="arithmatex">\(P\)</span></strong> (Millero 1982):</p>
+<div class="arithmatex">\[K_{S,T\&amp;P} = K_S \times \exp\left(\frac{-\bar{V}_S \times p + 0.5 \times \bar{K}_S \times p^2}{R \times T \times 10}\right)\]</div>
+<p>Calibration coefficients <span class="arithmatex">\(k_0\)</span>, <span class="arithmatex">\(k_2\)</span>, and <span class="arithmatex">\(f_1\)</span>–<span class="arithmatex">\(f_6\)</span> are from factory
+calibration sheets supplied by Sea-Bird Scientific with each instrument.</p>
+<p>Output accuracy: <span class="arithmatex">\(\pm 0.05\)</span> pH units; resolution 0.004 pH units; typical
+stability 0.003 pH units per month (Sea-Bird Scientific Deep SeapHOx V2
+data sheet, DS53, May 2025).
+See <a href="../../seaphox/">Deep SeapHOx V2</a> for instrument architecture context.</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_calc_phwater" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">ph_calc_phwater</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">light</span><span class="p">,</span> <span class="n">therm</span><span class="p">,</span> <span class="n">ea434</span><span class="p">,</span> <span class="n">eb434</span><span class="p">,</span> <span class="n">ea578</span><span class="p">,</span> <span class="n">eb578</span><span class="p">,</span> <span class="n">ind_slp</span><span class="p">,</span> <span class="n">ind_off</span><span class="p">,</span> <span class="n">psal</span><span class="o">=</span><span class="mf">35.0</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sunburst
+SAMI-II pH instrument (PHSEN).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ref</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>, 16))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw blank reference and signal measurements from the PHSEN blank
+cycle. Contains 4 sets of 4 interleaved measurements:
+[ref434, sig434, ref578, sig578][counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>light</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>, 92))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw reference and signal measurements from the PHSEN measurement
+cycle. Contains 23 sets of 4 interleaved measurements:
+[ref434, sig434, ref578, sig578][counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Thermistor temperature at the end of the measurement cycle,
+converted to degrees C via ph_thermistor (ABSTHRM_L0) [deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ea434</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1. Molar absorptivity of the acidic
+indicator form at 434 nm at the reference temperature [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eb434</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRer">nRer</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2. Molar absorptivity of the basic
+indicator form at 434 nm at the reference temperature [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ea578</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3. Molar absorptivity of the acidic
+indicator form at 578 nm at the reference temperature [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eb578</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4. Molar absorptivity of the basic
+indicator form at 578 nm at the reference temperature [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ind_slp</code></b>
+                  (<code>(<span title="float">float</span> or <span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Indicator impurity slope correction factor applied to pH values
+greater than 8.2 [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ind_off</code></b>
+                  (<code>(<span title="float">float</span> or <span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Indicator impurity offset correction factor applied to pH values
+greater than 8.2 [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psal</code></b>
+                  (<code>(<span title="float">float</span> or <span title="array_like">array_like</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>))</code>, default:
+                      <code>35.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from a co-located CTD. Default is 35.0 if
+CTD data are unavailable [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>ph</code></b>(                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>))</code>
+)              –
+              <div class="doc-md-description">
+                <p>pH of seawater on the total hydrogen ion scale (PHWATER_L2)
+[unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The algorithm selects the 8 most linearly consistent measurement
+points from 23 collected during each cycle (skipping the first 5)
+by finding the window of 8 consecutive points with the highest
+linear correlation coefficient (R^2) between indicator concentration
+and point pH. The final pH is extrapolated to zero indicator
+concentration from this best-fit region.</p>
+<p>An impurity correction (ind_slp, ind_off) is applied when the
+calculated pH exceeds 8.2. This correction is not described in DPS
+1341-00510 and was added post-publication.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ph_calc_phwater</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">light</span><span class="p">,</span> <span class="n">therm</span><span class="p">,</span> <span class="n">ea434</span><span class="p">,</span> <span class="n">eb434</span><span class="p">,</span> <span class="n">ea578</span><span class="p">,</span> <span class="n">eb578</span><span class="p">,</span>
+                    <span class="n">ind_slp</span><span class="p">,</span> <span class="n">ind_off</span><span class="p">,</span> <span class="n">psal</span><span class="o">=</span><span class="mf">35.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sunburst</span>
+<span class="sd">    SAMI-II pH instrument (PHSEN).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref : array_like, shape (nRec, 16)</span>
+<span class="sd">        Raw blank reference and signal measurements from the PHSEN blank</span>
+<span class="sd">        cycle. Contains 4 sets of 4 interleaved measurements:</span>
+<span class="sd">        [ref434, sig434, ref578, sig578] [counts].</span>
+<span class="sd">    light : array_like, shape (nRec, 92)</span>
+<span class="sd">        Raw reference and signal measurements from the PHSEN measurement</span>
+<span class="sd">        cycle. Contains 23 sets of 4 interleaved measurements:</span>
+<span class="sd">        [ref434, sig434, ref578, sig578] [counts].</span>
+<span class="sd">    therm : array_like, shape (nRec)</span>
+<span class="sd">        Thermistor temperature at the end of the measurement cycle,</span>
+<span class="sd">        converted to degrees C via ph_thermistor (ABSTHRM_L0) [deg_C].</span>
+<span class="sd">    ea434 : array_like, shape (nRec)</span>
+<span class="sd">        Calibration coefficient 1. Molar absorptivity of the acidic</span>
+<span class="sd">        indicator form at 434 nm at the reference temperature [unitless].</span>
+<span class="sd">    eb434 : array_like, shape (nRer)</span>
+<span class="sd">        Calibration coefficient 2. Molar absorptivity of the basic</span>
+<span class="sd">        indicator form at 434 nm at the reference temperature [unitless].</span>
+<span class="sd">    ea578 : array_like, shape (nRec)</span>
+<span class="sd">        Calibration coefficient 3. Molar absorptivity of the acidic</span>
+<span class="sd">        indicator form at 578 nm at the reference temperature [unitless].</span>
+<span class="sd">    eb578 : array_like, shape (nRec)</span>
+<span class="sd">        Calibration coefficient 4. Molar absorptivity of the basic</span>
+<span class="sd">        indicator form at 578 nm at the reference temperature [unitless].</span>
+<span class="sd">    ind_slp : float or array_like, shape (nRec)</span>
+<span class="sd">        Indicator impurity slope correction factor applied to pH values</span>
+<span class="sd">        greater than 8.2 [unitless].</span>
+<span class="sd">    ind_off : float or array_like, shape (nRec)</span>
+<span class="sd">        Indicator impurity offset correction factor applied to pH values</span>
+<span class="sd">        greater than 8.2 [unitless].</span>
+<span class="sd">    psal : float or array_like, shape (nRec), optional</span>
+<span class="sd">        Practical salinity from a co-located CTD. Default is 35.0 if</span>
+<span class="sd">        CTD data are unavailable [unitless].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ph : ndarray, shape (nRec,)</span>
+<span class="sd">        pH of seawater on the total hydrogen ion scale (PHWATER_L2)</span>
+<span class="sd">        [unitless].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The algorithm selects the 8 most linearly consistent measurement</span>
+<span class="sd">    points from 23 collected during each cycle (skipping the first 5)</span>
+<span class="sd">    by finding the window of 8 consecutive points with the highest</span>
+<span class="sd">    linear correlation coefficient (R^2) between indicator concentration</span>
+<span class="sd">    and point pH. The final pH is extrapolated to zero indicator</span>
+<span class="sd">    concentration from this best-fit region.</span>
+
+<span class="sd">    An impurity correction (ind_slp, ind_off) is applied when the</span>
+<span class="sd">    calculated pH exceeds 8.2. This correction is not described in DPS</span>
+<span class="sd">    1341-00510 and was added post-publication.</span>
+<span class="sd">    """</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">ref</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">nRec</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">light</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_3d</span><span class="p">(</span><span class="n">light</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">light</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+    <span class="n">therm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">therm</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">ea434</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ea434</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">eb434</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">eb434</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">ea578</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ea578</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">eb578</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">eb578</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">ind_slp</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">ind_slp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">ind_slp</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ind_slp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ind_slp</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">ind_off</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">ind_off</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">ind_off</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ind_off</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ind_off</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">psal</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">psal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">psal</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">psal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">psal</span><span class="p">,</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># Calculate blanks from the 16 sets of reference light measurements</span>
+    <span class="n">arr434</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">(</span><span class="n">ref</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">ref</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">ref</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">/</span> <span class="n">ref</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">ref</span><span class="p">[:,</span> <span class="mi">9</span><span class="p">]</span> <span class="o">/</span> <span class="n">ref</span><span class="p">[:,</span> <span class="mi">8</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">ref</span><span class="p">[:,</span> <span class="mi">13</span><span class="p">]</span> <span class="o">/</span> <span class="n">ref</span><span class="p">[:,</span> <span class="mi">12</span><span class="p">]),</span>
+    <span class="p">])</span>
+    <span class="n">blank434</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">arr434</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">arr578</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">(</span><span class="n">ref</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="n">ref</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">ref</span><span class="p">[:,</span> <span class="mi">7</span><span class="p">]</span> <span class="o">/</span> <span class="n">ref</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">ref</span><span class="p">[:,</span> <span class="mi">11</span><span class="p">]</span> <span class="o">/</span> <span class="n">ref</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">ref</span><span class="p">[:,</span> <span class="mi">15</span><span class="p">]</span> <span class="o">/</span> <span class="n">ref</span><span class="p">[:,</span> <span class="mi">14</span><span class="p">]),</span>
+    <span class="p">])</span>
+    <span class="n">blank578</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">arr578</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">nRec</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># Extract 23 sets of 4 light measurements into arrays corresponding</span>
+    <span class="c1"># to the raw reference and signal measurements at 434 and 578 nm.</span>
+    <span class="n">ref434</span> <span class="o">=</span> <span class="n">light</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>   <span class="c1"># reference signal, 434 nm</span>
+    <span class="n">int434</span> <span class="o">=</span> <span class="n">light</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>   <span class="c1"># signal intensity, 434 nm (PH434SI_L0)</span>
+    <span class="n">ref578</span> <span class="o">=</span> <span class="n">light</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>   <span class="c1"># reference signal, 578 nm</span>
+    <span class="n">int578</span> <span class="o">=</span> <span class="n">light</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span>   <span class="c1"># signal intensity, 578 nm (PH578SI_L0)</span>
+
+    <span class="c1"># Absorbance</span>
+    <span class="n">A434</span> <span class="o">=</span> <span class="o">-</span><span class="n">sp</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">int434</span> <span class="o">/</span> <span class="n">ref434</span><span class="p">)</span>
+    <span class="n">A434blank</span> <span class="o">=</span> <span class="o">-</span><span class="n">sp</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">blank434</span><span class="p">)</span>
+    <span class="n">abs434</span> <span class="o">=</span> <span class="n">A434</span> <span class="o">-</span> <span class="n">A434blank</span>
+
+    <span class="n">A578</span> <span class="o">=</span> <span class="o">-</span><span class="n">sp</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">int578</span> <span class="o">/</span> <span class="n">ref578</span><span class="p">)</span>
+    <span class="n">A578blank</span> <span class="o">=</span> <span class="o">-</span><span class="n">sp</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">blank578</span><span class="p">)</span>
+    <span class="n">abs578</span> <span class="o">=</span> <span class="n">A578</span> <span class="o">-</span> <span class="n">A578blank</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">abs578</span> <span class="o">/</span> <span class="n">abs434</span>
+
+    <span class="c1"># pKa from Clayton and Byrne, 1993</span>
+    <span class="n">pKa</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1245.69</span> <span class="o">/</span> <span class="p">(</span><span class="n">therm</span> <span class="o">+</span> <span class="mf">273.15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">3.8275</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.0021</span> <span class="o">*</span> <span class="p">(</span><span class="mf">35.</span> <span class="o">-</span> <span class="n">psal</span><span class="p">))</span>
+    <span class="n">pKa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">pKa</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># Molar absorptivities</span>
+    <span class="n">Ea434</span> <span class="o">=</span> <span class="n">ea434</span> <span class="o">-</span> <span class="p">(</span><span class="mf">26.</span> <span class="o">*</span> <span class="p">(</span><span class="n">therm</span> <span class="o">-</span> <span class="mf">24.788</span><span class="p">))</span>
+    <span class="n">Ea578</span> <span class="o">=</span> <span class="n">ea578</span> <span class="o">+</span> <span class="p">(</span><span class="n">therm</span> <span class="o">-</span> <span class="mf">24.788</span><span class="p">)</span>
+    <span class="n">Eb434</span> <span class="o">=</span> <span class="n">eb434</span> <span class="o">+</span> <span class="p">(</span><span class="mf">12.</span> <span class="o">*</span> <span class="p">(</span><span class="n">therm</span> <span class="o">-</span> <span class="mf">24.788</span><span class="p">))</span>
+    <span class="n">Eb578</span> <span class="o">=</span> <span class="n">eb578</span> <span class="o">-</span> <span class="p">(</span><span class="mf">71.</span> <span class="o">*</span> <span class="p">(</span><span class="n">therm</span> <span class="o">-</span> <span class="mf">24.788</span><span class="p">))</span>
+    <span class="n">e1</span> <span class="o">=</span> <span class="n">Ea578</span> <span class="o">/</span> <span class="n">Ea434</span>
+    <span class="n">e2</span> <span class="o">=</span> <span class="n">Eb578</span> <span class="o">/</span> <span class="n">Ea434</span>
+    <span class="n">e3</span> <span class="o">=</span> <span class="n">Eb434</span> <span class="o">/</span> <span class="n">Ea434</span>
+
+    <span class="n">V1</span> <span class="o">=</span> <span class="n">R</span> <span class="o">-</span> <span class="n">e1</span>
+    <span class="n">V2</span> <span class="o">=</span> <span class="n">e2</span> <span class="o">-</span> <span class="n">R</span> <span class="o">*</span> <span class="n">e3</span>
+
+    <span class="c1"># indicator concentration calculations</span>
+    <span class="n">HI</span> <span class="o">=</span> <span class="p">(</span><span class="n">abs434</span> <span class="o">*</span> <span class="n">Eb578</span> <span class="o">-</span> <span class="n">abs578</span> <span class="o">*</span> <span class="n">Eb434</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Ea434</span> <span class="o">*</span> <span class="n">Eb578</span> <span class="o">-</span> <span class="n">Eb434</span> <span class="o">*</span> <span class="n">Ea578</span><span class="p">)</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">abs578</span> <span class="o">*</span> <span class="n">Ea434</span> <span class="o">-</span> <span class="n">abs434</span> <span class="o">*</span> <span class="n">Ea578</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Ea434</span> <span class="o">*</span> <span class="n">Eb578</span> <span class="o">-</span> <span class="n">Eb434</span> <span class="o">*</span> <span class="n">Ea578</span><span class="p">)</span>
+    <span class="n">IndConc</span> <span class="o">=</span> <span class="n">HI</span> <span class="o">+</span> <span class="n">I</span>
+    <span class="n">pointph</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">pKa</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">V1</span> <span class="o">/</span> <span class="n">V2</span><span class="p">))</span>
+
+    <span class="c1"># determine the most linear region of points for pH of seawater</span>
+    <span class="c1"># calculation, skipping the first 5 points.</span>
+    <span class="n">IndConca</span> <span class="o">=</span> <span class="n">IndConc</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:]</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">pointph</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:]</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>
+
+    <span class="c1"># create arrays for vectorized computations used in sum of squares.</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># number of points to use</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">step</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">nPts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">step</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nPts</span><span class="p">,</span> <span class="n">count</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nRec</span><span class="p">,</span> <span class="n">nPts</span><span class="p">,</span> <span class="n">count</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nPts</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">count</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nRec</span><span class="p">):</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">count</span><span class="p">]</span>
+
+    <span class="c1"># compute correlation coefficient for each window of 8 points</span>
+    <span class="n">sumx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sumy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">sumxy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">sumx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sumy2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">sumxx</span> <span class="o">=</span> <span class="n">sumx</span> <span class="o">*</span> <span class="n">sumx</span>
+    <span class="n">sumyy</span> <span class="o">=</span> <span class="n">sumy</span> <span class="o">*</span> <span class="n">sumy</span>
+    <span class="n">ssxy</span> <span class="o">=</span> <span class="n">sumxy</span> <span class="o">-</span> <span class="p">(</span><span class="n">sumx</span> <span class="o">*</span> <span class="n">sumy</span><span class="p">)</span> <span class="o">/</span> <span class="n">count</span>
+    <span class="n">ssx</span> <span class="o">=</span> <span class="n">sumx2</span> <span class="o">-</span> <span class="p">(</span><span class="n">sumxx</span> <span class="o">/</span> <span class="n">count</span><span class="p">)</span>
+    <span class="n">ssy</span> <span class="o">=</span> <span class="n">sumy2</span> <span class="o">-</span> <span class="p">(</span><span class="n">sumyy</span> <span class="o">/</span> <span class="n">count</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">ssxy</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">ssx</span> <span class="o">*</span> <span class="n">ssy</span><span class="p">)</span>
+
+    <span class="c1"># Range of seawater points to use</span>
+    <span class="n">cutoff1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Find the first, best R-squared value</span>
+    <span class="n">cutoff2</span> <span class="o">=</span> <span class="n">cutoff1</span> <span class="o">+</span> <span class="n">count</span>
+
+    <span class="c1"># Indicator and pH range limited to best points</span>
+    <span class="n">IndConcS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nRec</span><span class="p">,</span> <span class="n">count</span><span class="p">))</span>
+    <span class="n">pointphS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nRec</span><span class="p">,</span> <span class="n">count</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nRec</span><span class="p">):</span>
+        <span class="n">IndConcS</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">IndConca</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">cutoff1</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">cutoff2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">pointphS</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">cutoff1</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="n">cutoff2</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+    <span class="c1"># Final pH calculation: extrapolate to zero indicator concentration</span>
+    <span class="n">sumx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">IndConcS</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sumy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pointphS</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sumxy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pointphS</span> <span class="o">*</span> <span class="n">IndConcS</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sumx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">IndConcS</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sumy2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pointphS</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">xbar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">IndConcS</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ybar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pointphS</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sumxx</span> <span class="o">=</span> <span class="n">sumx</span> <span class="o">*</span> <span class="n">sumx</span>
+    <span class="n">sumyy</span> <span class="o">=</span> <span class="n">sumy</span> <span class="o">*</span> <span class="n">sumy</span>
+    <span class="n">ssxy</span> <span class="o">=</span> <span class="n">sumxy</span> <span class="o">-</span> <span class="p">(</span><span class="n">sumx</span> <span class="o">*</span> <span class="n">sumy</span><span class="p">)</span> <span class="o">/</span> <span class="n">count</span>
+    <span class="n">ssx</span> <span class="o">=</span> <span class="n">sumx2</span> <span class="o">-</span> <span class="p">(</span><span class="n">sumxx</span> <span class="o">/</span> <span class="n">count</span><span class="p">)</span>
+    <span class="n">ssy</span> <span class="o">=</span> <span class="n">sumy2</span> <span class="o">-</span> <span class="p">(</span><span class="n">sumyy</span> <span class="o">/</span> <span class="n">count</span><span class="p">)</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="n">ssxy</span> <span class="o">/</span> <span class="n">ssx</span>
+    <span class="n">ph</span> <span class="o">=</span> <span class="n">ybar</span> <span class="o">-</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">xbar</span>
+
+    <span class="c1"># pH corrections due to indicator impurity if the calculated pH is</span>
+    <span class="c1"># greater than 8.2.</span>
+    <span class="n">phFlag</span> <span class="o">=</span> <span class="n">ph</span> <span class="o">&gt;=</span> <span class="mf">8.2</span>
+    <span class="n">ph</span><span class="p">[</span><span class="n">phFlag</span><span class="p">]</span> <span class="o">=</span> <span class="n">ph</span><span class="p">[</span><span class="n">phFlag</span><span class="p">]</span> <span class="o">*</span> <span class="n">ind_slp</span><span class="p">[</span><span class="n">phFlag</span><span class="p">]</span> <span class="o">+</span> <span class="n">ind_off</span><span class="p">[</span><span class="n">phFlag</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">ph</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-19</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.ph_total" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">ph_total</span><span class="p">(</span><span class="n">vrs_ext</span><span class="p">,</span> <span class="n">degc</span><span class="p">,</span> <span class="n">psu</span><span class="p">,</span> <span class="n">dbar</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sea-Bird
+Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>vrs_ext</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>External ISFET reference voltage (V_FET/REF) [Volts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>degc</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>In-situ temperature from the co-located CTD [deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psu</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from the co-located CTD [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dbar</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Pressure from the co-located CTD [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>k0</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1. Cell standard potential offset
+for the external reference [Volts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>k2</code></b>
+                  (<code><span title="float">float</span> or <span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2. Temperature slope coefficient for
+the external reference [Volts deg_C^-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>f</code></b>
+                  (<code>(<span title="array_like">array_like</span>, <span title="shape">shape</span>(..., 6))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficients 3-8. Coefficients f1 through f6 of
+the 6th-order pressure response polynomial f(P). Coefficient
+f0 is captured in k0 and is not used here [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>p_h</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>pH of seawater on the total hydrogen ion scale (PHWATER_L2)
+[unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The algorithm follows Sea-Bird Scientific Application Note 99
+(Johnson et al. 2016; Johnson et al. 2017). The ISFET external
+cell exhibits a Nernstian response to pH and is sensitive to
+chloride activity. The total pH is computed as:</p>
+<pre><code>pH = (V_FET/REF - k0 - k2*t - f(P)) / S_nernst
+     + log10(Cl_T) + 2*log10(gamma_HCl)_T&amp;P
+     - log10(1 + S_T/K_S,T&amp;P)
+     - log10((1000 - 1.005*S) / 1000)
+</code></pre>
+<p>where S_nernst = R<em>T</em>ln(10)/F, Cl_T is total chloride, gamma_HCl
+is the HCl activity coefficient corrected for temperature and
+pressure, S_T is total sulfate, and K_S,T&amp;P is the acid
+dissociation constant of HSO4- corrected for temperature and
+pressure. All intermediate quantities are computed from salinity,
+temperature, and pressure following Dickson et al. (2007),
+Khoo et al. (1977), Millero (1982, 1983), and Johnson et al.
+(2017).</p>
+<p>Calibration coefficients k0, k2, and f are from factory
+calibration sheets supplied by Sea-Bird Scientific.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ph_total</span><span class="p">(</span><span class="n">vrs_ext</span><span class="p">,</span> <span class="n">degc</span><span class="p">,</span> <span class="n">psu</span><span class="p">,</span> <span class="n">dbar</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sea-Bird</span>
+<span class="sd">    Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vrs_ext : array_like</span>
+<span class="sd">        External ISFET reference voltage (V_FET/REF) [Volts].</span>
+<span class="sd">    degc : array_like</span>
+<span class="sd">        In-situ temperature from the co-located CTD [deg_C].</span>
+<span class="sd">    psu : array_like</span>
+<span class="sd">        Practical salinity from the co-located CTD [unitless].</span>
+<span class="sd">    dbar : array_like</span>
+<span class="sd">        Pressure from the co-located CTD [dbar].</span>
+<span class="sd">    k0 : float or array_like</span>
+<span class="sd">        Calibration coefficient 1. Cell standard potential offset</span>
+<span class="sd">        for the external reference [Volts].</span>
+<span class="sd">    k2 : float or array_like</span>
+<span class="sd">        Calibration coefficient 2. Temperature slope coefficient for</span>
+<span class="sd">        the external reference [Volts deg_C^-1].</span>
+<span class="sd">    f : array_like, shape (..., 6)</span>
+<span class="sd">        Calibration coefficients 3-8. Coefficients f1 through f6 of</span>
+<span class="sd">        the 6th-order pressure response polynomial f(P). Coefficient</span>
+<span class="sd">        f0 is captured in k0 and is not used here [unitless].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    p_h : ndarray</span>
+<span class="sd">        pH of seawater on the total hydrogen ion scale (PHWATER_L2)</span>
+<span class="sd">        [unitless].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The algorithm follows Sea-Bird Scientific Application Note 99</span>
+<span class="sd">    (Johnson et al. 2016; Johnson et al. 2017). The ISFET external</span>
+<span class="sd">    cell exhibits a Nernstian response to pH and is sensitive to</span>
+<span class="sd">    chloride activity. The total pH is computed as:</span>
+
+<span class="sd">        pH = (V_FET/REF - k0 - k2*t - f(P)) / S_nernst</span>
+<span class="sd">             + log10(Cl_T) + 2*log10(gamma_HCl)_T&amp;P</span>
+<span class="sd">             - log10(1 + S_T/K_S,T&amp;P)</span>
+<span class="sd">             - log10((1000 - 1.005*S) / 1000)</span>
+
+<span class="sd">    where S_nernst = R*T*ln(10)/F, Cl_T is total chloride, gamma_HCl</span>
+<span class="sd">    is the HCl activity coefficient corrected for temperature and</span>
+<span class="sd">    pressure, S_T is total sulfate, and K_S,T&amp;P is the acid</span>
+<span class="sd">    dissociation constant of HSO4- corrected for temperature and</span>
+<span class="sd">    pressure. All intermediate quantities are computed from salinity,</span>
+<span class="sd">    temperature, and pressure following Dickson et al. (2007),</span>
+<span class="sd">    Khoo et al. (1977), Millero (1982, 1983), and Johnson et al.</span>
+<span class="sd">    (2017).</span>
+
+<span class="sd">    Calibration coefficients k0, k2, and f are from factory</span>
+<span class="sd">    calibration sheets supplied by Sea-Bird Scientific.</span>
+<span class="sd">    """</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">fp</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dbar</span> <span class="o">+</span> <span class="n">f</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">dbar</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">f</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">dbar</span> <span class="o">**</span> <span class="mi">3</span>
+          <span class="o">+</span> <span class="n">f</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">dbar</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">f</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="n">dbar</span> <span class="o">**</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">f</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">*</span> <span class="n">dbar</span> <span class="o">**</span> <span class="mi">6</span><span class="p">)</span>
+
+    <span class="n">bar</span> <span class="o">=</span> <span class="n">dbar</span> <span class="o">*</span> <span class="mf">0.10</span>  <span class="c1"># convert pressure from dbar to bar</span>
+
+    <span class="c1"># Nernstian response of the pH electrode (slope of the response)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mf">8.3144621</span>  <span class="c1"># J/(mol K) universal gas constant</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">degc</span> <span class="o">+</span> <span class="mf">273.15</span>  <span class="c1"># temperature in Kelvin</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="mf">9.6485365e4</span>  <span class="c1"># C/mol Faraday constant</span>
+    <span class="n">snerst</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="n">f</span>
+
+    <span class="c1"># total chloride in seawater (Dickson et al. 2007)</span>
+    <span class="n">cl_total</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.99889</span> <span class="o">/</span> <span class="mf">35.453</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">psu</span> <span class="o">/</span> <span class="mf">1.80655</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">-</span> <span class="mf">1.005</span> <span class="o">*</span> <span class="n">psu</span><span class="p">))</span>
+
+    <span class="c1"># partial Molal volume of HCl (Millero 1983)</span>
+    <span class="n">vhcl</span> <span class="o">=</span> <span class="mf">17.85</span> <span class="o">+</span> <span class="mf">0.1044</span> <span class="o">*</span> <span class="n">degc</span> <span class="o">-</span> <span class="mf">0.0001316</span> <span class="o">*</span> <span class="n">degc</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="c1"># Sample ionic strength (Dickson et al. 2007)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="mf">19.924</span> <span class="o">*</span> <span class="n">psu</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">-</span> <span class="mf">1.005</span> <span class="o">*</span> <span class="n">psu</span><span class="p">)</span>
+
+    <span class="c1"># Debye-Huckel constant for activity of HCl (Khoo et al. 1977)</span>
+    <span class="n">adh</span> <span class="o">=</span> <span class="mf">0.0000034286</span> <span class="o">*</span> <span class="n">degc</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">0.00067503</span> <span class="o">*</span> <span class="n">degc</span> <span class="o">+</span> <span class="mf">0.49172143</span>
+
+    <span class="c1"># log of HCl activity coefficient as a function of temperature</span>
+    <span class="c1"># (Khoo et al. 1977)</span>
+    <span class="n">loghclt</span> <span class="o">=</span> <span class="p">((</span><span class="o">-</span><span class="n">adh</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1.394</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.08885</span> <span class="o">-</span> <span class="mf">0.000111</span> <span class="o">*</span> <span class="n">degc</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span>
+
+    <span class="c1"># log10 of HCl activity coefficient as a function of temperature</span>
+    <span class="c1"># and pressure (Johnson et al. 2017)</span>
+    <span class="n">loghcltp</span> <span class="o">=</span> <span class="n">loghclt</span> <span class="o">+</span> <span class="p">(((</span><span class="n">vhcl</span> <span class="o">*</span> <span class="n">bar</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># total sulfate in seawater (Dickson et al. 2007)</span>
+    <span class="n">so4_total</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.1400</span> <span class="o">/</span> <span class="mf">96.062</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">psu</span> <span class="o">/</span> <span class="mf">1.80655</span><span class="p">)</span>
+
+    <span class="c1"># acid dissociation constant of HSO4- (Dickson et al. 2007)</span>
+    <span class="n">ks</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.001005</span> <span class="o">*</span> <span class="n">psu</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="p">(</span><span class="o">-</span><span class="mf">4276.1</span> <span class="o">/</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="mf">141.328</span> <span class="o">-</span> <span class="mf">23.093</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="o">+</span> <span class="p">((</span><span class="o">-</span><span class="mi">13856</span> <span class="o">/</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="mf">324.57</span> <span class="o">-</span> <span class="mf">47.986</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="o">+</span> <span class="p">((</span><span class="mi">35474</span> <span class="o">/</span> <span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="mf">771.54</span> <span class="o">+</span> <span class="mf">114.723</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="o">*</span> <span class="n">i</span>
+        <span class="o">-</span> <span class="p">(</span><span class="mi">2698</span> <span class="o">/</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="o">**</span> <span class="mf">1.5</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1776</span> <span class="o">/</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># partial Molal volume of HSO4- (Millero 1983)</span>
+    <span class="n">v_hso4</span> <span class="o">=</span> <span class="o">-</span><span class="mf">18.03</span> <span class="o">+</span> <span class="mf">0.0466</span> <span class="o">*</span> <span class="n">degc</span> <span class="o">+</span> <span class="mf">0.000316</span> <span class="o">*</span> <span class="n">degc</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="c1"># compressibility of HSO4- (Millero 1983)</span>
+    <span class="n">kbar_s</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">4.53</span> <span class="o">+</span> <span class="mf">0.09</span> <span class="o">*</span> <span class="n">degc</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+
+    <span class="c1"># acid dissociation constant of HSO4- corrected for T and P</span>
+    <span class="c1"># (Millero 1982)</span>
+    <span class="n">kstp</span> <span class="o">=</span> <span class="n">ks</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="o">-</span><span class="n">v_hso4</span> <span class="o">*</span> <span class="n">bar</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">kbar_s</span> <span class="o">*</span> <span class="n">bar</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span>
+
+    <span class="c1"># calculate total pH adjusted for pressure, temperature, and salinity</span>
+    <span class="n">p_h</span> <span class="o">=</span> <span class="p">(((</span><span class="n">vrs_ext</span> <span class="o">-</span> <span class="n">k0</span> <span class="o">-</span> <span class="n">k2</span> <span class="o">*</span> <span class="n">degc</span> <span class="o">-</span> <span class="n">fp</span><span class="p">)</span> <span class="o">/</span> <span class="n">snerst</span><span class="p">)</span>
+           <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cl_total</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">loghcltp</span>
+           <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">so4_total</span> <span class="o">/</span> <span class="n">kstp</span><span class="p">))</span>
+           <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">((</span><span class="mi">1000</span> <span class="o">-</span> <span class="mf">1.005</span> <span class="o">*</span> <span class="n">psu</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">p_h</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-01-21</td>
+<td>Samuel Dahlberg</td>
+<td>Initial code, adapted from Christopher Wingard's ph_total in cgsn-processing</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_434_intensity" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">ph_434_intensity</span><span class="p">(</span><span class="n">light</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Extract the L0 signal intensity at 434 nm (PH434SI_L0) from the PHSEN
+light measurement array.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>light</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw light measurement array from the PHSEN instrument. May be a
+single record or an array of records. The array is reshaped
+internally to (-1, 23, 4) where the second index selects the
+measurement set and the third index selects the channel [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>si434</code></b>(                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>, 23))</code>
+)              –
+              <div class="doc-md-description">
+                <p>Signal intensity at 434 nm (PH434SI_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Each PHSEN data record contains 23 sets of 4 light measurements
+interleaved as [ref434, sig434, ref578, sig578]. Column index 1
+(0-based) of each set is the 434 nm signal intensity.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ph_434_intensity</span><span class="p">(</span><span class="n">light</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Extract the L0 signal intensity at 434 nm (PH434SI_L0) from the PHSEN</span>
+<span class="sd">    light measurement array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    light : array_like</span>
+<span class="sd">        Raw light measurement array from the PHSEN instrument. May be a</span>
+<span class="sd">        single record or an array of records. The array is reshaped</span>
+<span class="sd">        internally to (-1, 23, 4) where the second index selects the</span>
+<span class="sd">        measurement set and the third index selects the channel [counts].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    si434 : ndarray, shape (nRec, 23)</span>
+<span class="sd">        Signal intensity at 434 nm (PH434SI_L0) [counts].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Each PHSEN data record contains 23 sets of 4 light measurements</span>
+<span class="sd">    interleaved as [ref434, sig434, ref578, sig578]. Column index 1</span>
+<span class="sd">    (0-based) of each set is the 434 nm signal intensity.</span>
+<span class="sd">    """</span>
+    <span class="n">light</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_3d</span><span class="p">(</span><span class="n">light</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">si434</span> <span class="o">=</span> <span class="n">new</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">si434</span>  <span class="c1"># signal intensity, 434 nm (PH434SI_L0)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-19</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_578_intensity" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">ph_578_intensity</span><span class="p">(</span><span class="n">light</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Extract the L0 signal intensity at 578 nm (PH578SI_L0) from the PHSEN
+light measurement array.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>light</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw light measurement array from the PHSEN instrument. May be a
+single record or an array of records. The array is reshaped
+internally to (-1, 23, 4) where the second index selects the
+measurement set and the third index selects the channel [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>si578</code></b>(                  <code>(<span title="ndarray">ndarray</span>, <span title="shape">shape</span>(<span title="nRec">nRec</span>, 23))</code>
+)              –
+              <div class="doc-md-description">
+                <p>Signal intensity at 578 nm (PH578SI_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Each PHSEN data record contains 23 sets of 4 light measurements
+interleaved as [ref434, sig434, ref578, sig578]. Column index 3
+(0-based) of each set is the 578 nm signal intensity.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ph_578_intensity</span><span class="p">(</span><span class="n">light</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Extract the L0 signal intensity at 578 nm (PH578SI_L0) from the PHSEN</span>
+<span class="sd">    light measurement array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    light : array_like</span>
+<span class="sd">        Raw light measurement array from the PHSEN instrument. May be a</span>
+<span class="sd">        single record or an array of records. The array is reshaped</span>
+<span class="sd">        internally to (-1, 23, 4) where the second index selects the</span>
+<span class="sd">        measurement set and the third index selects the channel [counts].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    si578 : ndarray, shape (nRec, 23)</span>
+<span class="sd">        Signal intensity at 578 nm (PH578SI_L0) [counts].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Each PHSEN data record contains 23 sets of 4 light measurements</span>
+<span class="sd">    interleaved as [ref434, sig434, ref578, sig578]. Column index 3</span>
+<span class="sd">    (0-based) of each set is the 578 nm signal intensity.</span>
+<span class="sd">    """</span>
+    <span class="n">light</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_3d</span><span class="p">(</span><span class="n">light</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">si578</span> <span class="o">=</span> <span class="n">new</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">si578</span>  <span class="c1"># signal intensity, 578 nm (PH578SI_L0)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-19</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_thermistor" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">ph_thermistor</span><span class="p">(</span><span class="n">traw</span><span class="p">,</span> <span class="n">sami_bits</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert the PHSEN thermistor counts (ABSTHRM_L0) to temperature in
+degrees C.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>traw</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw thermistor counts from the PHSEN instrument (ABSTHRM_L0)
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sami_bits</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>12</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>ADC resolution of the SAMI hardware generation. Use 12 for
+original SAMI-II hardware (full-scale 4096 counts) and 14 for
+newer hardware (full-scale 16384 counts). Default is 12.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>therm</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Thermistor temperature [deg_C].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The conversion uses a three-term polynomial in the natural log of the
+thermistor resistance. The full-scale count differs between SAMI
+hardware generations: 4096 for 12-bit hardware and 16384 for 14-bit
+hardware. The reference resistance is 17400 ohms in both cases.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ph_thermistor</span><span class="p">(</span><span class="n">traw</span><span class="p">,</span> <span class="n">sami_bits</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert the PHSEN thermistor counts (ABSTHRM_L0) to temperature in</span>
+<span class="sd">    degrees C.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    traw : array_like</span>
+<span class="sd">        Raw thermistor counts from the PHSEN instrument (ABSTHRM_L0)</span>
+<span class="sd">        [counts].</span>
+<span class="sd">    sami_bits : int, optional</span>
+<span class="sd">        ADC resolution of the SAMI hardware generation. Use 12 for</span>
+<span class="sd">        original SAMI-II hardware (full-scale 4096 counts) and 14 for</span>
+<span class="sd">        newer hardware (full-scale 16384 counts). Default is 12.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    therm : ndarray</span>
+<span class="sd">        Thermistor temperature [deg_C].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The conversion uses a three-term polynomial in the natural log of the</span>
+<span class="sd">    thermistor resistance. The full-scale count differs between SAMI</span>
+<span class="sd">    hardware generations: 4096 for 12-bit hardware and 16384 for 14-bit</span>
+<span class="sd">    hardware. The reference resistance is 17400 ohms in both cases.</span>
+<span class="sd">    """</span>
+    <span class="n">traw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">traw</span><span class="p">)</span>
+    <span class="n">sami_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">sami_bits</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sami_bits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">14</span><span class="p">:</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">traw</span> <span class="o">/</span> <span class="p">(</span><span class="mf">16384.0</span> <span class="o">-</span> <span class="n">traw</span><span class="p">))</span> <span class="o">*</span> <span class="mf">17400.0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">traw</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4096.0</span> <span class="o">-</span> <span class="n">traw</span><span class="p">))</span> <span class="o">*</span> <span class="mf">17400.0</span><span class="p">)</span>
+    <span class="n">inv</span> <span class="o">=</span> <span class="mf">0.0010183</span> <span class="o">+</span> <span class="mf">0.000241</span> <span class="o">*</span> <span class="n">rt</span> <span class="o">+</span> <span class="mf">0.00000015</span> <span class="o">*</span> <span class="n">rt</span><span class="o">**</span><span class="mi">3</span>
+    <span class="n">therm</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">inv</span><span class="p">)</span> <span class="o">-</span> <span class="mf">273.15</span>
+
+    <span class="k">return</span> <span class="n">therm</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-01</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr; added default for sami_bits</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_battery" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">ph_battery</span><span class="p">(</span><span class="n">braw</span><span class="p">,</span> <span class="n">sami_bits</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert the PHSEN battery counts to battery voltage in Volts.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>braw</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw battery counts from the PHSEN instrument [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sami_bits</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>12</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>ADC resolution of the SAMI hardware generation. Use 12 for
+original SAMI-II hardware (full-scale 4096 counts) and 14 for
+newer hardware (full-scale 16384 counts). Default is 12.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>volts</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Battery voltage [Volts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The full-scale voltage and count differ between SAMI hardware
+generations. For 12-bit hardware the full-scale is 15 V at 4096
+counts; for 14-bit hardware the full-scale is 3 V at 4000 counts.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ph_battery</span><span class="p">(</span><span class="n">braw</span><span class="p">,</span> <span class="n">sami_bits</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert the PHSEN battery counts to battery voltage in Volts.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    braw : array_like</span>
+<span class="sd">        Raw battery counts from the PHSEN instrument [counts].</span>
+<span class="sd">    sami_bits : int, optional</span>
+<span class="sd">        ADC resolution of the SAMI hardware generation. Use 12 for</span>
+<span class="sd">        original SAMI-II hardware (full-scale 4096 counts) and 14 for</span>
+<span class="sd">        newer hardware (full-scale 16384 counts). Default is 12.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    volts : ndarray</span>
+<span class="sd">        Battery voltage [Volts].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The full-scale voltage and count differ between SAMI hardware</span>
+<span class="sd">    generations. For 12-bit hardware the full-scale is 15 V at 4096</span>
+<span class="sd">    counts; for 14-bit hardware the full-scale is 3 V at 4000 counts.</span>
+<span class="sd">    """</span>
+    <span class="n">braw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">braw</span><span class="p">)</span>
+    <span class="n">sami_bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">sami_bits</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sami_bits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">14</span><span class="p">:</span>
+        <span class="n">volts</span> <span class="o">=</span> <span class="n">braw</span> <span class="o">*</span> <span class="mf">3.</span> <span class="o">/</span> <span class="mf">4000.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">volts</span> <span class="o">=</span> <span class="n">braw</span> <span class="o">*</span> <span class="mf">15.</span> <span class="o">/</span> <span class="mf">4096.</span>
+    <span class="k">return</span> <span class="n">volts</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-19</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Added 14-bit hardware support</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.convert_ph_voltage_counts" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">convert_ph_voltage_counts</span><span class="p">(</span><span class="n">ph_counts</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw ISFET pH voltage counts to volts for the Deep SeapHOx V2.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ph_counts</code></b>
+                  (<code><span title="array_like">array_like</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw ISFET pH voltage counts from the Deep SeapHOx V2 instrument
+[counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>ph_volts</code></b>(                  <code><span title="ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>ISFET external reference voltage (V_FET/REF) [Volts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The conversion uses a 23-bit ADC with a 2.5 V reference and unity
+gain. The full-scale count is 8388608 (2^23).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">convert_ph_voltage_counts</span><span class="p">(</span><span class="n">ph_counts</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert raw ISFET pH voltage counts to volts for the Deep SeapHOx V2.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ph_counts : array_like</span>
+<span class="sd">        Raw ISFET pH voltage counts from the Deep SeapHOx V2 instrument</span>
+<span class="sd">        [counts].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ph_volts : ndarray</span>
+<span class="sd">        ISFET external reference voltage (V_FET/REF) [Volts].</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The conversion uses a 23-bit ADC with a 2.5 V reference and unity</span>
+<span class="sd">    gain. The full-scale count is 8388608 (2^23).</span>
+<span class="sd">    """</span>
+    <span class="n">adc_vref</span> <span class="o">=</span> <span class="mf">2.5</span>
+    <span class="n">gain</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">adc_23bit</span> <span class="o">=</span> <span class="mf">8388608.0</span>
+    <span class="n">ph_volts</span> <span class="o">=</span> <span class="n">adc_vref</span> <span class="o">/</span> <span class="n">gain</span> <span class="o">*</span> <span class="p">(</span><span class="n">ph_counts</span> <span class="o">/</span> <span class="n">adc_23bit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ph_volts</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-01-21</td>
+<td>Samuel Dahlberg</td>
+<td>Initial code, adapted from Sea-Bird Scientific processing library</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Byrne, R. H., Robertbaldo, G., Thompson, S. W. and Chen, C. T. A. (1988).
+Seawater pH measurements — an at-sea comparison of spectrophotometric and
+potentiometric methods. Deep-Sea Research Part A, 35(8): 1405–1410.</p>
+<p>Clayton, T. D. and Byrne, R. H. (1993). Spectrophotometric seawater pH
+measurements — total hydrogen-ion concentration scale calibration of
+m-Cresol Purple and at-sea results. Deep-Sea Research Part I, 40(10):
+2115–2129.</p>
+<p>Dickson, A. G., Sabine, C. L., and Christian, J. R. (2007). Guide to Best
+Practices for Ocean CO2 Measurements. PICES Special Publication 3, IOCCP
+Report No. 8.</p>
+<p>Johnson, K. S., Jannasch, H. W., Coletti, L. J., Elrod, V. A., Martz, T. R.,
+Takeshita, Y., Carlson, R. J., and Connery, J. G. (2016). Deep-Sea DuraFET:
+A pressure tolerant pH sensor designed for global sensor networks. Analytical
+Chemistry, 88: 3249–3256.</p>
+<p>Johnson, K. S., Plant, J. N., and Maurer, T. L. (2017). Processing BGC-Argo
+pH data at the DAC level. BGC-Argo document.</p>
+<p>Khoo, K. H., Ramette, R. W., Culberson, C. H., and Bates, R. G. (1977).
+Determination of hydrogen ion concentrations in seawater from 5 C to 40 C:
+standard potentials at salinities 20 to 45%. Analytical Chemistry, 49:
+29–34.</p>
+<p>Liu, X., Patsavas, M. C., and Byrne, R. H. (2011). Purification and
+characterization of meta-cresol purple for spectrophotometric seawater pH
+measurements. Environmental Science and Technology, 45: 4862–4868.</p>
+<p>Martz, T. R., Connery, J. G., and Johnson, K. S. (2010). Testing the
+Honeywell Durafet for seawater pH applications. Limnology and Oceanography:
+Methods, 8: 172–184.</p>
+<p>Martz, T. R., Carr, J. J., French, C. R., and DeGrandpre, M. D. (2003). A
+submersible autonomous sensor for spectrophotometric pH measurements of
+natural waters. Analytical Chemistry, 75: 1844–1850.</p>
+<p>Millero, F. J. (1982). The effect of pressure on the solubility of minerals
+in water and seawater. Geochimica et Cosmochimica Acta, 46: 11–22.</p>
+<p>Millero, F. J. (1983). In Chemical Oceanography; Riley, J. P., Chester, R.,
+Eds.; Academic Press: London, Vol. 8, pp 1–88.</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_Spec_PHWATER_OOI.pdf">OOI (2012). Data Product Specification for pH of Seawater. Document Control
+Number 1341-00510.</a></p>
+<p>Sea-Bird Scientific (2025). Deep SeapHOx V2 Data Sheet. Document DS53,
+May 2025.</p>
+<p><a href="https://242648281.fs1.hubspotusercontent-na2.net/hubfs/242648281/Resources/Application%20Notes/AN99-CalculatepH.pdf">Sea-Bird Scientific. Application Note 99: Calculating pH from ISFET pH
+Sensors. SeaFET V2, Shallow SeapHOx V2, Deep SeapHOx V2, Floats.</a></p>
+<p>Seidel, M. P., DeGrandpre, M. D., and Dickson, A. G. (2008). A sensor for
+in situ indicator-based measurements of seawater pH. Marine Chemistry,
+109: 18–28.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../co2_functions/" class="btn btn-neutral float-left" title="CO2 Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../ctd_functions/" class="btn btn-neutral float-right" title="CTD Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../co2_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../ctd_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

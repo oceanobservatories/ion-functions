@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="OOI oceanographic data processing functions" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>ion-functions</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = "/ion-functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".">
+          <img src="assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#data-products">Data products</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#instrument-families">Instrument families</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="api/co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/ph_functions/">PH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="api/hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="api/obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Home</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="ion-functions">ION Functions</h1>
+<p>ION Functions is a Python library of oceanographic data processing algorithms
+for the <a href="https://oceanobservatories.org/">Ocean Observatories Initiative (OOI)</a>,
+a National Science Foundation-funded ocean observing network that operates
+fixed and mobile platforms across the full depth range of the ocean, from
+surface buoys to the seafloor.</p>
+<p>OOI instruments output raw data (L0) in instrument-native units — counts,
+voltages, or proprietary binary formats. ION Functions applies vendor
+calibration coefficients and documented algorithms to convert those raw
+outputs into calibrated physical quantities (L1) and derived scientific
+products (L2), following the data product specifications developed by the
+OOI project science team. Algorithms are derived from OOI Data Product
+Specifications (DPS), vendor documentation, and peer-reviewed literature.
+Where discrepancies exist between sources, they are noted in the documentation.</p>
+<p>The library covers a broad range of instrument families — CTD,
+dissolved oxygen, CO<sub>2</sub>, fluorometry, pH, nitrate, velocity,
+passive acoustics, seismology, optics, pressure, meteorology, and more —
+organized as standalone Python modules under <code>ion_functions/data/</code>. Each
+module contains pure functions that accept NumPy arrays as input and return
+NumPy arrays as output, with no internal state.</p>
+<p>For installation and usage, see the <a href="installation/">Installation</a> page.</p>
+<h2 id="data-products">Data products</h2>
+<p>The primary output of ION Functions is a set of standardized oceanographic
+data products (associated with individual variables within a data set), each 
+assigned a processing level that reflects how far the data has been transformed 
+from the raw instrument output. L0 is raw, L1 is a calibrated physical quantity 
+derived from a single sensor channel, and L2 is a derived scientific product 
+computed from two or more L1 or L2 inputs. See <a href="data_products/">Data Product Levels</a> for 
+full definitions.</p>
+<h2 id="instrument-families">Instrument families</h2>
+<p>Documentation is being added progressively as modules are converted to the
+NumPy docstring format. Linked entries have full API documentation; unlinked
+entries are pending conversion. The instrument families were defined at the
+beginning of the project were used to organize the modules. In two cases, PH
+and ADCP, a different name was used for the module, with the original project
+defined family name noted in parentheses.</p>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Class and Description</th>
+<th>Data Products</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="api/co2_functions/">CO2</a></td>
+<td>PCO2A — partial pressure of pCO<sub>2</sub> in air and surface water<br>PCO2W — partial pressure of CO<sub>2</sub> in water</td>
+<td>PCO2WAT, PCO2ATM, PCO2SSW, CO2FLUX</td>
+</tr>
+<tr>
+<td><a href="api/ph_functions/">PH (CO2)</a></td>
+<td>PHSEN — seawater pH</td>
+<td>PHWATER</td>
+</tr>
+<tr>
+<td><a href="api/ctd_functions/">CTD</a></td>
+<td>CTDAV — CTD for AUV<br>CTDBP — CTD with pump<br>CTDGV — CTD for gliders<br>CTDMO — CTD for moorings<br>CTDPF — CTD for profilers</td>
+<td>TEMPWAT, PRESWAT, CONDWAT, PRACSAL, DENSITY</td>
+</tr>
+<tr>
+<td><a href="api/do2_functions/">DO2</a></td>
+<td>DOSTA — dissolved oxygen, stable response<br>DOFST — dissolved oxygen, fast response</td>
+<td>DOCONCS, DOCONCF, DOXYGEN</td>
+</tr>
+<tr>
+<td><a href="api/fdc_functions/">FDC</a></td>
+<td>FDCHP — direct covariance flux system</td>
+<td>FLUXHOT, FLUXMOM, WINDTUR, TMPATUR</td>
+</tr>
+<tr>
+<td><a href="api/flo_functions/">FLO</a></td>
+<td>FLORD — 2-wavelength fluorometer (Chl-a, backscatter)<br>FLORT — 3-wavelength fluorometer (Chl-a, CDOM, backscatter)</td>
+<td>CHLAFLO, CDOMFLO, FLUBSCT</td>
+</tr>
+<tr>
+<td><a href="api/hyd_functions/">HYD</a></td>
+<td>HYDBB — broadband passive acoustic receiver, water column<br>HYDLF — broadband passive acoustic receiver, seafloor</td>
+<td>HYDAPBB, HYDAPLF</td>
+</tr>
+<tr>
+<td><a href="api/met_functions/">MET</a></td>
+<td>METBK — bulk meteorology</td>
+<td>TEMPAIR, BARPRES, WINDAVG, RELHUMI, SHRTIRR, LONGIRR, PRECIPM, TEMPSRF, CONDSRF, SPECHUM</td>
+</tr>
+<tr>
+<td><a href="api/msp_functions/">MSP</a></td>
+<td>MASSP — mass spectrometer for dissolved gases in hydrothermal and seep fluids</td>
+<td>DISSGAS, CALRANG, TSTAMP, MSINLET, MSWATER, NAFEFF, GASMODE, SMPMODE, TOTLGAS</td>
+</tr>
+<tr>
+<td><a href="api/nit_functions/">NIT</a></td>
+<td>NUTNR — optical nitrate sensor</td>
+<td>NITRTSC</td>
+</tr>
+<tr>
+<td><a href="api/obs_functions/">OBS</a></td>
+<td>OBSBB — broadband seismometer<br>OBSSP — short-period seismometer</td>
+<td>GRNDVEL, GRNDACC, SGRDVEL</td>
+</tr>
+<tr>
+<td><a href="api/opt_functions/">OPT</a></td>
+<td>OPTAA — spectrophotometer (attenuation and absorption)<br>PARAD — photosynthetically active radiation<br>SPKIR — downwelling spectral irradiance</td>
+<td>OPTATTN, OPTABSN, OPTPARW, SPECTIR</td>
+</tr>
+<tr>
+<td><a href="api/prs_functions/">PRS</a></td>
+<td>BOTPT — bottom pressure and tilt</td>
+<td>BOTPRES, BOTTILT, BOTSFLU</td>
+</tr>
+<tr>
+<td><a href="api/sfl_functions/">SFL</a></td>
+<td>FLOBN — benthic flow meter<br>OSMOI — osmotic fluid sampler<br>PRESF — seafloor pressure (SBE 26plus)<br>PREST — seafloor pressure (SBE 54)<br>THSPH — hydrothermal vent fluid chemistry (temperature, H<sub>2</sub>, H<sub>2</sub>S, pH)<br>TMPSF — seafloor diffuse flow thermistor array<br>TRHPH — vent fluid temperature and resistivity</td>
+<td>BENTHFL, TEMPSFL, THSPHTE, THSPHHC, THSPHHS, THSPHPH, TRHPHTE, TRHPHEH, TRHPHCC, SFLPRES</td>
+</tr>
+<tr>
+<td><a href="api/vel_functions/">VEL</a></td>
+<td>VELPT — single-point horizontal velocity<br>VEL3D — single-point 3-D velocity</td>
+<td>VELPTMN, VELPTTU</td>
+</tr>
+<tr>
+<td><a href="api/adcp_functions/">ADCP (VEL)</a></td>
+<td>ADCPA — velocity profile, 50 m range<br>ADCPS — velocity profile, 600–700 m range<br>ADCPT — velocity profile, 300 m range<br>VADCP — 3-D velocity profile for turbulence</td>
+<td>VELPROF, VELTURB, ECHOINT</td>
+</tr>
+<tr>
+<td><a href="api/wav_functions/">WAV</a></td>
+<td>WAVSS — directional and non-directional wave statistics</td>
+<td>WAVSTAT</td>
+</tr>
+<tr>
+<td><a href="api/generic_functions/">Generic</a></td>
+<td>Shared utility functions</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="installation/" class="btn btn-neutral float-right" title="Installation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+    
+      <span><a href="installation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-08-24 20:49:23.253967+00:00
+-->
