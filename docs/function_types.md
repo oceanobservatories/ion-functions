@@ -50,3 +50,10 @@ product has a uniquely named function; external users should call
 Wrapper functions are documented alongside their core counterparts in each
 instrument family page (where applicable), under a collapsed "Wrapper 
 Functions" section.
+
+## Deprecated Functions
+
+These functions are considered deprecated, and are no longer used by OOI to derive
+data products. They are retained to provide historical provenance for already released
+datasets. The Core, Helper, and Wrapper designations are retained under the Deprecated 
+Functions heading to provide the historical context of their usage.

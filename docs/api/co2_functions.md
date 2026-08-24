@@ -230,7 +230,7 @@ the code document this evolution.
 | 2018-03-04 | Christopher Wingard | Corrected blank normalization and temperature correction per vendor-revised algorithm |
 | 2023-01-12 | Mark Steiner | Changed therm argument to degrees C input |
 | 2023-08-15 | Samuel Dahlberg | Renamed local variables to follow naming convention |
-| 2025-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -241,7 +241,7 @@ the code document this evolution.
 |---|---|---|
 | 2014-10-27 | Christopher Wingard | Initial Python code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -252,7 +252,7 @@ the code document this evolution.
 |---|---|---|
 | 2012-03-28 | Matthias Lankhorst | Original Matlab code |
 | 2013-04-20 | Christopher Wingard | Initial Python code |
-| 2025-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -265,7 +265,7 @@ the code document this evolution.
 |---|---|---|
 | 2013-04-20 | Christopher Wingard | Initial code |
 | 2014-02-19 | Christopher Wingard | Updated comments |
-| 2025-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -276,7 +276,7 @@ the code document this evolution.
 |---|---|---|
 | 2013-04-20 | Christopher Wingard | Initial code |
 | 2014-02-19 | Christopher Wingard | Updated comments |
-| 2025-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -289,7 +289,7 @@ the code document this evolution.
 | 2014-02-19 | Christopher Wingard | Updated comments |
 | 2014-02-28 | Christopher Wingard | Updated to accept raw blank values from a sparse array |
 | 2018-03-04 | Christopher Wingard | Updated blank normalization per vendor-corrected algorithm |
-| 2025-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -302,7 +302,7 @@ the code document this evolution.
 | 2014-02-19 | Christopher Wingard | Updated comments |
 | 2023-01-12 | Mark Steiner | Added sami_bits argument to handle 14-bit hardware |
 | 2023-08-15 | Samuel Dahlberg | Renamed local variables; replaced numexpr with numpy |
-| 2025-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -312,7 +312,7 @@ the code document this evolution.
 | Date | Author | Change |
 |---|---|---|
 | 2023-02-23 | Mark Steiner | Initial code |
-| 2025-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -333,7 +333,7 @@ OOI single-output data product requirement. External users should call
 | 2014-02-19 | Christopher Wingard | Updated comments |
 | 2014-03-19 | Christopher Wingard | Optimized |
 | 2017-04-04 | Pete Cable | Updated to use thermistor/blank counts per DPS |
-| 2025-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

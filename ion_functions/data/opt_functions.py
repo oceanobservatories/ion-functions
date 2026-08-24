@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.opt_functions
-@file ion_functions/data/opt_functions.py
-@author Christopher Wingard
-@brief Module containing OPTAA and PAR data product algorithms.
+ion_functions.data.opt_functions
+
+Functions supporting the OPTAA (Sea-Bird Scientific ac-s), PARAD (scalar
+PAR sensors from multiple manufacturers), and SPKIR (Sea-Bird Scientific
+OCR-507) optical instrument families. Computes OPTATTN_L2 and OPTABSN_L2
+from the ac-s, OPTPARW_L1 from three PARAD variants, and SPECTIR_L1 from
+the OCR-507.
 """
 
 import numpy as np
@@ -18,73 +21,62 @@ def opt_beam_attenuation(cref, csig, traw, cwl, coff, tcal, tbins, tc_arr,
                          T, PS):
 
     """
-    Description:
+    OOI wrapper for OPTATTN_L2. Computes the beam attenuation coefficient
+    corrected for temperature and salinity from the Sea-Bird Scientific
+    ac-s (OPTAA).
 
-        Wrapper function to calculate the L2 beam attenuation coefficients OPTATTN
-        from the WET Labs, Inc. ACS instrument.
+    Parameters
+    ----------
+    cref : ndarray
+        Raw reference light measurements, OPTCREF_L0 [counts].
+    csig : ndarray
+        Raw signal light transmission measurements, OPTCSIG_L0
+        [counts].
+    traw : ndarray
+        Raw internal instrument temperature, OPTTEMP_L0 [counts].
+    cwl : ndarray
+        Attenuation channel wavelengths [nm], from the ac-s device
+        file.
+    coff : ndarray
+        Pure water offsets for the attenuation channel, from the ac-s
+        device file [m-1].
+    tcal : ndarray
+        Factory calibration reference (pure water) temperature
+        [deg_C], supplied by the manufacturer.
+    tbins : ndarray
+        Internal temperature calibration bin values, from the ac-s
+        device file [deg_C].
+    tc_arr : ndarray
+        Internal temperature calibration correction coefficients for
+        the attenuation channel, from the ac-s device file [m-1].
+    T : ndarray
+        In situ temperature, TEMPWAT_L1, from a co-located CTD
+        [deg_C].
+    PS : ndarray
+        In situ practical salinity, PRACSAL_L2, from a co-located CTD
+        [unitless].
 
-    Implemented by:
+    Returns
+    -------
+    cpd_ts : ndarray
+        Beam attenuation coefficient corrected for temperature and
+        salinity, OPTATTN_L2 [m-1].
 
-        2013-04-25: Christopher Wingard. Initial implementation.
-        2014-03-06: Russell Desiderio. Reset dimensions of arguments and implemented
-                    for loop to handle vectorized input.
-        2014-03-07: Russell Desiderio. Added Usage documentation.
-        2014-03-21: Russell Desiderio. Added rounding wavelengths to tenths to make sure
-                    they will match tscor dictionary key values.
-        2014-05-29: Russell Desiderio. Added capability to handle OPTAA wavelengths outside
-                    the wavelength range of the empirically derived temperature and salinity
-                    correction coefficients.
-        2015-04-17: Russell Desiderio. Use np.nan instead of fill_value.
+    See Also
+    --------
+    opt_internal_temp : Computes the internal instrument temperature
+        used here.
+    opt_pd_calc : Computes the uncorrected beam attenuation
+        coefficient.
+    opt_tempsal_corr : Applies the temperature and salinity
+        correction.
 
-    Usage:
-
-        cpd_ts = opt_beam_attenaution(cref, csig, traw, cwl, coff, tcal, tbins,
-                                      tc_arr, T, PS)
-
-            where
-
-        cpd_ts = beam attenuation coefficients corrected for temperature and salinity
-            (OPTATTN_L2) [m-1]
-        cref = raw reference light measurements (OPTCREF_L0) [counts]
-        csig = raw signal light transmission measurements (OPTCSIG_L0) [counts]
-        traw = raw internal instrument temperature (OPTTEMP_L0) [counts]
-        cwl = wavelengths at which the beam attenuation measurements were made [nm].
-        coff = pure water offsets for the beam attenuation channels from ACS device
-            (calibration) file [m-1].
-        tcal = factory calibration reference (pure water) temperature [deg_C].
-            supplied by the instrument manufacturer (WETLabs).
-        tbins = instrument specific internal temperature calibration bin values from
-            ACS device (calibration) file [deg_C].
-        tc_arr = instrument, wavelength, and channel ('c') specific internal
-            temperature calibration correction coefficients from ACS device
-            (calibration) file [m-1].
-        T  = TEMPWAT(L1): In situ temperature from co-located CTD [deg_C]
-        PS = PRACSAL(L2): In situ practical salinity from co-located CTD [unitless]
-
-    References:
-
-        OOI (2013). Data Product Specification for Optical Beam Attenuation
-            Coefficient. Document Control Number 1341-00690.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Optical Absorption
-            Coefficient. Document Control Number 1341-00700.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)
-
-        OOI (2014). OPTAA Unit Test. 1341-00700_OPTABSN Artifact.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00700_OPTABSN >>
-            OPTAA_unit_test.xlsx)
-
-    Notes:
-
-        Variables in the argument list, regardless of the number of dimensions, are assumed
-        to be vectorized to contain multiple data packets such that the first dimension
-        iterates over data packet number.
+    Notes
+    -----
+    All input arrays are assumed to be vectorized over data packets,
+    with the first dimension iterating over packet number; the
+    function loops over packets, calling opt_internal_temp,
+    opt_pd_calc, and opt_tempsal_corr for each.
     """
     # reset shapes of input arguments
     #    using np.array([], ndmin=#) seems faster than using np.atleast_#d
@@ -130,77 +122,73 @@ def opt_beam_attenuation(cref, csig, traw, cwl, coff, tcal, tbins, tc_arr,
 def opt_optical_absorption(aref, asig, traw, awl, aoff, tcal, tbins, ta_arr,
                            cpd_ts, cwl, T, PS, rwlngth=715.):
     """
-    Wrapper function to calculate the L2 optical absorption coefficient OPTABSN
-    from the WET Labs, Inc. ACS instrument.
+    OOI wrapper for OPTABSN_L2. Computes the optical absorption
+    coefficient corrected for temperature, salinity, and scattering
+    from the Sea-Bird Scientific ac-s (OPTAA).
 
-        2013-04-25: Christopher Wingard. Initial implementation.
-        2014-02-19: Russell Desiderio. Added rwlngth to argument lists, so that
-                    a non-default scatter correction wavelength could be passed
-                    to function opt_scatter_corr.
-        2014-03-06: Russell Desiderio. Reset dimensions of arguments and implemented
-                    for loop to handle vectorized input.
-        2014-03-07: Russell Desiderio. Added Usage documentation.
-        2014-03-21: Russell Desiderio. Added rounding wavelengths to tenths to make sure
-                    they will match tscor dictionary key values.
-        2014-05-29: Russell Desiderio. Added capability to handle OPTAA wavelengths outside
-                    the wavelength range of the empirically derived temperature and salinity
-                    correction coefficients.
-        2015-04-17: Russell Desiderio. Use np.nan instead of fill_value.
+    Parameters
+    ----------
+    aref : ndarray
+        Raw reference light measurements, OPTAREF_L0 [counts].
+    asig : ndarray
+        Raw signal light transmission measurements, OPTASIG_L0
+        [counts].
+    traw : ndarray
+        Raw internal instrument temperature, OPTTEMP_L0 [counts].
+    awl : ndarray
+        Absorption channel wavelengths [nm], from the ac-s device
+        file.
+    aoff : ndarray
+        Pure water offsets for the absorption channel, from the ac-s
+        device file [m-1].
+    tcal : ndarray
+        Factory calibration reference (pure water) temperature
+        [deg_C], supplied by the manufacturer.
+    tbins : ndarray
+        Internal temperature calibration bin values, from the ac-s
+        device file [deg_C].
+    ta_arr : ndarray
+        Internal temperature calibration correction coefficients for
+        the absorption channel, from the ac-s device file [m-1].
+    cpd_ts : ndarray
+        Beam attenuation coefficient corrected for temperature and
+        salinity, OPTATTN_L2 [m-1], from opt_beam_attenuation.
+    cwl : ndarray
+        Attenuation channel wavelengths [nm], from the ac-s device
+        file.
+    T : ndarray
+        In situ temperature, TEMPWAT_L1, from a co-located CTD
+        [deg_C].
+    PS : ndarray
+        In situ practical salinity, PRACSAL_L2, from a co-located CTD
+        [unitless].
+    rwlngth : float, optional
+        Scattering correction reference wavelength [nm] (default
+        715).
 
-    Usage:
+    Returns
+    -------
+    apd_ts_s : ndarray
+        Absorption coefficient corrected for temperature, salinity,
+        and scattering, OPTABSN_L2 [m-1].
 
-        apd_ts_s = opt_optical_absorption(aref, asig, traw, awl, aoff, tcal, tbins,
-                                      ta_arr, cpd_ts, cwl, T, PS[, rwlngth])
+    See Also
+    --------
+    opt_internal_temp : Computes the internal instrument temperature
+        used here.
+    opt_pd_calc : Computes the uncorrected absorption coefficient.
+    opt_tempsal_corr : Applies the temperature and salinity
+        correction.
+    opt_scatter_corr : Applies the scattering correction.
 
-            where
-
-        apd_ts_s = optical absorption coefficients corrected for temperature, salinity,
-            and measurement error due to scattering (OPTABSN_L2) [m-1]
-        aref = raw reference light measurements (OPTAREF_L0) [counts]
-        asig = raw signal light transmission measurements (OPTASIG_L0) [counts]
-        traw = raw internal instrument temperature (OPTTEMP_L0) [counts]
-        awl = wavelengths at which the absorption measurements were made [nm].
-        aoff = pure water offsets for the absorption channels from ACS device
-            (calibration) file [m-1].
-        tcal = factory calibration reference (pure water) temperature [deg_C].
-            supplied by the instrument manufacturer (WETLabs).
-        tbins = instrument specific internal temperature calibration bin values from
-            ACS device (calibration) file [deg_C].
-        ta_arr = instrument, wavelength, and channel ('a') specific internal
-            temperature calibration correction coefficients from ACS device
-            (calibration) file [m-1].
-        cpd_ts = beam attenuation coefficient corrected for temperature and
-            salinity effects (OPTATTN_L2) [m-1], from function opt_beam_attenuation.
-        cwl = attenuation channel wavelengths [nm], from ACS device (calibration) file.
-        T  = TEMPWAT(L1): In situ temperature from co-located CTD [deg_C]
-        PS = PRACSAL(L2): In situ practical salinity from co-located CTD [unitless]
-        rwlngth = [optional] user selected scattering correction reference wavelength
-            (default = 715) [nm]
-
-    References:
-
-        OOI (2013). Data Product Specification for Optical Beam Attenuation
-            Coefficient. Document Control Number 1341-00690.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Optical Absorption
-            Coefficient. Document Control Number 1341-00700.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)
-
-        OOI (2014). OPTAA Unit Test. 1341-00700_OPTABSN Artifact.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00700_OPTABSN >>
-            OPTAA_unit_test.xlsx)
-
-    Notes:
-
-        Variables in the argument list, regardless of the number of dimensions, are assumed
-        to be vectorized to contain multiple data packets such that the first dimension
-        iterates over data packet number.
+    Notes
+    -----
+    All input arrays are assumed to be vectorized over data packets,
+    with the first dimension iterating over packet number; the
+    function loops over packets, calling opt_internal_temp,
+    opt_pd_calc, opt_tempsal_corr, and opt_scatter_corr for each.
+    rwlngth defaults to 715 nm per DPS 1341-00700, but is exposed for
+    override if needed.
     """
     # reset shapes of input arguments
     #    using np.array ndmin=# seems faster than using np.atleast_#d
@@ -250,38 +238,18 @@ def opt_optical_absorption(aref, asig, traw, awl, aoff, tcal, tbins, ta_arr,
 # coefficients from the OPTAA family of instruments.
 def opt_internal_temp(traw):
     """
-    Description:
+    Calculates the internal ac-s instrument temperature from the raw
+    thermistor count. Used internally by opt_pd_calc.
 
-        Calculates the internal instrument temperature. Used in subsequent
-        OPTAA calculations.
+    Parameters
+    ----------
+    traw : ndarray
+        Raw internal instrument temperature, OPTTEMP_L0 [counts].
 
-    Implemented by:
-
-        2013-04-25: Christopher Wingard. Initial implementation.
-        2014-03-07: Russell Desiderio. Reduced calls to np.log.
-
-    Usage:
-
-        tintrn = opt_internal_temp(traw)
-
-            where
-
-        tintrn = calculated internal instrument temperature [deg_C]
-        traw = raw internal instrument temperature (OPTTEMP_L0) [counts]
-
-    References:
-
-        OOI (2013). Data Product Specification for Optical Beam Attenuation
-            Coefficient. Document Control Number 1341-00690.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Optical Absorption
-            Coefficient. Document Control Number 1341-00700.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)
+    Returns
+    -------
+    tintrn : ndarray
+        Calculated internal instrument temperature [deg_C].
     """
     # convert counts to volts
     volts = 5. * traw / 65535.
@@ -301,63 +269,42 @@ def opt_internal_temp(traw):
 
 def opt_pd_calc(ref, sig, offset, tintrn, tbins, tarray):
     """
-    Description:
+    Converts raw reference and signal measurements to an uncorrected
+    beam attenuation or optical absorption coefficient. The 'c' (beam
+    attenuation) and 'a' (absorption) cases are isomorphic; they differ
+    only in which calibration coefficients are supplied. The returned
+    values are not final data products.
 
-        Convert raw reference and signal measurements to scientific units.
+    Parameters
+    ----------
+    ref : ndarray
+        Raw reference light measurements, OPTCREF_L0 or OPTAREF_L0 as
+        appropriate [counts].
+    sig : ndarray
+        Raw signal light measurements, OPTCSIG_L0 or OPTASIG_L0 as
+        appropriate [counts].
+    offset : ndarray
+        Pure water offsets from the ac-s device file; use the 'c' or
+        'a' offsets as appropriate [m-1].
+    tintrn : float
+        Internal instrument temperature [deg_C], from
+        opt_internal_temp.
+    tbins : ndarray
+        Internal temperature calibration bin values, from the ac-s
+        device file [deg_C].
+    tarray : ndarray
+        Internal temperature calibration correction coefficients from
+        the ac-s device file, indexed by wavelength and temperature
+        bin; use the 'c' or 'a' array as appropriate [m-1].
 
-        The calculations for the beam attenuation ('c') and absortion ('a') cases
-        are isomorphic; they differ in just the values used for the input arguments.
-
-        The returned values are not final data products.
-
-    Implemented by:
-
-        2013-04-25: Christopher Wingard. Initial implementation.
-        2014-02-19: Russell Desiderio. Expanded Usage documentation.
-        2015-04-21: Russell Desiderio. Added diagnostics to ValueError exceptions.
-
-    Usage:
-
-        pd, deltaT = opt_pd_calc(ref, sig, offset, tintrn, tbins, tarray)
-
-            where
-
-        pd = uncorrected beam attenuation or optical absorption coefficients [m-1]
-        deltaT = correction due to instrument internal temperature [m-1]
-            (this value is returned so that it can be checked in unit tests. it
-            is not used in subsequent processing).
-        ref = raw reference light measurements (OPTCREF_L0 or OPTAREF_L0, as
-            appropriate) [counts]
-        sig = raw signal light measurements (OPTCSIG_L0 or OPTASIG_L0, as
-            appropriate) [counts]
-        offset = clear water offsets from ACS device (calibration) file [m-1].
-            use 'c' offsets or 'a' offsets, as appropriate.
-        tintrn = internal instrument temperature [deg_C]; output from function
-            opt_internal_temp
-        tbins = instrument specific internal temperature calibration bin values from
-            ACS device (calibration) file [deg_C].
-        tarray = instrument, wavelength and channel ('c' or 'a') specific internal
-            temperature calibration correction coefficients from ACS device
-            (calibration) file [m-1]. use 'c' or 'a' coefficients as appropriate.
-
-    References:
-
-        OOI (2013). Data Product Specification for Optical Beam Attenuation
-            Coefficient. Document Control Number 1341-00690.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Optical Absorption
-            Coefficient. Document Control Number 1341-00700.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)
-
-        OOI (2014). OPTAA Unit Test. 1341-00700_OPTABSN Artifact.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00700_OPTABSN >>
-            OPTAA_unit_test.xlsx)
+    Returns
+    -------
+    pd : ndarray
+        Uncorrected beam attenuation or optical absorption
+        coefficient [m-1].
+    deltaT : ndarray
+        Internal temperature correction applied to pd [m-1]; returned
+        for unit testing and not used in subsequent processing.
     """
     # Raw reference and signal values are imported as 1D arrays. They must be
     # the same length.
@@ -426,60 +373,38 @@ def opt_pd_calc(ref, sig, offset, tintrn, tbins, tarray):
 
 def opt_tempsal_corr(channel, pd, wlngth, tcal, T, PS):
     """
-    Description:
+    Applies the wavelength- and channel-specific temperature and
+    salinity correction to an uncorrected beam attenuation or
+    absorption coefficient.
 
-        Apply the wavelength and optical channel temperature and salinity corrections.
+    Parameters
+    ----------
+    channel : str
+        Measurement channel: 'c' for beam attenuation or 'a' for
+        absorption.
+    pd : ndarray
+        Uncorrected beam attenuation or absorption coefficient [m-1],
+        from opt_pd_calc.
+    wlngth : ndarray
+        Wavelengths at which the measurements were made [nm], from
+        the ac-s device file; use the 'c' or 'a' wavelengths as
+        appropriate.
+    tcal : float
+        Factory calibration reference (pure water) temperature
+        [deg_C], supplied by the manufacturer.
+    T : float
+        In situ temperature, TEMPWAT_L1, from a co-located CTD
+        [deg_C].
+    PS : float
+        In situ practical salinity, PRACSAL_L2, from a co-located CTD
+        [unitless].
 
-    Implemented by:
-
-        2013-04-25: Christopher Wingard. Initial implementation.
-        2014-02-19: Russell Desiderio. Expanded Usage documentation.
-                    Deleted incorrect requirement that T, PS vector lengths
-                        are the same as that of the number of wavelengths.
-        2014-03-21: Russell Desiderio. Added dictionary comprehension to vectorize
-                        correction calculation.
-
-    Usage:
-
-        pd_ts = opt_tempsal_corr(channel, pd, wlngth, tcal, T, PS)
-
-            where
-
-        pd_ts = temperature and salinity corrected data [m-1]
-                case 'c': OPTATTN_L2
-                case 'a': intermediate absorption product: will also
-                          need to have the scattering correction applied.
-        channel = which measurement channel is this? 'c' or 'a'
-                'c' denotes beam attenuation [m-1]
-                'a' denotes absorption [m-1]
-        pd = uncorrected absorption or attenuation data [m-1]
-                (from function opt_pd_calc)
-        wlngth = wavelengths at which measurements were made [nm].
-                from ACS device (calibration) file. use 'c' wavelengths or
-                'a' wavelengths as appropriate.
-        tcal = factory calibration reference (pure water) temperature [deg_C].
-                supplied by the instrument manufacturer (WETLabs).
-        T  = TEMPWAT(L1): In situ temperature from co-located CTD [deg_C]
-        PS = PRACSAL(L2): In situ practical salinity from co-located CTD [unitless]
-
-    References:
-
-        OOI (2013). Data Product Specification for Optical Beam Attenuation
-            Coefficient. Document Control Number 1341-00690.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Optical Absorption
-            Coefficient. Document Control Number 1341-00700.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-
-        OOI (2014). OPTAA Unit Test. 1341-00700_OPTABSN Artifact.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00700_OPTABSN >>
-            OPTAA_unit_test.xlsx)
-            1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)
+    Returns
+    -------
+    pd_ts : ndarray
+        Temperature- and salinity-corrected data [m-1]: OPTATTN_L2 for
+        channel 'c'; an intermediate absorption product still
+        requiring the scattering correction for channel 'a'.
     """
     # Absorption/attenuation and the wavelength values are imported as 1D
     # arrays. They must be the same length.
@@ -507,94 +432,49 @@ def opt_tempsal_corr(channel, pd, wlngth, tcal, T, PS):
 
 def opt_scatter_corr(apd_ts, awlngth, cpd_ts, cwlngth, rwlngth=715.):
     """
-    Description:
+    Applies the scattering correction to the temperature- and
+    salinity-corrected optical absorption coefficient, producing
+    OPTABSN_L2.
 
-        Apply the scattering correction to the temperature and salinity
-        corrected optical absorption coefficient.
+    Parameters
+    ----------
+    apd_ts : ndarray
+        Absorption coefficient corrected for temperature and
+        salinity [m-1], from opt_tempsal_corr.
+    awlngth : ndarray
+        Absorption channel wavelengths [nm], from the ac-s device
+        file.
+    cpd_ts : ndarray
+        Beam attenuation coefficient corrected for temperature and
+        salinity, OPTATTN_L2 [m-1], from opt_tempsal_corr.
+    cwlngth : ndarray
+        Attenuation channel wavelengths [nm], from the ac-s device
+        file.
+    rwlngth : float, optional
+        Scattering correction reference wavelength [nm] (default
+        715).
 
-    Implemented by:
+    Returns
+    -------
+    apd_ts_s : ndarray
+        Absorption coefficient corrected for temperature, salinity,
+        and scattering, OPTABSN_L2 [m-1].
 
-        2013-04-25: Christopher Wingard. Initial implementation.
-        2014-02-19: Russell Desiderio. Trapped out potential problems in
-                    scat_ratio calculation.
-        2015-12-08: Russell Desiderio. Made the scat_ratio calculation more robust.
-                    See Notes.
-
-    Usage:
-
-        apd_ts_s = opt_scatter_corr(apd_ts, awlngth, cpd_ts, cwlngth[, rwlngth])
-
-            where
-
-        apd_ts_s = optical absorption coefficient corrected for temperature,
-            salinity, and light scattering effects (OPTABSN_L2) [m-1]
-        apd_ts = optical absorption coefficient corrected for temperature and
-            salinity effects [m-1], from function opt_tempsal_corr.
-        awlngth = absorption channel wavelengths [nm] from ACS device (calibration) file.
-        cpd_ts = beam attenuation coefficient corrected for temperature and
-            salinity effects (OPTATTN_L2) [m-1], from function opt_tempsal_corr.
-        cwlngth = attenuation channel wavelengths [nm], from ACS device (calibration) file.
-        rwlngth = user selected scattering correction reference wavelength
-            (default = 715) [nm]
-
-    References:
-
-        OOI (2013). Data Product Specification for Optical Beam Attenuation
-            Coefficient. Document Control Number 1341-00690.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Optical Absorption
-            Coefficient. Document Control Number 1341-00700.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)
-
-        OOI (2014). OPTAA Unit Test. 1341-00700_OPTABSN Artifact.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >>
-            >> REFERENCE >> Data Product Specification Artifacts >> 1341-00700_OPTABSN >>
-            OPTAA_unit_test.xlsx)
-
-    Notes:
-
-        The 2014-02-19 version of this function passed its unit tests in the program
-        test_opt_functions_OPTAA_sub_functions in the test_opt_functions module when using numpy
-        version 1.8.0. However, these tests failed with numpy ver 1.10.1: instead of the scatter-
-        correction to absorption *not* being applied when cref = aref, unphysical absorption
-        values of -10^15 were calculated, presumably resulting from applying a subtractive
-        scattering correction proportional to 1/(cref-aref) = 1/10^(-15) when using numpy ver
-        1.10.1 interpolation routines.
-
-        The solution is to trap out the divide by zero in a more robust manner, not just to
-        avoid the round-off error problems above, but also to account for baseline variability
-        in the optical signals (none of this is specified in the DPS). Physically, because a+b=c
-        and a,b,c are all non-negative, beam attenuation c is always >= absorption a, so that at
-        any given wavelength the scattering b = c-a >= 0. And, if there is very little scattering,
-        c-a could fluctuate around a small value like 0.005, in which case the scattering correction
-        to the absorption readings should not be applied because the fluctuations in the corrections
-        would introduce an unnatural variability which would obscure the actual data. Therefore a
-        minimum reference wavelength scattering leakage value (ref_scatter_leakage_min) needs to be
-        specified, below which the scattering correction is not applied. The initial setting for this
-        parameter has been chosen to be 0.02.
-
-        There are instrumental and mechanical factors which also influence the validity and robustness
-        of this scattering correction. When the ac-s is plumbed with one intake tube which splits its flow
-        using a wye junction, with the aim of providing homogeneous water samples to the 'a' and 'c' tubes,
-        experiments have shown that presumed asymmetries in the plumbing paths result in a differential
-        partitioning of particles flowing through the two flow tubes. Because of this the accepted ac-s
-        plumbing deployment protocol is to have separate intakes for each flow tube. However, in this
-        configuration the 'a' and 'c' flow tubes do not sample exactly the same water, leading to inaccuracies
-        in the cref-aref quantity because the natural variability in these signals won't be precisely
-        correlated. In addition, the drifts in absorption versus beam attenuation baselines will differ
-        as a function of time due to electronic drift and bio-fouling accumulation, particularly for
-        moored instruments left unattended for long periods of time.
-
-        I would suggest that in the future the scattering correction algorithm be changed to the
-        more robust algorithm of just subtracting the aref value from all of the abs values. This
-        makes the assumption that the absorption signal at the reference wavelength is solely due to
-        scattering 'leakage' and is the most robust of the 3 scattering correction algorithms described
-        in the WETLabs ac-s protocol document.
+    Notes
+    -----
+    Numpy 1.10.1 interpolation changes caused unphysical values
+    (-10^15) instead of the expected null correction when cref =
+    aref, due to a divide-by-near-zero in the scatter ratio
+    calculation. The fix traps the divide-by-zero more robustly and
+    also accounts for baseline variability in the optical signals
+    (not specified in the DPS): since attenuation c = absorption a +
+    scattering b, and a, b, c are all non-negative, c is always >= a,
+    so a small or noisy c-a difference should not drive an unstable
+    correction. A minimum reference-wavelength scattering leakage
+    value (ref_scatter_leakage_min = 0.02, chosen empirically) is used
+    below which the correction is not applied; see Additional Notes on
+    the docs page for further detail, including known limitations of
+    the two-intake-tube deployment configuration.
     """
     ref_scatter_leakage_min = 0.02  # see Notes
 
@@ -649,39 +529,22 @@ def opt_scatter_corr(apd_ts, awlngth, cpd_ts, cwlngth, rwlngth=715.):
 # opt_pressure is not used in the calculation of the final OPTAA data products.
 def opt_pressure(praw, offset, sfactor):
     """
-    Description:
+    Calculates the depth of the ac-s from its optional auxiliary
+    pressure sensor. Not used in computing OPTATTN_L2 or OPTABSN_L2.
 
-        Calculates the pressure (depth) of the ACS, if the unit is equipped
-        with an auxiliary pressure sensor.
+    Parameters
+    ----------
+    praw : ndarray
+        Raw pressure reading [counts].
+    offset : float
+        Depth offset from the instrument device file [m].
+    sfactor : float
+        Scale factor from the instrument device file [m counts-1].
 
-    Implemented by:
-
-        2013-04-25: Christopher Wingard. Initial implementation.
-
-    Usage:
-
-        depth = opt_pressure(praw, offset, sfactor)
-
-            where
-
-        depth = depth of the instrument [m]
-        praw = raw pressure reading [counts]
-        offset = depth offset from instrument device file [m]
-        sfactor = scale factor from instrument device file [m counts-1]
-
-    References:
-
-        OOI (2013). Data Product Specification for Optical Beam Attenuation
-            Coefficient. Document Control Number 1341-00690.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Optical Absorption
-            Coefficient. Document Control Number 1341-00700.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)
+    Returns
+    -------
+    depth : ndarray
+        Depth of the instrument [m].
     """
     depth = praw * sfactor + offset
     return depth
@@ -690,38 +553,19 @@ def opt_pressure(praw, offset, sfactor):
 # opt_external_temp is not used in the calculation of the final OPTAA data products.
 def opt_external_temp(traw):
     """
-    Description:
+    Calculates the external environmental temperature of the ac-s from
+    its optional auxiliary temperature sensor. Not used in computing
+    OPTATTN_L2 or OPTABSN_L2.
 
-        Calculates the external environmental temperature of the ACS, if the unit
-        is equipped with an auxiliary temperature sensor.
+    Parameters
+    ----------
+    traw : ndarray
+        Raw external temperature [counts].
 
-
-    Implemented by:
-
-        2013-04-25: Christopher Wingard. Initial implementation.
-
-    Usage:
-
-        textrn = opt_external_temp(traw)
-
-            where
-
-        textrn = calculated external environment temperature [deg_C]
-        traw = raw external temperature [counts]
-
-    References:
-
-        OOI (2013). Data Product Specification for Optical Beam Attenuation
-            Coefficient. Document Control Number 1341-00690.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)
-
-        OOI (2013). Data Product Specification for Optical Absorption
-            Coefficient. Document Control Number 1341-00700.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)
+    Returns
+    -------
+    degC : ndarray
+        Calculated external environment temperature [deg_C].
     """
     # convert counts to degrees Centigrade
     a = -7.1023317e-13
@@ -735,41 +579,24 @@ def opt_external_temp(traw):
 
 def opt_par_satlantic(counts_output, a0, a1, Im):
     """
-    Description:
+    Computes OPTPARW_L1 from the Satlantic PAR LIN 600m instrument
+    (PARAD, RSN Shallow Profiler) using a linear calibration.
 
-        The OOI Level 1 Photosynthetically Active Radiation (PAR)
-        (OPTPARW) core data product is the spectral range
-        (wavelength) of solar radiation from 400 to 700 nanometers
-        that photosynthetic organisms are able to use in the process
-        of photosynthesis.
+    Parameters
+    ----------
+    counts_output : ndarray
+        OPTPARW_L0 raw ADC counts.
+    a0 : float
+        Voltage offset [counts].
+    a1 : float
+        Scaling factor [umol photons m-2 s-1 count-1].
+    Im : float
+        Immersion coefficient.
 
-    Implemented by:
-
-        2014-01-31: Craig Risien. Initial Code
-
-    Usage:
-
-        OPTPARW_L1 = opt_par_satlantic(counts_output, a0, a1, Im):
-
-        Calculates the L1 OPTPARW from the Satlantic instrument on the
-        RSN Shallow Profiler:
-        PAR (umol photons m^-2 s^-1) = Im * a1 (counts_output - a0)
-
-            where
-
-        counts_output is the OPTPARW L0 output [ADC counts]
-        a0 is the voltage offset [counts]
-        a1 is the scaling factor [umol photons per m^2 per second per count]
-        Im = immersion coefficient
-
-    References:
-
-        OOI (2012). Data Product Specification for PHOTOSYNTHETICALLY
-        ACTIVE RADIATION (PAR) FROM SATLANTIC INSTRUMENT ON RSN SHALLOW
-        PROFILER Document Control Number 1341-00720.
-        https://alfresco.oceanobservatories.org/
-        (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-        1341-00720_Data_Product_SPEC_OPTPARW_Satl_OOI.pdf)
+    Returns
+    -------
+    OPTPARW_L1 : ndarray
+        Photosynthetically active radiation [umol photons m-2 s-1].
     """
 
     OPTPARW_L1 = np.atleast_1d(Im * a1 * (counts_output - a0))
@@ -779,43 +606,25 @@ def opt_par_satlantic(counts_output, a0, a1, Im):
 
 def opt_par_wetlabs(counts_output, a0, a1, Im):
     """
-    Description:
+    Computes OPTPARW_L1 from the Sea-Bird Scientific ECO PAR /
+    ECOPARS instrument (PARAD-J, CSPP) using an exponential
+    calibration.
 
-        The OOI Level 1 Photosynthetically Active Radiation (PAR)
-        (OPTPARW) core data product is the spectral range
-        (wavelength) of solar radiation from 400 to 700 nanometers
-        that photosynthetic organisms are able to use in the process
-        of photosynthesis.
+    Parameters
+    ----------
+    counts_output : ndarray
+        OPTPARW_L0 raw ADC counts.
+    a0 : float
+        Voltage offset [counts].
+    a1 : float
+        Scaling factor [umol photons m-2 s-1 count-1].
+    Im : float
+        Immersion coefficient.
 
-    Implemented by:
-
-        2014-12-10: Craig Risien. Initial Code
-        2015-04-09: Russell Desiderio. Fixed "blocker bug #3182" so that the
-                    function runs correctly on time-vectorized arguments.
-
-    Usage:
-
-        OPTPARW_L1 = opt_wetlabs(counts_output, a0, a1, Im):
-
-        Calculates the L1 OPTPARW from the WET Labs instrument on the CSPP:
-
-        PAR (umol photons m^-2 s^-1) = Im * 10**((counts_output - a0) / a1)
-
-            where
-
-        counts_output is the OPTPARW L0 output [ADC counts]
-        a0 is the voltage offset [counts]
-        a1 is the scaling factor [umol photons per m^2 per second per count]
-        Im = immersion coefficient
-
-    References:
-
-        OOI (2014). Data Product Specification for DATA PRODUCT SPECIFICATION
-        FOR PHOTOSYNTHETICALLY ACTIVE RADIATION (PAR) FROM WET LABS INSTRUMENT
-        ON COASTAL SURFACE PIERCING PROFILER Document Control Number 1341-00722.
-        https://alfresco.oceanobservatories.org/
-        (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-        1341-00722_Data_Product_SPEC_OPTPARW_WETLabs_OOI.pdf)
+    Returns
+    -------
+    OPTPARW_L1 : ndarray
+        Photosynthetically active radiation [umol photons m-2 s-1].
     """
 
     counts_output = counts_output * 1.0  # type conversion
@@ -827,39 +636,22 @@ def opt_par_wetlabs(counts_output, a0, a1, Im):
 
 def opt_par_biospherical_mobile(output, dark_offset, scale_wet):
     """
-    Description:
+    Computes OPTPARW_L1 from the Biospherical QSP-2100 scalar PAR
+    instrument (PARAD, glider and other mobile assets).
 
-        The OOI Level 1 Photosynthetically Active Radiation (PAR)
-        (OPTPARW) core data product is the spectral range (wavelength)
-        of solar radiation from 400 to 700 nanometers that photosynthetic
-        organisms are able to use in the process of photosynthesis.
+    Parameters
+    ----------
+    output : ndarray
+        OPTPARW_L0 raw sensor output [V].
+    dark_offset : float
+        Dark reading [V].
+    scale_wet : float
+        Wet calibration scale factor [V per umol photons m-2 s-1].
 
-    Implemented by:
-
-        2014-01-31: Craig Risien. Initial Code
-
-    Usage:
-
-        OPTPARW_L1 = opt_par_biospherical_mobile(output, dark_offset, scale_wet):
-
-        Calculate the L1 OPTPARW from the Biospherical QSP-2100 series of scalar
-        instruments.
-
-        where
-
-        OPTPARW_L1 is Level 1 Photosynthetically Active Radiation [umol photons m^-2 s^-1]
-        output is the OPTPARW L0 output [volts]
-        dark offset is the dark reading [volts]
-        scale_wet is the wet calibration scale factor [volts per umol photons / m^2 s^1]
-
-    References:
-
-        OOI (2012). Data Product Specification for PHOTOSYNTHETICALLY
-        ACTIVE RADIATION (PAR) FROM BIOSPHERICAL INSTRUMENT QSP 2100
-        ON CGSN MOBILE ASSETS Document Control Number 1341-00721.
-        https://alfresco.oceanobservatories.org/
-        (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-        1341-00721_Data_Product_SPEC_OPTPARW_Bios_OOI.pdf)
+    Returns
+    -------
+    OPTPARW_L1 : ndarray
+        Photosynthetically active radiation [umol photons m-2 s-1].
     """
 
     OPTPARW_L1 = np.atleast_1d((output - dark_offset) / scale_wet)
@@ -869,39 +661,29 @@ def opt_par_biospherical_mobile(output, dark_offset, scale_wet):
 
 def opt_par_biospherical_wfp(output, dark_offset, scale_wet):
     """
-    Description:
+    Computes OPTPARW_L1 from the Biospherical QSP-2200 scalar PAR
+    instrument (PARAD, wire-following profiler).
 
-        The OOI Level 1 Photosynthetically Active Radiation (PAR)
-        (OPTPARW) core data product is the spectral range (wavelength)
-        of solar radiation from 400 to 700 nanometers that photosynthetic
-        organisms are able to use in the process of photosynthesis.
+    Parameters
+    ----------
+    output : ndarray
+        OPTPARW_L0 raw sensor output [mV].
+    dark_offset : float
+        Dark reading [mV].
+    scale_wet : float
+        Wet calibration scale factor [V per quanta cm-2 s-1].
 
-    Implemented by:
+    Returns
+    -------
+    OPTPARW_L1 : ndarray
+        Photosynthetically active radiation [umol photons m-2 s-1].
 
-        2014-03-07: Craig Risien. Initial Code
-
-    Usage:
-
-        OPTPARW_L1 = opt_par_biospherical_wfp(output, dark_offset, scale_wet):
-
-        Calculate the L1 OPTPARW from the Biospherical QSP-2200 series of scalar
-        instruments.
-
-        where
-
-        OPTPARW_L1 is Level 1 Photosynthetically Active Radiation [umol photons m^-2 s^-1]
-        output is the OPTPARW L0 output [millivolts (mV)]
-        dark offset is the dark reading [millivolts (mV)]
-        scale_wet is the wet calibration scale factor [volts / (quanta / cm^2 s^1)]
-
-    References:
-
-        OOI (2012). Data Product Specification for PHOTOSYNTHETICALLY
-        ACTIVE RADIATION (PAR) FROM BIOSPHERICAL INSTRUMENT QSP 2200
-        ON CGSN PROFILERS Document Control Number 1341-00721.
-        https://alfresco.oceanobservatories.org/
-        (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-        1341-00721_Data_Product_SPEC_OPTPARW_Bios_OOI.pdf)
+    Notes
+    -----
+    Converts the millivolt inputs to volts and the scale factor to SI
+    units (1 umol photons m-2 s-1 = 6.02e13 quanta cm-2 s-1) before
+    applying the same linear equation used by
+    opt_par_biospherical_mobile.
     """
 
     #Convert output from mvolts to volts
@@ -921,50 +703,25 @@ def opt_par_biospherical_wfp(output, dark_offset, scale_wet):
 
 def opt_ocr507_irradiance(counts, offset, scale, immersion_factor):
     """
-    Description:
+    Computes SPECTIR_L1 from the Sea-Bird Scientific OCR-507
+    multispectral radiometer (SPKIR).
 
-        This function calculates the OOI Level 1 Data Product SPECTIR_L1, which is the
-        'vector' (cosine-weighted) downwelling irradiance (Ed) in units of uW/cm^2/nm.
-        This data product is produced by the Satlantic OCR-507 multispectral radiometer
-        in the SPKIR instrument class.
+    Parameters
+    ----------
+    counts : ndarray
+        SPECTIR_L0 raw ADC counts, one column per wavelength channel
+        (7 channels).
+    offset : ndarray
+        Dark offset calibration coefficient, per channel.
+    scale : ndarray
+        Scale factor calibration coefficient, per channel.
+    immersion_factor : ndarray
+        Immersion coefficient, per channel.
 
-    Implemented by:
-
-        2014-03-14: Russell Desiderio. Initial Code.
-            At this time the DPS for this data product is not finished. The OCR-507
-            has 7 wavelength channels, and each data packet coming out of the instrument
-            contains one record from each channel. It has not been determined whether
-            the raw input data to this function will be in arrays of 7 wavelengths or not.
-        2014-03-25: Russell Desiderio.
-            Changed code to require data input arguments to be arrays with 7 columns,
-            one for each wavelength channel.
-        2015-04-09: Russell Desiderio
-            CI has determined that cal coefficients will be implemented as time-vectorized
-            arguments (tiled in time to the number of data packets).
-        2015-04-21: Russell Desiderio
-            CI has determined that calcoeffs and data that are 'natively' 1D arrays (all
-            input and output arguments of this function qualify) will be passed to the
-            function as 2D arrays (for one data record, these will be row vectors). On
-            output, the data product will also be 2D.
-
-    Usage:
-
-        Ed = opt_ocr507_irradiance(counts, offset, scale, immersion_factor):
-
-        where
-
-        Ed = downwelling vector irradiance SPECTIR_L1 [uW/cm^2/nm].
-        counts = raw downwelling vector irradiance signal SPECTIR_L0 [counts].
-        offset = calibration coefficient supplied by the manufacturer.
-        scale = calibration coefficient supplied by the manufacturer.
-        immersion_factor = calibration coefficient supplied by the manufacturer.
-
-    References:
-
-        OOI (2014). Data Product Specification for Downwelling Spectral Irradiance.
-            Document Control Number 1341-00730. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-00730__???.pdf)
+    Returns
+    -------
+    Ed : ndarray
+        Downwelling vector irradiance, SPECTIR_L1 [uW cm-2 nm-1].
     """
     # condition input to be arrays for error-checking, in case scalars are input
     counts = np.atleast_2d(counts*1.0)  # type conversion from fix to float in case needed.

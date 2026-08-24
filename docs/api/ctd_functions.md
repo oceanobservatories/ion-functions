@@ -300,7 +300,7 @@ are listed in the [References](#references) section.
 | 2013-05-10 | Christopher Wingard | Minor edits to comments |
 | 2014-01-31 | Russell Desiderio | Standardized comment format |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -311,7 +311,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2016-06-16 | Russell Desiderio | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -321,7 +321,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2014-02-05 | Russell Desiderio | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -331,7 +331,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2014-02-17 | Russell Desiderio | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -344,7 +344,7 @@ are listed in the [References](#references) section.
 | 2013-05-10 | Christopher Wingard | Minor edits to comments |
 | 2014-01-31 | Russell Desiderio | Standardized comment format |
 | 2017-03-31 | Dan Mergens | Added Druck offset correction |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -360,7 +360,7 @@ correctly.
 |---|---|---|
 | 2013-05-10 | Christopher Wingard | Initial code |
 | 2014-01-31 | Russell Desiderio | Standardized comment format; corrected pressure period calculation to use Hz input |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -370,7 +370,7 @@ correctly.
 | Date | Author | Change |
 |---|---|---|
 | 2016-06-16 | Russell Desiderio | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -380,7 +380,7 @@ correctly.
 | Date | Author | Change |
 |---|---|---|
 | 2014-02-05 | Russell Desiderio | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -390,7 +390,7 @@ correctly.
 | Date | Author | Change |
 |---|---|---|
 | 2015-10-28 | Russell Desiderio | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -400,7 +400,7 @@ correctly.
 | Date | Author | Change |
 |---|---|---|
 | 2014-02-17 | Russell Desiderio | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -412,7 +412,7 @@ correctly.
 | 2013-04-12 | Christopher Wingard | Initial code |
 | 2013-05-10 | Christopher Wingard | Minor edits to comments |
 | 2014-01-31 | Russell Desiderio | Standardized comment format |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -423,7 +423,7 @@ correctly.
 |---|---|---|
 | 2016-06-16 | Russell Desiderio | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -433,7 +433,7 @@ correctly.
 | Date | Author | Change |
 |---|---|---|
 | 2014-02-05 | Russell Desiderio | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -443,7 +443,7 @@ correctly.
 | Date | Author | Change |
 |---|---|---|
 | 2014-02-17 | Russell Desiderio | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -452,7 +452,7 @@ correctly.
 #### History
 | Date | Author | Change |
 |---|---|---|
-| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+| 2026-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
 
 ---
 
@@ -461,7 +461,7 @@ correctly.
 #### History
 | Date | Author | Change |
 |---|---|---|
-| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+| 2026-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
 
 ---
 
@@ -470,7 +470,7 @@ correctly.
 #### History
 | Date | Author | Change |
 |---|---|---|
-| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
+| 2026-05-15 | Christopher Wingard | Initial NumPy docstring; added to CTD family documentation |
 
 ---
 
@@ -483,7 +483,7 @@ correctly.
 | 2013-05-10 | Christopher Wingard | Minor edits to comments |
 | 2014-01-31 | Russell Desiderio | Standardized comment format |
 | 2023-08-15 | Samuel Dahlberg | Replaced incompatible pygsw with GSW library |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -497,7 +497,7 @@ correctly.
 | 2013-05-10 | Christopher Wingard | Minor edits to comments |
 | 2014-01-31 | Russell Desiderio | Standardized comment format |
 | 2023-08-15 | Samuel Dahlberg | Replaced incompatible pygsw with GSW library |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

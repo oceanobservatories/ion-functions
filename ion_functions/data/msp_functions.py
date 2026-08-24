@@ -1,256 +1,65 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.msp_functions
-@file ion_functions/data/msp_functions.py
-@author Craig Risien
-@brief Module containing MASSP instrument related functions and wrapper functions
+ion_functions.data.msp_functions
 
+Functions supporting the MASSP (Mass Spectrometer) instrument class. The
+MASSP measures dissolved gas concentrations (DISSGAS, L1) in hydrothermal
+vent and cold seep fluids from residual gas analyzer (RGA) mass spectral
+scans, together with a set of auxiliary quality, timing, and pH-intensity
+products, and a derived L2 total dissolved gas concentration product
+(TOTLGAS) for hydrogen sulfide and carbon dioxide.
 
-MASSP L1 Data Products
-
-Data Product Specification for Dissolved Gas Concentrations (DISSGAS) from the
-MASSP Instrument. Document Control Number 1341-00240.
-https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Controlled
->> 1000 System Level >> 1341-00240_DPS_DISSGAS.pdf)
-
-The OOI Level 1 Dissolved Gas Concentrations (DISSGAS) core data product is
-produced by the MASSP instrument class. The data for the computation of this L1
-core data product are derived from the Residual Gas Analyzer (RGA) integrated in
-the MASSP instrument. The resulting L1 DISSGAS core data product is calculated
-from the L0 Mass Spectral Intensities and the sample temperature, also measured
-by the MASSP instrument, and is composed of the dissolved concentrations (uM) of
-the individual gases: methane, ethane, hydrogen, argon, hydrogen sulfide, oxygen
-and carbon dioxide. NOTE: For methane, the Nafion mode data is used, while for
-the rest of the gasses, Direct mode data is used.
-
-Function Name		  L1 DP Name		Description
-
-calc_dissgas_smpmethcon   DISSGAS-SMPMETHCON	Dissolved Methane Conc. (uM) in Sample
-calc_dissgas_smpethcon    DISSGAS-SMPETHNCON	Dissolved Ethane Conc. (uM) in Sample
-calc_dissgas_smph2con     DISSGAS-SMPH2CON	Dissolved Hydrogen Conc. (uM) in Sample
-calc_dissgas_smparcon     DISSGAS-SMPARCON	Dissolved Argon Conc. (uM) in Sample
-calc_dissgas_smph2scon    DISSGAS-SMPH2SCON	Dissolved Hydrogen Sulfide Conc. (uM) in Sample
-calc_dissgas_smpo2con     DISSGAS-SMPO2CON	Dissolved Oxygen Conc. (uM) in Sample
-calc_dissgas_smpco2con    DISSGAS-SMPCO2CON	Dissolved Carbon Dioxide Conc. (uM) in Sample
-calc_dissgas_bkgmethcon   DISSGAS-BKGMETHCON	Dissolved Methane Conc. (uM) in Background Water
-calc_dissgas_bkgethcon    DISSGAS-BKGETHNCON	Dissolved Ethane Conc. (uM) in Background Water
-calc_dissgas_bkgh2con     DISSGAS-BKGH2CON	Dissolved H2 Conc. (uM) in Background Water
-calc_dissgas_bkgarcon     DISSGAS-BKGARCON	Dissolved AR Conc. (uM) in Background Water
-calc_dissgas_bkgh2scon    DISSGAS-BKGH2SCON	Dissolved Hydrogen Sulfide Conc. (uM) in Background Water
-calc_dissgas_bkgo2con     DISSGAS-BKGCO2CON 	Dissolved Carbon Dioxide Conc. (uM) in Background Water
-calc_dissgas_bkgco2con    DISSGAS-BKGO2CON	Dissolved Oxygen Conc. (uM) in Background Water
-calc_dissgas_cal1methcon  DISSGAS-CA1METHCON	Dissolved Methane Conc. (uM) in Calibration Solution 1
-calc_dissgas_cal1co2con   DISSGAS-CA1CO2CON	Dissolved Carbon Dioxide Conc. (uM) in Calibration Solution 1
-calc_dissgas_cal2methcon  DISSGAS-CA2METHCON	Dissolved Methane Conc. (uM) in Calibration Solution 2
-calc_dissgas_cal2co2con   DISSGAS-CA2CO2CON	Dissolved Carbon Dioxide Conc. (uM) in Calibration Solution 2
-
-...................................................................................
-
-The auxiliary data product MASSP Calibration Range (CALRANG) is the collection
-of parameters associated with the quality status for each gas concentration. A
-value of 0 indicates that both the intensity and temperature used are within the
-calibration range. A value of -1 indicates that the intensity used was below the
-minimum of the calibration range. A value of 1 indicates that the intensity was
-higher than the maximum of the calibration range, but the temperature was within
-the calibration range. A value of 2 indicates that the intensity was within the
-calibration range, but that the temperature was above the calibration range. A
-value of 3 indicates that both the intensity and the temperature were above the
-calibration range.
-
-Function Name		  AUX L1 DP Name	Description
-
-calc_calrang_smpmethcon   CALRANG-SMPMETH	Quality status for the Methane conc. in the sample water
-calc_calrang_smpethcon    CALRANG-SMPETHN	Quality status for the Ethane conc. in the sample water
-calc_calrang_smph2con     CALRANG-SMPH2		Quality status for the Hydrogen conc. in the sample water
-calc_calrang_smparcon     CALRANG-SMPAR		Quality status for the Argon conc. in the sample water
-calc_calrang_smph2scon    CALRANG-SMPH2S	Quality status for the H2S conc. in the sample water
-calc_calrang_smpo2con     CALRANG-SMPO2		Quality status for the oxygen conc. in the sample water
-calc_calrang_smpco2con    CALRANG-SMPCO2	Quality status for the CO2 conc. in the sample water
-calc_calrang_bkgmethcon   CALRANG-BKGMETH	Quality status for the Methane conc. in the background water
-calc_calrang_bkgethcon    CALRANG-BKGETHN	Quality status for the Ethane conc. in the background water
-calc_calrang_bkgh2con     CALRANG-BKGH2		Quality status for the Hydrogen conc. in the background water
-calc_calrang_bkgarcon     CALRANG-BKGAR		Quality status for the Argon conc. in the background water
-calc_calrang_bkgh2scon    CALRANG-BKGH2S	Quality status for the H2S conc. in the background water
-calc_calrang_bkgo2con     CALRANG-BKGO2		Quality status for the oxygen conc. in the background water
-calc_calrang_bkgco2con    CALRANG-BKGCO2	Quality status for the CO2 conc. in the background water
-calc_calrang_cal1methcon  CALRANG-CAL1METH	Quality status for the Methane conc. in the calibration fluid 1 water
-calc_calrang_cal1co2con   CALRANG-CAL1CO2	Quality status for the CO2 conc. in the calibration fluid 1 water
-calc_calrang_cal2methcon  CALRANG-CAL2METH	Quality status for the Methane conc. in the calibration fluid 2 water
-calc_calrang_cal2co2con   CALRANG-CAL2CO2	Quality status for the CO2 conc. in the calibration fluid 2 water
-
-...................................................................................
-
-The auxiliary data product MASSP Time Stamp (TSTAMP) is the collection
-of parameters associated with the time stamp for each gas concentration.
-
-Function Name		    AUX L1 DP Name	Description
-
-calc_timestamp_smpmethcon   TSTAMP-SMPMETH	Time stamp for the Methane conc. in the sample water
-calc_timestamp_smpethcon    TSTAMP-SMPETHN	Time stamp for the Ethane conc. in the sample water
-calc_timestamp_smph2con     TSTAMP-SMPH2	Time stamp for the Hydrogen conc. in the sample water
-calc_timestamp_smparcon     TSTAMP-SMPAR	Time stamp for the Argon conc. in the sample water
-calc_timestamp_smph2scon    TSTAMP-SMPH2S	Time stamp for the H2S conc. in the sample water
-calc_timestamp_smpo2con     TSTAMP-SMPO2	Time stamp for the oxygen conc. in the sample water
-calc_timestamp_smpco2con    TSTAMP-SMPCO2	Time stamp for the CO2 conc. in the sample water
-calc_timestamp_bkgmethcon   TSTAMP-BKGMETH	Time stamp for the Methane conc. in the background water
-calc_timestamp_bkgethcon    TSTAMP-BKGETHN	Time stamp for the Ethane conc. in the background water
-calc_timestamp_bkgh2con     TSTAMP-BKGH2	Time stamp for the Hydrogen conc. in the background water
-calc_timestamp_bkgarcon     TSTAMP-BKGAR	Time stamp for the Argon conc. in the background water
-calc_timestamp_bkgh2scon    TSTAMP-BKGH2S	Time stamp for the H2S conc. in the background water
-calc_timestamp_bkgo2con     TSTAMP-BKGO2	Time stamp for the oxygen conc. in the background water
-calc_timestamp_bkgco2con    TSTAMP-BKGCO2	Time stamp for the CO2 conc. in the background water
-calc_timestamp_cal1methcon  TSTAMP-CAL1METH	Time stamp for the Methane conc. in the calibration fluid 1 water
-calc_timestamp_cal1co2con   TSTAMP-CAL1CO2	Time stamp for the CO2 conc. in the calibration fluid 1 water
-calc_timestamp_cal2methcon  TSTAMP-CAL2METH	Time stamp for the Methane conc. in the calibration fluid 2 water
-calc_timestamp_cal2co2con   TSTAMP-CAL2CO2	Time stamp for the CO2 conc. in the calibration fluid 2 water
-
-...................................................................................
-
-Functions that calculate all addtional L1 auxiliary data products are listed below.
-
-The auxiliary data product MASSP Sample Inlet (MSINLET) is the collection of
-parameters associated with measurement of sample properties at the time of gas
-equilibration across the gas permeable membrane.
-
-Function Name		            AUX L1 DP Name	Description
-
-calc_msinlet_smpphint               MSINLET-SMPPHINT	Sample pH Intensity
-calc_msinlet_smpphint_timestamp     TSTAMP-SMPPHINT	Time stamp of Sample pH Intensity
-calc_msinlet_bkgphint               MSINLET-BKGPHINT	Background Water pH Intensity
-calc_msinlet_bkgphint_timestamp     TSTAMP-BKGPHINT	Time stamp of Background Water pH Intensity
-calc_msinlet_cal1phint              MSINLET-CA1PHINT	Calibration Solution 1 pH Intensity
-calc_msinlet_cal1phint_timestamp    TSTAMP-CA1PHINT     Time stamp of Calibration Solution 1 pH Intensity
-calc_msinlet_cal2phint              MSINLET-CA2PHINT	Calibration Solution 2 pH Intensity
-calc_msinlet_cal1phint_timestamp    TSTAMP-CA2PHINT     Time stamp of Calibration Solution 2 pH Intensity
-calc_smpnafeff                      NAFEFF  		Nafion Drier Efficiency
-calc_smpnafeff_timestamp            TSTAMP-NAFEFF  	Time stamp of Nafion Drier Efficiency
-
-...................................................................................
-...................................................................................
-...................................................................................
-
-MASSP L2 Data Products
-
-Data Product Specification for Dissolved Gas Concentrations (TOTLGAS) from the
-MASSP Instrument. Document Control Number 1341-00XXX.
-https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI >> Controlled
->> 1000 System Level >> 1341-00XXX_DPS_TOTLGAS.pdf)
-
-The OOI Level 2 Dissolved Gas Concentration (DISSGAS) core data product is
-produced by the MASSP instrument class. The data for the computation of this L2
-core data product are derived from the L1 core data product DISSGAS. The
-resulting L2 TOTLGAS core data product is calculated from the individual
-dissolved gas concentrations, the inlet fluid temperature, and the pH of the
-fluid also measured by the MASSP instrument, and is composed of the total
-concentrations (uM) of the individual gases: hydrogen sulfide and carbon
-dioxide.
-
-Function Name		    L2 DP Name		Description
-
-calc_l2_totlgas_smph2scon   TOTLGAS-SMPH2SCON	Total Hydrogen Sulfide Conc. (uM) in Sample Water
-calc_l2_totlgas_smpco2con   TOTLGAS-SMPCO2CON	Total Carbon Dioxide Conc. (uM) in Sample Water
-calc_l2_totlgas_bkgh2scon   TOTLGAS-BKGH2SCON	Total Hydrogen Sulfide Conc. (uM) in Background Water
-calc_l2_totlgas_bkgco2con   TOTLGAS-BKGCO2CON	Total Carbon Dioxide  Conc. (uM) in Background Water
-
-...................................................................................
-
-The auxiliary data product MASSP Time Stamp (TSTAMP) is the collection
-of parameters associated with the time stamp for each gas concentration.
-
-Function Name		            AUX L2 DP Name	Description
-
-calc_timestamp_totlgas_smph2scon    TSTAMP-SMPH2SCON	Time stamp for the total H2S conc. in the sample water
-calc_timestamp_totlgas_smpco2con    TSTAMP-SMPCO2CON	Time stamp for the total CO2 conc. in the sample water
-calc_timestamp_totlgas_bkgh2scon    TSTAMP-BKGH2SCON	Time stamp for the total H2S conc. in the background water
-calc_timestamp_totlgas_bkgco2con    TSTAMP-BKGCO2CON	Time stamp for the total CO2 conc. in the background water
-
-...................................................................................
-
-Functions that calculate all addtional L2 auxiliary data products are listed below:
-
-The auxiliary data product MASSP Equilibrated Water (MSWATER) is the collection
-of higher level products describing the pH state of the sampled and background
-water at equilibration and measurement by the Residual Gas Analyzer (RGA),
-onboard the MASSP instrument. These functions are required to calculate the above
-L2 data products namely TOTLGAS-SMPH2SCON, TOTLGAS-SMPCO2CON, TOTLGAS-BKGH2SCON,
-and TOTLGAS-BKGCO2CON.
-
-Function Name		    AUX L2 DP Name	Description
-
-calc_l2_mswater_smpphval    MSWATER-SMPPHVAL	Mass Spectrometer Equilibrated Sample Water pH Value
-calc_l2_mswater_bkgphval    MSWATER-BKGPHVAL	Mass Spectrometer Equilibrated Background Water pH Value
-
-...................................................................................
-...................................................................................
-...................................................................................
-
-The core functions used by all of the wrapper functions described above are listed below. Note that
-the mass-to-charge ratio is denoted as mz.
-
-Function Name		        Description
-
-SamplePreProcess                This subroutine takes in the SAMPLEINT array and produces intermediary
-                                    variables sample-mz2, sample-mz18, sample-mz30, sample-mz32,
-                                    sample-mz40, sample-mz44, sample-mz15 and sample-mz18Naf, sample-Tnaf,
-                                    sample-Tdir as well as MSINLET-SMPPHINT AUX data products.
-
-BackgroundPreProcess            This subroutine takes in the BKGNDINT array and produces intermediary
-                                    variables bckgnd-mz2, bckgnd-mz30, bckgnd-mz32, bckgnd-mz40,
-                                    bckgnd-mz44, bckgnd-mz15, bckgnd-Tnaf, bckgnd-Tdir, as well as
-                                    MSINLET-BKGPHINT AUX data products.
-
-Cal1PreProcess                  This subroutine takes in the DISSGAS-CALINT01 array and produces intermediary
-                                    variables cal1-mz44, cal1-mz15, cal1-Tnaf, cal1-Tdir as well as
-                                    MSINLET-CA1PHINT AUX data product.
-
-Cal2PreProcess                  This subroutine takes in the DISSGAS-CALINT02 array and produces intermediary
-                                    variables cal2-mz44, cal2-mz15, cal2-Tnaf, cal2-Tdir as well as
-                                    MSINLET-CA2PHINT AUX data product.
-
-gas_concentration               This sub-routine takes in a column range from DPS Table 1 (refered
-                                    as to c1, c2, c3, c4), a corrected intensity (referred as x, from the
-                                    Deconvolution subroutine), an averaged temperature (referred as T, see DPS Table 1),
-                                    the pressure P of the sampling site, and calculate the final concentration used
-                                    for L1 DISSGAS data products. This subroutine also assigns a value to the
-                                    corresponding CALRANG parameter (see DPS Table 1) identifying the quality of the
-                                    concentration value (indicate if it is out of calibration range for
-                                    concentration and/or temperature). The subroutine also uses a temporary
-                                    variable, tempCalRang used to compute the final value of CALRANG.
-
-average_mz                      This subroutine takes in an mz as parameter (M), parameter w from the calibration
-                                    table and a subset of n scans.
-
-deconvolution_correction        This sub-routine takes in a main variable (see DPS Table 1), a second variable
-                                    (see DPS Table 1), and a calibration lookup table (DPS Table 2) column
-                                    range (see Table 1).
-
-GasModeDetermination            Takes in the values of sample_valve1, sample_valve2, sample_valve3, and
-                                    sample_valve4 and returns the GASMODE array.
-
-SmpModeDetermination            Takes in the values of external_valve1_status, external_valve2_status,
-                                    external_valve3_status, external_valve4_status, and external_valve5_status
-                                    and returns the SMPMODE array.
-
+This module has never been used in an operational OOI data pipeline; see
+docs/api/msp_functions.md for background and the DEPRECATIONS.md entry for
+this module.
 """
 
 # import main python modules
 import numpy as np
 
+from ion_functions import deprecated
 
-#Block of functions that calculate the L2 data products
+@deprecated
 def calc_l2_totlgas_smph2scon(port_timestamp_sampleint, L0_dissgas_sampleint,
                               gas_mode_sampleint, port_timestamp_sampleint_mcu,
                               ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                               massp_rga_initial_mass, massp_rga_final_mass,
                               massp_rga_steps_per_amu, calibration_table,
                               l2_ph_calibration_table, sensor_depth, salinity):
-    '''
-    Below are the steps for calculating L2 TOTLGAS- SMPH2SCON and L2 TOTLGAS-
-    BKGH2SCON core data products from L1 DISSGAS-SMPH2SCON and
-    DISSGAS-BKGH2SCON, the L1 auxilliary data MSINLET-TEMP, the pressure at the
-    site P and the value S from the calibration table, and the higher auxiliary
-    data product MSWATER-SMPPHVAL and MSWATER-BKGPHVAL
-    '''
+    """
+    Computes the L2 total dissolved hydrogen sulfide concentration
+    in the sample water from the L1 DISSGAS-SMPH2SCON
+    concentration, the equilibrated water pH from calc_l2_mswater_smpphval,
+    and a temperature/salinity/pressure-dependent speciation
+    correction.
+
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 timing and intensity inputs; see calc_dissgas_smph2scon for
+        the full parameter list, which this function passes
+        through unchanged.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+    l2_ph_calibration_table : ndarray
+        Six-element L2 pH calibration coefficient array.
+    sensor_depth : float
+        In situ depth [m].
+    salinity : float
+        Estimated practical salinity [PSU] used in the speciation
+        correction; the DPS-era code comment notes an assumed
+        value of 35 where a measured value is unavailable.
+
+    Returns
+    -------
+    totlgas_smph2scon : float
+        TOTLGAS-SMPH2SCON, total dissolved hydrogen sulfide
+        concentration [uM].
+
+    Notes
+    -----
+    Speciation factor beta is 1 + (K1 / 10^-pH), with K1 an empirical
+    """
 
     ph_temp_array = calc_l2_mswater_smpphval(port_timestamp_sampleint,
                                              L0_dissgas_sampleint,
@@ -299,20 +108,47 @@ def calc_l2_totlgas_smph2scon(port_timestamp_sampleint, L0_dissgas_sampleint,
 
     return totlgas_smph2scon
 
-
+@deprecated
 def calc_l2_totlgas_smpco2con(port_timestamp_sampleint, L0_dissgas_sampleint,
                               gas_mode_sampleint, port_timestamp_sampleint_mcu,
                               ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                               massp_rga_initial_mass, massp_rga_final_mass,
                               massp_rga_steps_per_amu, calibration_table,
                               l2_ph_calibration_table, sensor_depth, salinity):
-    '''
-    Below are the steps for calculating L2 TOTLGAS- SMPCO2CON and L2 TOTLGAS-
-    BKGCO2CON core data products from L1 DISSGAS-SMPCO2CON and
-    DISSGAS-BKGCO2CON, the L1 auxiliary data MSINLET-TEMP, the pressure at the
-    site P and the value S from the calibration table and the higher auxiliary
-    data MSWATER-SMPPHVAL and MSWATER-BKGPHVAL
-    '''
+    """
+    Computes the L2 total dissolved carbon dioxide concentration
+    in the sample water from the L1 DISSGAS-SMPCO2CON
+    concentration, the equilibrated water pH from calc_l2_mswater_smpphval,
+    and a temperature/salinity/pressure-dependent speciation
+    correction.
+
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 timing and intensity inputs; see calc_dissgas_smpco2con for
+        the full parameter list, which this function passes
+        through unchanged.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+    l2_ph_calibration_table : ndarray
+        Six-element L2 pH calibration coefficient array.
+    sensor_depth : float
+        In situ depth [m].
+    salinity : float
+        Estimated practical salinity [PSU] used in the speciation
+        correction; the DPS-era code comment notes an assumed
+        value of 35 where a measured value is unavailable.
+
+    Returns
+    -------
+    totlgas_smpco2con : float
+        TOTLGAS-SMPCO2CON, total dissolved carbon dioxide
+        concentration [uM].
+
+    Notes
+    -----
+    Speciation factor alpha is 1 + (K1/10^-pH) + (K1*K2/10^-pH^2),
+    """
 
     ph_temp_array = calc_l2_mswater_smpphval(port_timestamp_sampleint,
                                              L0_dissgas_sampleint,
@@ -370,7 +206,7 @@ def calc_l2_totlgas_smpco2con(port_timestamp_sampleint, L0_dissgas_sampleint,
 
     return totlgas_smpco2con
 
-
+@deprecated
 def calc_timestamp_totlgas_smph2scon(port_timestamp_sampleint,
                                      L0_dissgas_sampleint,
                                      gas_mode_sampleint,
@@ -381,11 +217,16 @@ def calc_timestamp_totlgas_smph2scon(port_timestamp_sampleint,
                                      massp_rga_final_mass,
                                      massp_rga_steps_per_amu,
                                      calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved hydrogen
-    sulfide in the sample water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPH2SCON. Returns the Direct mode scan timestamp
+    associated with the L2 total dissolved hydrogen sulfide concentration
+    in the sample water.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this timestamp as the mean port
+        timestamp over the Direct mode averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -404,7 +245,7 @@ def calc_timestamp_totlgas_smph2scon(port_timestamp_sampleint,
 
     return smp_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_totlgas_smpco2con(port_timestamp_sampleint,
                                      L0_dissgas_sampleint,
                                      gas_mode_sampleint,
@@ -415,11 +256,16 @@ def calc_timestamp_totlgas_smpco2con(port_timestamp_sampleint,
                                      massp_rga_final_mass,
                                      massp_rga_steps_per_amu,
                                      calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved carbon dioxide
-    in the sample water as measured by the MASSP instrument,
-    while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPCO2CON. Returns the Direct mode scan timestamp
+    associated with the L2 total dissolved carbon dioxide concentration
+    in the sample water.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this timestamp as the mean port
+        timestamp over the Direct mode averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -438,7 +284,7 @@ def calc_timestamp_totlgas_smpco2con(port_timestamp_sampleint,
 
     return smp_direct_timestamp
 
-
+@deprecated
 def calc_l2_totlgas_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint,
                               gas_mode_bkgndint,
                               port_timestamp_bkgndint_mcu,
@@ -446,13 +292,40 @@ def calc_l2_totlgas_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint,
                               massp_rga_initial_mass, massp_rga_final_mass,
                               massp_rga_steps_per_amu, calibration_table,
                               l2_ph_calibration_table, sensor_depth, salinity):
-    '''
-    Below are the steps for calculating L2 TOTLGAS- SMPH2SCON and L2 TOTLGAS-
-    BKGH2SCON core data products from L1 DISSGAS-SMPH2SCON and
-    DISSGAS-BKGH2SCON, the L1 auxilliary data MSINLET-TEMP, the pressure at the
-    site P and the value S from the calibration table, and the higher auxiliary
-    data product MSWATER-SMPPHVAL and MSWATER-BKGPHVAL
-    '''
+    """
+    Computes the L2 total dissolved hydrogen sulfide concentration
+    in the background water from the L1 DISSGAS-BKGH2SCON
+    concentration, the equilibrated water pH from calc_l2_mswater_bkgphval,
+    and a temperature/salinity/pressure-dependent speciation
+    correction.
+
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 timing and intensity inputs; see calc_dissgas_bkgh2scon for
+        the full parameter list, which this function passes
+        through unchanged.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+    l2_ph_calibration_table : ndarray
+        Six-element L2 pH calibration coefficient array.
+    sensor_depth : float
+        In situ depth [m].
+    salinity : float
+        Estimated practical salinity [PSU] used in the speciation
+        correction; the DPS-era code comment notes an assumed
+        value of 35 where a measured value is unavailable.
+
+    Returns
+    -------
+    totlgas_bkgh2scon : float
+        TOTLGAS-BKGH2SCON, total dissolved hydrogen sulfide
+        concentration [uM].
+
+    Notes
+    -----
+    Speciation factor beta is 1 + (K1 / 10^-pH), with K1 an empirical
+    """
 
     ph_temp_array = calc_l2_mswater_bkgphval(port_timestamp_bkgndint,
                                              L0_dissgas_bkgndint,
@@ -501,7 +374,7 @@ def calc_l2_totlgas_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint,
 
     return totlgas_bkgh2scon
 
-
+@deprecated
 def calc_l2_totlgas_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint,
                               gas_mode_bkgndint,
                               port_timestamp_bkgndint_mcu,
@@ -509,13 +382,40 @@ def calc_l2_totlgas_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint,
                               massp_rga_initial_mass, massp_rga_final_mass,
                               massp_rga_steps_per_amu, calibration_table,
                               l2_ph_calibration_table, sensor_depth, salinity):
-    '''
-    Below are the steps for calculating L2 TOTLGAS- SMPCO2CON and L2 TOTLGAS-
-    BKGCO2CON core data products from L1 DISSGAS-SMPCO2CON and
-    DISSGAS-BKGCO2CON, the L1 auxiliary data MSINLET-TEMP, the pressure at the
-    site P and the value S from the calibration table and the higher auxiliary
-    data MSWATER-SMPPHVAL and MSWATER-BKGPHVAL
-    '''
+    """
+    Computes the L2 total dissolved carbon dioxide concentration
+    in the background water from the L1 DISSGAS-BKGCO2CON
+    concentration, the equilibrated water pH from calc_l2_mswater_bkgphval,
+    and a temperature/salinity/pressure-dependent speciation
+    correction.
+
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 timing and intensity inputs; see calc_dissgas_bkgco2con for
+        the full parameter list, which this function passes
+        through unchanged.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+    l2_ph_calibration_table : ndarray
+        Six-element L2 pH calibration coefficient array.
+    sensor_depth : float
+        In situ depth [m].
+    salinity : float
+        Estimated practical salinity [PSU] used in the speciation
+        correction; the DPS-era code comment notes an assumed
+        value of 35 where a measured value is unavailable.
+
+    Returns
+    -------
+    totlgas_bkgco2con : float
+        TOTLGAS-BKGCO2CON, total dissolved carbon dioxide
+        concentration [uM].
+
+    Notes
+    -----
+    Speciation factor alpha is 1 + (K1/10^-pH) + (K1*K2/10^-pH^2),
+    """
 
     ph_temp_array = calc_l2_mswater_bkgphval(port_timestamp_bkgndint,
                                              L0_dissgas_bkgndint,
@@ -573,7 +473,7 @@ def calc_l2_totlgas_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint,
 
     return totlgas_bkgco2con
 
-
+@deprecated
 def calc_timestamp_totlgas_bkgh2scon(port_timestamp_bkgndint,
                                      L0_dissgas_bkgndint,
                                      gas_mode_bkgndint,
@@ -584,11 +484,16 @@ def calc_timestamp_totlgas_bkgh2scon(port_timestamp_bkgndint,
                                      massp_rga_final_mass,
                                      massp_rga_steps_per_amu,
                                      calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved hydrogen sulfide
-    in the background water as measured by the MASSP instrument,
-    while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGH2SCON. Returns the Direct mode scan timestamp
+    associated with the L2 total dissolved hydrogen sulfide concentration
+    in the background water.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this timestamp as the mean port
+        timestamp over the Direct mode averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -606,7 +511,7 @@ def calc_timestamp_totlgas_bkgh2scon(port_timestamp_bkgndint,
 
     return bkg_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_totlgas_bkgco2con(port_timestamp_bkgndint,
                                      L0_dissgas_bkgndint,
                                      gas_mode_bkgndint,
@@ -617,11 +522,16 @@ def calc_timestamp_totlgas_bkgco2con(port_timestamp_bkgndint,
                                      massp_rga_final_mass,
                                      massp_rga_steps_per_amu,
                                      calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved carbon dioxide
-    in the background water as measured by the MASSP instrument,
-    while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGCO2CON. Returns the Direct mode scan timestamp
+    associated with the L2 total dissolved carbon dioxide concentration
+    in the background water.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this timestamp as the mean port
+        timestamp over the Direct mode averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -641,18 +551,42 @@ def calc_timestamp_totlgas_bkgco2con(port_timestamp_bkgndint,
 
 
 #Block of wrapper functions for calculating the pH intensity auxiliary data products and associated timestamps
-
+@deprecated
 def calc_l2_mswater_smpphval(port_timestamp_sampleint, L0_dissgas_sampleint,
                              gas_mode_sampleint, port_timestamp_sampleint_mcu,
                              ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass,
                              massp_rga_steps_per_amu, calibration_table,
                              l2_ph_calibration_table):
-    '''
-    Below are the steps for processing the auxiliary products MSINLET-TEMP,
-    MSINLET-SMPPHINT and MSINLET-BKGPHINT into the higher level auxiliary
-    products MSWATER-SMPPHVAL MSWATER-BKGPHVAL.
-    '''
+    """
+    Converts the auxiliary products MSINLET-TEMP and MSINLET-
+    SMPPHINT into the higher-level auxiliary product
+    MSWATER-SMPPHVAL, the mass-spectrometer-equilibrated
+    sample water pH
+    value.
+
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 timing and intensity inputs; see SamplePreProcess for the
+        full parameter list, which this function passes through
+        unchanged.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+    l2_ph_calibration_table : ndarray
+        Six-element L2 pH calibration coefficient array (A0, A1,
+        A2, a1, a0, a2, in that storage order).
+
+    Returns
+    -------
+    l2_smpphint : float
+        MSWATER-SMPPHVAL, equilibrated water pH
+        [dimensionless]; -9999999.0 if the computed value falls
+        outside the valid pH 2-12 range.
+    msinlet_temp : float
+        MSINLET-TEMP [deg_C] used in the pH calculation, returned
+        for reuse by calc_l2_totlgas_* functions.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -686,18 +620,42 @@ def calc_l2_mswater_smpphval(port_timestamp_sampleint, L0_dissgas_sampleint,
 
     return l2_msinlet_smpphint, msinlet_temp
 
-
+@deprecated
 def calc_l2_mswater_bkgphval(port_timestamp_bkgndint, L0_dissgas_bkgndint,
                              gas_mode_bkgndint, port_timestamp_bkgndint_mcu,
                              ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass,
                              massp_rga_steps_per_amu, calibration_table,
                              l2_ph_calibration_table):
-    '''
-    Below are the steps for processing the auxiliary products MSINLET-TEMP,
-    MSINLET-SMPPHINT and MSINLET-BKGPHINT into the higher level auxiliary
-    products MSWATER-SMPPHVAL MSWATER-BKGPHVAL.
-    '''
+    """
+    Converts the auxiliary products MSINLET-TEMP and MSINLET-
+    BKGPHINT into the higher-level auxiliary product
+    MSWATER-BKGPHVAL, the mass-spectrometer-equilibrated
+    background water pH
+    value.
+
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 timing and intensity inputs; see BackgroundPreProcess for the
+        full parameter list, which this function passes through
+        unchanged.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+    l2_ph_calibration_table : ndarray
+        Six-element L2 pH calibration coefficient array (A0, A1,
+        A2, a1, a0, a2, in that storage order).
+
+    Returns
+    -------
+    l2_bkgphint : float
+        MSWATER-BKGPHVAL, equilibrated water pH
+        [dimensionless]; -9999999.0 if the computed value falls
+        outside the valid pH 2-12 range.
+    msinlet_temp : float
+        MSINLET-TEMP [deg_C] used in the pH calculation, returned
+        for reuse by calc_l2_totlgas_* functions.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -731,17 +689,21 @@ def calc_l2_mswater_bkgphval(port_timestamp_bkgndint, L0_dissgas_bkgndint,
 
     return l2_msinlet_bkgphint, msinlet_temp
 
-
+@deprecated
 def calc_msinlet_smpphint(port_timestamp_sampleint, L0_dissgas_sampleint,
                           gas_mode_sampleint, port_timestamp_sampleint_mcu,
                           ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass,
                           massp_rga_steps_per_amu, calibration_table):
-    '''
-    Sample pH intensity is output by a sensor onboard the MASSP instrument. It
-    is the pH signal intensity of the Sample Water at the time of
-    dissolved gas measurement.
-    '''
+    """
+    OOI wrapper for MSINLET-SMPPHINT. Returns the Sample Water pH
+    signal intensity [dimensionless] at the time of dissolved gas
+    measurement, taken over the last minute of Direct mode.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -760,7 +722,7 @@ def calc_msinlet_smpphint(port_timestamp_sampleint, L0_dissgas_sampleint,
 
     return msinlet_smpphint
 
-
+@deprecated
 def calc_msinlet_smpphint_timestamp(port_timestamp_sampleint,
                                     L0_dissgas_sampleint, gas_mode_sampleint,
                                     port_timestamp_sampleint_mcu,
@@ -769,9 +731,14 @@ def calc_msinlet_smpphint_timestamp(port_timestamp_sampleint,
                                     massp_rga_initial_mass,
                                     massp_rga_final_mass,
                                     massp_rga_steps_per_amu, calibration_table):
-    '''
-    This is a wrapper function to calculate the MASSP timestamp while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPPHINT. Returns the Direct mode scan
+    timestamp associated with MSINLET-SMPPHINT.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -789,17 +756,21 @@ def calc_msinlet_smpphint_timestamp(port_timestamp_sampleint,
 
     return smp_direct_timestamp
 
-
+@deprecated
 def calc_msinlet_bkgphint(port_timestamp_bkgndint, L0_dissgas_bkgndint,
                           gas_mode_bkgndint, port_timestamp_bkgndint_mcu,
                           ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass,
                           massp_rga_steps_per_amu, calibration_table):
-    '''
-    Background Water pH intensity is output by a sensor onboard the MASSP
-    instrument. It is the pH signal intensity of Background Water at
-    the time of dissolved gas measurement
-    '''
+    """
+    OOI wrapper for MSINLET-BKGPHINT. Returns the Background Water pH
+    signal intensity [dimensionless] at the time of dissolved gas
+    measurement, taken over the last minute of Nafion mode.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -817,7 +788,7 @@ def calc_msinlet_bkgphint(port_timestamp_bkgndint, L0_dissgas_bkgndint,
 
     return msinlet_bkgphint
 
-
+@deprecated
 def calc_msinlet_bkgphint_timestamp(port_timestamp_bkgndint,
                                     L0_dissgas_bkgndint, gas_mode_bkgndint,
                                     port_timestamp_bkgndint_mcu,
@@ -826,9 +797,14 @@ def calc_msinlet_bkgphint_timestamp(port_timestamp_bkgndint,
                                     massp_rga_initial_mass,
                                     massp_rga_final_mass,
                                     massp_rga_steps_per_amu, calibration_table):
-    '''
-    This is a wrapper function to calculate the MASSP timestamp while in Nafion mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGPHINT. Returns the Nafion mode scan
+    timestamp associated with MSINLET-BKGPHINT.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -846,17 +822,21 @@ def calc_msinlet_bkgphint_timestamp(port_timestamp_bkgndint,
 
     return bkg_nafion_timestamp
 
-
+@deprecated
 def calc_msinlet_cal1phint(port_timestamp_calint01, L0_dissgas_calint01,
                            gas_mode_calint01, port_timestamp_calint01_mcu,
                            ph_meter_calint01_mcu, inlet_temp_calint01_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass,
                            massp_rga_steps_per_amu, calibration_table):
-    '''
-    Calibration Solution 1 pH intensity is output by a sensor onboard the MASSP
-    instrument. It is the pH signal intensity of Calibration Solution 1 at the
-    time of dissolved gas measurement
-    '''
+    """
+    OOI wrapper for MSINLET-CA1PHINT. Returns the Calibration Solution
+    1 pH signal intensity [dimensionless] at the time of dissolved gas
+    measurement, taken over the last minute of Nafion mode.
+
+    See Also
+    --------
+    Cal1PreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -874,7 +854,7 @@ def calc_msinlet_cal1phint(port_timestamp_calint01, L0_dissgas_calint01,
 
     return msinlet_cal1phint
 
-
+@deprecated
 def calc_msinlet_cal1phint_timestamp(port_timestamp_calint01,
                                      L0_dissgas_calint01,
                                      gas_mode_calint01,
@@ -885,9 +865,14 @@ def calc_msinlet_cal1phint_timestamp(port_timestamp_calint01,
                                      massp_rga_final_mass,
                                      massp_rga_steps_per_amu,
                                      calibration_table):
-    '''
-    This is a wrapper function to calculate the MASSP timestamp while in Nafion mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-CA1PHINT. Returns the Nafion mode scan
+    timestamp associated with MSINLET-CA1PHINT.
+
+    See Also
+    --------
+    Cal1PreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -905,17 +890,21 @@ def calc_msinlet_cal1phint_timestamp(port_timestamp_calint01,
 
     return cal1_nafion_timestamp
 
-
+@deprecated
 def calc_msinlet_cal2phint(port_timestamp_calint02, L0_dissgas_calint02,
                            gas_mode_calint02, port_timestamp_calint02_mcu,
                            ph_meter_calint02_mcu, inlet_temp_calint02_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass,
                            massp_rga_steps_per_amu, calibration_table):
-    '''
-    Calibration Solution 2 pH intensity is output by a sensor onboard the MASSP
-    instrument. It is the pH signal intensity of Calibration Solution 2 at the
-    time of dissolved gas measurement
-    '''
+    """
+    OOI wrapper for MSINLET-CA2PHINT. Returns the Calibration Solution
+    2 pH signal intensity [dimensionless] at the time of dissolved gas
+    measurement, taken over the last minute of Direct mode.
+
+    See Also
+    --------
+    Cal2PreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -930,7 +919,7 @@ def calc_msinlet_cal2phint(port_timestamp_calint02, L0_dissgas_calint02,
 
     return msinlet_cal2phint
 
-
+@deprecated
 def calc_msinlet_cal2phint_timestamp(port_timestamp_calint02,
                                      L0_dissgas_calint02,
                                      gas_mode_calint02,
@@ -941,9 +930,14 @@ def calc_msinlet_cal2phint_timestamp(port_timestamp_calint02,
                                      massp_rga_final_mass,
                                      massp_rga_steps_per_amu,
                                      calibration_table):
-    '''
-    This is a wrapper function to calculate the MASSP timestamp while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-CA2PHINT. Returns the Direct mode scan
+    timestamp associated with MSINLET-CA2PHINT.
+
+    See Also
+    --------
+    Cal2PreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -963,17 +957,21 @@ def calc_msinlet_cal2phint_timestamp(port_timestamp_calint02,
 
 
 #Block of wrapper functions for calculating the nafion drier efficiency auxiliary data product and associated timestamp
-
+@deprecated
 def calc_smpnafeff(port_timestamp_sampleint, L0_dissgas_sampleint,
                    gas_mode_sampleint, port_timestamp_sampleint_mcu,
                    ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                    massp_rga_initial_mass, massp_rga_final_mass,
                    massp_rga_steps_per_amu, calibration_table):
-    '''
-    The auxiliary data product Nafion Drier Efficiency (NAFEFF) is an indicator
-    of the drying efficiency of the nafion drier. The efficiency is represented
-    as the percentage of water signal in nafion mode compared to direct mode.
-    '''
+    """
+    OOI wrapper for NAFEFF. Returns the Nafion Drier Efficiency [%],
+    the percentage of the mz 18 (water) signal seen in Nafion mode
+    relative to Direct mode.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -991,15 +989,20 @@ def calc_smpnafeff(port_timestamp_sampleint, L0_dissgas_sampleint,
 
     return smpnafeff
 
-
+@deprecated
 def calc_smpnafeff_timestamp(port_timestamp_sampleint, L0_dissgas_sampleint,
                              gas_mode_sampleint, port_timestamp_sampleint_mcu,
                              ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass,
                              massp_rga_steps_per_amu, calibration_table):
-    '''
-    This is a wrapper function to calculate the MASSP timestamp while in Nafion mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-NAFEFF. Returns the Nafion mode scan
+    timestamp associated with NAFEFF.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this value directly.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass,
                                     massp_rga_final_mass,
@@ -1019,16 +1022,23 @@ def calc_smpnafeff_timestamp(port_timestamp_sampleint, L0_dissgas_sampleint,
 
 
 #Block of wrapper functions for calculating the L1 data products
-
+@deprecated
 def calc_dissgas_smpmethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                             port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                             calibration_table, sensor_depth):
-    '''
-    This is a wrapper function to calculate the in situ concentration (uM)
-    of dissolved methane in the sample water as measured by the MASSP
-    instrument, while in Nafion mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-SMPMETHCON. Returns the in situ dissolved methane
+    concentration [uM] in the sample water, computed from Nafion mode scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    SamplePreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1055,16 +1065,23 @@ def calc_dissgas_smpmethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_
 
     return smpmethcon
 
-
+@deprecated
 def calc_dissgas_smpethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                            port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    This is a wrapper function to calculate the in situ concentration (uM)
-    of dissolved ethane in the sample water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-SMPETHNCON. Returns the in situ dissolved ethane
+    concentration [uM] in the sample water, computed from Direct mode scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    SamplePreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1091,16 +1108,23 @@ def calc_dissgas_smpethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_m
 
     return smpethcon
 
-
+@deprecated
 def calc_dissgas_smph2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                           port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    This is a wrapper function to calculate the in situ concentration (uM)
-    of dissolved hydrogen in the sample water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-SMPH2CON. Returns the in situ dissolved hydrogen
+    concentration [uM] in the sample water, computed from Direct mode scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    SamplePreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1127,16 +1151,23 @@ def calc_dissgas_smph2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mo
 
     return smph2con
 
-
+@deprecated
 def calc_dissgas_smparcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                           port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved argon in the
-    sample water as measured by the MASSP instrument, while
-    in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-SMPARCON. Returns the in situ dissolved argon
+    concentration [uM] in the sample water, computed from Direct mode scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    SamplePreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1163,16 +1194,24 @@ def calc_dissgas_smparcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mo
 
     return smparcon
 
-
+@deprecated
 def calc_dissgas_smph2scon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                            port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved hydrogen
-    sulfide in the sample water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-SMPH2SCON. Returns the in situ dissolved hydrogen
+    sulfide concentration [uM] in the sample water, computed from Direct mode
+    scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    SamplePreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1199,16 +1238,23 @@ def calc_dissgas_smph2scon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_m
 
     return smph2scon
 
-
+@deprecated
 def calc_dissgas_smpo2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                           port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved oxygen
-    in the sample water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-SMPO2CON. Returns the in situ dissolved oxygen
+    concentration [uM] in the sample water, computed from Direct mode scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    SamplePreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1236,16 +1282,24 @@ def calc_dissgas_smpo2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mo
 
     return smpo2con
 
-
+@deprecated
 def calc_dissgas_smpco2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                            port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved carbon dioxide
-    in the sample water as measured by the MASSP instrument,
-    while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-SMPCO2CON. Returns the in situ dissolved carbon
+    dioxide concentration [uM] in the sample water, computed from Direct mode
+    scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    SamplePreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1272,15 +1326,24 @@ def calc_dissgas_smpco2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_m
 
     return smpco2con
 
-
+@deprecated
 def calc_dissgas_bkgmethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                             port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                             calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved methane in the background
-    water as measured by the MASSP instrument, while in Nafion mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-BKGMETHCON. Returns the in situ dissolved methane
+    concentration [uM] in the background water, computed from Nafion mode
+    scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    BackgroundPreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1307,15 +1370,24 @@ def calc_dissgas_bkgmethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mo
 
     return bkgmethcon
 
-
+@deprecated
 def calc_dissgas_bkgethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                            port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved ethane in the background
-    water as measured by the MASSP instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-BKGETHNCON. Returns the in situ dissolved ethane
+    concentration [uM] in the background water, computed from Direct mode
+    scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    BackgroundPreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1342,16 +1414,24 @@ def calc_dissgas_bkgethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mod
 
     return bkgethcon
 
-
+@deprecated
 def calc_dissgas_bkgh2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                           port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved hydrogen
-    in the background water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-BKGH2CON. Returns the in situ dissolved hydrogen
+    concentration [uM] in the background water, computed from Direct mode
+    scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    BackgroundPreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1378,16 +1458,24 @@ def calc_dissgas_bkgh2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode
 
     return bkgh2con
 
-
+@deprecated
 def calc_dissgas_bkgarcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                           port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved argon
-    in the background water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-BKGARCON. Returns the in situ dissolved argon
+    concentration [uM] in the background water, computed from Direct mode
+    scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    BackgroundPreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1414,16 +1502,24 @@ def calc_dissgas_bkgarcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode
 
     return bkgarcon
 
-
+@deprecated
 def calc_dissgas_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                            port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved hydrogen sulfide
-    in the background water as measured by the MASSP instrument,
-    while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-BKGH2SCON. Returns the in situ dissolved hydrogen
+    sulfide concentration [uM] in the background water, computed from Direct
+    mode scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    BackgroundPreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1450,16 +1546,24 @@ def calc_dissgas_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mod
 
     return bkgh2scon
 
-
+@deprecated
 def calc_dissgas_bkgo2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                           port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved oxygen
-    in the background water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-BKGO2CON. Returns the in situ dissolved oxygen
+    concentration [uM] in the background water, computed from Direct mode
+    scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    BackgroundPreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1487,16 +1591,24 @@ def calc_dissgas_bkgo2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode
 
     return bkgo2con
 
-
+@deprecated
 def calc_dissgas_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                            port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved carbon dioxide
-    in the background water as measured by the MASSP instrument,
-    while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-BKGCO2CON. Returns the in situ dissolved carbon
+    dioxide concentration [uM] in the background water, computed from Direct
+    mode scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    BackgroundPreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1523,15 +1635,24 @@ def calc_dissgas_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mod
 
     return bkgco2con
 
-
+@deprecated
 def calc_dissgas_cal1methcon(port_timestamp_calint01, L0_dissgas_calint01, gas_mode_calint01,
                              port_timestamp_calint01_mcu, ph_meter_calint01_mcu, inlet_temp_calint01_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                              calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved methane in the Calibration
-    Solution 1 water as measured by the MASSP instrument, while in Nafion mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-CA1METHCON. Returns the in situ dissolved methane
+    concentration [uM] in Calibration Solution 1, computed from Nafion mode
+    scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    Cal1PreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1558,15 +1679,24 @@ def calc_dissgas_cal1methcon(port_timestamp_calint01, L0_dissgas_calint01, gas_m
 
     return cal1methcon
 
-
+@deprecated
 def calc_dissgas_cal1co2con(port_timestamp_calint01, L0_dissgas_calint01, gas_mode_calint01,
                             port_timestamp_calint01_mcu, ph_meter_calint01_mcu, inlet_temp_calint01_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                             calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved carbon dioxide in the Calibration
-    Solution 1 water as measured by the MASSP instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-CA1CO2CON. Returns the in situ dissolved carbon
+    dioxide concentration [uM] in Calibration Solution 1, computed from Direct
+    mode scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    Cal1PreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1593,15 +1723,24 @@ def calc_dissgas_cal1co2con(port_timestamp_calint01, L0_dissgas_calint01, gas_mo
 
     return cal1co2con
 
-
+@deprecated
 def calc_dissgas_cal2methcon(port_timestamp_calint02, L0_dissgas_calint02, gas_mode_calint02,
                              port_timestamp_calint02_mcu, ph_meter_calint02_mcu, inlet_temp_calint02_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                              calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved methane in the Calibration
-    Solution 2 water as measured by the MASSP instrument, while in Nafion mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-CA2METHCON. Returns the in situ dissolved methane
+    concentration [uM] in Calibration Solution 2, computed from Nafion mode
+    scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    Cal2PreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1628,15 +1767,24 @@ def calc_dissgas_cal2methcon(port_timestamp_calint02, L0_dissgas_calint02, gas_m
 
     return cal2methcon
 
-
+@deprecated
 def calc_dissgas_cal2co2con(port_timestamp_calint02, L0_dissgas_calint02, gas_mode_calint02,
                             port_timestamp_calint02_mcu, ph_meter_calint02_mcu, inlet_temp_calint02_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                             calibration_table, sensor_depth):
-    '''
-    The in situ concentration (uM) of dissolved carbon dioxide in the Calibration
-    Solution 2 water as measured by the MASSP instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for DISSGAS-CA2CO2CON. Returns the in situ dissolved carbon
+    dioxide concentration [uM] in Calibration Solution 2, computed from Direct
+    mode scans.
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; use directly for the
+        corrected-intensity-to-concentration calculation and the
+        associated CALRANG quality flag.
+    Cal2PreProcess : Helper; produces the averaged mz
+        intensity and mode-averaged temperature consumed here.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1665,15 +1813,20 @@ def calc_dissgas_cal2co2con(port_timestamp_calint02, L0_dissgas_calint02, gas_mo
 
 
 #Block of wrapper functions for calculating the timestamps of the L1 data products
-
+@deprecated
 def calc_timestamp_smpmethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                               port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                               massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    This is a wrapper function to calculate the timestamp of the in situ concentration (uM)
-    of dissolved methane in the sample water as measured by the MASSP
-    instrument, while in Nafion mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPMETH. Returns the Nafion mode scan
+    timestamp associated with the dissolved methane concentration
+    in the sample water.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1686,15 +1839,20 @@ def calc_timestamp_smpmethcon(port_timestamp_sampleint, L0_dissgas_sampleint, ga
 
     return smp_nafion_timestamp
 
-
+@deprecated
 def calc_timestamp_smpethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                              port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    This is a wrapper function to calculate the timestamp of the in situ concentration (uM)
-    of dissolved ethane in the sample water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPETHN. Returns the Direct mode scan
+    timestamp associated with the dissolved ethane concentration
+    in the sample water.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1707,15 +1865,20 @@ def calc_timestamp_smpethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas
 
     return smp_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_smph2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                             port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    This is a wrapper function to calculate the timestamp of the in situ concentration (uM)
-    of dissolved hydrogen in the sample water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPH2. Returns the Direct mode scan
+    timestamp associated with the dissolved hydrogen concentration
+    in the sample water.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1728,15 +1891,20 @@ def calc_timestamp_smph2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_
 
     return smp_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_smparcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                             port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved argon in the
-    sample water as measured by the MASSP instrument, while
-    in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPAR. Returns the Direct mode scan
+    timestamp associated with the dissolved argon concentration
+    in the sample water.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1749,15 +1917,20 @@ def calc_timestamp_smparcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_
 
     return smp_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_smph2scon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                              port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved hydrogen
-    sulfide in the sample water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPH2S. Returns the Direct mode scan
+    timestamp associated with the dissolved hydrogen sulfide concentration
+    in the sample water.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1770,15 +1943,20 @@ def calc_timestamp_smph2scon(port_timestamp_sampleint, L0_dissgas_sampleint, gas
 
     return smp_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_smpo2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                             port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved oxygen
-    in the sample water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPO2. Returns the Direct mode scan
+    timestamp associated with the dissolved oxygen concentration
+    in the sample water.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1791,15 +1969,20 @@ def calc_timestamp_smpo2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_
 
     return smp_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_smpco2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                              port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved carbon dioxide
-    in the sample water as measured by the MASSP instrument,
-    while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-SMPCO2. Returns the Direct mode scan
+    timestamp associated with the dissolved carbon dioxide concentration
+    in the sample water.
+
+    See Also
+    --------
+    SamplePreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1812,14 +1995,20 @@ def calc_timestamp_smpco2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas
 
     return smp_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_bkgmethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                               port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                               massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved methane in the background
-    water as measured by the MASSP instrument, while in Nafion mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGMETH. Returns the Nafion mode scan
+    timestamp associated with the dissolved methane concentration
+    in the background water.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1832,14 +2021,20 @@ def calc_timestamp_bkgmethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_
 
     return bkg_nafion_timestamp
 
-
+@deprecated
 def calc_timestamp_bkgethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                              port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved ethane in the background
-    water as measured by the MASSP instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGETHN. Returns the Direct mode scan
+    timestamp associated with the dissolved ethane concentration
+    in the background water.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1852,15 +2047,20 @@ def calc_timestamp_bkgethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_m
 
     return bkg_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_bkgh2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                             port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved hydrogen
-    in the background water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGH2. Returns the Direct mode scan
+    timestamp associated with the dissolved hydrogen concentration
+    in the background water.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1873,15 +2073,20 @@ def calc_timestamp_bkgh2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mo
 
     return bkg_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_bkgarcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                             port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved argon
-    in the background water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGAR. Returns the Direct mode scan
+    timestamp associated with the dissolved argon concentration
+    in the background water.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1894,15 +2099,20 @@ def calc_timestamp_bkgarcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mo
 
     return bkg_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                              port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved hydrogen sulfide
-    in the background water as measured by the MASSP instrument,
-    while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGH2S. Returns the Direct mode scan
+    timestamp associated with the dissolved hydrogen sulfide concentration
+    in the background water.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1915,15 +2125,20 @@ def calc_timestamp_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_m
 
     return bkg_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_bkgo2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                             port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved oxygen
-    in the background water as measured by the MASSP
-    instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGO2. Returns the Direct mode scan
+    timestamp associated with the dissolved oxygen concentration
+    in the background water.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1936,15 +2151,20 @@ def calc_timestamp_bkgo2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mo
 
     return bkg_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                              port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved carbon dioxide
-    in the background water as measured by the MASSP instrument,
-    while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-BKGCO2. Returns the Direct mode scan
+    timestamp associated with the dissolved carbon dioxide concentration
+    in the background water.
+
+    See Also
+    --------
+    BackgroundPreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1957,14 +2177,20 @@ def calc_timestamp_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_m
 
     return bkg_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_cal1methcon(port_timestamp_calint01, L0_dissgas_calint01, gas_mode_calint01,
                                port_timestamp_calint01_mcu, ph_meter_calint01_mcu, inlet_temp_calint01_mcu,
                                massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved methane in the Calibration
-    Solution 1 water as measured by the MASSP instrument, while in Nafion mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-CA1METH. Returns the Nafion mode scan
+    timestamp associated with the dissolved methane concentration
+    in Calibration Solution 1.
+
+    See Also
+    --------
+    Cal1PreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1977,14 +2203,20 @@ def calc_timestamp_cal1methcon(port_timestamp_calint01, L0_dissgas_calint01, gas
 
     return cal1_nafion_timestamp
 
-
+@deprecated
 def calc_timestamp_cal1co2con(port_timestamp_calint01, L0_dissgas_calint01, gas_mode_calint01,
                               port_timestamp_calint01_mcu, ph_meter_calint01_mcu, inlet_temp_calint01_mcu,
                               massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved carbon dioxide in the Calibration
-    Solution 1 water as measured by the MASSP instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-CA1CO2. Returns the Direct mode scan
+    timestamp associated with the dissolved carbon dioxide concentration
+    in Calibration Solution 1.
+
+    See Also
+    --------
+    Cal1PreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -1997,14 +2229,20 @@ def calc_timestamp_cal1co2con(port_timestamp_calint01, L0_dissgas_calint01, gas_
 
     return cal1_direct_timestamp
 
-
+@deprecated
 def calc_timestamp_cal2methcon(port_timestamp_calint02, L0_dissgas_calint02, gas_mode_calint02,
                                port_timestamp_calint02_mcu, ph_meter_calint02_mcu, inlet_temp_calint02_mcu,
                                massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved methane in the Calibration
-    Solution 2 water as measured by the MASSP instrument, while in Nafion mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-CA2METH. Returns the Nafion mode scan
+    timestamp associated with the dissolved methane concentration
+    in Calibration Solution 2.
+
+    See Also
+    --------
+    Cal2PreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2017,14 +2255,20 @@ def calc_timestamp_cal2methcon(port_timestamp_calint02, L0_dissgas_calint02, gas
 
     return cal2_nafion_timestamp
 
-
+@deprecated
 def calc_timestamp_cal2co2con(port_timestamp_calint02, L0_dissgas_calint02, gas_mode_calint02,
                               port_timestamp_calint02_mcu, ph_meter_calint02_mcu, inlet_temp_calint02_mcu,
                               massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu, calibration_table):
-    '''
-    The timestamp of the in situ concentration (uM) of dissolved carbon dioxide in the Calibration
-    Solution 2 water as measured by the MASSP instrument, while in Direct mode.
-    '''
+    """
+    OOI wrapper for TSTAMP-CA2CO2. Returns the Direct mode scan
+    timestamp associated with the dissolved carbon dioxide concentration
+    in Calibration Solution 2.
+
+    See Also
+    --------
+    Cal2PreProcess : Helper; computes this timestamp as the
+        mean port timestamp over the averaging window.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2039,27 +2283,25 @@ def calc_timestamp_cal2co2con(port_timestamp_calint02, L0_dissgas_calint02, gas_
 
 
 #Block of wrapper functions for calculating the calibration ranges of the L1 data products
-
+@deprecated
 def calc_calrang_smpmethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                             port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                             calibration_table, sensor_depth):
-    '''
-    The auxiliary data product MASSP Calibration Range (CALRANG) is the
-    collection of parameters associated with the quality status for each gas
-    concentration. A value of 0 indicates that both the intensity and
-    temperature used are within the calibration range. A value of -1 indicates
-    that the intensity used was below the minimum of the calibration range. A
-    value of 1 indicates that the intensity was higher than the maximum of the
-    calibration range, but the temperature was within the calibration range. A
-    value of 2 indicates that the intensity was within the calibration range,
-    but that the temperature was above the calibration range. A value of 3
-    indicates that both the intensity and the temperature were above the
-    calibration range.
+    """
+    OOI wrapper for CALRANG-SMPMETH. Returns the MASSP Calibration
+    Range quality flag for the dissolved methane concentration in
+    the sample water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
 
-    Quality status for the Methane concentration in the sample water
-
-    '''
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2086,14 +2328,25 @@ def calc_calrang_smpmethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_
 
     return smpmethcon
 
-
+@deprecated
 def calc_calrang_smpethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                            port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    Quality status for the Ethane concentration in the sample water
-    '''
+    """
+    OOI wrapper for CALRANG-SMPETHN. Returns the MASSP Calibration
+    Range quality flag for the dissolved ethane concentration in
+    the sample water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2120,14 +2373,25 @@ def calc_calrang_smpethcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_m
 
     return smpethcon
 
-
+@deprecated
 def calc_calrang_smph2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                           port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    Quality status for the Hydrogen concentration in the sample water
-    '''
+    """
+    OOI wrapper for CALRANG-SMPH2. Returns the MASSP Calibration
+    Range quality flag for the dissolved hydrogen concentration in
+    the sample water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2154,14 +2418,25 @@ def calc_calrang_smph2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mo
 
     return smph2con
 
-
+@deprecated
 def calc_calrang_smparcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                           port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    Quality status for the Argon concentration in the sample water
-    '''
+    """
+    OOI wrapper for CALRANG-SMPAR. Returns the MASSP Calibration
+    Range quality flag for the dissolved argon concentration in
+    the sample water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2188,14 +2463,25 @@ def calc_calrang_smparcon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mo
 
     return smparcon
 
-
+@deprecated
 def calc_calrang_smph2scon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                            port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    Quality status for the H2S concentration in the sample water
-    '''
+    """
+    OOI wrapper for CALRANG-SMPH2S. Returns the MASSP Calibration
+    Range quality flag for the dissolved hydrogen sulfide concentration in
+    the sample water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2222,14 +2508,25 @@ def calc_calrang_smph2scon(port_timestamp_sampleint, L0_dissgas_sampleint, gas_m
 
     return smph2scon
 
-
+@deprecated
 def calc_calrang_smpo2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                           port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    Quality status for the oxygen concentration in the sample water
-    '''
+    """
+    OOI wrapper for CALRANG-SMPO2. Returns the MASSP Calibration
+    Range quality flag for the dissolved oxygen concentration in
+    the sample water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2257,14 +2554,25 @@ def calc_calrang_smpo2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mo
 
     return smpo2con
 
-
+@deprecated
 def calc_calrang_smpco2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                            port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    Quality status for the CO2 concentration in the sample water
-    '''
+    """
+    OOI wrapper for CALRANG-SMPCO2. Returns the MASSP Calibration
+    Range quality flag for the dissolved carbon dioxide concentration in
+    the sample water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2291,14 +2599,25 @@ def calc_calrang_smpco2con(port_timestamp_sampleint, L0_dissgas_sampleint, gas_m
 
     return smpco2con
 
-
+@deprecated
 def calc_calrang_bkgmethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                             port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                             calibration_table, sensor_depth):
-    '''
-    Quality status for the Methane concentration in the background water
-    '''
+    """
+    OOI wrapper for CALRANG-BKGMETH. Returns the MASSP Calibration
+    Range quality flag for the dissolved methane concentration in
+    the background water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2325,14 +2644,25 @@ def calc_calrang_bkgmethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mo
 
     return bkgmethcon
 
-
+@deprecated
 def calc_calrang_bkgethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                            port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    Quality status for the Ethane concentration in the background water
-    '''
+    """
+    OOI wrapper for CALRANG-BKGETHN. Returns the MASSP Calibration
+    Range quality flag for the dissolved ethane concentration in
+    the background water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2359,14 +2689,25 @@ def calc_calrang_bkgethcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mod
 
     return bkgethcon
 
-
+@deprecated
 def calc_calrang_bkgh2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                           port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    Quality status for the Hydrogen concentration in the background water
-    '''
+    """
+    OOI wrapper for CALRANG-BKGH2. Returns the MASSP Calibration
+    Range quality flag for the dissolved hydrogen concentration in
+    the background water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2393,14 +2734,25 @@ def calc_calrang_bkgh2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode
 
     return bkgh2con
 
-
+@deprecated
 def calc_calrang_bkgarcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                           port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    Quality status for the Argon concentration in the background water
-    '''
+    """
+    OOI wrapper for CALRANG-BKGAR. Returns the MASSP Calibration
+    Range quality flag for the dissolved argon concentration in
+    the background water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2427,14 +2779,25 @@ def calc_calrang_bkgarcon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode
 
     return bkgarcon
 
-
+@deprecated
 def calc_calrang_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                            port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    Quality status for the H2S concentration in the background water
-    '''
+    """
+    OOI wrapper for CALRANG-BKGH2S. Returns the MASSP Calibration
+    Range quality flag for the dissolved hydrogen sulfide concentration in
+    the background water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2461,14 +2824,25 @@ def calc_calrang_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mod
 
     return bkgh2scon
 
-
+@deprecated
 def calc_calrang_bkgo2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                           port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                           massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                           calibration_table, sensor_depth):
-    '''
-    Quality status for the oxygen concentration in the background water
-    '''
+    """
+    OOI wrapper for CALRANG-BKGO2. Returns the MASSP Calibration
+    Range quality flag for the dissolved oxygen concentration in
+    the background water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2496,14 +2870,25 @@ def calc_calrang_bkgo2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode
 
     return bkgo2con
 
-
+@deprecated
 def calc_calrang_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                            port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                            massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                            calibration_table, sensor_depth):
-    '''
-    Quality status for the CO2 concentration in the background water
-    '''
+    """
+    OOI wrapper for CALRANG-BKGCO2. Returns the MASSP Calibration
+    Range quality flag for the dissolved carbon dioxide concentration in
+    the background water. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2530,14 +2915,25 @@ def calc_calrang_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mod
 
     return bkgco2con
 
-
+@deprecated
 def calc_calrang_cal1methcon(port_timestamp_calint01, L0_dissgas_calint01, gas_mode_calint01,
                              port_timestamp_calint01_mcu, ph_meter_calint01_mcu, inlet_temp_calint01_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                              calibration_table, sensor_depth):
-    '''
-    Quality status for the Methane concentration in the calibration fluid 1 water
-    '''
+    """
+    OOI wrapper for CALRANG-CA1METH. Returns the MASSP Calibration
+    Range quality flag for the dissolved methane concentration in
+    Calibration Solution 1. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2564,14 +2960,25 @@ def calc_calrang_cal1methcon(port_timestamp_calint01, L0_dissgas_calint01, gas_m
 
     return ca1methcon
 
-
+@deprecated
 def calc_calrang_cal1co2con(port_timestamp_calint01, L0_dissgas_calint01, gas_mode_calint01,
                             port_timestamp_calint01_mcu, ph_meter_calint01_mcu, inlet_temp_calint01_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                             calibration_table, sensor_depth):
-    '''
-    Quality status for the CO2 concentration in the calibration fluid 1 water
-    '''
+    """
+    OOI wrapper for CALRANG-CA1CO2. Returns the MASSP Calibration
+    Range quality flag for the dissolved carbon dioxide concentration in
+    Calibration Solution 1. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2598,14 +3005,25 @@ def calc_calrang_cal1co2con(port_timestamp_calint01, L0_dissgas_calint01, gas_mo
 
     return ca1co2con
 
-
+@deprecated
 def calc_calrang_cal2methcon(port_timestamp_calint02, L0_dissgas_calint02, gas_mode_calint02,
                              port_timestamp_calint02_mcu, ph_meter_calint02_mcu, inlet_temp_calint02_mcu,
                              massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                              calibration_table, sensor_depth):
-    '''
-    Quality status for the Methane concentration in the calibration fluid 2 water
-    '''
+    """
+    OOI wrapper for CALRANG-CA2METH. Returns the MASSP Calibration
+    Range quality flag for the dissolved methane concentration in
+    Calibration Solution 2. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2632,14 +3050,25 @@ def calc_calrang_cal2methcon(port_timestamp_calint02, L0_dissgas_calint02, gas_m
 
     return ca2methcon
 
-
+@deprecated
 def calc_calrang_cal2co2con(port_timestamp_calint02, L0_dissgas_calint02, gas_mode_calint02,
                             port_timestamp_calint02_mcu, ph_meter_calint02_mcu, inlet_temp_calint02_mcu,
                             massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu,
                             calibration_table, sensor_depth):
-    '''
-    Quality status for the CO2 concentration in the calibration fluid 2 water
-    '''
+    """
+    OOI wrapper for CALRANG-CA2CO2. Returns the MASSP Calibration
+    Range quality flag for the dissolved carbon dioxide concentration in
+    Calibration Solution 2. Values: -1 (intensity below calibration range),
+    0 (intensity and temperature within range), 1 (intensity above
+    range, temperature within range), 2 (intensity within range,
+    temperature above range), 3 (intensity and temperature above
+    range).
+
+    See Also
+    --------
+    gas_concentration : Core algorithm; returns this flag alongside
+        the concentration value.
+    """
 
     mass_table = rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu)
 
@@ -2668,23 +3097,51 @@ def calc_calrang_cal2co2con(port_timestamp_calint02, L0_dissgas_calint02, gas_mo
 
 
 #Block of subfunctions called by the above wrapper functions that calculate the L1 and auxiliary data products
-
+@deprecated
 def gas_concentration(intermediate_mass_ratio, deconvolution_variable, calibration_table,
                       first_column, last_column, sensor_depth, average_temperature):
-    '''
-    This sub-routine takes in a column. range from Table 1 (refered as to c1, c2, c3, c4),
-    a corrected intensity (referred as x, from the Deconvolution subroutine), an averaged
-    temperature (referred as T, see Table 1), the pressure P of the sampling site, and
-    calculate the final concentration used for L1 DISSGAS data products. This subroutine
-    also assigns a value to the corresponding CALRANG parameter (see Table 1) identifying
-    the quality of the concentration value (indicate if it is out of calibration range
-    for concentration and/or temperature). The subroutine also uses a temporary variable,
-    tempCalRang used to compute the final value of CALRANG.
+    """
+    Converts a corrected mass spectral intensity into a final dissolved
+    gas concentration and its MASSP Calibration Range (CALRANG) quality
+    flag. This is the shared core algorithm called by every DISSGAS and
+    CALRANG wrapper function, each of which supplies a gas-specific
+    column range into the calibration table.
 
-    The following vars will be hard coded for each of the wrapper functions
-    deconvolution_variable, calibration_table, first_column, last_column
+    Parameters
+    ----------
+    intermediate_mass_ratio : float
+        Averaged mz intensity for the target gas, from average_mz.
+    deconvolution_variable : float
+        Secondary mz intensity used only for the oxygen deconvolution
+        correction (mz 34); 0 for all other gases.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+    first_column : int
+        First column of the gas-specific range within calibration_table.
+    last_column : int
+        Last column (exclusive) of the gas-specific range within
+        calibration_table.
+    sensor_depth : float
+        In situ depth [m]; converted internally to pressure [psi].
+    average_temperature : float
+        Mode-averaged MSINLET-TEMP [deg_C] for the gas and water source
+        being processed.
 
-    '''
+    Returns
+    -------
+    final_conc : float
+        Dissolved gas concentration, DISSGAS core data product [uM].
+    calrange : int
+        MASSP Calibration Range quality flag (-1, 0, 1, 2, or 3),
+        CALRANG auxiliary data product.
+
+    Notes
+    -----
+    Selects one or two calibration temperature columns bracketing
+    average_temperature, evaluates a pressure-dependent polynomial and
+    exponential fit at each, and interpolates between them when two
+    columns are used.
+    """
 
     #Converth depth (meters) to pressure (psi)
     pressure = (sensor_depth * 0.099204 + 1) * 14.695
@@ -2767,12 +3224,36 @@ def gas_concentration(intermediate_mass_ratio, deconvolution_variable, calibrati
 
     return final_conc, calrange
 
-
 def average_mz(mz, data_in, mass_table, window):
-    '''
-    This subroutine takes in a mass-to-charge ratio mz, a subset of n scans
-    and the mass_table and returns an intermediate mz (mass-to-charge) ratio.
-    '''
+    """
+    Averages a subset of RGA scans at a given mass-to-charge ratio to
+    produce an intermediate mz intensity.
+
+    Parameters
+    ----------
+    mz : int
+        Target mass-to-charge ratio.
+    data_in : ndarray
+        Subset of L0 mass spectral scans (sample, background, or
+        calibration fluid) for the time window being averaged.
+    mass_table : ndarray
+        RGA mass lookup table from rga_status_process.
+    window : float
+        Half-width of the mz +/- window searched in mass_table; taken
+        from the calibration table's last row for the relevant gas.
+
+    Returns
+    -------
+    intermediate_mass_ratio : float
+        Mean, across scans, of the per-scan intensity at mz; negative
+        values are set to zero before averaging.
+
+    Notes
+    -----
+    The code takes the second-highest intensity within the mz window
+    for each scan, not a median of three values as the original code
+    comment states; see Additional Notes.
+    """
     #find mz +/- window in the mass_table. The window value comes from the L1 Cal Table
     mz_ind = np.where((mass_table >= mz - window) & (mass_table <= mz + window))
 
@@ -2795,25 +3276,54 @@ def average_mz(mz, data_in, mass_table, window):
 
     return intermediate_mass_ratio
 
-
 def deconvolution_correction(intermediate_mass_ratio, deconvolution_variable, calibration_table):
-    '''
-    This sub-routine takes in a main variable (intermediate_mass_ratio: see DPS Table 1), a
-    second variable (deconvolution_variable: see DPS Table 1), and a calibration lookup
-    table (DPS Table 2) and calculates a corrected intensity.
-    '''
+    """
+    Applies the intensity deconvolution correction (DPS Equation 4) to
+    an averaged mz intensity, using a second mz intensity and two
+    calibration table coefficients.
+
+    Parameters
+    ----------
+    intermediate_mass_ratio : float
+        Averaged mz intensity for the target gas, from average_mz.
+    deconvolution_variable : float
+        Secondary mz intensity used in the correction; 0 where no
+        deconvolution is required for the gas being processed.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table, already sliced to
+        the gas-specific column range.
+
+    Returns
+    -------
+    corrected_intensity : float
+        Deconvolution-corrected intensity, consumed by
+        gas_concentration.
+    """
     #Equ 4 on page 13 of the DPS
     corrected_intensity = intermediate_mass_ratio - (calibration_table[2, 0] * deconvolution_variable) - calibration_table[1, 0]
 
     return corrected_intensity
 
-
 def rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_steps_per_amu):
-    '''
-    This subroutine takes in the values of rga_final_mass, rga_initial_mass, and
-    rga_steps_per_amu, calculates the value for Tnb (Total number of values) and
-    returns a table of the masses.
-    '''
+    """
+    Builds the RGA mass-to-charge lookup table from the residual gas
+    analyzer scan configuration.
+
+    Parameters
+    ----------
+    massp_rga_initial_mass : float
+        RGA scan starting mass [amu].
+    massp_rga_final_mass : float
+        RGA scan ending mass [amu].
+    massp_rga_steps_per_amu : float
+        RGA steps per unit mass [amu^-1].
+
+    Returns
+    -------
+    mass_table : ndarray
+        Mass-to-charge value at each RGA scan step, rounded to one
+        decimal place.
+    """
 
     Tnb = int(((massp_rga_final_mass - massp_rga_initial_mass) * massp_rga_steps_per_amu) + 1)
 
@@ -2827,61 +3337,44 @@ def rga_status_process(massp_rga_initial_mass, massp_rga_final_mass, massp_rga_s
 
     return mass_table
 
-
 def SamplePreProcess(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sampleint,
                      port_timestamp_sampleint_mcu, ph_meter_sampleint_mcu, inlet_temp_sampleint_mcu,
                      mass_table, calibration_table):
-    '''
-    This subroutine takes in L0 DISSGAS-SAMPLEINT and produces
-    intermediary variables sample-mz2, sample-mz18, sample-mz30,
-    sample-mz32, sample-mz40, sample-mz44, sample-mz15 and
-    sample-mz18Naf, sample-Tnaf, sample-Tdir as well as
-    MSINLET-SMPPHINT AUX data products. This subroutine groups
-    the scans into two subsets corresponding to nafion and direct
-    mode, and then extracts the mass data needed for L1 computations.
+    """
+    Groups sample water scans into Direct and Nafion mode
+    subsets and extracts the averaged mz intensities, mode-
+    averaged temperatures, and pH intensity needed for the L1
+    DISSGAS, CALRANG, TSTAMP, MSINLET, and (for the sample water
+    only) NAFEFF auxiliary data products.
 
-    Definitions:
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 port timestamps for the mass spectral data.
+    L0_dissgas... : ndarray
+        L0 mass spectral intensity data set [A].
+    gas_mode... : ndarray
+        GASMODE auxiliary data product for this water source.
+    port_timestamp..._mcu : ndarray
+        MCU timestamps for the pH and temperature sensors.
+    ph_meter..._mcu : ndarray
+        Raw pH signal intensity [dimensionless].
+    inlet_temp..._mcu : ndarray
+        Sample or background temperature [deg_C]; -127 and 85 are
+        replaced with NaN as instrument not-sampling fill values.
+    mass_table : ndarray
+        RGA mass lookup table from rga_status_process.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
 
-    port_timestamp = time stamps associated with L0_dissgas_sampleint,
-    gas_mode and sample_mode.
-
-    L0_dissgas_sampleint = mass spectral data set for sample fluid
-    (array, 10-16 ampere).
-
-    gas_mode = The auxiliary data product Gas Measurement Mode
-    (GASMODE) indicates the operating mode of the MASSP
-    instrument and can have integer values of 0 and 1 for Direct
-    and Nafion modes, respectively, or value of -1 if the instrument
-    is in another operating mode.
-
-    inlet_temp = Sample Temperature (oC) is output by a sensor onboard the MASSP instrument.
-    It is the temperature of the Sample Water at the time of dissolved gas measurement.
-    The value is set to -9999 when the instrument is not sampling.
-
-    ph_meter = Sample pH intensity is output by a sensor onboard the MASSP instrument.
-    It is the pH signal intensity (no unit) of the Sample Water at the time of dissolved
-    gas measurement.
-
-    mz = Mass to charge ratio
-
-    sample-mz2 = Intensity returned by the averaging subroutine for mz 2 within DISSGAS-SAMPLEINT
-    sample-mz15 = Intensity returned by the averaging subroutine for mz 15 within DISSGAS-SAMPLEINT
-    sample-mz18Naf = Intensity returned by the averaging subroutine for mz 18 in nafion mode within DISSGAS-SAMPLEINT
-    sample-mz18 = Intensity returned by the averaging subroutine for mz 18 within DISSGAS-SAMPLEINT
-    sample-mz30 = Intensity returned by the averaging subroutine for mz 30 within DISSGAS-SAMPLEINT
-    sample-mz32 = Intensity returned by the averaging subroutine for mz 32 within DISSGAS-SAMPLEINT
-    sample-mz34 = Intensity returned by the averaging subroutine for mz 34 within DISSGAS-SAMPLEINT
-    sample-mz40 = Intensity returned by the averaging subroutine for mz 40 within DISSGAS-SAMPLEINT
-    sample-mz44 = Intensity returned by the averaging subroutine for mz 44 within DISSGAS-SAMPLEINT
-    sample-Tdir = Averaged temperature in Sample fluid direct mode
-    sample-Tnaf = Averaged temperature in Sample fluid nafion mode
-
-    nafeff = The auxiliary data product Nafion Drier Efficiency (NAFEFF)
-    is an indicator of the drying efficiency of the nafion drier. The
-    efficiency is represented as the percentage of water signal in nafion
-    mode compared to direct mode.
-
-    '''
+    Returns
+    -------
+    tuple of float
+    sample_mz15, sample_mz18naf, sample_mz2, sample_mz18, sample_mz30,
+    sample_mz32, sample_mz34, sample_mz40, sample_mz44, nafeff, sample_Tnaf,
+    sample_Tdir, msinlet_smpphint, nafion_mode_timestamp, and
+    direct_mode_timestamp, in that order.
+    """
 
     #replace bad data with nans
     inlet_temp_sampleint_mcu[inlet_temp_sampleint_mcu == -127] = np.nan
@@ -2978,19 +3471,43 @@ def SamplePreProcess(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sa
             sample_mz32, sample_mz34, sample_mz40, sample_mz44, nafeff, sample_Tnaf,
             sample_Tdir, msinlet_smpphint, nafion_mode_timestamp, direct_mode_timestamp)
 
-
 def BackgroundPreProcess(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_bkgndint,
                          port_timestamp_bkgndint_mcu, ph_meter_bkgndint_mcu, inlet_temp_bkgndint_mcu,
                          mass_table, calibration_table):
-    '''
-    This subroutine takes in L0 BKGNDINT and produces intermediary
-    variables bckgnd-mz2, bckgnd-mz30, bckgnd -mz32, bckgnd -mz40,
-    bckgnd -mz44, bckgnd -mz15, bckgnd-Tnaf, bckgnd-Tdir, as well
-    as MSINLET-BKGPHINT AUX data products. This subroutine groups
-    the scans into two subsets corresponding to nafion and direct
-    mode, and then extracts the mass data needed for L1 computations.
+    """
+    Groups background water scans into Direct and Nafion mode
+    subsets and extracts the averaged mz intensities, mode-
+    averaged temperatures, and pH intensity needed for the L1
+    DISSGAS, CALRANG, TSTAMP, MSINLET, and (for the sample water
+    only) NAFEFF auxiliary data products.
 
-    '''
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 port timestamps for the mass spectral data.
+    L0_dissgas... : ndarray
+        L0 mass spectral intensity data set [A].
+    gas_mode... : ndarray
+        GASMODE auxiliary data product for this water source.
+    port_timestamp..._mcu : ndarray
+        MCU timestamps for the pH and temperature sensors.
+    ph_meter..._mcu : ndarray
+        Raw pH signal intensity [dimensionless].
+    inlet_temp..._mcu : ndarray
+        Sample or background temperature [deg_C]; -127 and 85 are
+        replaced with NaN as instrument not-sampling fill values.
+    mass_table : ndarray
+        RGA mass lookup table from rga_status_process.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+
+    Returns
+    -------
+    tuple of float
+    bckgnd_mz2, bckgnd_mz15, bckgnd_mz30, bckgnd_mz32, bckgnd_mz34,
+    bckgnd_mz40, bckgnd_mz44, bckgnd_Tnaf, bckgnd_Tdir, msinlet_bkgphint,
+    nafion_mode_timestamp, and direct_mode_timestamp, in that order.
+    """
 
     #replace bad data with nans
     inlet_temp_bkgndint_mcu[inlet_temp_bkgndint_mcu == -127] = np.nan
@@ -3074,21 +3591,42 @@ def BackgroundPreProcess(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_
             bckgnd_mz40, bckgnd_mz44, bckgnd_Tnaf, bckgnd_Tdir, msinlet_bkgphint,
             nafion_mode_timestamp, direct_mode_timestamp)
 
-
 def Cal1PreProcess(port_timestamp_calint01, L0_dissgas_calint01, gas_mode_calint01,
                    port_timestamp_calint01_mcu, ph_meter_calint01_mcu,
                    inlet_temp_calint01_mcu, mass_table, calibration_table):
-    '''
-    This subroutine takes in L0 DISSGAS-CALINT01 and produces
-    intermediary variables cal1-mz44, cal1-mz15, cal1-Tnaf,
-    cal1-Tdir as well as MSINLET-CA1PHINT AUX data product.
-    This subroutine groups the scans into two subsets
-    corresponding to nafion and direct mode, and then extracts
-    the mass data needed for L1 computations. This subroutine
-    is very similar to the BackgroundPreProcess subroutine,
-    with just different intermediary variable assignations.
+    """
+    Groups Calibration Solution 1 scans into Direct and Nafion mode
+    subsets and extracts the averaged mz intensities, mode-
+    averaged temperatures, and pH intensity needed for the L1
+    DISSGAS, CALRANG, TSTAMP, MSINLET, and (for the sample water
+    only) NAFEFF auxiliary data products.
 
-    '''
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 port timestamps for the mass spectral data.
+    L0_dissgas... : ndarray
+        L0 mass spectral intensity data set [A].
+    gas_mode... : ndarray
+        GASMODE auxiliary data product for this water source.
+    port_timestamp..._mcu : ndarray
+        MCU timestamps for the pH and temperature sensors.
+    ph_meter..._mcu : ndarray
+        Raw pH signal intensity [dimensionless].
+    inlet_temp..._mcu : ndarray
+        Sample or background temperature [deg_C]; -127 and 85 are
+        replaced with NaN as instrument not-sampling fill values.
+    mass_table : ndarray
+        RGA mass lookup table from rga_status_process.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+
+    Returns
+    -------
+    tuple of float
+    cal1_mz15, cal1_mz44, cal1_Tnaf, cal1_Tdir, msinlet_cal1phint,
+    nafion_mode_timestamp, and direct_mode_timestamp, in that order.
+    """
 
     #replace bad data with nans
     inlet_temp_calint01_mcu[inlet_temp_calint01_mcu == -127] = np.nan
@@ -3151,21 +3689,42 @@ def Cal1PreProcess(port_timestamp_calint01, L0_dissgas_calint01, gas_mode_calint
     return (cal1_mz15, cal1_mz44, cal1_Tnaf, cal1_Tdir, msinlet_cal1phint,
             nafion_mode_timestamp, direct_mode_timestamp)
 
-
 def Cal2PreProcess(port_timestamp_calint02, L0_dissgas_calint02, gas_mode_calint02,
                    port_timestamp_calint02_mcu, ph_meter_calint02_mcu,
                    inlet_temp_calint02_mcu, mass_table, calibration_table):
-    '''
-    This subroutine takes in L0 DISSGAS-CALINT02 and produces
-    intermediary variables cal2-mz44, cal2-mz15, cal2-Tnaf,
-    cal2-Tdir as well as MSINLET-CA2PHINT AUX data product.
-    This subroutine groups the scans into two subsets
-    corresponding to nafion and direct mode, and then extracts
-    the mass data needed for L1 computations. This subroutine
-    is very similar to the SamplePreProcess subroutine, with
-    just different intermediary variable assignations.
+    """
+    Groups Calibration Solution 2 scans into Direct and Nafion mode
+    subsets and extracts the averaged mz intensities, mode-
+    averaged temperatures, and pH intensity needed for the L1
+    DISSGAS, CALRANG, TSTAMP, MSINLET, and (for the sample water
+    only) NAFEFF auxiliary data products.
 
-    '''
+    Parameters
+    ----------
+    port_timestamp... : ndarray
+        L0 port timestamps for the mass spectral data.
+    L0_dissgas... : ndarray
+        L0 mass spectral intensity data set [A].
+    gas_mode... : ndarray
+        GASMODE auxiliary data product for this water source.
+    port_timestamp..._mcu : ndarray
+        MCU timestamps for the pH and temperature sensors.
+    ph_meter..._mcu : ndarray
+        Raw pH signal intensity [dimensionless].
+    inlet_temp..._mcu : ndarray
+        Sample or background temperature [deg_C]; -127 and 85 are
+        replaced with NaN as instrument not-sampling fill values.
+    mass_table : ndarray
+        RGA mass lookup table from rga_status_process.
+    calibration_table : ndarray
+        MASSP per-gas calibration coefficient table.
+
+    Returns
+    -------
+    tuple of float
+    cal2_mz15, cal2_mz44, cal2_Tnaf, cal2_Tdir, msinlet_cal2phint,
+    nafion_mode_timestamp, and direct_mode_timestamp, in that order.
+    """
 
     #replace bad data with nans
     inlet_temp_calint02_mcu[inlet_temp_calint02_mcu == -127] = np.nan
@@ -3229,13 +3788,30 @@ def Cal2PreProcess(port_timestamp_calint02, L0_dissgas_calint02, gas_mode_calint
     return (cal2_mz15, cal2_mz44, cal2_Tnaf, cal2_Tdir, msinlet_cal2phint,
             nafion_mode_timestamp, direct_mode_timestamp)
 
-
+@deprecated
 def GasModeDetermination(sample_valve1, sample_valve2, sample_valve3, sample_valve4):
-    '''
-    This subroutine takes in the values of sample_valve1, sample_valve2,
-    sample_valve3, and sample_valve4 and returns the value for the AUX GASMODE
-    data product.
-    '''
+    """
+    Determines the auxiliary data product Gas Measurement Mode
+    (GASMODE) from the four sample valve statuses.
+
+    Parameters
+    ----------
+    sample_valve1 : ndarray of int
+        Sample valve 1 status.
+    sample_valve2 : ndarray of int
+        Sample valve 2 status.
+    sample_valve3 : ndarray of int
+        Sample valve 3 status.
+    sample_valve4 : ndarray of int
+        Sample valve 4 status.
+
+    Returns
+    -------
+    gasmode_array : ndarray of float
+        GASMODE auxiliary data product: -1 for another operating mode,
+        0 for Direct mode, 1 for Nafion mode; NaN where none of the
+        valve combinations match.
+    """
 
     data_array_size = np.shape(sample_valve1)
     gasmode_array = np.ones(data_array_size[0])
@@ -3250,16 +3826,33 @@ def GasModeDetermination(sample_valve1, sample_valve2, sample_valve3, sample_val
 
     return gasmode_array
 
-
+@deprecated
 def SmpModeDetermination(external_valve1_status, external_valve2_status,
                          external_valve3_status, external_valve4_status,
                          external_valve5_status):
-    '''
-    This subroutine takes in the values of external_valve1_status,
-    external_valve2_status, external_valve3_status, external_valve4_status, and
-    external_valve5_status and returns the value for the AUX SMPMODE data
-    product.
-    '''
+    """
+    Determines the auxiliary data product Sample Measurement Mode
+    (SMPMODE) from the five external valve statuses.
+
+    Parameters
+    ----------
+    external_valve1_status : ndarray of int
+        External valve 1 status.
+    external_valve2_status : ndarray of int
+        External valve 2 status.
+    external_valve3_status : ndarray of int
+        External valve 3 status.
+    external_valve4_status : ndarray of int
+        External valve 4 status.
+    external_valve5_status : ndarray of int
+        External valve 5 status.
+
+    Returns
+    -------
+    smpmode_array : ndarray of float
+        SMPMODE auxiliary data product: 2, 1, -1, or -2 depending on
+        the valve combination; NaN where none match.
+    """
 
     data_array_size = np.shape(external_valve1_status)
     smpmode_array = np.ones(data_array_size[0])

@@ -155,7 +155,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2013-06-10 | Christopher Wingard | Initial code |
 | 2014-03-20 | Russell Desiderio | Alternate code: faster, but less direct |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -165,7 +165,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2013-06-10 | Christopher Wingard | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -176,7 +176,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2013-06-10 | Christopher Wingard | Initial code |
 | 2014-03-20 | Russell Desiderio | Replaced initial code with arctan2 implementation |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -187,7 +187,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2015-01-13 | Russell Desiderio | Initial code |
 | 2017-05-15 | Russell Desiderio | Included botpres as input argument to delete timestamps of bad raw values |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -197,7 +197,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2015-01-13 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -207,7 +207,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2015-01-13 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -217,7 +217,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2015-01-14 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -227,7 +227,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2015-01-14 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -237,7 +237,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2015-01-14 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -248,7 +248,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2015-01-14 | Russell Desiderio | Initial code |
 | 2017-05-05 | Russell Desiderio | Changed time24h time base to span entire dataset including data gaps |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -261,7 +261,7 @@ are listed in the [References](#references) section.
 | 2017-05-05 | Russell Desiderio | Changed time24h time base to span entire dataset including data gaps |
 | 2017-05-11 | Russell Desiderio | Incorporated daydepth coverage threshold |
 | 2020-06-01 | Mark Steiner | Required predtide as argument; refactored daydepth calculation to expand API |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -274,7 +274,7 @@ are listed in the [References](#references) section.
 | 2017-05-05 | Russell Desiderio | Changed time24h time base to span entire dataset including data gaps |
 | 2017-05-12 | Russell Desiderio | Incorporated daydepth and rate coverage thresholds |
 | 2020-06-01 | Mark Steiner | Required predtide as argument; refactored rate calculation to expand API |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -287,7 +287,7 @@ are listed in the [References](#references) section.
 | 2017-05-05 | Russell Desiderio | Changed time24h time base to span entire dataset including data gaps |
 | 2017-05-12 | Russell Desiderio | Incorporated daydepth and rate coverage thresholds |
 | 2020-06-01 | Mark Steiner | Required predtide as argument; refactored rate calculation to expand API |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -299,7 +299,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2020-06-01 | Mark Steiner | Extracted from prs_botsflu_daydepth to expand API |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -309,7 +309,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2020-06-01 | Mark Steiner | Extracted from prs_botsflu_4wkrate to expand API |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -319,7 +319,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2020-06-01 | Mark Steiner | Extracted from prs_botsflu_8wkrate to expand API |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -329,7 +329,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2017-05-05 | Russell Desiderio | Initial code from modifying anchor_bin; added nan and bad-value trapping |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -339,7 +339,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2017-05-05 | Russell Desiderio | Initial code from modifying anchor_bin |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -349,7 +349,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2015-01-14 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -360,7 +360,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2015-01-13 | Russell Desiderio | Initial code |
 | 2017-05-06 | Russell Desiderio | Updated to work with odd window sizes |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -371,7 +371,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2017-05-03 | Russell Desiderio | Initial code; replaced Moore-Penrose method to support nan-masking |
 | 2017-05-08 | Russell Desiderio | Added fractional coverage criterion |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -393,7 +393,7 @@ not been verified with actual data.
 | Date | Author | Change |
 |---|---|---|
 | 2015-01-14 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -408,7 +408,7 @@ not been verified with actual data.
 | Date | Author | Change |
 |---|---|---|
 | 2015-01-14 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -423,7 +423,7 @@ not been verified with actual data.
 | Date | Author | Change |
 |---|---|---|
 | 2015-01-14 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -440,7 +440,7 @@ check and extended 24-hour timestamp records respectively.
 | 2015-01-13 | Russell Desiderio | Initial code |
 | 2015-01-14 | Russell Desiderio | Changed output arguments; added conditionals for efficiency |
 | 2017-05-05 | Russell Desiderio | Deprecated |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -455,7 +455,7 @@ Deprecated May 2017. Superseded by `calc_meandepth_plus` and
 |---|---|---|
 | 2015-01-14 | Russell Desiderio | Initial code |
 | 2017-05-05 | Russell Desiderio | Deprecated |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -472,7 +472,7 @@ than computing all slopes and then applying NaN masking.
 | 2017-05-03 | Russell Desiderio | Initial code |
 | 2017-05-08 | Russell Desiderio | Added coverage criterion |
 | 2017-05-08 | Russell Desiderio | Deprecated |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -488,7 +488,7 @@ data window.
 |---|---|---|
 | 2015-01-13 | Russell Desiderio | Initial code |
 | 2017-05-03 | Russell Desiderio | Deprecated; nan-masking cannot be implemented with this algorithm |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

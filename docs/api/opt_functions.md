@@ -260,7 +260,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2013-04-25 | Christopher Wingard | Initial implementation |
 | 2014-03-07 | Russell Desiderio | Reduced calls to np.log |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -272,7 +272,7 @@ are listed in the [References](#references) section.
 | 2013-04-25 | Christopher Wingard | Initial implementation |
 | 2014-02-19 | Russell Desiderio | Expanded documentation |
 | 2015-04-21 | Russell Desiderio | Added diagnostics to ValueError exceptions |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -284,7 +284,7 @@ are listed in the [References](#references) section.
 | 2013-04-25 | Christopher Wingard | Initial implementation |
 | 2014-02-19 | Russell Desiderio | Expanded documentation; removed incorrect vector length requirement |
 | 2014-03-21 | Russell Desiderio | Added dictionary comprehension to vectorize correction calculation |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -311,7 +311,7 @@ compute the scatter ratio.
 | 2013-04-25 | Christopher Wingard | Initial implementation |
 | 2014-02-19 | Russell Desiderio | Trapped out potential problems in scatter ratio calculation |
 | 2015-12-08 | Russell Desiderio | Made the scatter ratio calculation more robust; added minimum threshold |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -321,7 +321,7 @@ compute the scatter ratio.
 | Date | Author | Change |
 |---|---|---|
 | 2014-01-31 | Craig Risien | Initial code |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -332,7 +332,7 @@ compute the scatter ratio.
 |---|---|---|
 | 2014-12-10 | Craig Risien | Initial code |
 | 2015-04-09 | Russell Desiderio | Fixed bug so that the function runs correctly on time-vectorized arguments |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -342,7 +342,7 @@ compute the scatter ratio.
 | Date | Author | Change |
 |---|---|---|
 | 2014-01-31 | Craig Risien | Initial code |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -352,7 +352,7 @@ compute the scatter ratio.
 | Date | Author | Change |
 |---|---|---|
 | 2014-03-07 | Craig Risien | Initial code |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -365,7 +365,7 @@ compute the scatter ratio.
 | 2014-03-25 | Russell Desiderio | Changed code to require data inputs to be arrays with 7 columns |
 | 2015-04-09 | Russell Desiderio | Revised for time-vectorized calibration coefficient arrays |
 | 2015-04-21 | Russell Desiderio | Revised for 2-D array input and output |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -386,7 +386,7 @@ units.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-25 | Christopher Wingard | Initial implementation |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -401,7 +401,7 @@ OPTAA units.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-25 | Christopher Wingard | Initial implementation |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -424,7 +424,7 @@ packets and calls `opt_internal_temp`, `opt_pd_calc`, and
 | 2014-03-21 | Russell Desiderio | Added wavelength rounding to match tscor dictionary keys |
 | 2014-05-29 | Russell Desiderio | Added handling for wavelengths outside the T/S correction table range |
 | 2015-04-17 | Russell Desiderio | Use np.nan instead of fill value |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -451,7 +451,7 @@ instrument's channel closest to 715 nm differs significantly.
 | 2014-03-21 | Russell Desiderio | Added wavelength rounding to match tscor dictionary keys |
 | 2014-05-29 | Russell Desiderio | Added handling for wavelengths outside the T/S correction table range |
 | 2015-04-17 | Russell Desiderio | Use np.nan instead of fill value |
-| 2025-05-18 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-07-27 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

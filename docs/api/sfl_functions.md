@@ -312,7 +312,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2014-05-01 | Russell Desiderio | Initial code |
 | 2014-06-30 | Russell Desiderio | DPS modifications to cal equations implemented |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -323,7 +323,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2014-05-01 | Russell Desiderio | Initial code |
 | 2014-06-30 | Russell Desiderio | DPS modifications to cal equations implemented |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -334,7 +334,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2014-05-01 | Russell Desiderio | Initial code |
 | 2014-06-30 | Russell Desiderio | DPS modifications to cal equations implemented |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -345,7 +345,7 @@ are listed in the [References](#references) section.
 |---|---|---|
 | 2014-05-01 | Russell Desiderio | Initial code |
 | 2014-06-30 | Russell Desiderio | DPS modifications to cal equations implemented |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -357,7 +357,7 @@ are listed in the [References](#references) section.
 | 2014-05-01 | Russell Desiderio | Initial code |
 | 2014-06-30 | Russell Desiderio | DPS modifications to cal equations implemented |
 | 2015-07-24 | Russell Desiderio | Added call to replace_fill_with_nan; cleaned up error-checking |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -369,7 +369,7 @@ are listed in the [References](#references) section.
 | 2014-05-01 | Russell Desiderio | Initial code |
 | 2014-06-30 | Russell Desiderio | DPS modifications to cal equations implemented |
 | 2015-07-24 | Russell Desiderio | Added call to replace_fill_with_nan; cleaned up error-checking |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -383,7 +383,7 @@ The algorithm is documented from the code and code comments only.
 | Date | Author | Change |
 |---|---|---|
 | 2014-07-08 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -397,7 +397,7 @@ The algorithm is documented from the code and code comments only.
 | Date | Author | Change |
 |---|---|---|
 | 2014-07-08 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -412,7 +412,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2014-07-08 | Russell Desiderio | Initial code |
 | 2015-07-24 | Russell Desiderio | Incorporated calculate_vent_pH function |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -427,7 +427,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2014-07-08 | Russell Desiderio | Initial code |
 | 2015-07-24 | Russell Desiderio | Incorporated calculate_vent_pH function |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -442,7 +442,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2014-07-08 | Russell Desiderio | Initial code |
 | 2015-07-24 | Russell Desiderio | Incorporated calculate_vent_pH function |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -457,7 +457,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2014-07-08 | Russell Desiderio | Initial code |
 | 2015-07-24 | Russell Desiderio | Incorporated calculate_vent_pH function |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -468,7 +468,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2013-05-01 | Christopher Wingard | Initial code |
 | 2014-02-27 | Russell Desiderio | Added documentation; implemented Horner's method |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -478,7 +478,7 @@ The algorithm is documented from the code and code comments only.
 | Date | Author | Change |
 |---|---|---|
 | 2014-02-28 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -491,7 +491,7 @@ The algorithm is documented from the code and code comments only.
 | 2014-02-28 | Russell Desiderio | Modified code to better handle nans and fill values; added documentation |
 | 2014-03-10 | Russell Desiderio | Removed unnecessary np.vectorized wrapper; improved speed |
 | 2014-03-26 | Russell Desiderio | Incorporated optimization from Chris Fortin; sped up execution by factor of 5 |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -504,7 +504,7 @@ The algorithm is documented from the code and code comments only.
 | 2014-09-23 | Christopher Wingard | Minor edits |
 | 2015-07-22 | Russell Desiderio | Removed replace_fill_with_nan call (no integer inputs) |
 | 2023-08-15 | Samuel Dahlberg | Removed use of Numexpr library |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -516,7 +516,7 @@ The algorithm is documented from the code and code comments only.
 | 2014-09-23 | Christopher Wingard | Initial code |
 | 2015-07-22 | Russell Desiderio | Added call to replace_fill_with_nan |
 | 2023-08-15 | Samuel Dahlberg | Removed use of Numexpr library |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -529,7 +529,7 @@ The algorithm is documented from the code and code comments only.
 | 2015-07-20 | Russell Desiderio | Modified code to accept p_dec_wave as 2D array |
 | 2015-07-22 | Russell Desiderio | Added call to replace_fill_with_nan |
 | 2023-08-15 | Samuel Dahlberg | Removed use of Numexpr library |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -539,7 +539,7 @@ The algorithm is documented from the code and code comments only.
 | Date | Author | Change |
 |---|---|---|
 | 2015-10-28 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -552,7 +552,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2014-06-30 | Russell Desiderio | Initial code |
 | 2015-07-24 | Russell Desiderio | Added call to replace_fill_with_nan |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -563,7 +563,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2014-06-30 | Russell Desiderio | Initial code |
 | 2015-07-24 | Russell Desiderio | Added call to replace_fill_with_nan |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -577,7 +577,7 @@ The algorithm is documented from the code and code comments only.
 | Date | Author | Change |
 |---|---|---|
 | 2015-07-24 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -587,7 +587,7 @@ The algorithm is documented from the code and code comments only.
 | Date | Author | Change |
 |---|---|---|
 | 2014-07-08 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -598,7 +598,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2014-07-08 | Russell Desiderio | Initial code |
 | 2015-07-22 | Russell Desiderio | Added call to replace_fill_with_nan |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -608,7 +608,7 @@ The algorithm is documented from the code and code comments only.
 | Date | Author | Change |
 |---|---|---|
 | 2014-07-08 | Russell Desiderio | Initial code |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -619,7 +619,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2014-05-01 | Russell Desiderio | Initial code (no arrays) |
 | 2014-07-02 | Russell Desiderio | 2D calibration coefficient array implementation |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -630,7 +630,7 @@ The algorithm is documented from the code and code comments only.
 |---|---|---|
 | 2014-02-28 | Russell Desiderio | Initial code |
 | 2015-01-06 | Russell Desiderio | Documented product as TRHPHTE-T_TS-AUX |
-| 2025-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

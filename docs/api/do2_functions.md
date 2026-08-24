@@ -251,7 +251,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 | 2015-08-10 | Russell Desiderio | Added conc_coef calibration array to argument list |
 | 2015-10-28 | Russell Desiderio | Added atleast_2d handling for 1D conc_coef arrays |
 | 2023-08-15 | Samuel Dahlberg | Renamed local variables to follow naming convention |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -264,7 +264,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 | 2015-08-04 | Russell Desiderio | Added Garcia-Gordon reference |
 | 2021-12-16 | Stuart Pearce | Added salinity reference parameter |
 | 2023-08-15 | Samuel Dahlberg | Removed numexpr; replaced pygsw with gsw |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -276,7 +276,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 | 2013-08-20 | Stuart Pearce | Initial code |
 | 2015-08-04 | Russell Desiderio | Added Garcia-Gordon reference |
 | 2023-08-15 | Samuel Dahlberg | Added freq variable for CGSN compatibility |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -285,7 +285,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 #### History
 | Date | Author | Change |
 |---|---|---|
-| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to DO family documentation |
+| 2026-05-15 | Christopher Wingard | Initial NumPy docstring; added to DO family documentation |
 
 ---
 
@@ -297,7 +297,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 | Date | Author | Change |
 |---|---|---|
 | 2015-08-04 | Russell Desiderio | Initial code |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -308,7 +308,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 |---|---|---|
 | 2015-08-04 | Russell Desiderio | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Renamed local variables to follow naming convention |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -319,7 +319,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 |---|---|---|
 | 2013-04-26 | Stuart Pearce | Initial code |
 | 2015-04-10 | Russell Desiderio | Added documentation and fill value handling |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -328,7 +328,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 #### History
 | Date | Author | Change |
 |---|---|---|
-| 2025-05-15 | Christopher Wingard | Initial NumPy docstring; added to DO family documentation |
+| 2026-05-15 | Christopher Wingard | Initial NumPy docstring; added to DO family documentation |
 
 ---
 
@@ -341,7 +341,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 |---|---|---|
 | 2013-08-20 | Stuart Pearce | Initial code |
 | 2015-08-05 | Russell Desiderio | Added fill value conversion to NaN |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -352,7 +352,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 |---|---|---|
 | 2013-08-20 | Stuart Pearce | Initial code |
 | 2015-08-05 | Russell Desiderio | Added fill value conversion to NaN |
-| 2025-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

@@ -174,7 +174,7 @@ when a single computation is needed for multiple products.
 |---|---|---|
 | 2014-01-30 | Craig Risien | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -186,7 +186,7 @@ when a single computation is needed for multiple products.
 | 2013-07-16 | Christopher Wingard | Initial code |
 | 2014-04-23 | Christopher Wingard | Revised to address integration issues and meet DPS intent |
 | 2015-10-26 | Russell Desiderio | Removed default argument values; revised documentation |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -199,7 +199,7 @@ when a single computation is needed for multiple products.
 |---|---|---|
 | 2013-07-15 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -210,7 +210,7 @@ when a single computation is needed for multiple products.
 |---|---|---|
 | 2014-02-21 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -221,7 +221,7 @@ when a single computation is needed for multiple products.
 |---|---|---|
 | 2014-02-21 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -232,7 +232,7 @@ when a single computation is needed for multiple products.
 |---|---|---|
 | 2014-02-21 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -244,7 +244,7 @@ when a single computation is needed for multiple products.
 | Date | Author | Change |
 |---|---|---|
 | 2014-04-24 | Christopher Wingard | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -259,7 +259,7 @@ should call `flo_scale_and_offset` directly.
 | Date | Author | Change |
 |---|---|---|
 | 2014-01-30 | Craig Risien | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -269,7 +269,7 @@ should call `flo_scale_and_offset` directly.
 | Date | Author | Change |
 |---|---|---|
 | 2014-01-30 | Craig Risien | Initial code |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -280,7 +280,7 @@ should call `flo_scale_and_offset` directly.
 |---|---|---|
 | 2014-01-30 | Craig Risien | Initial code |
 | 2015-10-23 | Russell Desiderio | Revised documentation |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 

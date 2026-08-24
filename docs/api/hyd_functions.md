@@ -131,7 +131,7 @@ event header; if no external gain is applied the gain value is 0 dB
 |---|---|---|
 | 2014-05-16 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr; renamed local variables |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
@@ -142,7 +142,7 @@ event header; if no external gain is applied the gain value is 0 dB
 |---|---|---|
 | 2014-07-09 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2025-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
