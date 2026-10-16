@@ -13,6 +13,7 @@ import datetime
 import pandas as pd
 import ppigrf
 import numpy as np
+import numpy.typing as npt
 import numexpr as ne
 import time
 from numbers import Integral
@@ -21,6 +22,12 @@ from ion_functions import deprecated
 
 # CyberInfrastructure fill value for all integer data types
 SYSTEM_FILLVALUE = -999999999
+
+# magnetic_declination quantization and memory settings
+_NTP_UNIX_OFFSET = 2208988800.0   # seconds between 1900-01-01 and 1970-01-01
+_SECONDS_PER_DAY = 86400.0
+_POS_DECIMALS = 4                 # ~10 m; collapses GPS jitter, negligible declination error
+_MAX_GRID = 2_000_000             # cap on (days x positions) per ppigrf call
 
 
 def replace_fill_with_nan(instrument_fillvalue, *args):
@@ -106,19 +113,26 @@ def replace_fill_with_nan(instrument_fillvalue, *args):
     return args
 
 
-def magnetic_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
+def magnetic_declination(lat: npt.ArrayLike, lon: npt.ArrayLike, timestamp: npt.ArrayLike,
+                         z: npt.ArrayLike = 0.0, zflag: npt.ArrayLike = -1,
+                         ntp: npt.ArrayLike = 1) -> np.ndarray:
     """
-    Computes magnetic declination for a platform location and date,
-    vectorizing per-sample calls to igrf_declination.
+    Computes magnetic declination from the IGRF for 1 to N samples.
+
+    Inputs are broadcast together, quantized (time to the day, position
+    to _POS_DECIMALS decimal places), and deduplicated. The IGRF is
+    evaluated once on the grid of unique days x unique positions
+    (chunked to bound memory) and the results are mapped back to the
+    original samples.
 
     Parameters
     ----------
     lat : array_like
-        Latitude of the instrument [decimal degrees]. East is
-        positive, West negative.
-    lon : array_like
-        Longitude of the instrument [decimal degrees]. North is
+        Latitude of the instrument [decimal degrees]. North is
         positive, South negative.
+    lon : array_like
+        Longitude of the instrument [decimal degrees]. East is
+        positive, West negative.
     timestamp : array_like
         Time stamp from a data particle, either NTP [secs since
         1900-01-01] or Unix [secs since 1970-01-01].
@@ -133,17 +147,60 @@ def magnetic_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
 
     Returns
     -------
-    mag_dec : array_like
-        Magnetic declination (magnetic variation) [degrees from N].
-        Positive values are eastward, negative westward of North.
+    mag_dec : np.ndarray
+        Magnetic declination (magnetic variation) [degrees from N],
+        with the broadcast shape of the inputs. Positive values are
+        eastward, negative westward of North. NaN where any input is
+        non-finite.
+
+    Notes
+    -----
+    Day binning (evaluated at mid-day) introduces <= ~0.0003 deg of
+    error; position rounding to 4 decimals (~10 m) is negligible. Both
+    are far below the IGRF's own uncertainty relative to the true
+    field. ppigrf evaluates the outer product of dates and coordinates,
+    so it must never be called with N dates and N positions directly.
 
     See Also
     --------
-    igrf_declination : Core per-sample algorithm.
+    igrf_declination : Exact, unquantized, single-sample reference.
     """
-    decln = np.vectorize(igrf_declination)
-    mag_dec = decln(lat, lon, timestamp, z, zflag, ntp)
-    return mag_dec
+    arrays = np.broadcast_arrays(lat, lon, timestamp, z, zflag, ntp)
+    shape = arrays[0].shape
+    lat, lon, timestamp, z, zflag, ntp = (np.ravel(a).astype(float) for a in arrays)
+
+    unix = np.where(ntp == 1, timestamp - _NTP_UNIX_OFFSET, timestamp)
+    h = np.where((z > 0) & (zflag == -1), -z, z) / 1000.0   # m -> km, negative below sea level
+
+    mag_dec = np.full(lat.size, np.nan)
+    valid = np.isfinite(lat) & np.isfinite(lon) & np.isfinite(unix) & np.isfinite(h)
+    if not valid.any():
+        return mag_dec.reshape(shape)
+
+    # quantize and deduplicate days and positions independently
+    udays, it = np.unique(np.floor(unix[valid] / _SECONDS_PER_DAY), return_inverse=True)
+    pos = np.round(np.column_stack((lat[valid], lon[valid], h[valid])), _POS_DECIMALS)
+    upos, ip = np.unique(pos, axis=0, return_inverse=True)
+    it, ip = it.ravel(), ip.ravel()
+
+    # unique (day, position) pairs, sorted by day
+    n_pos = len(upos)
+    upairs, ipair = np.unique(it * n_pos + ip, return_inverse=True)
+    pair_t, pair_p = np.divmod(upairs, n_pos)
+    pair_dec = np.empty(upairs.size)
+
+    # evaluate the IGRF on (day chunk x positions used in that chunk) grids
+    step = max(1, _MAX_GRID // n_pos)
+    for t0 in range(0, len(udays), step):
+        sel = (pair_t >= t0) & (pair_t < t0 + step)
+        cp, local_p = np.unique(pair_p[sel], return_inverse=True)
+        dates = pd.to_datetime((udays[t0:t0 + step] + 0.5) * _SECONDS_PER_DAY, unit='s')
+        be, bn, _ = ppigrf.igrf(upos[cp, 1], upos[cp, 0], upos[cp, 2], dates)
+        grid = np.degrees(np.arctan2(be, bn))   # (n_days, n_positions), full +/-180 deg range
+        pair_dec[sel] = grid[pair_t[sel] - t0, local_p.ravel()]
+
+    mag_dec[valid] = pair_dec[ipair.ravel()]
+    return mag_dec.reshape(shape)
 
 
 def magnetic_correction(theta, u, v):
@@ -171,20 +228,19 @@ def magnetic_correction(theta, u, v):
         Northward velocity, in Earth coordinates, corrected for
         magnetic variation.
     """
-    theta_rad = np.radians(theta)
+    theta_rad = np.radians(np.atleast_1d(theta))
+    u = np.atleast_1d(u)
+    v = np.atleast_1d(v)
+
+    # align theta with the leading (time) axis of u/v, e.g. (N,) -> (N, 1) for (N, nbins) velocities
+    theta_rad = theta_rad.reshape(theta_rad.shape + (1,) * (u.ndim - theta_rad.ndim))
     cos_t = np.cos(theta_rad)
     sin_t = np.sin(theta_rad)
 
-    m = np.array([
-        [cos_t, sin_t],
-        [-1*sin_t, cos_t]
-    ])
-
-    u = np.atleast_1d(u)
-    v = np.atleast_1d(v)
-    cor = np.dot(m, np.array([u, v]))
-
-    return cor[0], cor[1]
+    # rotate from the magnetic to the true Earth frame
+    u_cor = u * cos_t + v * sin_t
+    v_cor = -u * sin_t + v * cos_t
+    return u_cor, v_cor
 
 
 def igrf_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
@@ -196,11 +252,11 @@ def igrf_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
     Parameters
     ----------
     lat : float
-        Latitude of the instrument [decimal degrees]. East is
-        positive, West negative.
-    lon : float
-        Longitude of the instrument [decimal degrees]. North is
+        Latitude of the instrument [decimal degrees]. North is
         positive, South negative.
+    lon : float
+        Longitude of the instrument [decimal degrees]. East is
+        positive, West negative.
     timestamp : float
         Time stamp from a data particle, either NTP [secs since
         1900-01-01] or Unix [secs since 1970-01-01].
@@ -219,6 +275,13 @@ def igrf_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
         Magnetic declination (magnetic variation) [degrees from N].
         Positive values are eastward, negative westward of North.
 
+    Raises
+    ------
+    ValueError
+        If any input has more than one element. ppigrf evaluates the
+        outer product of dates and coordinates, so array inputs would
+        silently return the first date's declination at every location.
+
     Examples
     --------
     >>> igrf_declination(45.0, -128, 3574792037.958, 1000)
@@ -228,6 +291,9 @@ def igrf_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
     --------
     magnetic_declination : Public, array-vectorized entry point.
     """
+    if any(np.size(arg) > 1 for arg in (lat, lon, timestamp, z, zflag, ntp)):
+        raise ValueError('igrf_declination accepts single-valued inputs only; '
+                         'use magnetic_declination for array inputs.')
 
     if ntp == 1:
         timestamp = timestamp - 2208988800.
@@ -241,8 +307,8 @@ def igrf_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
         z = zflag * z    # convert z to indicate depth
 
     # calculate the magnetic declination
-    be, bn, bu = ppigrf.igrf(lon, lat, z, date)
-    _, mag_dec = ppigrf.get_inclination_declination(be, bn, bu)
+    be, bn, _ = ppigrf.igrf(lon, lat, z, date)
+    mag_dec = np.degrees(np.arctan2(be, bn))   # full +/-180 deg range
     return mag_dec[0]
 
 

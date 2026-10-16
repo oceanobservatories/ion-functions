@@ -374,8 +374,7 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=
     mag_dec = magnetic_declination(lat, lon, timestamp, zwindsp, zflag)
 
     # rotate the vectors from the magnetic to the true compass frame
-    magvar = np.vectorize(magnetic_correction)
-    uu_cor, vv_cor = magvar(mag_dec, uu, vv)
+    uu_cor, vv_cor = magnetic_correction(mag_dec, uu, vv)
 
     # convert the wind components to speed and direction
     wspd = np.sqrt(uu_cor**2 + vv_cor**2)
