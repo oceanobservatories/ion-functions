@@ -1,3 +1,7 @@
+# Release 2.5.8 2026-10-19
+
+Issue #16336 - Fix new magnetic declination library affecting performance of data delivery.
+
 # Release 2.5.7 2026-03-25
 
 Issue #15645 - Convert stream_engine from Python2 to Python3
