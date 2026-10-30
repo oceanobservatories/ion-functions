@@ -14,15 +14,11 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
     """
     Description:
 
-        This Python code is based on Matlab code
-        (NUTNR_Example_MATLAB_Code_20140521_ver_1_00.m) that was
-        developed by O.E. Kawka (UW/RSN).
-
-        The code below calculates the Dissolved Nitrate Concentration
-        with the Sakamoto et. al. (2009) algorithm that uses the observed
-        sample salinity and temperature to subtract the bromide component
-        of the overall seawater UV absorption spectrum before solving for
-        the nitrate concentration.
+        Calculates the Dissolved Nitrate Concentration with the Sakamoto et
+        al. (2009) TCSS algorithm, using the updated temperature correction of
+        Plant et al. (2023), which uses the observed sample salinity and
+        temperature to subtract the bromide component of the overall seawater
+        UV absorption spectrum before solving for the nitrate concentration.
 
         The output represents the OOI L2 Dissolved Nitrate Concentration,
         Temperature and Salinity Corrected (NITRTSC).
@@ -37,6 +33,11 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
                     by tiling in time, requiring coding changes. The
                     tiling includes the wllower and wlupper variables
                     when supplied by CI.
+        2026-10-27: Christopher Wingard. Replaced the Sakamoto et al.
+                    (2009) temperature correction of the seawater
+                    extinction coefficients with the Plant et al. (2023)
+                    model, per the BGC-Argo nitrate processing manual
+                    (v1.2.2).
 
     Usage:
 
@@ -93,6 +94,9 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
 
     References:
 
+        This Python code is based on Matlab code (NUTNR_Example_MATLAB_Code_20140521_ver_1_00.m)
+        that was developed by O.E. Kawka (UW/RSN).
+
         OOI (2014). Data Product Specification for NUTNR Data Products.
             Document Control Number 1341-00620.
             https://alfresco.oceanobservatories.org/ (See: Company Home >>
@@ -106,6 +110,15 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
             algorithm for the computation of nitrate concentrations in
             seawater using an in situ ultraviolet spectrophotometer.
             Limnology and Oceanography: Methods 7: 132-143
+        Plant, J. N., C. M. Sakamoto, K. S. Johnson, T. L. Maurer, and
+            M. B. Bif (2023). Updated temperature correction for computing
+            seawater nitrate with in situ ultraviolet spectrophotometer
+            and submersible ultraviolet nitrate analyzer nitrate sensors.
+            Limnology and Oceanography: Methods 21: 581-593,
+            doi:10.1002/lom3.10566
+        Johnson, K. S., et al. (2023). Processing BGC-Argo nitrate
+            concentration at the DAC level, Version 1.2.2.
+            doi:10.13155/46121
     """
     n_data_packets = data_in.shape[0]
 
@@ -117,12 +130,14 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
     if np.isscalar(wlupper):
         wlupper = np.tile(wlupper, n_data_packets)
 
-    # coefficients to equation 4 of Sakamoto et al 2009 that give the
-    # absorbance of seasalt at 35 salinity versus temperature
-    Asak = 1.1500276
-    Bsak = 0.02840
-    Csak = -0.3101349
-    Dsak = 0.001222
+    # coefficients of the 4th-order polynomial in (wavelength - 210 nm) from
+    # Plant et al. 2023 that describes the temperature dependence of the
+    # absorbance of sea salt
+    Aplant = 1.46380e-02
+    Bplant = 1.67660e-03
+    Cplant = 2.91898e-05
+    Dplant = -7.56395e-06
+    Eplant = 1.27353e-07
 
     NO3_conc = np.ones(n_data_packets)
 
@@ -156,11 +171,12 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
             Absorbance = np.log10(DI / SWcorr)
 
             # now estimate molar absorptivity of seasalt at in situ temperature
-            # use Satlantic calibration and correct as in Sakamoto et al. 2009.
-            SWA_Ext_at_T = (ESWA * ((Asak + Bsak * ctd_t[i]) / (Asak + Bsak * cal_temp[i]))
-                            * np.exp(Dsak * (ctd_t[i] - cal_temp[i]) * (WL - 210.0)))
+            # use Satlantic calibration and correct as in Plant et al. 2023.
+            WLs = WL - 210.0
+            TcorPoly = Aplant + Bplant * WLs + Cplant * WLs**2 + Dplant * WLs**3 + Eplant * WLs**4
+            SWA_Ext_at_T = ESWA * np.exp(TcorPoly * (ctd_t[i] - cal_temp[i]))
 
-            # absorbance due to seasalt
+            # absorbance due to sea salt
             A_SWA = ctd_sp[i] * SWA_Ext_at_T
             # subtract seasalt absorbance from measured absorbance
             Acomp = np.array(Absorbance - A_SWA, ndmin=2).T
