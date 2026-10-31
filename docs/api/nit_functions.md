@@ -6,9 +6,9 @@ The Ocean Observatories Initiative deploys the Sea-Bird Scientific SUNA V2
 (Submersible Ultraviolet Nitrate Analyzer) as its nitrate sensor. The SUNA V2
 is an optical, chemical-free sensor derived from the ISUS (In Situ Ultraviolet
 Spectroscopy) technology developed at MBARI. Prior to 2017, OOI deployed the ISUS
-sensor on fixed depth platforms in the uncabled arrays prior to convert all ISUS
-sensors to the SUNA V2. The OOI instrument class NUTNR (Nutrient Sensor) covers 
-both the original ISUS instruments and the SUNA V2.
+sensor on fixed depth platforms in the uncabled arrays. These were all converted
+to the SUNA V2. The OOI instrument class NUTNR (Nutrient Sensor) covers both the 
+original ISUS instruments and the SUNA V2.
 
 `nit_functions.py` computes a single L2 data product, NITRTSC_L2, from raw
 UV absorption spectra produced by NUTNR instruments. Within the OOI data
@@ -19,7 +19,7 @@ Nitrate category.
 
 No OOI Data Product Specification exists for the NUTNR data products. The algorithm 
 documented here is derived from the source code, its embedded comments, and the two 
-journal articles cited in the code.
+journal articles cited below.
 
 ---
 
@@ -28,7 +28,8 @@ journal articles cited in the code.
 NITRTSC_L2 is the dissolved nitrate concentration ($\mu$M) corrected for
 the temperature and salinity dependence of the seawater UV absorption
 spectrum. It is produced by the NUTNR instrument class using the
-Sakamoto et al. (2009) algorithm.
+Sakamoto et al. (2009) algorithm, with the temperature correction of the
+seawater extinction coefficients updated to Plant et al. (2023).
 
 #### L0 Data and Frame Types
 
@@ -74,8 +75,8 @@ regression:
 
 #### NITRTSC_L2 Algorithm
 
-The algorithm follows Sakamoto et al. (2009). For each light frame $i$,
-the computation proceeds as follows.
+The algorithm follows Sakamoto et al. (2009), with the temperature correction in Step 4 from Plant et al. (2023).
+For each light frame $i$, the computation proceeds as follows.
 
 **Step 1 -- Select the spectral fitting window.** Wavelength bins and their
 corresponding calibration arrays are subset to channels where
@@ -94,20 +95,31 @@ reference to the dark-corrected seawater spectrum:
 $$A = \log_{10}\!\left(\frac{DI}{SW_{corr}}\right)$$
 
 **Step 4 -- Temperature-correct the seawater extinction coefficients.**
-The in situ temperature ($T$) and calibration temperature ($T_{cal}$) are
-used to scale `eswa` following Sakamoto et al. (2009), Equation 4. The
-coefficients $A_{sak}$, $B_{sak}$, $C_{sak}$, $D_{sak}$ are fixed
-constants from Sakamoto et al. (2009):
+The seawater extinction coefficients, determined at the calibration temperature $T_{cal}$, are corrected to the in
+situ temperature $T$ from the co-located CTD following Plant et al. (2023), Equations 6 and 8. The temperature
+response is a fourth-order polynomial in the scaled wavelength $\lambda' = \lambda - 210$:
 
 $$\begin{align}
-A_{sak} &= 1.1500276 \\
-B_{sak} &= 0.02840 \\
-C_{sak} &= -0.3101349 \\
-D_{sak} &= 0.001222
+f(\lambda') &= c_0 + c_1 \times \lambda' + c_2 \times {\lambda'}^2 \\
+&\quad + c_3 \times {\lambda'}^3 + c_4 \times {\lambda'}^4
 \end{align}$$
 
-$$ESWA_T = ESWA \times \frac{A_{sak} + B_{sak} \times T}{A_{sak} + B_{sak} \times T_{cal}}
-\times \exp\!\left(D_{sak} \times (T - T_{cal}) \times (\lambda - 210)\right)$$
+with the fixed coefficients from Plant et al. (2023):
+
+$$\begin{align}
+c_0 &= 1.46380 \times 10^{-2} \\
+c_1 &= 1.67660 \times 10^{-3} \\
+c_2 &= 2.91898 \times 10^{-5} \\
+c_3 &= -7.56395 \times 10^{-6} \\
+c_4 &= 1.27353 \times 10^{-7}
+\end{align}$$
+
+$$ESWA_T = ESWA \times \exp\!\left(f(\lambda') \times (T - T_{cal})\right)$$
+
+Plant et al. (2023) developed this model to replace the temperature correction of Sakamoto et al. (2009), Equation
+4, which can bias nitrate high by 1-2 $\mu$mol kg$^{-1}$ in waters warmer than the calibration temperature; the
+updated model reduces this bias by at least 50%. The pressure correction in Plant et al. (2023), Equation 9, is not
+applied.
 
 **Step 5 -- Subtract the seawater bromide contribution** from the measured
 absorbance. The seawater absorbance is proportional to practical salinity
@@ -142,8 +154,7 @@ are listed in the [References](#references) section.
 
 #### Additional Notes
 Dark frames (frame types `SDB`, `SDF`, and `NDF`) produce `NaN` on output.
-Light frames (frame type `SLB`) are processed through the full Sakamoto
-et al. (2009) TS-corrected algorithm.
+Light frames (frame type `SLB`) are processed through the algorithm described in the Background.
 
 The `wllower` and `wlupper` arguments default to 217 nm and 240 nm
 respectively, matching the 1-cm pathlength probe tip specification. For
@@ -157,6 +168,7 @@ the time-vectorized calibration coefficient mechanism.
 | 2014-05-27 | Craig Risien | Added light vs dark frame filtering |
 | 2015-04-09 | Russell Desiderio | Revised for time-vectorized calibration coefficient arrays; changed fill value to NaN |
 | 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-10-27 | Christopher Wingard | Replaced the Sakamoto et al. (2009) temperature correction of the seawater extinction coefficients with Plant et al. (2023) |
 
 ---
 
@@ -166,10 +178,14 @@ Johnson, K. S. and Coletti, L. J. (2002). In situ ultraviolet
 spectrophotometry for high resolution and long-term monitoring of nitrate,
 bromide and bisulfide in the ocean. Deep-Sea Research I, 49, 1291-1305.
 
+OOI (2014). Data Product Specification for NUTNR Data Products. Document
+Control Number 1341-00620. (Not released.)
+
+Plant, J. N., Sakamoto, C. M., Johnson, K. S., Maurer, T. L., and Bif, M. B. (2023). Updated temperature correction
+for computing seawater nitrate with in situ ultraviolet spectrophotometer and submersible ultraviolet nitrate analyzer
+nitrate sensors. Limnology and Oceanography: Methods, 21, 581-593.
+
 Sakamoto, C. M., Johnson, K. S., and Coletti, L. J. (2009). Improved
 algorithm for the computation of nitrate concentrations in seawater using
 an in situ ultraviolet spectrophotometer. Limnology and Oceanography:
 Methods, 7, 132-143.
-
-OOI (2014). Data Product Specification for NUTNR Data Products. Document
-Control Number 1341-00620. (Not released.)

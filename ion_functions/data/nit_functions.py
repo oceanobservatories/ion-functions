@@ -64,18 +64,11 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
 
     Notes
     -----
-    Implements the Sakamoto et al. (2009) TS-corrected nitrate algorithm.
-    For each light frame, absorbance is computed from the ratio of the
-    deionized water reference to the dark-corrected seawater spectrum.
-    The seawater bromide contribution is removed using temperature-
-    corrected seawater extinction coefficients scaled by practical
-    salinity. Nitrate concentration is then obtained by linear least
-    squares using a model matrix that includes the nitrate extinction
-    spectrum plus a linear baseline in wavelength.
-
-    The four fixed Sakamoto coefficients (Asak=1.1500276, Bsak=0.02840,
-    Csak=-0.3101349, Dsak=0.001222) parameterize the absorbance of
-    seasalt at 35 salinity vs temperature (Sakamoto et al. 2009, Eq. 4).
+    Absorbance is the log ratio of the deionized water reference to the
+    dark-corrected spectrum. Sea salt absorbance, from the seawater
+    extinction coefficients corrected to in situ temperature (Plant et al.
+    2023) and scaled by practical salinity, is subtracted, and nitrate is
+    fit by least squares together with a linear baseline in wavelength.
     """
     n_data_packets = data_in.shape[0]
 
