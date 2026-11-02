@@ -113,7 +113,7 @@ def adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon
         vf = instrument's vertical orientation (0 = downward looking and 1 = upward looking)
         lat = instrument's deployment latitude [decimal degrees]
         lon = instrument's deployment longitude [decimal degrees]
-        dt = sample date and time value [seconds since 1970-01-01] (Unix Time Format)
+        dt = sample date and time value [seconds since 1900-01-01] (NTP Time Format)
 
     References:
 
@@ -213,11 +213,8 @@ def adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon
         dt = sample date and time value [seconds since 1900-01-01] (NTP Time Format)
     """
 
-    # Convert the given ntp epoch timestamp in unix epoch timestamp.
-    dt_unix = dt - 2208988800
-
     # call central adcp_beam_velocity function to get specific eastward velocity profile
-    u_cor, _, _, _ = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt_unix)
+    u_cor, _, _, _ = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
     # return the eastward velocity profile
     return u_cor
@@ -283,11 +280,8 @@ def adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lo
         dt = sample date and time value [seconds since 1900-01-01] (NTP Time Format)
     """
 
-    # Convert the given ntp epoch timestamp in unix epoch timestamp.
-    dt_unix = dt - 2208988800
-
     # call central adcp_beam_velocity function to get specific eastward velocity profile
-    _, v_cor, _, _ = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt_unix)
+    _, v_cor, _, _ = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
     # return the northward velocity profile
     return v_cor
