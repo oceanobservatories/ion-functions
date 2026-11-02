@@ -26,12 +26,28 @@ air-sea flux data products. The bulk flux engine and every data product built on
 (see [Deprecated Functions](#deprecated-functions)) in favor of the official TOGA-COARE reference implementation maintained
 at [github.com/NOAA-PSL/COARE-algorithm](https://github.com/NOAA-PSL/COARE-algorithm); users requiring bulk air-sea flux products should use that 
 implementation directly starting with the 1-minute resolution data defined above.
+The deprecated engine implements COARE 3.5. The NOAA-PSL repository provides both COARE 3.5 and the current COARE 3.6,
+which adds parameterizations of wave effects on surface roughness and whitecap fraction; users should select the
+version appropriate to their application.
+
+Within the OOI data system, MET data products fall under the Air-Sea Interface [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+The METBK sensor modules report their measurements in engineering units, so no factory calibration coefficients are
+applied by these functions. The calibration-record (`CC_`) inputs are deployment metadata -- sensor heights, the depth
+of the sea surface CT, latitude and longitude -- processing switches (`jwarm`, `jcool`, `use_velpt`), and the wind
+speed correction (`spd_corr`).
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
 | DCN | Document |
 |---|---|
-| 1341-00360 | [OOI (2013). Data Product Specification for L1 Bulk Meteorological Data Products.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00360_Data_Product_Spec_BULKMET_OOI.pdf) |
+| 1341-00360 | [OOI (2013). Data Product Specification for L1 Bulk Meteorological Data Products.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00360_Data_Product_Spec_BULKMET_OOI_2013-08-02_Ver_1-02.pdf) |
 | 1341-00040 | [OOI (2012). Data Product Specification for Salinity.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf) |
 | 1341-00370 | OOI. Data Product Specification for L2 BULKFLX Data Products. Document Control Number 1341-00370. (Not released.) |
 
@@ -389,6 +405,23 @@ Full algorithm derivations, calibration procedures, and source references are li
 ---
 
 ::: ion_functions.data.met_functions.rain_heat_flux
+
+#### Additional Notes
+This function replaced an earlier rain heat flux calculation (2014-10-28, R. Desiderio) that had the following
+problems:
+
+1. The original derivation (Gosnell, Fairall, and Webster, 1995) dropped a factor of the ratio of the heat and vapor
+   diffusivities from Eqs. 9 and 13 (verified by C. Fairall, personal communication, 2014). The equations were coded as
+   they appeared in the paper, so the error propagated through all earlier versions of the COARE code.
+2. The original derivation used a Taylor series expansion at the sea temperature, so the WHOI form of the
+   Clausius-Clapeyron equation was more correct than the Edson form.
+3. The expansion involves the saturation humidity of the air through which the raindrops fall, not the saturation
+   humidity of the air directly above the sea surface; the original code's use of Qsea and dqer was incorrect.
+4. Earlier code used the specific heat of seawater instead of fresh rain water (an error of almost 5%).
+
+The current derivation follows a suggestion by Simon de Szoeke, using a Taylor series expansion at the air temperature
+instead of the sea temperature; this is more accurate and avoids the confusion that arose when the sea temperature was
+used as the expansion temperature.
 
 #### History
 | Date | Author | Change |
@@ -794,7 +827,7 @@ GitHub repository.
 
 [OOI (2013). Data Product Specification for L1 Bulk Meteorological Data Products. Document
 Control Number
-1341-00360.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00360_Data_Product_Spec_BULKMET_OOI.pdf)
+1341-00360.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00360_Data_Product_Spec_BULKMET_OOI_2013-08-02_Ver_1-02.pdf)
 
 OOI. Data Product Specification for L2 BULKFLX Data Products. Document Control Number
 1341-00370. (Not released.)

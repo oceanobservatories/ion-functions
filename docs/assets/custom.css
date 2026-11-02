@@ -4,9 +4,20 @@ td, th {
     word-break: break-word;
 }
 
-/* Prevent 1st column from wrapping (first column of every table body row) */
+/* Prevent 1st column from wrapping (first column of every table, header and body rows) */
+thead th:nth-child(1),
 tbody td:nth-child(1) {
     white-space: nowrap !important;
+}
+
+/* Keep identifiers in code spans (e.g. calibration coefficient names) intact rather than breaking mid-word */
+td code {
+    word-break: normal;
+}
+
+/* Never split a header word mid-word (e.g. "Platfor-m"); headers wrap only at spaces */
+th {
+    word-break: normal !important;
 }
 
 /* White background for transparent logo PNG */

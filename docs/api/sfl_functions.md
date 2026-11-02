@@ -17,6 +17,17 @@ Sea-Bird SBE 54 Tsunameter). All SFL processing functions are implemented in
 | PRESF | Sea-Bird SBE 26plus | Seafloor | Seafloor pressure (SBE 26plus) |
 | PREST | Sea-Bird SBE 54 Tsunameter | Seafloor | Seafloor pressure (SBE 54) |
 
+Within the OOI data system, SFL data products fall under the Seafloor/Crust [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+THSPH and TRHPH calibration coefficients are from factory calibration sheets; PRESF calibration coefficients are from
+Sea-Bird factory calibration sheets. The SBE 54 (PREST) applies its calibration onboard.
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
+
 ### Primary Sources
 
 | DCN | Document |
@@ -57,6 +68,36 @@ coefficients for each sensor are supplied as 6-element arrays in
 descending-degree order. All calibration coefficients are from factory
 calibration sheets.
 
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `e2l_H` | `CC_e2l_H` | Factory calibration sheet |
+| `l2s_H` | `CC_l2s_H` | Factory calibration sheet |
+| `e2l_L` | `CC_e2l_L` | Factory calibration sheet |
+| `l2s_L` | `CC_l2s_L` | Factory calibration sheet |
+| `e2l_r` | `CC_e2l_r` | Factory calibration sheet |
+| `l2s_r` | `CC_l2s_r` | Factory calibration sheet |
+| `s2v_r` | `CC_s2v_r` | Factory calibration sheet |
+| `e2l_b` | `CC_e2l_b` | Factory calibration sheet |
+| `l2s_b` | `CC_l2s_b` | Factory calibration sheet |
+| `e2l_ysz` | `CC_e2l_ysz` | Factory calibration sheet |
+| `e2l_agcl` | `CC_e2l_agcl` | Factory calibration sheet |
+| `e2l_h2` | `CC_e2l_h2` | Factory calibration sheet |
+| `e2l_hs` | `CC_e2l_hs` | Factory calibration sheet |
+| `arr_hgo` | `CC_arr_hgo` | Factory calibration sheet |
+| `arr_agcl` | `CC_arr_agcl` | Factory calibration sheet |
+| `arr_agclref` | `CC_arr_agclref` | Factory calibration sheet |
+| `arr_tac` | `CC_arr_tac` | Factory calibration sheet |
+| `arr_tbc1` | `CC_arr_tbc1` | Factory calibration sheet |
+| `arr_tbc2` | `CC_arr_tbc2` | Factory calibration sheet |
+| `arr_tbc3` | `CC_arr_tbc3` | Factory calibration sheet |
+| `arr_logkfh2g` | `CC_arr_logkfh2g` | Factory calibration sheet |
+| `arr_eh2sg` | `CC_arr_eh2sg` | Factory calibration sheet |
+| `arr_yh2sg` | `CC_arr_yh2sg` | Factory calibration sheet |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
 #### THSPHTE_L1 -- Vent Fluid Temperature from THSPH
 
 THSPHTE_L1 is the vent fluid temperature ($^\circ$C) measured by the THSPH
@@ -67,7 +108,7 @@ sub-products used for instrument health monitoring and quality control:
 THSPHTE-TCH, THSPHTE-TCL, THSPHTE-REF, and THSPHTE-INT.
 
 The processing chain for the final temperature products (TH and TL) follows
-seven steps, as specified in DPS 1341-00120:
+four steps, as specified in DPS 1341-00120:
 
 **Step 1 -- Raw to engineering units.** Decimal thermocouple counts are
 converted to engineering voltages [mV], and decimal thermistor counts are
@@ -81,7 +122,8 @@ R_{ts,eng} &= \frac{10000 \times ts_{rawdec} \times 0.125}
 
 **Step 2 -- Engineering to lab-calibrated values.** A 5th-degree polynomial
 correction (coefficients `e2l`) converts engineering values to lab-calibrated
-voltages or resistances.
+voltages or resistances. The `e2l`, `l2s`, and `s2v` coefficients used in Steps 2-4 are from the instrument's factory
+calibration sheet (see [Calibration Coefficients](#calibration-coefficients)).
 
 **Step 3 -- Lab-calibrated to scientific units.** For the thermocouples, a
 5th-degree polynomial (coefficients `l2s`) converts calibrated voltage [mV] to
@@ -96,10 +138,6 @@ is converted to a thermocouple-equivalent voltage using `s2v` coefficients,
 which is added to the calibrated thermocouple voltage before the final
 polynomial evaluation to yield the absolute (cold-junction-corrected)
 temperature at each thermocouple site.
-
-**Step 5 -- Final linear calibration.** A linear correction (coefficients `s2f`)
-is applied to the combined thermocouple-plus-thermistor temperature to yield the 
-final L1 products TH and TL.
 
 The four intermediate sub-products (TCH, TCL, REF, INT) are produced at
 earlier stages of this chain and are useful for instrument diagnostics.
@@ -116,7 +154,7 @@ temperature-dependent Nernst factor:
 
 $$E_{nernst} = 1.9842 \times 10^{-4} \times (T + 273.15)$$
 
-where $T$ is the THSPHTE-TH temperature in $^\circ$C. Raw electrode counts
+where $T$ is the THSPHTE-TH temperature in $^\circ$C, computed by the same THSPH instrument. Raw electrode counts
 are first converted to lab-calibrated voltages via `v_labcal`, which applies
 a counts-to-engineering-values conversion followed by a 5th-degree
 polynomial correction using `e2l` calibration coefficients.
@@ -138,7 +176,7 @@ and a fugacity-to-concentration quotient (`arr_yh2sg`).
 produced depending on data availability:
 
 - **THSPHPH-PH**: measured AgCl reference electrode and chloride from
-  TRHPHCC_L2.
+  TRHPHCC_L2 (from the TRHPH instrument).
 - **THSPHPH-PH-ACL**: measured AgCl reference electrode, assumed chloride
   (default 250 mmol/kg).
 - **THSPHPH-PH-NOREF**: theoretical reference electrode potential computed
@@ -165,6 +203,17 @@ hydrothermal vent fluid to measure temperature, oxidation-reduction potential
 (ORP), and resistivity. It uses a Type K thermocouple for high-temperature 
 measurement and a thermistor as a cold-junction reference, along with a Pt-Ag/AgCl 
 ORP electrode pair and three resistivity circuits scaled to different concentration ranges.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `tc_slope` | `CC_tc_slope` | Factory calibration sheet |
+| `ts_slope` | `CC_ts_slope` | Factory calibration sheet |
+| `gain` | `CC_gain` | Factory calibration sheet |
+| `offset` | `CC_offset` | Factory calibration sheet |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 #### TRHPHTE_L1 -- Vent Fluid Temperature from TRHPH
 
@@ -249,8 +298,34 @@ Pressure data product (dbar). PRESF uses the Sea-Bird SBE 26plus, which
 measures absolute pressure (hydrostatic plus atmospheric) using an internal
 quartz crystal resonator and supports three sampling modes. PREST uses the
 Sea-Bird SBE 54 Tsunameter, which streams real-time absolute pressure data.
-Both instruments report the absolute pressure in psi and only require unit 
-conversions.
+PREST, and PRESF in real-time mode, report absolute pressure in psi and require only a unit conversion; PRESF tide
+and wave data recovered from the instrument are converted from raw values using factory calibration coefficients.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `c1` | `CC_c1` | Sea-Bird factory calibration sheet |
+| `c2` | `CC_c2` | Sea-Bird factory calibration sheet |
+| `c3` | `CC_c3` | Sea-Bird factory calibration sheet |
+| `d1` | `CC_d1` | Sea-Bird factory calibration sheet |
+| `d2` | `CC_d2` | Sea-Bird factory calibration sheet |
+| `t1` | `CC_t1` | Sea-Bird factory calibration sheet |
+| `t2` | `CC_t2` | Sea-Bird factory calibration sheet |
+| `t3` | `CC_t3` | Sea-Bird factory calibration sheet |
+| `t4` | `CC_t4` | Sea-Bird factory calibration sheet |
+| `u0` | `CC_u0` | Sea-Bird factory calibration sheet |
+| `y1` | `CC_y1` | Sea-Bird factory calibration sheet |
+| `y2` | `CC_y2` | Sea-Bird factory calibration sheet |
+| `y3` | `CC_y3` | Sea-Bird factory calibration sheet |
+| `poff` | `CC_pressure_offset_calibration_coefficient` | Sea-Bird factory calibration sheet |
+| `m` | `CC_m` | Sea-Bird factory calibration sheet |
+| `b` | `CC_b` | Sea-Bird factory calibration sheet |
+| `slope` | `CC_slope_correction_factor` | Sea-Bird factory calibration sheet |
+| `offset` | `CC_offset_correction_factor` | Sea-Bird factory calibration sheet |
+
+PREST functions take no calibration coefficients. OOI calibration coefficient names are explained in
+[Using These Functions with OOI Data](../using-ooi-data.md).
 
 #### SFLPRES_L1 -- Seafloor Pressure
 
@@ -265,9 +340,8 @@ coefficients. The L1 product is a direct unit conversion from psi to dbar:
 $$p_{dbar} = p_{psi} \times 0.689475728$$
 
 **SFLPRES-TIDE** is produced from post-recovery tide data. The raw pressure 
-measurement `p_dec_tide` is converted to psi using instrument calibration 
-coefficients $M$, $B$, and optional slope and offset corrections, then scaled
-to dbar:
+measurement `p_dec_tide` is converted to psi using the calibration coefficients $M$ and $B$ and the slope and
+offset corrections, all from the Sea-Bird factory calibration sheet, then scaled to dbar:
 
 $$p_{psi} = slope \times \frac{p_{dec\_tide} - B}{M} + offset$$
 
@@ -275,8 +349,8 @@ $$p_{dbar} = p_{psi} \times 0.689475728$$
 
 **SFLPRES-WAVE** is produced from post-recovery wave burst data. The pressure 
 temperature compensation frequency (PTCF) and pressure frequency (PF) are derived 
-from raw inputs, then pressure is computed using quartz transducer calibration 
-coefficients as specified in DPS 1341-00230:
+from raw inputs, then pressure is computed using the quartz transducer calibration coefficients from the Sea-Bird
+factory calibration sheet, as specified in DPS 1341-00230:
 
 $$\begin{align}
 U &= \frac{10^6}{PTCF} - U_0 \\
@@ -296,7 +370,7 @@ $$t = \frac{t_0}{1000} - 10$$
 The SBE 54 Tsunameter (PREST) transmits pressure already converted to psi
 using onboard calibration coefficients; the L1 product is computed with the
 same unit conversion as SFLPRES-RTIME and also represents the absolute seafloor
-pressure..
+pressure.
 
 Full algorithm derivations, calibration procedures, and source references
 are listed in the [References](#references) section.
@@ -392,6 +466,8 @@ The algorithm is documented from the code and code comments only.
 #### Additional Notes
 The DPS document for THSPHHS (1341-00200) was never publicly released.
 The algorithm is documented from the code and code comments only.
+The chemical formula for hydrogen is H$_2$ and for hydrogen sulfide is H$_2$S; the variable and array names carried
+over from the DPS are easily confused between the two.
 
 #### History
 | Date | Author | Change |

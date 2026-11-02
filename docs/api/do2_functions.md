@@ -1,4 +1,4 @@
-# Dissolved Oxygen Functions
+# DO2 Functions
 
 ## Background
 
@@ -8,12 +8,12 @@ dissolved oxygen sensor is integrated into the Deep SeapHOx V2 pH instrument
 (PHSEN-G and PHSEN-H). The table below lists the OOI instrument classes
 covered by this module.
 
-| Class | Hardware | Platform type | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| DOSTA | Aanderaa Optode 4831 | Moored (fixed depth) and gliders | DO, Stable |
-| DOFST-A | Sea-Bird Scientific SBE 43 | Moored profiler (CTDPF-A/B) | DO, Fast, SBE 43 |
-| DOFST-K | Sea-Bird Scientific SBE 43F | Moored profiler (CTDPF-C/K/L) | DO, Fast, SBE 43F |
-| PHSEN-G/H | Sea-Bird Scientific Deep SeapHOx V2 (SBE 63) | Moored (fixed depth) | pH Sensor (integrated DO) |
+| DOSTA | [Aanderaa Optode 4831](#dosta-functions-aanderaa-optode-4831) | Moored (fixed depth) and gliders | DO, Stable |
+| DOFST-A | [Sea-Bird Scientific SBE 43](#dofst-functions-sbe-43-sbe-43f) | RCA cabled shallow profilers and platforms (CTDPF-A/B) | DO, Fast, SBE 43 |
+| DOFST-K | [Sea-Bird Scientific SBE 43F](#dofst-functions-sbe-43-sbe-43f) | Wire-following profilers (CTDPF-K/L) | DO, Fast, SBE 43F |
+| PHSEN-G/H | [Sea-Bird Scientific Deep SeapHOx V2 (SBE 63)](#deep-seaphox-v2-do-functions-sbe-63) ([instrument notes](../seaphox.md)) | Moored (fixed depth) | pH Sensor (integrated DO) |
 
 `do2_functions.py` processes data from the DOSTA and DOFST instrument classes.
 The dissolved oxygen functions for the PHSEN-G/H integrated SBE 63 sensor live
@@ -21,9 +21,22 @@ in `phsen_h_functions.py`; they are documented here because the SBE 63 is a
 dissolved oxygen sensor. See [Deep SeapHOx V2](../seaphox.md) for instrument
 architecture context.
 
+Within the OOI data system, dissolved oxygen data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+**Units identify the processing level.** All OOI dissolved oxygen products in $\mu$mol L$^{-1}$ or mL L$^{-1}$
+(DOCONCS_L1) are Level 1 products that have not been corrected for salinity or pressure. All products in
+$\mu$mol kg$^{-1}$ (DOXYGEN_L2, DOCONCF_L2) are Level 2 products that have been corrected for salinity and pressure;
+converting from per-volume to per-mass units requires salinity, which is what makes the result a Level 2 product.
+
 All calibration coefficients are from factory calibration sheets supplied with
-individual instruments. Within the OOI data system, dissolved oxygen functions
-fall under the Water Column science regime and the Dissolved O$_2$ category.
+individual instruments.
+
+This page documents the algorithms used to compute the dissolved oxygen data products. For general guidance on working
+with OOI biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -47,11 +60,11 @@ internal thermistor positioned directly at the foil.
 DOCONCS_L1 is the dissolved oxygen concentration ($\mu$mol L$^{-1}$)
 uncorrected for salinity and pressure. DOXYGEN_L2 is the final
 salinity- and pressure-corrected concentration ($\mu$mol kg$^{-1}$). The
-product was named DOCONCS_L2 in early OOI documentation and renamed DOXYGEN
+Level 2 product was named DOCONCS_L2 in early OOI documentation and renamed DOXYGEN_L2
 in DPS 1341-00520 version 1-02 (2014-04-11); `do2_salinity_correction`
 produces DOXYGEN_L2.
 
-#### L0 Data Streams
+#### DOSTA L0 Data Streams
 
 The DOSTA reaches the OOI data system through three distinct hardware
 configurations, each producing a different L0 format:
@@ -78,7 +91,7 @@ $$\text{DOCONCS_L1}\ [\mu\text{mol/L}] = \frac{\text{DOCONCS-CNT_L0}}{10000} - 1
 $P_t$ (DOCONCS-DEG_L0) and $T_{opt}$ directly in degrees and $^\circ$C,
 requiring no voltage conversion before the SVU equation.
 
-#### DOCONCS_L1 -- Stern-Volmer-Uchida Equation
+#### DOSTA DOCONCS_L1 -- Stern-Volmer-Uchida Equation
 
 Where DOCONCS-DEG_L0 is available (analog or autonomous configurations),
 DOCONCS_L1 is computed using the Stern-Volmer-Uchida (SVU) equation
@@ -106,8 +119,7 @@ $$O_2 = \text{conc_coef}[0] + \text{conc_coef}[1] \times O_2$$
 Aanderaa applies this two-point correction after refurbishment; for new
 optodes or new SVU foil determinations conc_coef defaults to [0, 1].
 
-The result is DOCONCS_L1 in $\mu$mol L$^{-1}$. Note: the OOI documentation
-incorrectly lists the units for this product as $\mu$mol kg$^{-1}$.
+The result is DOCONCS_L1 in $\mu$mol L$^{-1}$.
 
 The optode foil thermistor temperature ($T_{opt}$) must be used as the
 temperature input to the SVU equation, not CTD temperature. The thermistor is
@@ -117,7 +129,7 @@ of its temperature. On gliders, differences between CTD and optode temperature
 of 1$^\circ$C correspond to approximately 5% differences in calculated oxygen
 concentration.
 
-#### DOXYGEN_L2 -- Salinity and Pressure Correction
+#### DOSTA DOXYGEN_L2 -- Salinity and Pressure Correction
 
 DOCONCS_L1 ($\mu$mol L$^{-1}$) is corrected for salinity and pressure using
 CTD data from the co-located instrument to produce DOXYGEN_L2 ($\mu$mol
@@ -161,14 +173,14 @@ The Sea-Bird Scientific SBE 43 (DOFST-A) and SBE 43F (DOFST-K) are Clark-type
 polarographic dissolved oxygen sensors integrated into profiling CTD systems.
 The SBE 43 is mounted on the SBE 16Plus V2 CTD (CTDPF-A/B) and reports
 a voltage signal; the SBE 43F is mounted on the SBE 52-MP profiling CTD
-(CTDPF-C/K/L) and reports a frequency signal.
+(CTDPF-K/L) and reports a frequency signal.
 
 DOCONCF_L2 is the dissolved oxygen concentration ($\mu$mol kg$^{-1}$)
 corrected for temperature, salinity, and pressure. There is no intermediate
 L1 product; DOCONCF_L0 (counts representing voltage or frequency) is converted
 directly to DOCONCF_L2.
 
-#### L0 Input Conversion
+#### DOFST L0 Input Conversion
 
 **SBE 43 (DOFST-A):** The raw hex voltage counts are converted to volts:
 
@@ -177,7 +189,7 @@ $$V = \frac{\text{DOCONCF-CNT_L0}}{13107}$$
 **SBE 43F (DOFST-K):** The raw hex frequency value is used directly as
 $F$ [Hz].
 
-#### DOCONCF_L2 Algorithm
+#### DOFST DOCONCF_L2 Algorithm
 
 Sea-Bird uses an algorithm based on Owens and Millard (1985). With the
 derivative term removed by setting tau = 0 (recommended by Sea-Bird and the
@@ -217,7 +229,7 @@ $$\text{DOCONCF_L2} = \frac{\text{DO_int} \times 44660}{\rho_\theta}$$
 
 ### DOXYGEN_L2 -- SeapHOx Dissolved Oxygen
 
-The Sea-Bird Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H) integrates an
+The Sea-Bird Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H; see the [Deep SeapHOx V2 instrument notes](../seaphox.md)) integrates an
 SBE 63 optical dissolved oxygen sensor alongside an SBE 37 MicroCAT CTD and
 a Deep SeaFET pH sensor. The SBE 63 uses a Stern-Volmer fluorescence quenching
 approach with a calibration model distinct from the DOSTA Aanderaa optode.
@@ -229,18 +241,27 @@ directly to DOXYGEN_L2 ($\mu$mol kg$^{-1}$) via `dissolved_oxygen` in
 from mL L$^{-1}$ to $\mu$mol kg$^{-1}$ using potential density are all
 applied within a single function call.
 
-**Telemetered**: The instrument reports dissolved oxygen in mL L$^{-1}$
-(DOCONCS_L1). The salinity and pressure correction to produce DOXYGEN_L2
-follows the same `do2_salinity_correction` path as the DOSTA optode. This
-processing path is not yet implemented in `do2_functions.py`.
-
-See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
+**Telemetered**: The instrument reports dissolved oxygen in mL L$^{-1}$ (DOCONCS_L1). No ion-functions function
+currently converts this value to DOXYGEN_L2, and no telemetered SeapHOx stream is defined in the OOI data system;
+DOXYGEN_L2 is produced only from the raw phase in the streamed and recovered_instrument data (`dissolved_oxygen`).
 
 ---
 
-## Core Functions
+## DOSTA Functions (Aanderaa Optode 4831)
+
+### Core Functions
 
 ::: ion_functions.data.do2_functions.do2_SVU
+
+#### Additional Notes
+The model 4831 thermistor time constant is less than 2 seconds, while the foil (and therefore calphase) response
+time is 8 or 24 seconds depending on the optode, so there is little or no advantage in using a faster temperature
+sensor such as a CTD; it is more important that the temperature reflect the foil temperature.
+
+For standard refurbishment Aanderaa recommends the secondary calibration rather than a new multi-point SVU foil
+calibration. The conc_coef values from the secondary calibration are stored in the optode firmware and listed on the
+Aanderaa Form No. 710 calibration certificate, where they are mislabelled "PhaseCoef". (As of 2015 Aanderaa was
+moving the secondary calibration to a one-point, 100% oxygen calibration, still expressed as offset and slope.)
 
 #### History
 | Date | Author | Change |
@@ -268,28 +289,7 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 
 ---
 
-::: ion_functions.data.do2_functions.dofst_calc
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2013-08-20 | Stuart Pearce | Initial code |
-| 2015-08-04 | Russell Desiderio | Added Garcia-Gordon reference |
-| 2023-08-15 | Samuel Dahlberg | Added freq variable for CGSN compatibility |
-| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.phsen_h_functions.dissolved_oxygen
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2026-05-15 | Christopher Wingard | Initial NumPy docstring; added to DO family documentation |
-
----
-
-## Helper Functions
+### Helper Functions
 
 ::: ion_functions.data.do2_functions.dosta_phase_volt_to_degree
 
@@ -323,16 +323,23 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 
 ---
 
-::: ion_functions.data.phsen_h_functions.convert_sbe63_thermistor
+## DOFST Functions (SBE 43 / SBE 43F)
+
+### Core Functions
+
+::: ion_functions.data.do2_functions.dofst_calc
 
 #### History
 | Date | Author | Change |
 |---|---|---|
-| 2026-05-15 | Christopher Wingard | Initial NumPy docstring; added to DO family documentation |
+| 2013-08-20 | Stuart Pearce | Initial code |
+| 2015-08-04 | Russell Desiderio | Added Garcia-Gordon reference |
+| 2023-08-15 | Samuel Dahlberg | Added freq variable for CGSN compatibility |
+| 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
 
-## Wrapper Functions
+### Wrapper Functions
 
 ::: ion_functions.data.do2_functions.do2_dofst_volt
 
@@ -353,6 +360,32 @@ See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 | 2013-08-20 | Stuart Pearce | Initial code |
 | 2015-08-05 | Russell Desiderio | Added fill value conversion to NaN |
 | 2026-05-15 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+## Deep SeapHOx V2 DO Functions (SBE 63)
+
+### Core Functions
+
+See the [Deep SeapHOx V2 instrument notes](../seaphox.md) for how the pH, CTD, and DO subsystems and their data streams fit together.
+
+::: ion_functions.data.phsen_h_functions.dissolved_oxygen
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2026-05-15 | Christopher Wingard | Initial NumPy docstring; added to DO family documentation |
+
+---
+
+### Helper Functions
+
+::: ion_functions.data.phsen_h_functions.convert_sbe63_thermistor
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2026-05-15 | Christopher Wingard | Initial NumPy docstring; added to DO family documentation |
 
 ---
 

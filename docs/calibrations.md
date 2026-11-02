@@ -41,6 +41,13 @@ Calibration coefficient names in each function's parameter list generally
 reflect the naming conventions used in the vendor's calibration documentation 
 or the relevant OOI Data Product Specification. In most cases, the names match
 the vendor's convention directly; where they differ, the name is defined on the 
-relevant instrument family page. The definition of each coefficient -- its name, 
-units, and source -- is also documented in the Background section of the relevant 
-instrument family page.
+relevant instrument family page. The meaning and units of each coefficient are
+given where it is used in the Background section of the relevant instrument family page, and its OOI
+calibration name (`CC_...`) and source are listed in that page's Calibration Coefficients table.
+
+## Finding the Coefficients for an OOI Dataset
+
+The coefficient values applied to a dataset can be obtained from the calibration CSV files in the asset-management
+repository, through the OOI M2M API, or from the provenance file that can accompany an OOI data download. The location values `CC_lat`,
+`CC_lon`, and `CC_depth` are taken from the deployment record rather than the calibration files. See
+[Using These Functions with OOI Data](using-ooi-data.md#calibration-coefficients) for details.

@@ -13,18 +13,26 @@ Array and elsewhere in the Regional Cabled Array (RCA) to record underwater
 sound pressure waves in the frequency ranges relevant to seismic, biological, 
 and anthropogenic sources.
 
-| Class | Hardware | Platform | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| HYDBB | Ocean Sonics icListen HF | Moored (fixed depth) | Hydrophone, Broadband |
-| HYDLF | Low-frequency hydrophone | Moored (fixed depth) | Hydrophone, Low Frequency |
+| HYDBB | Ocean Sonics icListen HF | RCA cabled seafloor junction boxes and 200 m platforms | Hydrophone, Broadband |
+| HYDLF | HTI 90-U | RCA cabled seafloor junction boxes | Hydrophone, Low Frequency |
 
 `hyd_functions.py` converts raw L0 data from both instrument classes into
 their respective L1 data products: Broadband Acoustic Pressure Waves
-(HYDAPBB_L1) and Low Frequency Acoustic Pressure Waves (HYDAPLF_L1). All
-calibration coefficients are from factory calibration sheets supplied with
-individual instruments. Within the OOI data system, HYD functions fall
-under the Water Column and Seafloor/Crust science regimes and the Passive
-Acoustics category.
+(HYDAPBB_L1) and Low Frequency Acoustic Pressure Waves (HYDAPLF_L1).
+
+Within the OOI data system, HYD data products fall under the Seafloor/Crust [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+These functions apply a gain setting supplied by the caller (HYDBB) or a fixed nominal gain (HYDLF); no per-instrument
+calibration coefficients are used. They are not currently mapped to any data stream in the OOI data system; the cabled
+hydrophone data are distributed through IRIS.
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 

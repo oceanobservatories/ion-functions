@@ -1173,7 +1173,9 @@ def anchor_bin(time, data, bin_duration, mode):
     -----
     Timestamps are anchored so that bin centers fall at integral
     multiples of bin_duration after midnight (e.g., at 0, 15, 30, 45
-    seconds past the minute for bin_duration = 15 s).
+    seconds past the minute for bin_duration = 15 s). Statements are
+    executed conditionally on mode because, for multiple years of
+    20 Hz data, each np.bincount call can take tens of seconds.
     """
     half_bin = bin_duration/2.0
     # anchor time-centered bins by determining the start time to be half a bin

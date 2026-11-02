@@ -2,15 +2,15 @@
 
 ## Background
 
-The Ocean Observatories Initiative deploys the WET Labs ECO fluorometer
+The Ocean Observatories Initiative deploys the Sea-Bird Scientific (formerly WET Labs) ECO fluorometer
 family across its moored, profiling, and mobile platforms to measure
 fluorescence and optical backscatter. Two instrument classes are covered
 by this module.
 
-| Class | Hardware | Channels | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| FLORT | WET Labs ECO Triplet | 3 | Fluorometer, Three Wavelength |
-| FLORD | WET Labs ECO Dual | 2 | Fluorometer, Two Wavelength |
+| FLORT | Sea-Bird Scientific (formerly WET Labs) ECO Triplet | Moored (fixed depth), cabled shallow profilers, profilers, gliders, and AUVs | Fluorometer, Three Wavelength |
+| FLORD | Sea-Bird Scientific (formerly WET Labs) ECO Dual | Moored (fixed depth), cabled 200 m platforms, wire-following profilers, and gliders | Fluorometer, Two Wavelength |
 
 Fixed-platform instruments include a wiper to actively limit biofouling.
 Mobile-platform instruments (profilers, gliders, AUVs) use only passive
@@ -20,12 +20,18 @@ mitigation (copper faceplates).
 three L1 data products -- fluorometric chlorophyll-a concentration
 (CHLAFLO_L1), fluorometric CDOM concentration (CDOMFLO_L1), and the
 volume scattering function (FLUBSCT_L1) -- and one L2 product, the total
-optical backscatter coefficient (FLUBSCT_L2). All calibration coefficients
-are from factory calibration sheets. Within the OOI data system, FLO
-functions fall under the Water Column science regime. FLORD instruments
-fall under the Chlorophyll a and Inherent Optical Properties categories;
-FLORT instruments additionally include the Colored Dissolved Organic Matter
-category.
+optical backscatter coefficient (FLUBSCT_L2).
+
+Within the OOI data system, FLO data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+All calibration coefficients are from factory calibration sheets.
+
+This page documents the algorithms used to compute the FLO data products. For general guidance on working with OOI
+biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -50,6 +56,11 @@ where $C_\text{output}$ is the raw count output, $C_\text{dc}$ is the
 dark count from the factory calibration sheet, and SF is the scale factor
 from the factory calibration sheet. The same equation applies to both
 CHLAFLO and CDOMFLO; only the calibration coefficients and units differ.
+
+Chlorophyll-a absorbs light in the visible spectrum and re-emits a portion as fluorescence; the intensity of that
+fluorescence is used as a proxy for chlorophyll-a concentration, and therefore for phytoplankton biomass. CDOM is the
+fraction of dissolved organic matter that absorbs ultraviolet light and fluoresces in the visible blue; it is largely
+made up of tannins and lignins from decaying plant material and gives some water masses their tea-like color.
 
 For **CHLAFLO** (chlorophyll-a), SF has units of $\mu g\ L^{-1}\ \text{count}^{-1}$
 and the output is in $\mu g\ L^{-1}$. The instrument measures at
@@ -96,6 +107,18 @@ instrument-dependent:
 All FLORD and FLORT backscatter channels use a nominal measurement
 wavelength of 700 nm. The ECO-BB3 (FLORT series O) is an exception with
 three backscatter channels at different visible wavelengths.
+
+The 3-channel values ($\theta$ = 124 deg, $\chi$ = 1.076) are from Sullivan et al. (2013), Table 6.2b ("ECO-BB");
+older WET Labs documentation lists the centroid angle as 117 deg. The 2-channel values are from M. Twardowski
+(personal communication). The chi factor is thought to be at most weakly dependent on wavelength, so these values
+apply at any visible wavelength. The ECO-BB3 was originally classified as OPTAA series M and is now FLORT series O.
+
+The chi factor is a scaling factor, not an angular resolution. In the OOI calibration records it is stored as
+`CC_angular_resolution`, a historical mislabel; `CC_scattering_angle` and `CC_measurement_wavelength` hold $\theta$
+and $\lambda$.
+
+In this documentation "total" can mean seawater plus particulate scattering, forward plus backward scattering, or
+backscatter integrated over all backward angles, depending on context.
 
 ### FLUBSCT_L2: Total Optical Backscatter Coefficient
 
@@ -197,6 +220,7 @@ when a single computation is needed for multiple products.
 #### History
 | Date | Author | Change |
 |---|---|---|
+| unknown | Xiaodong Zhang (University of North Dakota) | Original Matlab code |
 | 2013-07-15 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
 | 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |

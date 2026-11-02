@@ -23,6 +23,10 @@ packets, computes the motion-corrected L1 wind velocity (WINDTUR) and sonic temp
 from those L1 products. Two auxiliary time-base products, not specified in the DPS, provide
 timestamps for the L1 and L2 arrays.
 
+Within the OOI data system, FDC data products fall under the Air-Sea Interface [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
 ### Primary Sources
 
 | DCN | Document |
@@ -31,7 +35,8 @@ timestamps for the L1 and L2 arrays.
 
 ### WINDTUR_L1 -- Motion-Corrected Wind Velocity
 
-WINDTUR_L1 is the motion-corrected wind velocity (m/s) relative to Earth, reported as three
+WINDTUR_L1 is the motion-corrected wind velocity (m/s) in the earth reference frame (see
+[True Wind Velocity](#true-wind-velocity) below), reported as three
 directional components: WINDTUR-VLN_L1 (positive North), WINDTUR-VLW_L1 (positive West), and
 WINDTUR-VLU_L1 (positive up). The sign convention follows a right-handed (x, y, z) buoy frame
 with x positive toward the buoy vane, y positive to port, z positive upward, and yaw positive
@@ -125,8 +130,10 @@ where $\vec g = -\hat k g$.
 
 The measured wind velocity is combined with the angular-rate cross-product correction (which
 accounts for the offset between the IMU and the sonic anemometer sampling volume) and rotated
-into the earth frame, then added to the platform velocity to give the wind velocity relative to
-the buoy (`fdc_sonic`, `fdc_trans`):
+into the earth frame, then added to the high-pass filtered platform velocity (`fdc_sonic`, `fdc_trans`). The result
+is expressed in the earth reference frame; because only the high-frequency platform motion can be recovered from the
+accelerometers, it is the wind relative to the slowly varying (low-frequency) motion of the buoy, which DPS 1341-00280
+(Eq. 14) labels the true wind relative to the buoy. For a moored buoy this approximates the wind relative to Earth:
 
 $$\vec{V}^{buoy}_{true} = T\left(\vec{V}_{obs} + \vec\Omega_{obs} \times \vec R\right) +
 \vec{V}_{hp}$$

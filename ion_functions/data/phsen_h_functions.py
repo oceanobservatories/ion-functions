@@ -503,10 +503,12 @@ def ph_total(vrs_ext, degc, psu, dbar, k0, k2, f):
              - log10((1000 - 1.005*S) / 1000)
 
     where S_nernst = R*T*ln(10)/F, Cl_T is total chloride, gamma_HCl
-    is the HCl activity coefficient corrected for temperature and
+    is the HCl activity coefficient at in situ temperature and
     pressure, S_T is total sulfate, and K_S,T&P is the acid
-    dissociation constant of HSO4- corrected for temperature and
-    pressure. All intermediate quantities are computed from salinity,
+    dissociation constant of HSO4- at in situ temperature and
+    pressure, obtained by applying a pressure correction (Millero
+    1982) to K_S (Dickson et al. 2007). Equations and citations follow
+    Sea-Bird Scientific AN99. All intermediate quantities are computed from salinity,
     temperature, and pressure following Dickson et al. (2007),
     Khoo et al. (1977), Millero (1982, 1983), and Johnson et al.
     (2017).
@@ -563,8 +565,8 @@ def ph_total(vrs_ext, degc, psu, dbar, k0, k2, f):
     # compressibility of HSO4- (Millero 1983)
     kbar_s = (-4.53 + 0.09 * degc) / 1000
 
-    # acid dissociation constant of HSO4- corrected for T and P
-    # (Millero 1982)
+    # acid dissociation constant of HSO4- at in situ temperature and
+    # pressure, K_S,T&P: pressure correction of ks (Millero 1982)
     kstp = ks * np.exp((-v_hso4 * bar + 0.5 * kbar_s * bar ** 2) / (r * t * 10))
 
     # calculate total pH adjusted for pressure, temperature, and salinity

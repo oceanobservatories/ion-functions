@@ -6,20 +6,28 @@ The Ocean Observatories Initiative deploys two families of pH instruments
 across its moored platforms. The table below lists the OOI instrument classes
 covered by this module.
 
-| Class | Hardware | Platform | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| PHSEN-A/D/E/F | Sunburst SAMI-pH | Moored (fixed depth) | pH Sensor |
-| PHSEN-G/H | Sea-Bird Scientific Deep SeapHOx V2 | Moored (fixed depth) | pH Sensor |
+| PHSEN-A/D/E/F | [Sunburst SAMI-pH](#sami-ph-functions-phsen-adef) | Moored (fixed depth) | pH Sensor |
+| PHSEN-G/H | [Sea-Bird Scientific Deep SeapHOx V2](#deep-seaphox-v2-functions-phsen-gh) ([instrument notes](../seaphox.md)) | Moored (fixed depth) | pH Sensor |
 
 `ph_functions.py` processes data from the [Sunburst Sensors SAMI-pH](https://www.sunburstsensors.com/products/oceanographic-ph-sensor.html)
 (PHSEN-A/D/E/F) and computes the L2 pH of seawater data product 
 (PHWATER_L2). `phsen_h_functions.py` processes data from the [Sea-Bird 
 Scientific Deep SeapHOx V2](https://www.seabird.com/products/deep-seaphox-v2-ph-sensor) 
 (PHSEN-G and PHSEN-H) and computes the same PHWATER_L2 data product. Both 
-instruments measure pH on the total hydrogen ion scale ($\text{pH}_T$). All 
-calibration coefficients are from factory calibration sheets supplied with 
-individual instruments. Within the OOI data system, pH functions fall under
-the Water Column science regime and the pH category.
+instruments measure pH on the total hydrogen ion scale ($\text{pH}_T$).
+
+Within the OOI data system, pH data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+All calibration coefficients are from factory calibration sheets supplied with individual instruments.
+
+This page documents the algorithms used to compute the pH data products. For general guidance on working with OOI
+biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -167,7 +175,7 @@ Section 3.3).
 
 #### Sea-Bird Scientific Deep SeapHOx V2
 
-The Deep SeapHOx V2 combines the Deep SeaFET V2 ISFET pH sensor with the
+The Deep SeapHOx V2 (see the [Deep SeapHOx V2 instrument notes](../seaphox.md)) combines the Deep SeaFET V2 ISFET pH sensor with the
 Sea-Bird Electronics SBE 37-SMP-ODO MicroCAT CTD+DO sensor. PHSEN-G and
 PHSEN-H differ only in the pressure rating of their strain-gauge pressure
 sensor (Sea-Bird Scientific Deep SeapHOx V2 data sheet, DS53, May 2025).
@@ -207,9 +215,11 @@ pH_T &= \frac{V_\text{FET/REF} - k_0 - k_2 \times t - f(P)}{S_\text{nernst}} \\
 
 where $t$ is temperature in $^\circ$C, $S$ is practical salinity,
 $Cl_T$ is total chloride, $(\gamma_{\pm\text{HCl}})_{T\&P}$ is the HCl
-activity coefficient corrected for temperature and pressure, $S_T$ is
+activity coefficient at in situ temperature and pressure, $S_T$ is
 total sulfate, and $K_{S,T\&P}$ is the acid dissociation constant of
-$\text{HSO}_4^-$ corrected for temperature and pressure.
+$\text{HSO}_4^-$ at in situ temperature and pressure (Sea-Bird Scientific AN99). $K_{S,T\&P}$ is obtained by applying
+a pressure correction (Millero 1982) to $K_S$ (Dickson et al. 2007), which is already a function of salinity and
+temperature.
 
 The intermediate quantities are computed as follows (Application Note 99):
 
@@ -264,7 +274,8 @@ $$\bar{V}_S = -18.03 + 0.0466 \times t + 0.000316 \times t^2$$
 
 $$\bar{K}_S = \frac{-4.53 + 0.09 \times t}{1000}$$
 
-**Acid dissociation constant corrected for $T$ and $P$** (Millero 1982):
+**Acid dissociation constant of $\text{HSO}_4^-$ at in situ temperature and pressure** (pressure correction of $K_S$;
+Millero 1982):
 
 $$K_{S,T\&P} = K_S \times \exp\left(\frac{-\bar{V}_S \times p + 0.5 \times \bar{K}_S \times p^2}{R \times T \times 10}\right)$$
 
@@ -274,14 +285,15 @@ calibration sheets supplied by Sea-Bird Scientific with each instrument.
 Output accuracy: $\pm 0.05$ pH units; resolution 0.004 pH units; typical
 stability 0.003 pH units per month (Sea-Bird Scientific Deep SeapHOx V2
 data sheet, DS53, May 2025).
-See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 
 Full algorithm derivations, calibration procedures, and source references
 are listed in the [References](#references) section.
 
 ---
 
-## Core Functions
+## SAMI-pH Functions (PHSEN-A/D/E/F)
+
+### Core Functions
 
 ::: ion_functions.data.ph_functions.ph_calc_phwater
 
@@ -293,17 +305,7 @@ are listed in the [References](#references) section.
 
 ---
 
-::: ion_functions.data.phsen_h_functions.ph_total
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2026-01-21 | Samuel Dahlberg | Initial code, adapted from Christopher Wingard's ph_total in cgsn-processing |
-| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-## Helper Functions
+### Helper Functions
 
 ::: ion_functions.data.ph_functions.ph_434_intensity
 
@@ -346,6 +348,24 @@ are listed in the [References](#references) section.
 | 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---
+
+## Deep SeapHOx V2 Functions (PHSEN-G/H)
+
+### Core Functions
+
+See the [Deep SeapHOx V2 instrument notes](../seaphox.md) for how the pH, CTD, and DO subsystems and their data streams fit together.
+
+::: ion_functions.data.phsen_h_functions.ph_total
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2026-01-21 | Samuel Dahlberg | Initial code, adapted from Christopher Wingard's ph_total in cgsn-processing |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+### Helper Functions
 
 ::: ion_functions.data.phsen_h_functions.convert_ph_voltage_counts
 

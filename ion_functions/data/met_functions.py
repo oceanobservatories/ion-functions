@@ -323,7 +323,11 @@ def met_relwind_speed(vle_wind, vln_wind, vle_water=None, vln_water=None, use_ve
     Unlike met_relwind_direction, met_current_direction, and
     met_current_speed, bad or missing current data are set to 0 (not
     nan) here so actual wind speed is used in place of relative wind
-    speed, per the DPS. See docs site for full discussion.
+    speed, per the DPS. Earlier (non-OOI) FORTRAN and MATLAB
+    implementations of the COARE algorithm often used wind speed
+    rather than wind speed relative to the water, presumably because
+    surface current data were not available. See docs site for full
+    discussion.
     """
     # If the surface current velocities are missing or invalid, the actual windspeed
     # will be used in place of the relative windspeed over water to calculate the METBK
@@ -545,6 +549,11 @@ def met_buoyfls(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     --------
     seasurface_skintemp_correct : Core algorithm; use directly for
         multi-output access.
+
+    Notes
+    -----
+    The FDCHP instrument computes the analogous FLUXHOT_L2 data
+    product, also as a buoyancy flux, using the sonic temperature.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1610,9 +1619,9 @@ def rain_heat_flux(rainrate, Tsea, Tair, relhum, pr_air):
     Follows Gosnell, Fairall, and Webster (1995), with the raindrop
     wetbulb temperature approximated by a Taylor series expansion at
     the air temperature rather than the sea temperature, per a
-    correction suggested by Simon de Szoeke. See
-    rain_heat_flux_FLAWED [removed] for the superseded derivation this
-    replaced.
+    correction suggested by Simon de Szoeke. The problems with the
+    superseded derivation are described in the Additional Notes for
+    this function on the documentation site.
     """
     c2k = 273.15       # celsius to kelvin temperature constant
     Rgas_air = 287.05  # gas constant [J/kg/K] for air
@@ -2215,7 +2224,11 @@ def coare35vn(tC_sea, wnd, zwindsp, tC_air, ztmpair, relhum, zhumair, pr_air,
     variables are recomputed each pass; the original code carried
     little documentation of this structure. dter and dqer are forced
     to 0 when jcool=0, so downstream callers need no jcool
-    multiplicative factor.
+    multiplicative factor. Writing each data product as its own
+    function makes explicit where the coolskin and warmlayer
+    corrections are applied, and may expose inconsistent application
+    of those corrections to the bulk sea surface temperature between
+    data products.
     """
     # convert relative humidity to specific humidity [kg/kg]
     Qsea = sea_spechum(tC_sea, pr_air) / 1000.0          # surface water specific humidity
@@ -2905,7 +2918,10 @@ def make_hourly_data(*args):
     hourly timestamp is a half hour after the first each-minute
     datum, so hourly timestamps do not in general fall on the top of
     the hour. Uses np.bincount, weighted, to sum and average values
-    per bin.
+    per bin. Changing the timestamp to the start or end of the bin
+    (the latter may suit the time integrals in warmlayer) would change
+    the unit test check values and could warrant changing the
+    warmlayer threshold (see warmlayer_time_keys).
     """
     args = list(args)
 
@@ -2995,7 +3011,9 @@ def warmlayer_time_keys(localdate):
     fortran and MATLAB code. Applies a quality-control check the
     original code lacked: a day is only warmlayer-processed if it has
     data before the threshold, preventing e.g. a data gap that
-    straddles midnight from being misattributed to the wrong day.
+    straddles midnight from being misattributed to the wrong day. The
+    fixed threshold could in future be replaced by one calculated as
+    a function of time of year and latitude.
     """
     warmlayer_threshold_OOI = 21600.0  # equatorial sunrise: 6AM
 

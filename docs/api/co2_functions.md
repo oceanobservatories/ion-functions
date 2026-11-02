@@ -6,18 +6,28 @@ The Ocean Observatories Initiative deploys two families of CO$_2$ instruments
 across its surface and subsurface platforms. The table below lists the OOI
 instrument classes covered by this module.
 
-| Class | Hardware | Platform                           | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|------------------------------------|--------------------|
-| PCO2W | Sunburst SAMI-CO2 | Moored (fixed depth) and Profiling | pCO$_2$, Seawater  |
-| PCO2A | Pro-Oceanus CO2-Pro | Surface buoys                      | pCO$_2$, Air-Sea   |
+| PCO2W | [Sunburst SAMI-CO2](#sami-co2-functions-pco2w) | Moored (fixed depth) and Profiling | pCO$_2$, Seawater  |
+| PCO2A | [Pro-Oceanus CO2-Pro](#pro-oceanus-co2-pro-functions-pco2a) | Surface buoys                      | pCO$_2$, Air-Sea   |
 
 `co2_functions.py` processes data from both instrument classes and computes
 a third derived product, CO$_2$ flux from the ocean to the atmosphere 
 (CO2FLUX_L2), using auxiliary bulk meteorology data from the METBK instrument 
-class. Within the OOI data system, PCO2W instruments fall under the Water
-Column science regime and the Dissolved CO$_2$ category. PCO2A instruments
-fall under the Air-Sea Interface and Surface Water regimes and the same
-Dissolved CO$_2$ category.
+class.
+
+Within the OOI data system, PCO2W data products (PCO2WAT) fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/); PCO2A data products (PCO2ATM, PCO2SSW) and CO2FLUX fall under
+the Air-Sea Interface sampling regime (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+PCO2W calibration coefficients are from factory calibration sheets supplied with individual instruments; PCO2A reports
+xCO$_2$ computed internally and requires no calibration coefficients.
+
+This page documents the algorithms used to compute the CO2 data products. For general guidance on working with OOI
+biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -206,19 +216,19 @@ are listed in the [References](#references) section.
 
 ---
 
-## Core Functions
+## SAMI-CO2 Functions (PCO2W)
+
+### Core Functions
 
 ::: ion_functions.data.co2_functions.pco2_calc_pco2
 
 #### Additional Notes
-The `ea434`, `eb434`, `ea620`, and `eb620` calibration coefficient
-parameters are accepted as inputs for backward compatibility but are
-not used in the calculation. The original formulation derived $e_1$,
-$e_2$, and $e_3$ from these per-instrument values; the current
-algorithm uses fixed constants supplied by Sunburst Sensors
-($e_1 = 0.0043$, $e_2 = 2.136$, $e_3 = 0.2105$) for all instruments.
-The retained parameters and the commented-out original formulation in
-the code document this evolution.
+The `ea434`, `eb434`, `ea620`, and `eb620` calibration coefficient parameters are accepted as inputs for backward
+compatibility but are not used in the calculation. The original vendor formulation derived the constants from each
+instrument's calibration values: $e_1 = ea_{620}/ea'_{434}$, $e_2 = eb'_{620}/ea'_{434}$, $e_3 = eb_{434}/ea'_{434}$,
+with $ea'_{434} = ea_{434} - 29.3\,T_{cal}$ and $eb'_{620} = eb_{620} - 70.6\,T_{cal}$. The current algorithm replaces
+these with fixed constants supplied by Sunburst Sensors ($e_1 = 0.0043$, $e_2 = 2.136$, $e_3 = 0.2105$) for all
+instruments; the per-instrument parameters are retained as inputs for backward compatibility.
 
 #### History
 | Date | Author | Change |
@@ -234,29 +244,7 @@ the code document this evolution.
 
 ---
 
-::: ion_functions.data.co2_functions.pco2_ppressure
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-10-27 | Christopher Wingard | Initial Python code |
-| 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.co2_functions.pco2_co2flux
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2012-03-28 | Matthias Lankhorst | Original Matlab code |
-| 2013-04-20 | Christopher Wingard | Initial Python code |
-| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-## Helper Functions
+### Helper Functions
 
 ::: ion_functions.data.co2_functions.pco2_abs434_ratio
 
@@ -316,7 +304,7 @@ the code document this evolution.
 
 ---
 
-## Wrapper Functions
+### Wrapper Functions
 
 `pco2_pco2wat` is the OOI single-output wrapper for the PCO2WAT_L1 data
 product. It calls `pco2_calc_pco2` for all records and then sets blank
@@ -333,6 +321,32 @@ OOI single-output data product requirement. External users should call
 | 2014-02-19 | Christopher Wingard | Updated comments |
 | 2014-03-19 | Christopher Wingard | Optimized |
 | 2017-04-04 | Pete Cable | Updated to use thermistor/blank counts per DPS |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+## Pro-Oceanus CO2-Pro Functions (PCO2A)
+
+### Core Functions
+
+::: ion_functions.data.co2_functions.pco2_ppressure
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-10-27 | Christopher Wingard | Initial Python code |
+| 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.co2_functions.pco2_co2flux
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2012-03-28 | Matthias Lankhorst | Original Matlab code |
+| 2013-04-20 | Christopher Wingard | Initial Python code |
 | 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---

@@ -99,12 +99,6 @@ def o2_counts_to_uM(o2_counts):
     DO : ndarray
         Dissolved oxygen concentration uncorrected for salinity and
         pressure, DOCONCS_L1 [micro-mole/L].
-
-    Notes
-    -----
-    The DOCONCS_L1 data product has units of micromole/liter. The OOI
-    Software Application Framework (SAF) incorrectly lists the units
-    for this L1 product as micromole/kg.
     """
     # replace fill values with nan
     o2_counts = replace_fill_with_nan(None, o2_counts)
@@ -173,10 +167,6 @@ def do2_SVU(calphase, temp, csv, conc_coef=np.array([0.0, 1.0])):
     gliders, differences between CTD and optode temperature readings of
     1 degC can translate to approximately 5% differences in calculated
     oxygen concentration.
-
-    The DOCONCS_L1 data product has units of micromole/liter. The OOI
-    Software Application Framework (SAF) incorrectly lists the units
-    for this L1 product as micromole/kg.
     """
     conc_coef = np.atleast_2d(conc_coef)
     # this will work for both old and new CI implementations of cal coeffs.

@@ -1176,8 +1176,9 @@ def fdc_filtcoef(fs, fc):
     fs : float
         Sampling frequency [Hz].
     fc : float
-        Inverse of the cutoff frequency used to derive the filter
-        (e.g. 1.0 / fltr_cutoff_freq) [s].
+        High-pass filter cutoff frequency [Hz]. Called with 1/12 Hz
+        from fdc_flux_and_wind and 1/240 Hz from
+        fdc_anglesclimodeyaw.
 
     Returns
     -------
@@ -1193,12 +1194,17 @@ def fdc_filtcoef(fs, fc):
     Not present in the DPS, which hardcodes the filter coefficients
     directly in Appendix A rather than computing them from a cutoff
     frequency; this function derives equivalent coefficients via
-    scipy.signal.buttord and scipy.signal.butter. High-pass filter
-    intended to retain real acceleration signal while removing drift;
-    the current filter design (chosen so the doubly-integrated
-    acceleration spectrum matches the frequency-domain integrated
-    power spectrum in the pass band) supersedes an earlier 1998
-    design.
+    scipy.signal.buttord and scipy.signal.butter, with the stopband
+    edge at 0.7 fc. The design follows DPS author Jim Edson's 1998
+    revision: a high-pass filter that retains real acceleration but
+    removes drift, chosen so that the spectrum of the doubly
+    integrated acceleration matches the frequency-domain integrated
+    power spectrum in the pass band. The comparison was most
+    sensitive to the transition width, which was placed in the
+    overlap region between the integrated angular-rate and
+    accelerometer-based angle estimates, shifting the filter to
+    higher frequencies by about 1/4 to 1/2 decade relative to the
+    earlier design.
     """
     nfreq = fs / 2.0
     wp = fc / nfreq
@@ -1348,6 +1354,13 @@ def fdc_quantize_data(*args):
     are truncated to 12000, and packets with fewer than 12000 records
     are padded to 12000 using the last data record. Also works if the
     only input variable is a 1D array of timestamps.
+
+    Short packets are padded with a constant copy of the last record
+    and are not flagged or excluded. Products computed from a heavily
+    padded packet are therefore based partly on synthetic data with
+    no turbulent fluctuation, which may bias the fluxes.
+    Discarding packets below a minimum record count was suggested by
+    the original developer as a possible enhancement.
     """
     # target number of datapoints per dataset: 10Hz for 20 minutes.
     npts = 12000

@@ -2065,6 +2065,8 @@ def adcp_bin_depths_meters(dist_first_bin, bin_size, num_bins, sensor_depth,
     -----
     The PD8 output format does not record dist_first_bin, bin_size, or
     num_bins; those values must be supplied externally for PD8 data.
+    When num_bins is time-vectorized, all records are assumed to have
+    the same number of bins.
     """
     # check for CI fill values.
     dist_first_bin, bin_size, num_bins, sensor_depth, adcp_orientation = (

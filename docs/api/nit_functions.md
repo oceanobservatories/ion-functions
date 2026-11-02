@@ -1,4 +1,4 @@
-# Nitrate Functions
+# NIT Functions
 
 ## Background
 
@@ -10,10 +10,27 @@ sensor on fixed depth platforms in the uncabled arrays. These were all converted
 to the SUNA V2. The OOI instrument class NUTNR (Nutrient Sensor) covers both the 
 original ISUS instruments and the SUNA V2.
 
+| Class | Hardware | Platform | Designator Meaning |
+|---|---|---|---|
+| NUTNR-A | Sea-Bird Scientific (formerly Satlantic) Deep SUNA | RCA cabled shallow profilers (CE04OSPS, RS01SBPS, RS03AXPS) | Nutrient, Nitrate |
+| NUTNR-B | Sea-Bird Scientific (formerly Satlantic) ISUS, replaced by the SUNA V2 by 2017 | Surface moorings: near-surface instrument frame (Endurance, Pioneer, Global) and surface buoy (Global) | Nutrient, Nitrate |
+| NUTNR-J | Sea-Bird Scientific (formerly Satlantic) SUNA V2 | Coastal surface-piercing profilers (CSPP) | Nutrient, Nitrate |
+| NUTNR-M | Sea-Bird Scientific (formerly Satlantic) SUNA V2 | Global profiling gliders | Nutrient, Nitrate |
+| NUTNR-N | Sea-Bird Scientific (formerly Satlantic) Deep SUNA | Pioneer coastal AUVs | Nutrient, Nitrate |
+
 `nit_functions.py` computes a single L2 data product, NITRTSC_L2, from raw
-UV absorption spectra produced by NUTNR instruments. Within the OOI data
-system, NIT functions fall under the Water Column science regime and the
-Nitrate category.
+UV absorption spectra produced by NUTNR instruments.
+
+Within the OOI data system, NIT data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+All calibration coefficients are from the factory calibration file supplied with each instrument.
+
+This page documents the algorithms used to compute the NIT data products. For general guidance on working with OOI
+biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -48,30 +65,17 @@ from the previous dark frame measurements.
 
 #### Calibration Coefficients
 
-Four sets of 256-element wavelength-dependent arrays are supplied from
-factory calibration sheets:
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `wl` | `CC_wl` | Factory calibration file |
+| `eno3` | `CC_eno3` | Factory calibration file |
+| `eswa` | `CC_eswa` | Factory calibration file |
+| `di` | `CC_di` | Factory calibration file |
+| `cal_temp` | `CC_cal_temp` | Factory calibration file |
+| `wllower` | `CC_lower_wavelength_limit_for_spectra_fit` | OOI processing setting (217 nm for the 1-cm probe tip, 220 nm for the 4-cm) |
+| `wlupper` | `CC_upper_wavelength_limit_for_spectra_fit` | OOI processing setting (240 nm for the 1-cm probe tip, 245 nm for the 4-cm) |
 
-- `wl` -- wavelength bins (nm) for each spectral channel
-- `eno3` -- nitrate molar absorptivity (extinction coefficients) at each
-  wavelength, determined from laboratory standards
-- `eswa` -- seawater extinction coefficients at each wavelength, at a
-  reference salinity of 35 and the calibration temperature `cal_temp`
-- `di` -- deionized water reference spectrum, measured in the laboratory
-  at the time of calibration
-
-A scalar calibration temperature `cal_temp` ($^\circ$C) specifies the
-temperature at which `eswa` was determined. All calibration coefficients
-are time-vectorized by the OOI data management system: each coefficient
-array is tiled to shape $(N, 256)$ where $N$ is the number of data packets,
-allowing coefficients to vary across deployments within a single input array.
-
-Two wavelength limit parameters bound the spectral window used in the
-regression:
-
-- `wllower` -- lower wavelength limit (nm); default 217 nm for the
-  1-cm pathlength probe tip or 220 nm for the 4-cm pathlength probe tip
-- `wlupper` -- upper wavelength limit (nm); default 240 nm for the
-  1-cm pathlength probe tip or 245 nm for the 4-cm pathlength probe tip
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 #### NITRTSC_L2 Algorithm
 
@@ -84,10 +88,21 @@ $\text{wllower} \leq \lambda \leq \text{wlupper}$:
 
 $$\lambda,\ ENO3,\ ESWA,\ DI \gets \text{channels where } \text{wllower} \leq wl \leq \text{wlupper}$$
 
+where $wl$ is the wavelength (nm) of each of the 256 spectral channels; $ENO3$ is the nitrate molar absorptivity
+(extinction coefficient) at each wavelength, determined from laboratory nitrate standards; $ESWA$ is the seawater
+extinction coefficient at each wavelength, at a reference salinity of 35 and the calibration temperature $T_{cal}$;
+and $DI$ is the deionized water reference spectrum measured in the laboratory at the time of calibration. All four
+are 256-element arrays from the instrument's factory calibration file. wllower and wlupper are the limits (nm) of the
+fitting window, set by OOI according to the probe tip pathlength (217-240 nm for the 1-cm tip, 220-245 nm for the
+4-cm tip) and supplied with the instrument's calibration values.
+
 **Step 2 -- Dark-correct the measured spectrum** by subtracting the dark
 current scalar from the raw spectral counts:
 
-$$SW_{corr} = SW - dark_value$$
+$$SW_{corr} = SW - dark\_value$$
+
+where $SW$ is the raw spectrum (NITROPT_L0) and $dark\_value$ is the dark current scalar, both reported by the
+instrument.
 
 **Step 3 -- Compute absorbance** from the ratio of the deionized water
 reference to the dark-corrected seawater spectrum:
@@ -116,6 +131,9 @@ c_4 &= 1.27353 \times 10^{-7}
 
 $$ESWA_T = ESWA \times \exp\!\left(f(\lambda') \times (T - T_{cal})\right)$$
 
+where $T_{cal}$ ($^\circ$C) is the calibration temperature (`cal_temp`) from the factory calibration file and $T$
+($^\circ$C) is the in situ temperature from the co-located CTD.
+
 Plant et al. (2023) developed this model to replace the temperature correction of Sakamoto et al. (2009), Equation
 4, which can bias nitrate high by 1-2 $\mu$mol kg$^{-1}$ in waters warmer than the calibration temperature; the
 updated model reduces this bias by at least 50%. The pressure correction in Plant et al. (2023), Equation 9, is not
@@ -128,6 +146,8 @@ $S_P$:
 $$A_{swa} = S_P \times ESWA_T$$
 
 $$A_{comp} = A - A_{swa}$$
+
+where $S_P$ is the practical salinity from the co-located CTD.
 
 **Step 6 -- Solve for nitrate concentration** by linear least squares. The
 model matrix $M$ includes the nitrate extinction spectrum, a constant
@@ -160,6 +180,11 @@ The `wllower` and `wlupper` arguments default to 217 nm and 240 nm
 respectively, matching the 1-cm pathlength probe tip specification. For
 4-cm pathlength probe tips, the OOI system supplies 220 nm and 245 nm via
 the time-vectorized calibration coefficient mechanism.
+
+The calibration arrays are time-vectorized by the OOI data system: each 256-element array is tiled to shape
+$(N, 256)$, where $N$ is the number of data packets, so that the coefficients can vary across deployments (and
+instruments) within a single input array. The fitting window and coefficients are therefore evaluated for each data
+packet.
 
 #### History
 | Date | Author | Change |

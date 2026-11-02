@@ -45,12 +45,13 @@ nav:
   - Contributing: CONTRIBUTING.md
   - Data Product Levels: data_products.md
   - Calibration Coefficients: calibrations.md
+  - Using These Functions with OOI Data: using-ooi-data.md
   - Function Types: function_types.md
   - Instrument Notes:
     - Deep SeapHOx V2: seaphox.md
   - Instrument Families:
     - CO2 Functions: api/co2_functions.md
-    - PH Functions: api/ph_functions.md
+    - pH Functions: api/ph_functions.md
     - CTD Functions: api/ctd_functions.md
     - DO2 Functions: api/do2_functions.md
     - FDC Functions: api/fdc_functions.md

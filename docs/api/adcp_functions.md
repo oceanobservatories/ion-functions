@@ -10,18 +10,30 @@
 
 ## Background
 
-The ADCP instrument family covers Teledyne RDI Workhorse acoustic Doppler
+The ADCP instrument family covers Teledyne RDI and Nortek acoustic Doppler
 current profilers (ADCPs) deployed across the OOI network. Three instrument
 classes produce the VELPROF and ECHOINT data products, and one class produces
 the VELTURB and ECHOINT data products.
 
 | Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| ADCPA | TRDI Explorer PA DVL | Coastal glider | ADCP, glider-mounted |
-| ADCPS | TRDI Workhorse Long Ranger (75 kHz) | Subsurface mooring | ADCP, subsurface |
-| ADCPT | TRDI Workhorse Quartermaster (150 kHz) | Surface mooring | ADCP, surface |
-| VADCP | TRDI Workhorse Sentinel, 5-beam (600 kHz) | RSN 200 m platform | Vertical ADCP |
-| VADCP-B | Nortek Signature 55 | RSN 200 m platform | Vertical ADCP, 2nd generation |
+| ADCPA | TRDI Explorer DVL (M) and Workhorse Navigator (N), 600 kHz | Coastal gliders (M) and AUVs (N) | ADCP, mobile assets |
+| ADCPS | TRDI Workhorse Long Ranger, 75 kHz | Mooring risers, seafloor multi-function nodes, and cabled seafloor junction boxes | Velocity Profiler, long range |
+| ADCPT | TRDI Workhorse Sentinel, Monitor, and Quartermaster, 150-600 kHz | Near-surface instrument frames, mooring risers, seafloor multi-function nodes, cabled junction boxes, and RCA 200 m platforms | Velocity Profiler, short range |
+| VADCP-A | TRDI Workhorse 5-beam, 600 kHz | RCA 200 m platforms | Vertical ADCP |
+| VADCP-B | Nortek Signature 55 | RCA 200 m platforms | Vertical ADCP, 2nd generation |
+
+Within the OOI data system, ADCP data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+Velocity calculations use no calibration coefficients beyond the deployment location used for the magnetic declination
+correction; echo intensity uses the vendor scale factor, and bin depths use the instrument configuration (bin size,
+distance to the first bin, and orientation).
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -55,6 +67,17 @@ final L1 products are scaled from mm/s to m/s.
 
 **ADCPA (glider):** The ADCPA produces L1 VELPROF directly onboard; only
 the magnetic declination correction is applied by ion-functions.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `sfactor` | `CC_scale_factor1`-`CC_scale_factor4` | TRDI echo intensity scale factor, per beam (vendor) |
+| `bin_size` | `CC_bin_size` | Instrument configuration (deployment setup) |
+| `dist_first_bin` | `CC_dist_first_bin` | Instrument configuration (deployment setup) |
+| `adcp_orientation` | `CC_orientation` | Instrument configuration (deployment setup) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 #### Beam to Instrument Coordinates
 
@@ -171,8 +194,8 @@ function accepts depth in meters directly.
 ### VELTURB_L1 and ECHOINT_L1 -- Turbulent Velocity Profile
 
 VELTURB_L1 is the turbulent velocity profile (m/s) in Earth coordinates with
-magnetic variation correction applied, produced by the VADCP and VADCP-B
-instruments deployed on RSN 200 m platforms. ECHOINT_L1 is the echo intensity
+magnetic variation correction applied, produced by the VADCP-A and VADCP-B
+instruments deployed on RCA 200 m platforms. ECHOINT_L1 is the echo intensity
 (dB) for each beam.
 
 The original VADCP (Teledyne RDI Workhorse Sentinel, 600 kHz) is a 5-beam
@@ -186,6 +209,15 @@ The VADCP-B (Nortek Signature 55) uses a different beam geometry, beam
 numbering convention, beam velocity units (m/s directly, not mm/s), and a
 vendor-supplied 4x4 transformation matrix (`tm`) in place of the fixed
 analytical matrix used for TRDI instruments.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `tm` | `CC_TM` | Nortek beam-to-XYZ transformation matrix (VADCP-B, factory) |
+| `orientation` | `CC_vadcpb_orientation` | Instrument configuration (VADCP-B) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 #### VELTURB -- Original VADCP (TRDI)
 

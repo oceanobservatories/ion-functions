@@ -7,29 +7,38 @@ conductivity-temperature-depth (CTD) family of instruments across its moored,
 profiling, and mobile platforms. The table below lists the OOI instrument
 classes covered by this module.
 
-| Class | Hardware | Platform type | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---------------|
 | CTDBP | SBE 16Plus V2 | Moored (fixed depth) | CTD, Bottom Pumped |
 | CTDMO | SBE 37IM | Moored (fixed depth) | CTD, Modem (Inductive) |
-| CTDPF | SBE 16Plus V2 (A/B) or SBE 52MP (C/K/L) | Profiling | CTD, Profiler |
+| CTDPF-A/B | SBE 16Plus V2 | RCA cabled shallow profilers and platforms | CTD, Profiler |
+| CTDPF-J | SBE FastCAT 49 | Coastal surface-piercing profilers (CSPP) | CTD, Profiler |
+| CTDPF-K/L | SBE 52MP | Wire-following profilers | CTD, Profiler |
 | CTDGV | SBE GPCTD (Seabird Payload CTD) | Gliders | CTD, Glider Vehicle |
-| PHSEN | SBE Deep SeapHOx V2 | Moored (fixed depth) | pH Sensor |
+| PHSEN-G/H | SBE Deep SeapHOx V2 ([instrument notes](../seaphox.md)) | Moored (fixed depth) | pH Sensor |
 
 `ctd_functions.py` converts raw Sea-Bird Electronics CTD data into calibrated 
 L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) and computes the L2 
 derived products Practical Salinity (PRACSAL) and in-situ Density (DENSITY) 
-using the [TEOS-10 GSW library](https://teos-10.github.io/GSW-Python/). All 
-calibration coefficients are from factory calibration values supplied with 
-individual instruments. Within the OOI data system, CTD functions fall under
-the Water Column science regime and the Conductivity, Temperature, Pressure,
-Salinity, and Density categories.
+using the [TEOS-10 GSW library](https://teos-10.github.io/GSW-Python/).
+
+Within the OOI data system, CTD data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
 
 The L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) may be reported directly
 by the instrument (computed onboard the sensor using vendor firmware) or they 
 may be reported as L0 values in raw units (counts, frequency, or linearly scaled 
 integers). Depending on the instrument, telemetered data may be reported directly 
 in L1 units while the recovered instrument data is reported in L0 units 
-requiring the conversions below.  
+requiring the conversions below. The SBE FastCAT 49 (CTDPF-J) reports its data in engineering units, so
+the L1 conversions below are not applied to it.
+
+All calibration coefficients are from factory calibration values supplied with individual instruments.
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI
+data file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and
+[Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -84,7 +93,7 @@ where $T$ is TEMPWAT_L1 ($^\circ$C), $P$ is PRESWAT_L1 (dbar), and $g$,
 $h$, $i$, $j$, wbotc, CTcor, CPcor are factory calibration coefficients.
 See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 
-**SBE 52MP** (CTDPF-C/K/L): Linear scaling with a unit conversion from
+**SBE 52MP** (CTDPF-K/L): Linear scaling with a unit conversion from
 mS cm$^{-1}$ to S m$^{-1}$:
 
 $$C_{L1} = (c_0 \div 10000 - 0.5) \times 0.1$$
@@ -137,7 +146,7 @@ $$T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15$
 
 where $a_0$, $a_1$, $a_2$, $a_3$ are factory calibration coefficients.
 
-**SBE 52MP** (CTDPF-C/K/L): The instrument outputs engineering units scaled 
+**SBE 52MP** (CTDPF-K/L): The instrument outputs engineering units scaled
 to an integer. The L1 conversion is:
 
 $$T_{L1} = t_0 / 10000 - 5$$
@@ -229,7 +238,7 @@ $$P_{L1} = (p_{\text{psi}} - 14.7) \times 0.689475729$$
 where $p_0$ is the raw pressure count and all calibration coefficients are
 from factory calibration sheets.
 
-**SBE 52MP** (CTDPF-C/K/L):
+**SBE 52MP** (CTDPF-K/L):
 
 $$P_{L1} = p_0 \div 100 - 10$$
 

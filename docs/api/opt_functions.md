@@ -10,21 +10,25 @@ downwelling irradiance radiometer (SPKIR). All three produce L1 or L2 data produ
 counts or voltage, using instrument-specific factory calibration
 coefficients.
 
-`opt_functions.py` computes five data products: OPTATTN_L2 and OPTABSN_L2
-from the OPTAA instrument, OPTPARW_L1 from three PARAD variants, and
+`opt_functions.py` computes four data products: OPTATTN_L2 and OPTABSN_L2
+from the OPTAA instrument, OPTPARW_L1 from four PARAD variants, and
 SPECTIR_L1 from the SPKIR instrument. A companion module,
 `opt_functions_tscor.py`, provides the wavelength-indexed dictionary of
 temperature and salinity correction coefficients used in the OPTAA
 processing chain.
 
-| Instrument Class | Hardware | Data Product |
-|---|---|---|
-| OPTAA | Sea-Bird Scientific ac-s | OPTATTN_L2, OPTABSN_L2 |
-| PARAD (RSN Shallow Profiler) | Sea-Bird Scientific PAR LIN 600m | OPTPARW_L1 |
-| PARAD (CSPP, PARAD-J) | Sea-Bird Scientific ECO PAR (ECOPARS) | OPTPARW_L1 |
-| PARAD (glider, QSP-2100) | Biospherical Instruments QSP-2100 | OPTPARW_L1 |
-| PARAD (WFP, QSP-2200) | Biospherical Instruments QSP-2200 | OPTPARW_L1 |
-| SPKIR | Sea-Bird Scientific OCR-507 | SPECTIR_L1 |
+| Class | Hardware | Platform | Designator Meaning |
+|---|---|---|---|
+| OPTAA | Sea-Bird Scientific ac-s | Moored (fixed depth), cabled seafloor nodes and profilers, and coastal surface-piercing profilers | Optical Absorption and Attenuation |
+| PARAD-A | Sea-Bird Scientific (formerly Satlantic) PAR LIN 600m | RCA cabled shallow profilers | Photosynthetically Active Radiation |
+| PARAD-J | Sea-Bird Scientific (formerly WET Labs) ECO PAR (ECOPARS) | Coastal surface-piercing profilers (CSPP) | Photosynthetically Active Radiation |
+| PARAD-M/N | Biospherical Instruments QSP-2100 series (QSP-2155, QSP-2150) | Coastal gliders (M) and AUVs (N) | Photosynthetically Active Radiation |
+| PARAD-K | Biospherical Instruments QSP-2200 | Wire-following profilers | Photosynthetically Active Radiation |
+| SPKIR | Sea-Bird Scientific OCR-507 | Surface moorings, RCA cabled shallow profilers, and coastal surface-piercing profilers | Spectral Irradiance |
+
+Within the OOI data system, OPT data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
 
 ### Primary Sources
 
@@ -33,8 +37,8 @@ processing chain.
 | 1341-00690 | [OOI (2014). Data Product Specification for Optical Beam Attenuation Coefficient. Document Control Number 1341-00690.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf)                                                                          |
 | 1341-00700 | [OOI (2014). Data Product Specification for Optical Absorption Coefficient. Document Control Number 1341-00700.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf)                                                                                |
 | 1341-00720 | [OOI (2012). Data Product Specification for Photosynthetically Active Radiation (PAR) from Instruments on Cabled Shallow Profilers. Document Control Number 1341-00720.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00720_Data_Product_SPEC_OPTPARW_Satl_OOI-2.pdf)                 |
-| 1341-00721 | OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721. |
-| 1341-00722 | OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722. |
+| 1341-00721 | OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721. (Not publicly posted.) |
+| 1341-00722 | OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722. (Not publicly posted.) |
 | 1341-00730 | [OOI (2014). Data Product Specification for Downwelling Spectral Irradiance. Document Control Number 1341-00730.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00730_DATA_PRODUCT_SPEC_SPECTIR_OOI.pdf)                                                                               |
 
 ---
@@ -79,7 +83,7 @@ Sea-Bird Scientific ac Meter Protocol Document (Revision P) is tabulated in
 
 #### OPTATTN_L2 Algorithm
 
-The computation proceeds in four steps (DPS 1341-00690, Section 4.3):
+The computation proceeds in three steps (DPS 1341-00690, Section 4.3):
 
 **Step 1 -- Compute internal instrument temperature** from the raw thermistor
 count (OPTTEMP_L0):
@@ -100,12 +104,12 @@ raw signal and reference counts (OPTCSIG_L0 and OPTCREF_L0), $c_{off}$ is
 the pure water offset from the device file, and $\Delta T(\lambda)$ is the
 linearly interpolated internal temperature correction:
 
-$$\Delta T(\lambda) = \Delta T_1(\lambda) +
-\frac{T_{intr} - T_1}{T_2 - T_1}
-\times \left[\Delta T_2(\lambda) - \Delta T_1(\lambda)\right]$$
+$$\Delta T(\lambda) = \Delta T_0(\lambda) +
+\frac{T_{intr} - T_0}{T_1 - T_0}
+\times \left[\Delta T_1(\lambda) - \Delta T_0(\lambda)\right]$$
 
-where $T_1$ and $T_2$ are the bracketing temperature bin values and
-$\Delta T_1$, $\Delta T_2$ are the corresponding correction coefficients
+where $T_0$ and $T_1$ are the bracketing temperature bin values and
+$\Delta T_0$, $\Delta T_1$ are the corresponding correction coefficients
 from the device file.
 
 **Step 3 -- Apply the water temperature and salinity correction:**
@@ -163,7 +167,9 @@ where $\Psi_{sa}$ is the absorption-channel salinity correction constant
 
 **Step 4 -- Apply the scattering correction.** The ac-s absorption tube does
 not detect light scattered into the backward direction; the measured signal
-therefore overestimates absorption. The correction parameterizes the
+therefore overestimates absorption. The ac Meter Protocol Document describes
+three scattering correction methods; OOI uses the proportional method (method 3;
+Zaneveld et al., 1994), as specified in DPS 1341-00700. The correction parameterizes the
 fraction of undetected scatter $\tilde{\beta}$ using a reference wavelength
 (default 715 nm) where absorption by water impurities is assumed negligible:
 
@@ -185,11 +191,14 @@ $a_{pd;ts;s}(\lambda)$ is OPTABSN_L2.
 ### OPTPARW_L1 -- Photosynthetically Active Radiation
 
 OPTPARW_L1 is the photosynthetically active radiation ($\mu$mol photons
-m$^{-2}$ s$^{-1}$) within the spectral range 400-700 nm. Three instrument
+m$^{-2}$ s$^{-1}$) within the spectral range 400-700 nm, the wavelengths photosynthetic organisms use for
+photosynthesis. Four instrument
 variants are deployed across the OOI arrays, each using a different
-calibration equation.
+calibration equation. The function names `opt_par_satlantic` and
+`opt_par_wetlabs` reflect the manufacturers at the time the DPS documents
+were written; both product lines are now part of Sea-Bird Scientific.
 
-**Satlantic PAR LIN 600m** (PARAD, RSN Shallow Profiler): applies a linear
+**Sea-Bird Scientific (formerly Satlantic) PAR LIN 600m** (PARAD, RSN Shallow Profiler): applies a linear
 calibration to 32-bit ADC counts (DPS 1341-00720):
 
 $$OPTPARW = I_m \times a_1 \times (x - a_0)$$
@@ -198,12 +207,16 @@ where $x$ is the L0 count output, $a_0$ is the voltage offset (counts),
 $a_1$ is the scaling factor ($\mu$mol photons m$^{-2}$ s$^{-1}$ count$^{-1}$),
 and $I_m$ is the immersion coefficient.
 
-**Sea-Bird Scientific ECO PAR / ECOPARS** (PARAD-J, CSPP): applies an exponential
+**Sea-Bird Scientific (formerly WET Labs) ECO PAR / ECOPARS** (PARAD-J, CSPP): applies an exponential
 calibration to 14-bit ADC counts (DPS 1341-00722):
 
 $$OPTPARW = I_m \times 10^{(x - a_0) / a_1}$$
 
-where $x$, $a_0$, $a_1$, and $I_m$ carry the same definitions as above.
+where $x$ is the L0 output (counts), $a_0$ is the offset (counts), $a_1$ is the scaling factor (counts), and $I_m$
+is the dimensionless immersion coefficient (1.0 in air). The sensor output is logarithmic in PAR, so $a_1$ is the
+change in counts corresponding to a tenfold change in PAR. DPS 1341-00722 lists $a_1$ in $\mu$mol photons
+m$^{-2}$ s$^{-1}$ count$^{-1}$, carried over from the linear calibration; that unit does not apply to the
+logarithmic form (Sea-Bird Scientific ECO PAR User Manual, Rev. D).
 
 **Biospherical QSP-2100** (PARAD, glider / mobile assets): applies a
 linear calibration to a voltage signal (DPS 1341-00721):
@@ -230,7 +243,10 @@ sheets supplied by the manufacturer.
 
 SPECTIR_L1 is the downwelling spectral "vector" irradiance ($E_d(\lambda)$,
 $\mu$W cm$^{-2}$ nm$^{-1}$) measured by the Sea-Bird Scientific OCR-507
-multispectral radiometer (SPKIR). The OCR-507 provides seven user-defined wavelength
+multispectral radiometer (SPKIR). "Vector" (or planar) irradiance is the downwelling light weighted by the cosine
+of its zenith angle, i.e., the light incident on a horizontal surface; it is distinct from scalar irradiance
+($E_o(\lambda)$), which weights light from all directions equally (DPS 1341-00730, Section 3.1). The OCR-507
+provides seven user-defined wavelength
 channels, typically spanning 400-700 nm in bandwidths of nominally 10 or
 20 nm, with center wavelengths specified at instrument purchase.
 
@@ -291,19 +307,25 @@ are listed in the [References](#references) section.
 ::: ion_functions.data.opt_functions.opt_scatter_corr
 
 #### Additional Notes
-The scattering correction is suppressed when
-$c_{pd;ts}(\lambda_{ref}) - a_{pd;ts}(\lambda_{ref}) \leq 0.02$ or when
-$a_{pd;ts}(\lambda_{ref}) \leq 0$, to avoid numerical instability from
-near-zero denominators and to avoid applying corrections when scattering
-is too small to be meaningfully resolved. The threshold value of 0.02 was
-chosen empirically. This behavior is not specified in DPS 1341-00700 but
-is documented in the source code (2015-12-08 revision).
+The scattering correction is suppressed when $c_{pd;ts}(\lambda_{ref}) - a_{pd;ts}(\lambda_{ref}) \leq 0.02$ or when
+$a_{pd;ts}(\lambda_{ref}) \leq 0$. This behavior is not specified in DPS 1341-00700; it was added in the 2015-12-08
+revision (R. Desiderio). Because attenuation is the sum of absorption and scattering ($c = a + b$, all
+non-negative), $c \geq a$ at every wavelength. When scattering is small, $c - a$ can fluctuate around a value such as
+0.005, and applying the correction would add artificial variability that obscures the data. The minimum
+reference-wavelength scattering leakage of 0.02 was chosen empirically.
 
-The code comments also note that the accepted deployment protocol (separate
-intake tubes for the 'a' and 'c' flow paths) means the two paths do not
-sample exactly the same water, introducing uncertainty in the
-$c_{pd;ts}(\lambda_{ref}) - a_{pd;ts}(\lambda_{ref})$ quantity used to
-compute the scatter ratio.
+Instrumental and mechanical factors also limit the correction. When the ac-s is plumbed with a single intake split
+by a wye junction, experiments have shown that asymmetries in the two flow paths partition particles unevenly
+between the 'a' and 'c' tubes. The accepted deployment protocol is therefore a separate intake for each tube, but
+the two tubes then do not sample exactly the same water, so natural variability in the 'a' and 'c' signals is not
+precisely correlated and the $c_{pd;ts}(\lambda_{ref}) - a_{pd;ts}(\lambda_{ref})$ quantity is uncertain. The
+absorption and attenuation baselines also drift differently over time, from electronic drift and biofouling,
+particularly on moored instruments left unattended for long periods.
+
+The 2015-12-08 revision recommended replacing this algorithm with the flat (baseline) scattering correction:
+subtracting $a_{pd;ts}(\lambda_{ref})$ from the absorption at all wavelengths. This assumes the absorption signal
+at the reference wavelength is entirely scattering leakage, and is the most robust of the three scattering
+correction methods described in the ac Meter Protocol Document. This change has not been implemented.
 
 #### History
 | Date | Author | Change |
@@ -481,9 +503,9 @@ NASA/TM-2003-211621, Vol. IV.
 
 [OOI (2012). Data Product Specification for Photosynthetically Active Radiation (PAR) from Instruments on Cabled Shallow Profilers. Document Control Number 1341-00720.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00720_Data_Product_SPEC_OPTPARW_Satl_OOI-2.pdf)
 
-OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721.
+OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721. (Not publicly posted.)
 
-OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722.
+OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722. (Not publicly posted.)
 
 [OOI (2014). Data Product Specification for Downwelling Spectral Irradiance. Document Control Number 1341-00730.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00730_DATA_PRODUCT_SPEC_SPECTIR_OOI.pdf)
 
@@ -500,6 +522,9 @@ OR: Sea-Bird Scientific.
 Sea-Bird Scientific. *ECO PAR Sensor User Manual, Edition 5.* Philomath,
 OR: Sea-Bird Scientific.
 
+Sea-Bird Scientific (2023). *ECO PAR Sensor User Manual, Version D.*
+Philomath, OR: Sea-Bird Scientific.
+
 Sea-Bird Scientific. *OCR-507 Operation Manual, SAT-DN-0027, Rev E.*
 Philomath, OR: Sea-Bird Scientific.
 
@@ -510,3 +535,7 @@ Sullivan, J. M., Twardowski, M. S., Zaneveld, J. R. V., Moore, C. M.,
 Barnard, A. H., Donaghay, P. L., and Rhoades, B. (2006). The hyperspectral
 temperature and salt dependencies of absorption by water and heavy water in
 the 400-750 nm spectral range. Appl. Opt., 45, 5294-5309.
+
+Zaneveld, J. R. V., Kitchen, J. C., and Moore, C. C. (1994). Scattering
+error correction of reflecting-tube absorption meters. Ocean Optics XII,
+Proc. SPIE 2258, 44-55.

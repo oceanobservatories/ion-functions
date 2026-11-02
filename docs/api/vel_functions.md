@@ -11,9 +11,9 @@ after correction for magnetic declination using the International Geomagnetic
 Reference Field (IGRF-14). The table below lists the OOI instrument classes
 covered by this module.
 
-| Class | Hardware | Platform type | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| VELPT-A/B/D/J | Nortek Aquadopp | Moored (fixed depth) | Velocity Point |
+| VELPT | Nortek Aquadopp | Moored (fixed depth) | Velocity Point |
 | VEL3D-B | Nobska MAVS-4 | Moored (fixed depth) | Velocity 3D |
 | VEL3D-C/D | Nortek Vector | Moored (fixed depth) | Velocity 3D |
 | VEL3D-A | FSI ACM-3D-MP (RSN) | Cabled deep profiler | Velocity 3D |
@@ -24,12 +24,19 @@ covered by this module.
 into calibrated L1 velocity data products in m/s, referenced to true North
 and true East. All magnetic declination corrections are computed from the IGRF
 using the deployment location (latitude, longitude, depth) and NTP timestamp.
-No factory calibration coefficients are applied by ion-functions for these
-instruments; the instruments perform onboard beam-to-ENU coordinate transforms
-and provide velocity components directly in earth coordinates as L0 output.
-Within the OOI data system, VEL functions fall under the Water velocity
-category. VELPT instruments fall under the Water Column science regime;
-VEL3D instruments fall under the Water Column and Seafloor/Crust regimes.
+
+Within the OOI data system, VEL data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+Apart from the VEL3D-A compass calibration, no calibration coefficients are applied by these functions; the deployment
+latitude and longitude are used for the magnetic declination correction. VELPT and VEL3D-B/C/D/L instruments report
+velocities in instrument earth coordinates (magnetic); VEL3D-K beam velocities are transformed to earth coordinates by
+ion-functions using the fixed instrument and profiler geometry.
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -82,6 +89,16 @@ cosines (hx, hy) corrected by an 8-point spin test calibration (via
 `fsi_acm_horz_vel`. The calibration computes offsets, scaling factors, and a
 compass bias following the procedure in the McLane Moored Profiler (MMP)
 manual Appendix D.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `hdg_cal` | `CC_hdg_cal` | Compass calibration spin test (MMP manual, Appendix D) |
+| `hx_cal` | `CC_hx_cal` | Compass calibration spin test (MMP manual, Appendix D) |
+| `hy_cal` | `CC_hy_cal` | Compass calibration spin test (MMP manual, Appendix D) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 For Scripps deployments (VEL3D-L), the wrapper functions `fsi_acm_sio_east`
 and `fsi_acm_sio_north` pass the instrument-reported heading directly to
@@ -158,6 +175,12 @@ the rotation is applied.
 The wrapper functions `vel3dk_east`, `vel3dk_north`, and `vel3dk_up` each call
 `vel3dk_transform` and extract the appropriate component. Magnetic declination
 correction via `vel_mag_correction` is applied to the horizontal components.
+
+In 2017 the VEL3D-K velocities were found to be aliased by an ambiguity-velocity problem. In diagnosing it, data were
+sent to Nortek, who returned corrected data and code that differed significantly from the 2014 code used for the
+original implementation; the first set returned had a sign error that produced downward 'current' velocities during
+downward profiles. The 2018 revision matches Nortek's second set, and was independently derived from the transducer
+geometry, the radial beam-velocity sign convention, and the X-axis heading reference.
 
 The 2018 revision to `generate_beam_transforms` and `generate_ENU_transform`
 corrected three errors in the original 2014 Nortek-supplied code: (1) the
