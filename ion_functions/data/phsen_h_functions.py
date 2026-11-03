@@ -234,7 +234,7 @@ def internal_humidity(humidity_counts, temperature):
     Returns
     -------
     relative_humidity : ndarray
-        Relative humidity, clipped to the range [0, 100] [percent].
+        Relative humidity, clipped to the range 0 to 100 [percent].
 
     Notes
     -----

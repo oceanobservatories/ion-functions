@@ -67,7 +67,7 @@ def adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf,
     lon : array_like
         Deployment longitude [decimal degrees].
     dt : array_like
-        Sample timestamp [seconds since 1970-01-01] (Unix time).
+        Sample timestamp [seconds since 1900-01-01] (NTP time).
 
     Returns
     -------

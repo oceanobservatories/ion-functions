@@ -219,7 +219,7 @@ analytical matrix used for TRDI instruments.
 
 OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
-#### VELTURB -- Original VADCP (TRDI)
+#### VELTURB Algorithm -- Original VADCP (TRDI)
 
 The beam-to-instrument and instrument-to-Earth transforms for the original
 VADCP use the same matrix formulation as VELPROF (DPS 1341-00760, Equations
@@ -241,9 +241,9 @@ The TRDI `vadcp_beam_eastward`, `vadcp_beam_northward`, and
 `vadcp_beam_error` functions use the standard 4-beam `adcp_beam2ins` and
 `adcp_ins2earth` pipeline. `vadcp_beam_vertical_est` and
 `vadcp_beam_vertical_true` use the same pipeline but incorporate the 5th
-beam; see [Wrapper Functions -- VELTURB (Original VADCP)](#velturb----original-vadcp-trdi).
+beam; see [Wrapper Functions -- VELTURB (Original VADCP)](#velturb-original-vadcp-trdi).
 
-#### VELTURB -- VADCP-B (Nortek Signature 55)
+#### VELTURB Algorithm -- VADCP-B (Nortek Signature 55)
 
 The VADCP-B beam-to-instrument transform uses the vendor-supplied
 transformation matrix `tm` (a 4x4 matrix) applied via Einstein summation.
@@ -281,6 +281,7 @@ are listed in the [References](#references) section.
 | 2019-03-11 | Christopher Wingard | Removed multiple wrapper functions; made function standalone returning all velocity components |
 | 2023-08-15 | Samuel Dahlberg | Ported from Pyseas for CGSN compatibility |
 | 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-11-02 | Christopher Wingard | Corrected dt to NTP time, so the magnetic declination is computed for the sample date |
 
 ---
 
@@ -313,6 +314,7 @@ are listed in the [References](#references) section.
 | 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
 | 2023-08-15 | Samuel Dahlberg | Refactored as wrapper calling adcp_beam_velocity; added NTP to Unix timestamp conversion |
 | 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-11-02 | Christopher Wingard | Removed the NTP to Unix timestamp conversion; NTP time is passed to adcp_beam_velocity |
 
 ---
 
@@ -330,6 +332,7 @@ are listed in the [References](#references) section.
 | 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
 | 2023-08-15 | Samuel Dahlberg | Refactored as wrapper calling adcp_beam_velocity; added NTP to Unix timestamp conversion |
 | 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-11-02 | Christopher Wingard | Removed the NTP to Unix timestamp conversion; NTP time is passed to adcp_beam_velocity |
 
 ---
 
