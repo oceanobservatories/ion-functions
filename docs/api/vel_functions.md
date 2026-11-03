@@ -57,6 +57,18 @@ profiling current meters that average over an ensemble interval. The product
 comprises three components: eastward (VLE), northward (VLN), and upward
 (VLU), all referenced to true Earth coordinates.
 
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `hdg_cal` | `CC_hdg_cal` | Compass calibration spin test (MMP manual, Appendix D) |
+| `hx_cal` | `CC_hx_cal` | Compass calibration spin test (MMP manual, Appendix D) |
+| `hy_cal` | `CC_hy_cal` | Compass calibration spin test (MMP manual, Appendix D) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### VELPTMN_L1 Algorithm
+
 **VELPT-A/B/D/J (Nortek Aquadopp):** The Aquadopp outputs velocity components
 already converted to earth coordinates (East, North, Up) onboard using its
 internal heading, pitch, and roll sensors. The L0 data are in mm/s. The L1
@@ -89,16 +101,6 @@ cosines (hx, hy) corrected by an 8-point spin test calibration (via
 `fsi_acm_horz_vel`. The calibration computes offsets, scaling factors, and a
 compass bias following the procedure in the McLane Moored Profiler (MMP)
 manual Appendix D.
-
-#### Calibration Coefficients
-
-| Function Argument | Calibration Coefficient | Source |
-|---|---|---|
-| `hdg_cal` | `CC_hdg_cal` | Compass calibration spin test (MMP manual, Appendix D) |
-| `hx_cal` | `CC_hx_cal` | Compass calibration spin test (MMP manual, Appendix D) |
-| `hy_cal` | `CC_hy_cal` | Compass calibration spin test (MMP manual, Appendix D) |
-
-OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 For Scripps deployments (VEL3D-L), the wrapper functions `fsi_acm_sio_east`
 and `fsi_acm_sio_north` pass the instrument-reported heading directly to

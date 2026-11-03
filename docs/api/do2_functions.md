@@ -30,8 +30,8 @@ products](https://oceanobservatories.org/data-products/data-products-complete-li
 $\mu$mol kg$^{-1}$ (DOXYGEN_L2, DOCONCF_L2) are Level 2 products that have been corrected for salinity and pressure;
 converting from per-volume to per-mass units requires salinity, which is what makes the result a Level 2 product.
 
-All calibration coefficients are from factory calibration sheets supplied with
-individual instruments.
+Calibration coefficients are from the factory calibration sheets supplied with individual instruments, except where
+noted in the Calibration Coefficients tables below.
 
 This page documents the algorithms used to compute the dissolved oxygen data products. For general guidance on working
 with OOI biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
@@ -63,6 +63,16 @@ salinity- and pressure-corrected concentration ($\mu$mol kg$^{-1}$). The
 Level 2 product was named DOCONCS_L2 in early OOI documentation and renamed DOXYGEN_L2
 in DPS 1341-00520 version 1-02 (2014-04-11); `do2_salinity_correction`
 produces DOXYGEN_L2.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `csv` | `CC_csv` | Factory calibration sheet (SVU foil calibration, $\text{csv}_1$-$\text{csv}_7$) |
+| `conc_coef` | `CC_conc_coef` | Factory calibration sheet (secondary calibration; Form 710 "PhaseCoef") |
+| `sref` | `CC_ref_salinity` | Instrument configuration (optode firmware reference salinity; glider DOSTA only) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 #### DOSTA L0 Data Streams
 
@@ -109,10 +119,10 @@ $$O_2 = \frac{(P_0 / P_c) - 1}{K_{SV}}$$
 where $T_{opt}$ is the optode foil temperature ($^\circ$C), $P_t$ is the
 calibrated phase (degrees), $P_0$ is the zero-oxygen phase shift, $P_c$ is
 the phase at the current oxygen level, and $\text{csv}_1$ through
-$\text{csv}_7$ are factory calibration coefficients.
+$\text{csv}_7$ (`csv`) are from the factory calibration sheet.
 
-A secondary calibration (conc_coef = [offset, slope]) is applied after the
-SVU equation:
+A secondary calibration (`conc_coef` = [offset, slope], from the factory calibration sheet) is applied after the SVU
+equation:
 
 $$O_2 = \text{conc_coef}[0] + \text{conc_coef}[1] \times O_2$$
 
@@ -162,8 +172,8 @@ $$\text{DOXYGEN_L2} = \exp\!\left[(S_P - S_{ref}) \times B(t_s) + C_0 \times ({S
 
 where $B_0 = -6.24097 \times 10^{-3}$, $B_1 = -6.93498 \times 10^{-3}$,
 $B_2 = -6.90358 \times 10^{-3}$, $B_3 = -4.29155 \times 10^{-3}$,
-$C_0 = -3.11680 \times 10^{-7}$, and $S_{ref}$ is the reference salinity
-configured in the Aanderaa optode firmware (typically 0 or 35).
+$C_0 = -3.11680 \times 10^{-7}$, and $S_{ref}$ is the reference salinity configured in the Aanderaa optode firmware
+(typically 0 or 35). For the glider DOSTA it is passed as `sref`; the other DOSTA streams use the function default of 0.
 
 ---
 
@@ -179,6 +189,20 @@ DOCONCF_L2 is the dissolved oxygen concentration ($\mu$mol kg$^{-1}$)
 corrected for temperature, salinity, and pressure. There is no intermediate
 L1 product; DOCONCF_L0 (counts representing voltage or frequency) is converted
 directly to DOCONCF_L2.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `Soc` | `CC_oxygen_signal_slope` | Factory calibration sheet |
+| `Foffset` | `CC_frequency_offset` | Factory calibration sheet (SBE 43F) |
+| `Voffset` | `CC_frequency_offset` | Factory calibration sheet (SBE 43; a voltage offset despite the name) |
+| `A` | `CC_residual_temperature_correction_factor_a` | Factory calibration sheet |
+| `B` | `CC_residual_temperature_correction_factor_b` | Factory calibration sheet |
+| `C` | `CC_residual_temperature_correction_factor_c` | Factory calibration sheet |
+| `E` | `CC_residual_temperature_correction_factor_e` | Factory calibration sheet |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 #### DOFST L0 Input Conversion
 
@@ -216,7 +240,9 @@ $$\text{DO_int} = \text{Soc} \times (x + \text{offset}) \times \text{Oxsol}(T, S
 \times (1 + AT + BT^2 + CT^3) \times e^{EP/K}$$
 
 where $x$ is $V$ (SBE 43) or $F$ (SBE 43F), $K = T + 273.15$ is absolute
-temperature, and Soc, offset, A, B, C, E are factory calibration coefficients.
+temperature, and Soc, offset, A, B, C, E (`Soc`, `Foffset` or `Voffset`, `A`, `B`, `C`, `E`) are from the factory
+calibration sheet. The SBE 43 voltage offset (`Voffset`, V) is stored under the name `CC_frequency_offset`, the same
+name as the SBE 43F frequency offset.
 
 **Step 3 -- Convert to $\mu$mol kg$^{-1}$:**
 
@@ -241,9 +267,29 @@ directly to DOXYGEN_L2 ($\mu$mol kg$^{-1}$) via `dissolved_oxygen` in
 from mL L$^{-1}$ to $\mu$mol kg$^{-1}$ using potential density are all
 applied within a single function call.
 
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `a0` | `CC_set_a0` | Factory calibration sheet |
+| `a1` | `CC_set_a1` | Factory calibration sheet |
+| `a2` | `CC_set_a2` | Factory calibration sheet |
+| `b0` | `CC_set_b0` | Factory calibration sheet |
+| `b1` | `CC_set_b1` | Factory calibration sheet |
+| `c0` | `CC_set_c0` | Factory calibration sheet |
+| `c1` | `CC_set_c1` | Factory calibration sheet |
+| `c2` | `CC_set_c2` | Factory calibration sheet |
+| `coeff_e` | `CC_set_e` | Factory calibration sheet |
+| `therm_ta0` | `CC_set_ta0` | Factory calibration sheet (thermistor) |
+| `therm_ta1` | `CC_set_ta1` | Factory calibration sheet (thermistor) |
+| `therm_ta2` | `CC_set_ta2` | Factory calibration sheet (thermistor) |
+| `therm_ta3` | `CC_set_ta3` | Factory calibration sheet (thermistor) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
 **Telemetered**: The instrument reports dissolved oxygen in mL L$^{-1}$ (DOCONCS_L1). No ion-functions function
-currently converts this value to DOXYGEN_L2, and no telemetered SeapHOx stream is defined in the OOI data system;
-DOXYGEN_L2 is produced only from the raw phase in the streamed and recovered_instrument data (`dissolved_oxygen`).
+currently converts this value to DOXYGEN_L2. DOXYGEN_L2 is produced only from the raw phase in the streamed data
+via (`dissolved_oxygen`).
 
 ---
 

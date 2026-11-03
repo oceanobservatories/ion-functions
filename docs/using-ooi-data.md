@@ -90,8 +90,9 @@ they are therefore not listed in the family-page Calibration Coefficients tables
 ### Names that do not describe the value
 
 A few `CC_` names are historical and do not describe the quantity they hold. For example, the chi factor used for
-the FLUBSCT_L2 backscatter calculation is stored as `CC_angular_resolution` (see [FLO Functions](api/flo_functions.md)).
-Where this occurs it is noted on the family page.
+the FLUBSCT_L2 backscatter calculation is stored as `CC_angular_resolution` (see [FLO Functions](api/flo_functions.md)),
+and the SBE 43 voltage offset is stored as `CC_frequency_offset` (see [DO2 Functions](api/do2_functions.md)). Where this
+occurs it is noted on the family page.
 
 ## Mapping File Variables to Function Arguments
 
@@ -100,17 +101,26 @@ The OOI data system defines which inputs are passed to each function in the
 
 - `csv/ParameterFunctions.csv` lists each parameter function (`PFIDnnn`): the Python function, its module, and its
   argument names.
-- `csv/ParameterDefs.csv` lists each parameter (`PDnnn`): its `name` (the variable name in the data file), units, and,
-  for computed parameters, the function used (`parameterfunctionid`) and the argument map (`parameterfunctionmap`).
+- `csv/ParameterDefs.csv` lists each parameter (`PDnnn`): its `netcdf_name` (the variable name in the data file, which
+  can differ from its `name`), units, and, for computed parameters, the function used (`parameterfunctionid`) and the
+  argument map (`parameterfunctionmap`).
 
-The argument map is a dictionary from function argument to input. Inputs take four forms:
+The same information is available for any stream through the OOI M2M API. A request to
+`https://ooinet.oceanobservatories.org/api/m2m/12575/stream/byname/<stream>` (with your OOI API username and token)
+returns each parameter in the stream with its `id` (the number in `PDnnn`), the variable name in the data file
+(`netcdf_name`), units, and data product identifier and level, and, for computed parameters, the function and module
+(`parameter_function`) and the argument map (`parameter_function_map`). The stream name is part of the data file name
+(for example `flort_sample` or `adcp_velocity_beam`).
+
+The argument map is a dictionary from function argument to input. Inputs take five forms:
 
 | Form | Example | Meaning |
 |---|---|---|
-| `PDnnn` | `"b1": "PD3811"` | A parameter in the same data stream; look up its `name` in `ParameterDefs.csv` (here `velocity_beam1`) |
+| `PDnnn` | `"b1": "PD3811"` | A parameter in the same data stream; look up its `netcdf_name` (here `velocity_beam1`) |
 | `CC_...` | `"lat": "CC_lat"` | A calibration coefficient or location value (see [above](#calibration-coefficients)) |
 | `dpi_<PRODUCT>` | `"ctd_sp": "dpi_PRACSAL_L2"` | A data product from a co-located instrument (see [below](#inputs-from-co-located-instruments)) |
 | `<stream>.PDnnn` | `"botpres": "botpt_nano_sample.PD848"` | A parameter from another named data stream from the same instrument |
+| `<number>` | `"pressure_scale_factor": 1` | A constant passed to the function as is |
 
 ### Inputs from co-located instruments
 
@@ -151,7 +161,7 @@ The data product `upward_seawater_velocity` is `PD3821` in `ParameterDefs.csv`. 
  "h": "PD672", "p": "PD673", "r": "PD674", "vf": "PD617"}
 ```
 
-Looking up each `PDnnn` in `ParameterDefs.csv` gives the variable names in the file:
+Looking up the `netcdf_name` of each `PDnnn` gives the variable names in the file:
 
 | Argument | Parameter | Variable in the file | Units |
 |---|---|---|---|

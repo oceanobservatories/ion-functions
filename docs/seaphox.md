@@ -61,7 +61,7 @@ Functions: `dissolved_oxygen`, `convert_sbe63_thermistor`
 
 **Deep SeaFET V2 ISFET (pH)** -- Raw ISFET voltage counts to pH on the total
 hydrogen ion scale (PHWATER_L2). See
-[pH Functions -- Sea-Bird Scientific Deep SeapHOx V2](api/ph_functions.md#sea-bird-scientific-deep-seaphox-v2).
+[pH Functions -- Deep SeapHOx V2](api/ph_functions.md#deep-seaphox-v2-phsen-gh).
 
 Functions: `convert_ph_voltage_counts`, `ph_total`
 (both in `phsen_h_functions.py`).

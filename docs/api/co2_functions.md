@@ -51,6 +51,22 @@ protonated and deprotonated forms of the indicator. Periodic blank
 measurements (every 3.5 days) correct for drift in the electro-optical
 system.
 
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `calt` | `CC_calt` | Factory calibration sheet |
+| `cala` | `CC_cala` | Factory calibration sheet |
+| `calb` | `CC_calb` | Factory calibration sheet |
+| `calc` | `CC_calc` | Factory calibration sheet |
+| `ea434` | `CC_ea434` | Factory calibration sheet (accepted but not used; see Additional Notes) |
+| `eb434` | `CC_eb434` | Factory calibration sheet (accepted but not used; see Additional Notes) |
+| `ea620` | `CC_ea620` | Factory calibration sheet (accepted but not used; see Additional Notes) |
+| `eb620` | `CC_eb620` | Factory calibration sheet (accepted but not used; see Additional Notes) |
+| `sami_bits` | `CC_sami_bits` | Instrument configuration (12- or 14-bit ADC) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
 #### L0 Inputs and Blank Normalization
 
 The SAMI-CO2 outputs two record types:
@@ -68,8 +84,8 @@ $$A_{620,blank} = \frac{\text{Ratio620}_{blank}}{16384}$$
 
 #### Thermistor Temperature
 
-The raw thermistor count is converted to degrees C. The conversion depends
-on the SAMI hardware generation (12-bit or 14-bit ADC). For 12-bit hardware
+The raw thermistor count is converted to degrees C. The conversion depends on the SAMI hardware generation (12-bit
+or 14-bit ADC), set by `sami_bits` from the instrument configuration. For 12-bit hardware
 (full-scale count $= 4096$):
 
 $$r_t = \ln\left(\frac{\text{Therm}}{4096 - \text{Therm}} \times 17400\right)$$
@@ -113,15 +129,14 @@ $$qcc = \frac{-\text{CalB} + \sqrt{\text{CalB}^2 - 4 \times \text{CalA} \times (
 
 $$pCO_2 = 10^{qcc}$$
 
+where CalT (`calt`, $^\circ$C) is the calibration temperature and CalA, CalB, and CalC (`cala`, `calb`, `calc`) are
+the quadratic calibration curve coefficients, all from the factory calibration sheet supplied after each calibration
+or refurbishment cycle.
+
 The equilibration constants $e_1 = 0.0043$, $e_2 = 2.136$, $e_3 = 0.2105$
 are fixed values provided by Sunburst Sensors based on laboratory
 determinations with the BTB indicator batch and are not recalculated per
 calibration cycle.
-
-The instrument-specific calibration coefficients CalT, CalA, CalB, and CalC
-are provided by the manufacturer after each calibration or refurbishment
-cycle and are made available to the [OOI Asset Management database via CSV files 
-uploaded to GitHub](https://github.com/oceanobservatories/asset-management/).
 
 **Algorithm note:** The Python implementation corrects errors present in the
 vendor-supplied Matlab example code distributed with DPS 1341-00490

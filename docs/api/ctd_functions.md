@@ -59,6 +59,26 @@ counts or scaled L1 units. The converted seawater conductivity,
 CONDWAT_L1, is reported in S m$^{-1}$. As with temperature, conversions from 
 L0 to L1 depend on the instrument class and/or data delivery method.
 
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `g` | `CC_g` | Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered) |
+| `h` | `CC_h` | Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered) |
+| `i` | `CC_i` | Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered) |
+| `j` | `CC_j` | Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered) |
+| `g` | `CC_cg` | Factory calibration sheet (Deep SeapHOx V2) |
+| `h` | `CC_ch` | Factory calibration sheet (Deep SeapHOx V2) |
+| `i` | `CC_ci` | Factory calibration sheet (Deep SeapHOx V2) |
+| `j` | `CC_cj` | Factory calibration sheet (Deep SeapHOx V2) |
+| `ctcor` | `CC_ctcor` | Factory calibration sheet |
+| `cpcor` | `CC_cpcor` | Factory calibration sheet |
+| `wbotc` | `CC_wbotc` | Factory calibration sheet (SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### CONDWAT_L1 Algorithm
+
 **SBE 16Plus** (CTDBP, CTDPF-A/B): The raw count is converted to a frequency
 $f$ in kHz, then evaluated with a polynomial corrected for temperature and
 pressure:
@@ -67,11 +87,11 @@ $$f = \frac{c_0 \div  256}{1000}$$
 
 $$C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor}\times T + \text{CPcor}\times P}$$
 
-where $T$ is TEMPWAT_L1 ($^\circ\text{C}$), $P$ is PRESWAT_L1 (dbar), and
-$g$, $h$, $i$, $j$, CTcor, CPcor are factory calibration coefficients.
+where $T$ is TEMPWAT_L1 ($^\circ\text{C}$), $P$ is PRESWAT_L1 (dbar), and $g$, $h$, $i$, $j$, CTcor, CPcor (`g`, `h`,
+`i`, `j`, `ctcor`, `cpcor`) are from the factory calibration sheet.
 
 **SBE 37IM instrument-recovered** (CTDMO): Same polynomial as the SBE 16Plus
-path, but includes an additional wbotc correction to the frequency:
+path, but includes an additional wbotc correction (`wbotc`, from the factory calibration sheet) to the frequency:
 
 $$f = \frac{c_0 \div  256}{1000} \times \sqrt{1 + \text{wbotc}\times T}$$
 
@@ -89,8 +109,8 @@ $$f = c_0 \times \sqrt{1 + \text{wbotc} \times T}\ /\ 1000$$
 $$C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor} \times T
 + \text{CPcor} \times P}$$
 
-where $T$ is TEMPWAT_L1 ($^\circ$C), $P$ is PRESWAT_L1 (dbar), and $g$,
-$h$, $i$, $j$, wbotc, CTcor, CPcor are factory calibration coefficients.
+where $T$ is TEMPWAT_L1 ($^\circ$C), $P$ is PRESWAT_L1 (dbar), and $g$, $h$, $i$, $j$, wbotc, CTcor, CPcor (`g`, `h`,
+`i`, `j`, `wbotc`, `ctcor`, `cpcor`) are from the factory calibration sheet.
 See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 
 **SBE 52MP** (CTDPF-K/L): Linear scaling with a unit conversion from
@@ -115,6 +135,23 @@ data for internal storage or transmission. The converted seawater temperature,
 TEMPWAT_L1, is reported in $^\circ$C. Conversions from L0 to L1 depend on the 
 instrument class and/or data delivery method.
 
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `a0` | `CC_a0` | Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered) |
+| `a1` | `CC_a1` | Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered) |
+| `a2` | `CC_a2` | Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered) |
+| `a3` | `CC_a3` | Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered) |
+| `a0` | `CC_ta0` | Factory calibration sheet (Deep SeapHOx V2) |
+| `a1` | `CC_ta1` | Factory calibration sheet (Deep SeapHOx V2) |
+| `a2` | `CC_ta2` | Factory calibration sheet (Deep SeapHOx V2) |
+| `a3` | `CC_ta3` | Factory calibration sheet (Deep SeapHOx V2) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### TEMPWAT_L1 Algorithm
+
 **SBE 16Plus** (CTDBP, CTDPF-A/B): Raw counts $t_0$ are converted to seawater
 temperature ($^\circ$C) via an intermediate resistance quantity $R$:
 
@@ -124,7 +161,7 @@ $$R = \frac{MV \times 2.9 \times 10^9 + 1.024 \times 10^8}{2.048 \times 10^4 - M
 
 $$T_{L1} = \frac{1}{a_0 + a_1 \ln R + a_2 \ln^2 R + a_3 \ln^3 R} - 273.15$$
 
-where $a_0$, $a_1$, $a_2$, $a_3$ are factory calibration coefficients.
+where $a_0$, $a_1$, $a_2$, $a_3$ (`a0`-`a3`) are from the factory calibration sheet.
 
 **SBE 37IM telemetered and recovered_host** (CTDMO): The instrument outputs
 engineering units scaled to an integer. The L1 conversion is:
@@ -132,8 +169,8 @@ engineering units scaled to an integer. The L1 conversion is:
 $$T_{L1} = t_0 / 10000 - 10$$
 
 **SBE 37IM instrument-recovered** (CTDMO): Raw decimal counts $t_0$ are
-retained in the instrument-stored file and require the calibration-coefficient
-equation:
+retained in the instrument-stored file and require the calibration-coefficient equation, with $a_0$-$a_3$ (`a0`-`a3`)
+from the factory calibration sheet:
 
 $$T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15$$
 
@@ -144,7 +181,7 @@ the SBE 37IM instrument-recovered path, with the raw A/D counts used directly
 
 $$T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15$$
 
-where $a_0$, $a_1$, $a_2$, $a_3$ are factory calibration coefficients.
+where $a_0$, $a_1$, $a_2$, $a_3$ (`a0`-`a3`) are from the factory calibration sheet.
 
 **SBE 52MP** (CTDPF-K/L): The instrument outputs engineering units scaled
 to an integer. The L1 conversion is:
@@ -168,9 +205,42 @@ pressure, PRESWAT_L1, is reported in dbar relative to one standard atmosphere
 (10.1325 dbar). As with temperature, conversions from L0 to L1 depend on the 
 instrument class and/or data delivery method.
 
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `pa0` | `CC_pa0` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `pa1` | `CC_pa1` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `pa2` | `CC_pa2` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `ptca0` | `CC_ptca0` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `ptca1` | `CC_ptca1` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `ptca2` | `CC_ptca2` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `ptcb0` | `CC_ptcb0` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `ptcb1` | `CC_ptcb1` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `ptcb2` | `CC_ptcb2` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `ptempa0` | `CC_ptempa0` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `ptempa1` | `CC_ptempa1` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `ptempa2` | `CC_ptempa2` | Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2) |
+| `offset` | `CC_offset` | Factory calibration sheet (SBE 16Plus strain gauge) |
+| `C1` | `CC_C1` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `C2` | `CC_C2` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `C3` | `CC_C3` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `D1` | `CC_D1` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `D2` | `CC_D2` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `T1` | `CC_T1` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `T2` | `CC_T2` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `T3` | `CC_T3` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `T4` | `CC_T4` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `T5` | `CC_T5` | Factory calibration sheet (SBE 16Plus Digiquartz) |
+| `p_range_psia` | `CC_p_range` | Factory calibration sheet (SBE 37IM telemetered and recovered_host) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### PRESWAT_L1 Algorithm
+
 **SBE 16Plus -- strain-gauge pressure sensor** (CTDBP except N/O, CTDPF-A/B):
 
-$$t_v = $pt_0$ \div  13107$$
+$$t_v = pt_0 \div  13107$$
 
 $$t = \text{PTEMPA0} + \text{PTEMPA1} \times t_v + \text{PTEMPA2} \times t_v^2$$
 
@@ -182,9 +252,9 @@ $$p_{\text{psi}} = \text{PA0} + \text{PA1} \times n + \text{PA2} \times n^2$$
 
 $$P_{L1}\ = p_{\text{psi}} \times 0.689475729 - 10.1325 + \delta$$
 
-where $pt_0$ is the pressure sensor thermistor in counts, $\delta$ is an 
-optional Druck sensor offset correction (default 0 dbar) and all 
-calibration coefficients are from factory calibration sheets.
+where $pt_0$ is the pressure sensor thermistor in counts, $\delta$ is the Druck sensor offset correction (`offset`,
+dbar; default 0), and PTEMPA0-PTEMPA2, PTCA0-PTCA2, PTCB0-PTCB2, and PA0-PA2 (`ptempa0`-`ptempa2`, `ptca0`-`ptca2`,
+`ptcb0`-`ptcb2`, `pa0`-`pa2`) are all from the factory calibration sheet.
 
 **SBE 16Plus -- digiquartz pressure sensor** (CTDBP-N and CTDBP-O only):
 
@@ -206,10 +276,12 @@ $$p_{\text{psi}} = C\left(1 - \frac{T_0^2}{\tau^2}\right)\left(1 - D\left(1 - \f
 
 $$P_{L1} = p_{\text{psi}} \times 0.689475729 - 10.1325$$
 
-All calibration coefficients are from factory calibration sheets.
+where $C_1$-$C_3$, $D_1$-$D_2$, and $T_1$-$T_5$ (`C1`-`C3`, `D1`-`D2`, `T1`-`T5`) are from the factory calibration
+sheet.
 
 **SBE 37IM telemetered and recovered_host** (CTDMO): Raw pressure is a scaled 
-integer relative to a factory-set full-scale pressure range $P_{rng}$ (in psi):
+integer relative to the full-scale pressure range $P_{rng}$ (`p_range_psia`, psi, from the factory calibration
+sheet):
 
 $$P_{rng,dbar} = (P_{rng,psi} - 14.7) \times 0.6894757$$
 
@@ -235,8 +307,7 @@ $$p_{\text{psi}} = \text{PA0} + \text{PA1} \times n + \text{PA2} \times n^2$$
 
 $$P_{L1} = (p_{\text{psi}} - 14.7) \times 0.689475729$$
 
-where $p_0$ is the raw pressure count and all calibration coefficients are
-from factory calibration sheets.
+where $p_0$ is the raw pressure count and all calibration coefficients are from the factory calibration sheet.
 
 **SBE 52MP** (CTDPF-K/L):
 

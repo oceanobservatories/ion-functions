@@ -5,6 +5,8 @@
     are no longer in use because the OOI data system assembles instrument
     bursts in a way that is incompatible with this processing pipeline. They
     are retained for reference but are no longer used in OOI data production.
+    The FDCHP products in the `fdchp_a_dcl_instrument` stream are computed
+    onboard the instrument and reported directly.
 
 ## Background
 
@@ -16,6 +18,10 @@ accelerometers, 3-axis angular rate sensors, and a 3-axis magnetometer), forming
 instrument class deployed on select OOI surface buoys. Note, MicroStrain was acquired by Hottinger
 Bruel and Kjaer (HBK) in September 2023 and now operates as MicroStrain by HBK.
 
+| Class | Hardware | Platform | Designator Meaning |
+|---|---|---|---|
+| FDCHP-A | Gill Windmaster Pro (1561-PK-020) sonic anemometer with Lord MicroStrain 3DM-GX3-25 IMU | Surface moorings (CE02SHSM, CP01CNSM, GI01SUMO, GS01SUMO) | Flux Direct Covariance High Power |
+
 FDCHP collects 10 Hz data for 20 minutes out of every hour, yielding roughly 12000 records per
 dataset. `fdc_functions.py` parses the raw 1D input streams into discrete 12000-record dataset
 packets, computes the motion-corrected L1 wind velocity (WINDTUR) and sonic temperature
@@ -26,6 +32,10 @@ timestamps for the L1 and L2 arrays.
 Within the OOI data system, FDC data products fall under the Air-Sea Interface [sampling
 regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
 products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+The FDCHP has no calibration coefficients. The conversions from raw counts to physical units are fixed in the code
+(see [Instrument Frame Data and Unit Conversion](#instrument-frame-data-and-unit-conversion)), and the only
+calibration-record input, `CC_latitude`, is the deployment latitude taken from the deployment record.
 
 ### Primary Sources
 
@@ -42,7 +52,7 @@ WINDTUR-VLU_L1 (positive up). The sign convention follows a right-handed (x, y, 
 with x positive toward the buoy vane, y positive to port, z positive upward, and yaw positive
 for counter-clockwise rotation (the opposite of the typical left-handed compass convention).
 
-#### Instrument Frame Data and Calibration
+#### Instrument Frame Data and Unit Conversion
 
 Raw sonic anemometer velocities and speed of sound are converted from counts to physical units
 with a gain of 0.01 (cm/s to m/s). Raw angular rates and heading/pitch/roll are stored as
@@ -192,8 +202,7 @@ sonic temperature closely approximates; the small correction needed to convert f
 virtual temperature (using an independent estimate of the latent heat flux) is left to
 post-processing and is not computed by `ion-functions`.
 
-Full algorithm derivations, calibration procedures, and source references are listed in the
-[References](#references) section.
+Full algorithm derivations and source references are listed in the [References](#references) section.
 
 ---
 
