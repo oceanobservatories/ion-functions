@@ -135,7 +135,9 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=
     wdir = np.where(wdir < 0, wdir + np.pi * 2, wdir)  # 0 to 360 degrees, but still in radians
 
     # apply the wind speed correction factors (array specific and provided as calibration coefficients).
-    # calibration coefficients are provided as an array of (n, 2) or (n, 4), where n is the number of records.
+    # calibration coefficients are provided as an array of (n, 2) or (n, 4), where n is the number of records;
+    # a single set of coefficients (e.g. the default [0.0, 1.0]) is promoted to shape (1, 2) or (1, 4).
+    spd_corr = np.atleast_2d(spd_corr)
     if spd_corr.shape[1] == 2:
         # linear correction only (offset and slope, where the offset can be zero for a pure slope correction)
         wspd_cor = spd_corr[:, 0] + spd_corr[:, 1] * wspd

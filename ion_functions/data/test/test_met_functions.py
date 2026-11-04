@@ -1531,8 +1531,8 @@ class TestMetFunctionsUnit(BaseUnitTestCase):
             2014-12-29: Russell Desiderio. Extended tests.
         """
         # read in the input L0 test data ...
-        file = os.path.join(os.getcwd(),
-                            '../matlab_scripts/metbk/metbk_test_dat.txt')
+        file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'matlab_scripts', 'metbk',
+                            'metbk_test_dat.txt')
         with open(file, 'r') as f:
             lines = f.readlines()
 

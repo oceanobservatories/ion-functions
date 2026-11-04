@@ -38,10 +38,11 @@ class TestWAVFunctionsUnit(BaseUnitTestCase):
                             [0.2585, -0.8497, -0.0873, 0.3073, 0.5461]])
         # set expected results -- magnetic variation correction applied
         # (computed in Matlab using above values and mag_var.m)
-        self.xx_cor = np.array([[0.1099, -0.3221, -0.4025, 0.2092, 0.9243],
-                                [0.3087, 0.3555, -0.1980, 0.1822, -0.7144]])
-        self.yy_cor = np.array([[-0.3855, -0.0916, -0.9773, -0.9707, -1.2140],
-                                [0.1783, -0.9911, -0.0325, 0.2666, 0.7805]])
+        # expected values updated 2026-11-04 for the IGRF-14 magnetic declination model (previously WMM2010)
+        self.xx_cor = np.array([[0.1100, -0.3221, -0.4022, 0.2095, 0.9247],
+                                [0.3087, 0.3557, -0.1980, 0.1822, -0.7145]])
+        self.yy_cor = np.array([[-0.3854, -0.0917, -0.9774, -0.9707, -1.2137],
+                                [0.1784, -0.9910, -0.0325, 0.2666, 0.7804]])
 
     def test_wav_triaxys_nondir_freq(self):
         """
