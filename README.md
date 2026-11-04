@@ -1,138 +1,66 @@
 # ion-functions
 
 Python library of oceanographic data processing functions for the
-[Ocean Observatories Initiative (OOI)](https://oceanobservatories.org/).
-
-ion-functions transforms raw instrument data into calibrated scientific
-data products and applies additional corrections (e.g., magnetic declination) 
-to already calculated data products. It covers a broad range of instrument
-families, including CTD, ADCP, velocity, dissolved oxygen, CO<sub>2</sub>, fluorometry,
-pH, pressure, optical, meteorology, and more.
+[Ocean Observatories Initiative (OOI)](https://oceanobservatories.org/). It converts raw instrument output (L0) into
+calibrated (L1) and derived (L2) data products, and applies corrections such as magnetic declination to products
+computed onboard the instruments. Functions are organized by instrument family and take and return NumPy arrays.
 
 **Documentation:** https://oceanobservatories.github.io/ion-functions/
 
 **Repository:** https://github.com/oceanobservatories/ion-functions
 
-## Overview
-
-OOI instruments output raw data (L0) in instrument-specific units — counts,
-voltages, or proprietary formats. ion-functions applies vendor calibration
-coefficients and documented algorithms to produce:
-
-- **L1** — calibrated physical quantities (e.g., temperature in &deg;C, pressure
-  in dbar)
-
-Instruments also output data in already calculated physical quantities. These
-may require additional corrections (e.g., unit conversions, magnetic declination).
-ion-functions applies these corrections either as part of the conversion from L0 
-to L1, or to the already calculated physical quantities. Additional functions
-are included which are used in the calculations of derived products, where 2 or
-more L1 data products are combined to create a new L2 data product.
-
-- **L2** — derived scientific products (e.g., practical salinity, dissolved
-  oxygen concentration, partial pressure of CO<sub>2</sub>)
-
-The functions are organized according to instrument family and are 
-implemented as standalone Python modules under `ion_functions/data/`, with 
-pure functions that take NumPy arrays as input and return NumPy arrays as 
-output.
-
-Algorithms are derived from OOI Data Product Specifications (DPS), vendor
-documentation, and peer-reviewed literature. Where discrepancies exist
-between and within sources, the implemented code is authoritative. Discrepancies
-are noted in the documentation.
-
-## Requirements
-
-- Python = 3.12
-- Cython >= 3.0 (required to build C extensions)
-- NumPy >= 2.4
-- SciPy >= 1.17
-- [gsw](https://teos-10.github.io/GSW-Python/) >= 3.6 (TEOS-10 seawater
-  thermodynamics)
-- [ppigrf](https://github.com/IAGA-VMOD/ppigrf) >= 2.0 (geomagnetic field
-  model)
-- mkdocstrings (for the creation and editing of the documentation pages)
-- mkdocstrings-python
-- mkdocs-material
-
 ## Installation
 
-The recommended approach uses conda to create an isolated environment with
-all dependencies:
+Install [Miniforge](https://github.com/conda-forge/miniforge), which uses the conda-forge channel by default, then
+create the environment from `conda_env.yml` and install the package:
 
 ```bash
 git clone https://github.com/oceanobservatories/ion-functions.git
 cd ion-functions
 conda env create -f conda_env.yml
 conda activate ion
-pip install -e .
+pip install --no-build-isolation --no-deps -e .
 ```
 
-### Building the C extensions
-
-Two Cython extensions must be compiled before use:
-
-- `ion_functions/qc/qc_extensions.pyx` — quality control algorithms (stuck,
-  spike, gradient), wrapping C source in `extensions/`
-- `ion_functions/data/polycals.pyx` — polynomial calibration calculations
-
-`pip install -e .` will build them automatically. To rebuild explicitly:
-
-```bash
-python setup.py build_ext --inplace
-```
+Runtime dependencies are listed in `conda_env.yml` (pinned to the OOI production versions) and `pyproject.toml`; the
+test and documentation tools are optional extras in `pyproject.toml`. A C compiler is optional; see the
+[installation guide](https://oceanobservatories.github.io/ion-functions/installation/) for details.
 
 ## Running the tests
 
 ```bash
-pytest
+pip install --no-build-isolation -e ".[test]"         # test tools (pytest, matplotlib)
+pytest                                                # full suite
+pytest ion_functions/data/test/test_ctd_functions.py  # one instrument family
 ```
 
-To run tests for a specific instrument family:
-
-```bash
-pytest ion_functions/data/test/test_ctd_functions.py
-```
-
-### C extension tests
-
-A separate test suite exercises the C extensions directly:
-
-```bash
-make
-extensions/test
-```
-
-## Project structure
+## Project layout
 
 ```
 ion_functions/
-    data/           # Core data processing functions, one module per
-                    # instrument family (ctd_functions.py, do2_functions.py, …)
-    data/test/      # Unit tests, one file per data module
-    data/perf/      # Performance benchmarks (not part of normal test suite)
-    qc/             # Quality control functions and Cython extension
-    qc/test/        # Unit tests for QC functions
-extensions/         # C source for performance-critical QC algorithms
-docs/               # MkDocs documentation source
+    data/        instrument family modules (ctd_functions.py, do2_functions.py, ...)
+    data/test/   unit tests, one file per module
+    qc/          quality control functions and Cython extension
+    qc/test/     unit tests for the QC functions
+extensions/      C source for the QC and polynomial calibration extensions
+docs/            MkDocs documentation source
 ```
 
 ## Data product levels
 
 | Level | Description | Example |
 |-------|-------------|---------|
-| L0 | Raw instrument output (counts, voltages, proprietary units) | SBE thermistor counts |
-| L1 | Calibrated physical quantity | Temperature (°C) |
-| L2 | Derived scientific product | Practical salinity (PSS-78) |
+| L0 | Raw instrument output (counts, voltages, instrument-specific units) | Thermistor counts |
+| L1 | Computed from L0 inputs from one instrument with calibration coefficients and metadata, or an instrument-computed value rescaled or corrected | Seawater temperature (&deg;C) |
+| L2 | Derived value computed from at least one L1 or L2 product | Practical salinity (PSS-78) |
+
+Algorithms come from the OOI Data Product Specifications (DPS), vendor documentation, and peer-reviewed literature.
+Where sources disagree, the implemented code is authoritative and the discrepancy is noted in the documentation.
 
 ## Contributing
 
-Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for
-guidelines on submitting bug reports, proposing changes, and opening pull
-requests.
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for reporting bugs, proposing changes, and opening pull requests.
 
 ## License
 
-Copyright 2013 UC Regents. Licensed under the
-[Apache License, Version 2.0](LICENSE.txt).
+Copyright 2013 UC Regents. Licensed under the [Apache License, Version 2.0](LICENSE).

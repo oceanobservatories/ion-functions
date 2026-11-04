@@ -6,20 +6,30 @@ The Ocean Observatories Initiative deploys two families of pH instruments
 across its moored platforms. The table below lists the OOI instrument classes
 covered by this module.
 
-| Class | Hardware | Platform | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| PHSEN-A/D/E/F | Sunburst SAMI-pH | Moored (fixed depth) | pH Sensor |
-| PHSEN-G/H | Sea-Bird Scientific Deep SeapHOx V2 | Moored (fixed depth) | pH Sensor |
+| PHSEN-A/D/E/F | [Sunburst SAMI-pH](#sami-ph-functions-phsen-adef) | Moored (fixed depth) | pH Sensor |
+| PHSEN-G/H | [Sea-Bird Scientific Deep SeapHOx V2](#deep-seaphox-v2-functions-phsen-gh) ([instrument notes](../seaphox.md)) | Moored (fixed depth) | pH Sensor |
 
 `ph_functions.py` processes data from the [Sunburst Sensors SAMI-pH](https://www.sunburstsensors.com/products/oceanographic-ph-sensor.html)
 (PHSEN-A/D/E/F) and computes the L2 pH of seawater data product 
 (PHWATER_L2). `phsen_h_functions.py` processes data from the [Sea-Bird 
 Scientific Deep SeapHOx V2](https://www.seabird.com/products/deep-seaphox-v2-ph-sensor) 
 (PHSEN-G and PHSEN-H) and computes the same PHWATER_L2 data product. Both 
-instruments measure pH on the total hydrogen ion scale ($\text{pH}_T$). All 
-calibration coefficients are from factory calibration sheets supplied with 
-individual instruments. Within the OOI data system, pH functions fall under
-the Water Column science regime and the pH category.
+instruments measure pH on the total hydrogen ion scale ($\text{pH}_T$) and produce PHWATER_L2 directly from their raw
+L0 data; there is no intermediate L1 product.
+
+Within the OOI data system, pH data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+Calibration coefficients are from the factory calibration sheets supplied with individual instruments, except where
+noted in the Calibration Coefficients tables below.
+
+This page documents the algorithms used to compute the pH data products. For general guidance on working with OOI
+biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -30,40 +40,50 @@ the Water Column science regime and the pH category.
 
 ---
 
-### PHWATER_L2 — pH of Seawater
-
-PHWATER_L2 is the pH of seawater on the total hydrogen ion scale
-($\text{pH}_T$). Both PHSEN-A/D/E/F and PHSEN-G/H produce PHWATER_L2 directly 
-from their raw L0 data; there is no intermediate L1 product.
-
-#### Sunburst Sensors SAMI-pH
+### SAMI-pH -- PHSEN-A/D/E/F
 
 The SAMI-pH measures pH using a colorimetric reaction with the pH indicator
 meta-Cresol Purple (mCP). A seawater sample is pumped through a flow cell and
 injected with a pulse of indicator solution. Two LEDs illuminate the
-indicator-sample mixture at 434 nm and 578 nm — the peak absorbance wavelengths
+indicator-sample mixture at 434 nm and 578 nm -- the peak absorbance wavelengths
 of the protonated ($\text{HI}^-$) and deprotonated ($\text{I}^{2-}$) forms of
 mCP, respectively. The ratio of the absorbances at these two wavelengths is used
 to compute pH on the total scale.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `ea434` | `CC_ea434` | Factory calibration sheet |
+| `eb434` | `CC_eb434` | Factory calibration sheet |
+| `ea578` | `CC_ea578` | Factory calibration sheet |
+| `eb578` | `CC_eb578` | Factory calibration sheet |
+| `ind_slp` | `CC_ind_slp` | Set to 1 (no correction) |
+| `ind_off` | `CC_ind_off` | Set to 0 (no correction) |
+| `sami_bits` | `CC_sami_bits` | Instrument configuration (12- or 14-bit ADC) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### PHWATER_L2 -- pH of Seawater from SAMI-pH
 
 **L0 Inputs**
 
 Each SAMI-II data record contains two types of raw light measurements:
 
-- **Blank measurements** — 4 sets of 4 interleaved readings
+- **Blank measurements** -- 4 sets of 4 interleaved readings
   $[\text{ref}_{434},\ \text{sig}_{434},\ \text{ref}_{578},\ \text{sig}_{578}]$
   collected while pumping pure seawater (16 values total).
-- **Sample measurements** — 23 sets of 4 interleaved readings in the same
-  arrangement, collected while pumping the seawater–indicator mixture
+- **Sample measurements** -- 23 sets of 4 interleaved readings in the same
+  arrangement, collected while pumping the seawater-indicator mixture
   (92 values total).
 
 Raw signal intensities range from 0 to 4096 counts.
 
 **Thermistor Temperature**
 
-The raw thermistor count is converted to temperature in $^\circ$C. The
-conversion depends on the SAMI hardware generation (12-bit or 14-bit ADC).
-For 12-bit hardware (full-scale count $= 4096$):
+The raw thermistor count is converted to temperature in $^\circ$C. The conversion depends on the SAMI hardware
+generation (12-bit or 14-bit ADC), set by `sami_bits` from the instrument configuration. For 12-bit hardware (full-scale
+count $= 4096$):
 
 $$r_t = \ln\left(\frac{\text{Therm}}{4096 - \text{Therm}} \times 17400\right)$$
 
@@ -102,9 +122,8 @@ $$R = \frac{A_{578}}{A_{434}}$$
 **Temperature-Dependent Molar Absorptivities**
 
 The molar absorptivities of the two indicator forms are adjusted for
-temperature using the factory-supplied reference values $e_{a434}$,
-$e_{b434}$, $e_{a578}$, $e_{b578}$ at a reference temperature of
-24.788 $^\circ$C:
+temperature using the reference molar absorptivities $e_{a434}$, $e_{b434}$, $e_{a578}$, $e_{b578}$ (`ea434`, `eb434`,
+`ea578`, `eb578`, from the factory calibration sheet) at a reference temperature of 24.788 $^\circ$C:
 
 $$E_{a434} = e_{a434} - 26 \times (T_C - 24.788)$$
 
@@ -147,27 +166,27 @@ The first 5 of the 23 measurement sets are discarded. From the remaining 18,
 the 8 consecutive points with the highest linear $R^2$ between $C_\text{ind}$
 and $\text{pH}_\text{point}$ are selected. The final PHWATER_L2 value is
 the y-intercept of a linear regression of $\text{pH}_\text{point}$ on
-$C_\text{ind}$ through those 8 points — i.e., the pH extrapolated to zero
+$C_\text{ind}$ through those 8 points -- i.e., the pH extrapolated to zero
 indicator concentration.
 
 An impurity correction is applied when the extrapolated pH exceeds 8.2:
 
 $$\text{pH}_\text{final} = \text{pH} \times \text{ind_slp} + \text{ind_off}$$
 
-where `ind_slp` and `ind_off` are instrument-specific correction factors
-not described in DPS 1341-00510.
+where `ind_slp` and `ind_off` are the indicator impurity slope and offset correction factors, currently set to 1 and
+0 (no correction). This correction is not described in DPS 1341-00510.
 
 Output accuracy: $\pm 0.01$ pH units; precision $\pm 0.005$ pH units
-(DPS 1341-00510, §4.4). Algorithm results are valid between 0 and 35
+(DPS 1341-00510, Section 4.4). Algorithm results are valid between 0 and 35
 $^\circ$C and at salinities of $35 \pm 1$; salinity corrections
 from a co-located CTD extend the valid salinity range (DPS 1341-00510,
-§3.3).
+Section 3.3).
 
 ---
 
-#### Sea-Bird Scientific Deep SeapHOx V2
+### Deep SeapHOx V2 -- PHSEN-G/H
 
-The Deep SeapHOx V2 combines the Deep SeaFET V2 ISFET pH sensor with the
+The Deep SeapHOx V2 (see the [Deep SeapHOx V2 instrument notes](../seaphox.md)) combines the Deep SeaFET V2 ISFET pH sensor with the
 Sea-Bird Electronics SBE 37-SMP-ODO MicroCAT CTD+DO sensor. PHSEN-G and
 PHSEN-H differ only in the pressure rating of their strain-gauge pressure
 sensor (Sea-Bird Scientific Deep SeapHOx V2 data sheet, DS53, May 2025).
@@ -176,6 +195,18 @@ The ISFET external electrochemical cell exhibits a Nernstian response to pH
 and is sensitive to chloride activity. The raw ISFET voltage is digitized
 by a 23-bit ADC with a 2.5 V reference and unity gain and converted to
 volts before the pH calculation (Sea-Bird Scientific Application Note 99).
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `k0` | `CC_k0` | Factory calibration sheet |
+| `k2` | `CC_k2` | Factory calibration sheet |
+| `f` | `CC_f` | Factory calibration sheet ($f_1$-$f_6$) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### PHWATER_L2 -- pH of Seawater from Deep SeapHOx V2
 
 **PHWATER_L2 Calculation**
 
@@ -188,7 +219,7 @@ where $R = 8.3144621\ \text{J} \times (\text{mol} \times \text{K})^{-1}$,
 $T$ is temperature in K, and $F = 96485.365\ \text{C} \times \text{mol}^{-1}$.
 
 The pressure response of the sensor is modeled by a 6th-order polynomial
-in pressure $P$ (dbar) using factory coefficients $f_1$ through $f_6$
+in pressure $P$ (dbar) using the coefficients $f_1$ through $f_6$ (`f`, from the factory calibration sheet)
 (Application Note 99):
 
 $$f(P) = f_1 P + f_2 P^2 + f_3 P^3 + f_4 P^4 + f_5 P^5 + f_6 P^6$$
@@ -205,11 +236,12 @@ pH_T &= \frac{V_\text{FET/REF} - k_0 - k_2 \times t - f(P)}{S_\text{nernst}} \\
 &\quad - \log_{10}\left(\frac{1000 - 1.005 \times S}{1000}\right)
 \end{align}$$
 
-where $t$ is temperature in $^\circ$C, $S$ is practical salinity,
-$Cl_T$ is total chloride, $(\gamma_{\pm\text{HCl}})_{T\&P}$ is the HCl
-activity coefficient corrected for temperature and pressure, $S_T$ is
-total sulfate, and $K_{S,T\&P}$ is the acid dissociation constant of
-$\text{HSO}_4^-$ corrected for temperature and pressure.
+where $V_\text{FET/REF}$ is the ISFET voltage, $k_0$ (`k0`) is the sensor offset and $k_2$ (`k2`) the temperature slope,
+both from the factory calibration sheet, $t$ is temperature in $^\circ$C, $S$ is practical salinity, $Cl_T$ is total
+chloride, $(\gamma_{\pm\text{HCl}})_{T\&P}$ is the HCl activity coefficient at in situ temperature and pressure, $S_T$
+is total sulfate, and $K_{S,T\&P}$ is the acid dissociation constant of $\text{HSO}_4^-$ at in situ temperature and
+pressure (Sea-Bird Scientific AN99). $K_{S,T\&P}$ is obtained by applying a pressure correction (Millero 1982) to $K_S$
+(Dickson et al. 2007), which is already a function of salinity and temperature.
 
 The intermediate quantities are computed as follows (Application Note 99):
 
@@ -221,11 +253,11 @@ $$Cl_T = \frac{0.99889}{35.453} \times \frac{S}{1.80655} \times \frac{1000}{1000
 
 $$I = \frac{19.924 \times S}{1000 - 1.005 \times S}$$
 
-**Debye-Hückel constant** (Khoo et al. 1977):
+**Debye-H&uuml;ckel constant** (Khoo et al. 1977):
 
 $$A_{DH} = 3.4286 \times 10^{-6} \times t^2 + 6.7503 \times 10^{-4} \times t + 0.49172143$$
 
-**HCl activity coefficient — temperature only** (Khoo et al. 1977):
+**HCl activity coefficient -- temperature only** (Khoo et al. 1977):
 
 $$\log(\gamma_{\pm\text{HCl}})_T = \frac{-A_{DH} \times \sqrt{I}}{1 + 1.394 \times \sqrt{I}} + (0.08885 - 0.000111 \times t) \times I$$
 
@@ -233,7 +265,7 @@ $$\log(\gamma_{\pm\text{HCl}})_T = \frac{-A_{DH} \times \sqrt{I}}{1 + 1.394 \tim
 
 $$\bar{V}_\text{HCl} = 17.85 + 0.1044 \times t - 0.0001316 \times t^2$$
 
-**HCl activity coefficient — temperature and pressure** (Johnson et al. 2017):
+**HCl activity coefficient -- temperature and pressure** (Johnson et al. 2017):
 
 $$\log(\gamma_{\pm\text{HCl}})_{T\&P} = \log(\gamma_{\pm\text{HCl}})_T + \frac{\bar{V}_\text{HCl} \times p}{2 \times \ln(10) \times R \times T \times 10}$$
 
@@ -264,24 +296,23 @@ $$\bar{V}_S = -18.03 + 0.0466 \times t + 0.000316 \times t^2$$
 
 $$\bar{K}_S = \frac{-4.53 + 0.09 \times t}{1000}$$
 
-**Acid dissociation constant corrected for $T$ and $P$** (Millero 1982):
+**Acid dissociation constant of $\text{HSO}_4^-$ at in situ temperature and pressure** (pressure correction of $K_S$;
+Millero 1982):
 
 $$K_{S,T\&P} = K_S \times \exp\left(\frac{-\bar{V}_S \times p + 0.5 \times \bar{K}_S \times p^2}{R \times T \times 10}\right)$$
-
-Calibration coefficients $k_0$, $k_2$, and $f_1$–$f_6$ are from factory
-calibration sheets supplied by Sea-Bird Scientific with each instrument.
 
 Output accuracy: $\pm 0.05$ pH units; resolution 0.004 pH units; typical
 stability 0.003 pH units per month (Sea-Bird Scientific Deep SeapHOx V2
 data sheet, DS53, May 2025).
-See [Deep SeapHOx V2](../seaphox.md) for instrument architecture context.
 
 Full algorithm derivations, calibration procedures, and source references
 are listed in the [References](#references) section.
 
 ---
 
-## Core Functions
+## SAMI-pH Functions (PHSEN-A/D/E/F)
+
+### Core Functions
 
 ::: ion_functions.data.ph_functions.ph_calc_phwater
 
@@ -293,17 +324,7 @@ are listed in the [References](#references) section.
 
 ---
 
-::: ion_functions.data.phsen_h_functions.ph_total
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2026-01-21 | Samuel Dahlberg | Initial code, adapted from Christopher Wingard's ph_total in cgsn-processing |
-| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-## Helper Functions
+### Helper Functions
 
 ::: ion_functions.data.ph_functions.ph_434_intensity
 
@@ -347,6 +368,24 @@ are listed in the [References](#references) section.
 
 ---
 
+## Deep SeapHOx V2 Functions (PHSEN-G/H)
+
+### Core Functions
+
+See the [Deep SeapHOx V2 instrument notes](../seaphox.md) for how the pH, CTD, and DO subsystems and their data streams fit together.
+
+::: ion_functions.data.phsen_h_functions.ph_total
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2026-01-21 | Samuel Dahlberg | Initial code, adapted from Christopher Wingard's ph_total in cgsn-processing |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+### Helper Functions
+
 ::: ion_functions.data.phsen_h_functions.convert_ph_voltage_counts
 
 #### History
@@ -360,13 +399,13 @@ are listed in the [References](#references) section.
 ## References
 
 Byrne, R. H., Robertbaldo, G., Thompson, S. W. and Chen, C. T. A. (1988).
-Seawater pH measurements — an at-sea comparison of spectrophotometric and
-potentiometric methods. Deep-Sea Research Part A, 35(8): 1405–1410.
+Seawater pH measurements -- an at-sea comparison of spectrophotometric and
+potentiometric methods. Deep-Sea Research Part A, 35(8): 1405-1410.
 
 Clayton, T. D. and Byrne, R. H. (1993). Spectrophotometric seawater pH
-measurements — total hydrogen-ion concentration scale calibration of
+measurements -- total hydrogen-ion concentration scale calibration of
 m-Cresol Purple and at-sea results. Deep-Sea Research Part I, 40(10):
-2115–2129.
+2115-2129.
 
 Dickson, A. G., Sabine, C. L., and Christian, J. R. (2007). Guide to Best
 Practices for Ocean CO2 Measurements. PICES Special Publication 3, IOCCP
@@ -375,7 +414,7 @@ Report No. 8.
 Johnson, K. S., Jannasch, H. W., Coletti, L. J., Elrod, V. A., Martz, T. R.,
 Takeshita, Y., Carlson, R. J., and Connery, J. G. (2016). Deep-Sea DuraFET:
 A pressure tolerant pH sensor designed for global sensor networks. Analytical
-Chemistry, 88: 3249–3256.
+Chemistry, 88: 3249-3256.
 
 Johnson, K. S., Plant, J. N., and Maurer, T. L. (2017). Processing BGC-Argo
 pH data at the DAC level. BGC-Argo document.
@@ -383,25 +422,25 @@ pH data at the DAC level. BGC-Argo document.
 Khoo, K. H., Ramette, R. W., Culberson, C. H., and Bates, R. G. (1977).
 Determination of hydrogen ion concentrations in seawater from 5 C to 40 C:
 standard potentials at salinities 20 to 45%. Analytical Chemistry, 49:
-29–34.
+29-34.
 
 Liu, X., Patsavas, M. C., and Byrne, R. H. (2011). Purification and
 characterization of meta-cresol purple for spectrophotometric seawater pH
-measurements. Environmental Science and Technology, 45: 4862–4868.
+measurements. Environmental Science and Technology, 45: 4862-4868.
 
 Martz, T. R., Connery, J. G., and Johnson, K. S. (2010). Testing the
 Honeywell Durafet for seawater pH applications. Limnology and Oceanography:
-Methods, 8: 172–184.
+Methods, 8: 172-184.
 
 Martz, T. R., Carr, J. J., French, C. R., and DeGrandpre, M. D. (2003). A
 submersible autonomous sensor for spectrophotometric pH measurements of
-natural waters. Analytical Chemistry, 75: 1844–1850.
+natural waters. Analytical Chemistry, 75: 1844-1850.
 
 Millero, F. J. (1982). The effect of pressure on the solubility of minerals
-in water and seawater. Geochimica et Cosmochimica Acta, 46: 11–22.
+in water and seawater. Geochimica et Cosmochimica Acta, 46: 11-22.
 
 Millero, F. J. (1983). In Chemical Oceanography; Riley, J. P., Chester, R.,
-Eds.; Academic Press: London, Vol. 8, pp 1–88.
+Eds.; Academic Press: London, Vol. 8, pp 1-88.
 
 [OOI (2012). Data Product Specification for pH of Seawater. Document Control
 Number 1341-00510.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_Spec_PHWATER_OOI.pdf)
@@ -414,4 +453,4 @@ Sensors. SeaFET V2, Shallow SeapHOx V2, Deep SeapHOx V2, Floats.](https://242648
 
 Seidel, M. P., DeGrandpre, M. D., and Dickson, A. G. (2008). A sensor for
 in situ indicator-based measurements of seawater pH. Marine Chemistry,
-109: 18–28.
+109: 18-28.

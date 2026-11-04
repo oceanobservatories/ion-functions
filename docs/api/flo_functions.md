@@ -2,30 +2,37 @@
 
 ## Background
 
-The Ocean Observatories Initiative deploys the WET Labs ECO fluorometer
+The Ocean Observatories Initiative deploys the Sea-Bird Scientific (formerly WET Labs) ECO fluorometer
 family across its moored, profiling, and mobile platforms to measure
 fluorescence and optical backscatter. Two instrument classes are covered
 by this module.
 
-| Class | Hardware | Channels | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| FLORT | WET Labs ECO Triplet | 3 | Fluorometer, Three Wavelength |
-| FLORD | WET Labs ECO Dual | 2 | Fluorometer, Two Wavelength |
+| FLORT | Sea-Bird Scientific (formerly WET Labs) ECO Triplet | Moored (fixed depth), cabled shallow profilers, profilers, gliders, and AUVs | Fluorometer, Three Wavelength |
+| FLORD | Sea-Bird Scientific (formerly WET Labs) ECO Dual | Moored (fixed depth), cabled 200 m platforms, wire-following profilers, and gliders | Fluorometer, Two Wavelength |
 
 Fixed-platform instruments include a wiper to actively limit biofouling.
 Mobile-platform instruments (profilers, gliders, AUVs) use only passive
 mitigation (copper faceplates).
 
 `flo_functions.py` converts raw L0 count data from these instruments into
-three L1 data products — fluorometric chlorophyll-a concentration
+three L1 data products -- fluorometric chlorophyll-a concentration
 (CHLAFLO_L1), fluorometric CDOM concentration (CDOMFLO_L1), and the
-volume scattering function (FLUBSCT_L1) — and one L2 product, the total
-optical backscatter coefficient (FLUBSCT_L2). All calibration coefficients
-are from factory calibration sheets. Within the OOI data system, FLO
-functions fall under the Water Column science regime. FLORD instruments
-fall under the Chlorophyll a and Inherent Optical Properties categories;
-FLORT instruments additionally include the Colored Dissolved Organic Matter
-category.
+volume scattering function (FLUBSCT_L1) -- and one L2 product, the total
+optical backscatter coefficient (FLUBSCT_L2).
+
+Within the OOI data system, FLO data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+Calibration coefficients are from the factory calibration sheets supplied with individual instruments, except where
+noted in the Calibration Coefficients tables below.
+
+This page documents the algorithms used to compute the FLO data products. For general guidance on working with OOI
+biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -37,19 +44,37 @@ category.
 
 ---
 
-### CHLAFLO and CDOMFLO — Fluorescence Concentrations
+### CHLAFLO and CDOMFLO -- Fluorescence Concentrations
 
-Raw output from the FLORD/FLORT instrument is in counts, ranging from 0
-to approximately 4096. The L1 fluorescence concentrations are computed
+Raw output from the FLORD/FLORT instrument is in counts, ranging from 0 to approximately 4096.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `counts_dark` | `CC_dark_counts_chlorophyll_a` | Factory calibration sheet (CHLAFLO) |
+| `scale_factor` | `CC_scale_factor_chlorophyll_a` | Factory calibration sheet (CHLAFLO) |
+| `counts_dark` | `CC_dark_counts_cdom` | Factory calibration sheet (CDOMFLO) |
+| `scale_factor` | `CC_scale_factor_cdom` | Factory calibration sheet (CDOMFLO) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### CHLAFLO and CDOMFLO Algorithm
+
+The L1 fluorescence concentrations are computed
 from a linear scale-and-offset equation using factory-supplied calibration
 coefficients:
 
 $$XX = (C_\text{output} - C_\text{dc}) \times \text{SF}$$
 
-where $C_\text{output}$ is the raw count output, $C_\text{dc}$ is the
-dark count from the factory calibration sheet, and SF is the scale factor
-from the factory calibration sheet. The same equation applies to both
+where $C_\text{output}$ is the raw count output, $C_\text{dc}$ is the dark count (`counts_dark`) and SF is the scale
+factor (`scale_factor`), both from the factory calibration sheet. The same equation applies to both
 CHLAFLO and CDOMFLO; only the calibration coefficients and units differ.
+
+Chlorophyll-a absorbs light in the visible spectrum and re-emits a portion as fluorescence; the intensity of that
+fluorescence is used as a proxy for chlorophyll-a concentration, and therefore for phytoplankton biomass. CDOM is the
+fraction of dissolved organic matter that absorbs ultraviolet light and fluoresces in the visible blue; it is largely
+made up of tannins and lignins from decaying plant material and gives some water masses their tea-like color.
 
 For **CHLAFLO** (chlorophyll-a), SF has units of $\mu g\ L^{-1}\ \text{count}^{-1}$
 and the output is in $\mu g\ L^{-1}$. The instrument measures at
@@ -64,26 +89,44 @@ black tape over the detector, measured at the factory. The scale factor
 is calculated at the factory by obtaining a consistent output in a
 solution of known concentration and subtracting the dark count.
 
-**FLORT/FLORD gliders and AUVs**: Raw data from fluorometers on gliders
-and AUVs are processed onboard the vehicle using vendor software and
-transmitted already in decimal engineering units; `ion-functions` is not
-invoked for those deployments.
+**FLORT/FLORD gliders and AUVs**: Fluorescence (CHLAFLO, CDOMFLO) from gliders and AUVs is computed onboard the
+vehicle using vendor software and transmitted already in engineering units; `ion-functions` is not invoked for those
+products. Glider backscatter is the exception (see [FLUBSCT_L1](#flubsct_l1-total-volume-scattering-function) and
+[FLUBSCT_L2](#flubsct_l2-total-optical-backscatter-coefficient)).
 
 ---
 
 ### FLUBSCT_L1: Total Volume Scattering Function
 
-The L1 optical backscatter product is the total volume scattering function
-$\beta(\theta, \lambda)$ ($\text{m}^{-1}\ \text{sr}^{-1}$) at the
-instrument's effective (centroid) backscatter angle $\theta$ and measurement
-wavelength $\lambda$. It is computed from raw counts using the same
+The L1 optical backscatter product is the total volume scattering function $\beta(\theta, \lambda)$
+($\text{m}^{-1}\ \text{sr}^{-1}$) at the instrument's effective (centroid) backscatter angle $\theta$ and measurement
+wavelength $\lambda$.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `counts_dark` | `CC_dark_counts_volume_scatter` | Factory calibration sheet |
+| `scale_factor` | `CC_scale_factor_volume_scatter` | Factory calibration sheet |
+| `counts_dark` | `CC_1_`, `CC_2_`, `CC_3_dark_counts_volume_scatter` | Factory calibration sheet (ECO-BB3, 660/532/470 nm channels) |
+| `scale_factor` | `CC_1_`, `CC_2_`, `CC_3_scale_factor_volume_scatter` | Factory calibration sheet (ECO-BB3, 660/532/470 nm channels) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### FLUBSCT_L1 Algorithm
+
+The product is computed from raw counts using the same
 scale-and-offset equation as the fluorescence products:
 
 $$\beta(\theta, \lambda) = (C_\text{output} - C_\text{dc}) \times \text{SF}$$
 
 where SF has units of $(\text{m}^{-1}\ \text{sr}^{-1})\ \text{count}^{-1}$.
-Raw counts range from 0 to approximately 4210. The dark count and scale
-factor are from the factory calibration sheet.
+Raw counts range from 0 to approximately 4210. The dark count (`counts_dark`) and scale factor (`scale_factor`) are
+from the factory calibration sheet.
+
+On gliders, the FLORT-M and FLORD-M volume scattering function is computed onboard the vehicle. The ECO-BB3 (FLORT
+series O) on coastal gliders reports raw counts for each of its three channels, which `flo_beta` converts using the
+`CC_1_`, `CC_2_`, and `CC_3_` coefficients for the 660, 532, and 470 nm channels.
 
 The centroid angle $\theta$ and chi factor $\chi$ (used below) are 
 instrument-dependent:
@@ -97,24 +140,53 @@ All FLORD and FLORT backscatter channels use a nominal measurement
 wavelength of 700 nm. The ECO-BB3 (FLORT series O) is an exception with
 three backscatter channels at different visible wavelengths.
 
+The 3-channel values ($\theta$ = 124 deg, $\chi$ = 1.076) are from Sullivan et al. (2013), Table 6.2b ("ECO-BB");
+older WET Labs documentation lists the centroid angle as 117 deg. The 2-channel values are from M. Twardowski
+(personal communication). The chi factor is thought to be at most weakly dependent on wavelength, so these values
+apply at any visible wavelength. The ECO-BB3 was originally classified as OPTAA series M and is now FLORT series O.
+
+The chi factor is a scaling factor, not an angular resolution. In the OOI calibration records it is stored as
+`CC_angular_resolution`, a historical mislabel.
+
+In this documentation "total" can mean seawater plus particulate scattering, forward plus backward scattering, or
+backscatter integrated over all backward angles, depending on context.
+
 ### FLUBSCT_L2: Total Optical Backscatter Coefficient
 
 The L2 product is the total optical backscatter coefficient $b_b$
-($\text{m}^{-1}$), computed in four steps:
+($\text{m}^{-1}$), computed in four steps. It is computed by `ion-functions` for all FLORT and FLORD backscatter,
+including gliders, using the co-located (or glider) CTD temperature and practical salinity.
 
-**Step 1** — Compute the seawater volume scattering function $\beta_\text{sw}$
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `theta` | `CC_scattering_angle` | OOI processing setting (centroid angle; see the table in FLUBSCT_L1) |
+| `xfactor` | `CC_angular_resolution` | OOI processing setting (chi factor; the name is a historical mislabel) |
+| `wlngth` | `CC_measurement_wavelength` | Instrument specification (nominal 700 nm) |
+| `wlngth` | `CC_1_`, `CC_2_`, `CC_3_measurement_wavelength` | Instrument specification (ECO-BB3 channel wavelengths) |
+| `delta` | `CC_depolarization_ratio` | OOI processing setting (0.039; Farinato and Roswell, 1976) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### FLUBSCT_L2 Algorithm
+
+**Step 1** -- Compute the seawater volume scattering function $\beta_\text{sw}$
 and total seawater scattering coefficient $b_\text{sw}$ using the Zhang
 et al. (2009) model with co-located CTD temperature and salinity:
 
 $$[\beta_\text{sw}, b_\text{sw}] = \text{flo_zhang_scatter_coeffs}(\text{degC}, \text{psu}, \theta, \lambda)$$
 
-**Step 2** — Subtract the seawater contribution to obtain the particulate
+where $\theta$ (`theta`) is the instrument centroid angle and $\lambda$ (`wlngth`) the measurement wavelength, both
+OOI processing settings from the table in [FLUBSCT_L1](#flubsct_l1-total-volume-scattering-function).
+
+**Step 2** -- Subtract the seawater contribution to obtain the particulate
 volume scattering function:
 
 $$\beta_p(\theta, \lambda) = \beta(\theta, \lambda) - \beta_\text{sw}(\theta, \lambda)$$
 
-**Step 3** — Convert to the particulate backscattering coefficient using
-the chi factor $\chi$:
+**Step 3** -- Convert to the particulate backscattering coefficient using the chi factor $\chi$ (`xfactor`, an OOI
+processing setting from the table in [FLUBSCT_L1](#flubsct_l1-total-volume-scattering-function)):
 
 $$b_{bp} = \chi \times 2\pi \times \beta_p(\theta, \lambda)$$
 
@@ -123,7 +195,7 @@ chi factor relates the particulate volume scattering at angle $\theta$ to
 the total particulate backscattering coefficient integrated over all
 backward angles.
 
-**Step 4** — Add the seawater backscattering contribution. Because
+**Step 4** -- Add the seawater backscattering contribution. Because
 seawater scattering is symmetric in forward and backward directions, the
 backward component is half the total:
 
@@ -149,8 +221,8 @@ angles. The volume scattering function at angle $\theta$ is then:
 
 $$\beta_\text{sw}(\theta) = \beta_{90,\text{sw}} \left(1 + \frac{1 - \delta}{1 + \delta} \cos^2\theta \right)$$
 
-where $\delta = 0.039$ is the default depolarization ratio (Farinato and
-Roswell, 1976). Seawater density uses the UNESCO (1981) formulation. The
+where $\delta = 0.039$ (`delta`) is the depolarization ratio (Farinato and Roswell, 1976), an OOI processing
+setting. Seawater density uses the UNESCO (1981) formulation. The
 refractive index of air uses the Ciddor (1996) formula.
 
 Full algorithm derivations, calibration procedures, and source references
@@ -197,6 +269,7 @@ when a single computation is needed for multiple products.
 #### History
 | Date | Author | Change |
 |---|---|---|
+| unknown | Xiaodong Zhang (University of North Dakota) | Original Matlab code |
 | 2013-07-15 | Christopher Wingard | Initial code |
 | 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
 | 2026-04-17 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |

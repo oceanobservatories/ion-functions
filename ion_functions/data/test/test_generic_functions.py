@@ -417,6 +417,11 @@ class TestGenericFunctionsUnit(BaseUnitTestCase):
         were created and checked using online calculators.
 
         Implemented by Stuart Pearce, April 2013
+
+        2026-11-04: Expected values updated to the IGRF-14 model now used by
+        magnetic_declination (they differ from the WMM2010 values by up to
+        0.03 degrees). The WMM2010 test points at 100 km are heights, so they
+        are now passed with zflag = 1; they had been passed as depths.
         """
 
         lat = np.array([45.0, 45.0, 80.0, 0.0, -80.0, 80.0, 0.0, -80.0])
@@ -433,10 +438,13 @@ class TestGenericFunctionsUnit(BaseUnitTestCase):
                               3471292800.0,
                               3471292800.0])
 
-        decln = np.array([16.46093044096720, 16.46376239313584, -6.13, 0.97,
-                          70.21, -6.57, 0.94, 69.62])
+        # z is a depth for the first two points and a height for the rest
+        zflag = np.array([-1, -1, 1, 1, 1, 1, 1, 1])
 
-        out = gfunc.magnetic_declination(lat, lon, timestamp, z, -1)
+        decln = np.array([16.4532, 16.4561, -6.14, 0.95,
+                          70.18, -6.57, 0.93, 69.59])
+
+        out = gfunc.magnetic_declination(lat, lon, timestamp, z, zflag)
 
         self.assertTrue(np.allclose(out, decln, rtol=0, atol=1e-2))
 
