@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.prs_functions_ccmp
-@file ion_functions/data/prs_functions_ccmp.py
-@author Christopher Wingard
-@brief Module containing BOTTILT-CCMP correction coefficients.
+BOTTILT-CCMP compass correction lookup table, keyed by sensor serial
+number and uncorrected compass reading, used by
+prs_functions.prs_bottilt_ccmp.
+
+Author: Christopher Wingard
 """
 
 # Returns the corrected compass direction based on the sensor compass direction

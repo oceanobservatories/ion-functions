@@ -64,18 +64,11 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
 
     Notes
     -----
-    Implements the Sakamoto et al. (2009) TS-corrected nitrate algorithm.
-    For each light frame, absorbance is computed from the ratio of the
-    deionized water reference to the dark-corrected seawater spectrum.
-    The seawater bromide contribution is removed using temperature-
-    corrected seawater extinction coefficients scaled by practical
-    salinity. Nitrate concentration is then obtained by linear least
-    squares using a model matrix that includes the nitrate extinction
-    spectrum plus a linear baseline in wavelength.
-
-    The four fixed Sakamoto coefficients (Asak=1.1500276, Bsak=0.02840,
-    Csak=-0.3101349, Dsak=0.001222) parameterize the absorbance of
-    seasalt at 35 salinity vs temperature (Sakamoto et al. 2009, Eq. 4).
+    Absorbance is the log ratio of the deionized water reference to the
+    dark-corrected spectrum. Sea salt absorbance, from the seawater
+    extinction coefficients corrected to in situ temperature (Plant et al.
+    2023) and scaled by practical salinity, is subtracted, and nitrate is
+    fit by least squares together with a linear baseline in wavelength.
     """
     n_data_packets = data_in.shape[0]
 
@@ -87,12 +80,14 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
     if np.isscalar(wlupper):
         wlupper = np.tile(wlupper, n_data_packets)
 
-    # coefficients to equation 4 of Sakamoto et al 2009 that give the
-    # absorbance of seasalt at 35 salinity versus temperature
-    Asak = 1.1500276
-    Bsak = 0.02840
-    Csak = -0.3101349
-    Dsak = 0.001222
+    # coefficients of the 4th-order polynomial in (wavelength - 210 nm) from
+    # Plant et al. 2023 that describes the temperature dependence of the
+    # absorbance of sea salt
+    Aplant = 1.46380e-02
+    Bplant = 1.67660e-03
+    Cplant = 2.91898e-05
+    Dplant = -7.56395e-06
+    Eplant = 1.27353e-07
 
     NO3_conc = np.ones(n_data_packets)
 
@@ -123,11 +118,12 @@ def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
             Absorbance = np.log10(DI / SWcorr)
 
             # now estimate molar absorptivity of seasalt at in situ temperature
-            # use Satlantic calibration and correct as in Sakamoto et al. 2009.
-            SWA_Ext_at_T = (ESWA * ((Asak + Bsak * ctd_t[i]) / (Asak + Bsak * cal_temp[i]))
-                            * np.exp(Dsak * (ctd_t[i] - cal_temp[i]) * (WL - 210.0)))
+            # use Satlantic calibration and correct as in Plant et al. 2023.
+            WLs = WL - 210.0
+            TcorPoly = Aplant + Bplant * WLs + Cplant * WLs**2 + Dplant * WLs**3 + Eplant * WLs**4
+            SWA_Ext_at_T = ESWA * np.exp(TcorPoly * (ctd_t[i] - cal_temp[i]))
 
-            # absorbance due to seasalt
+            # absorbance due to sea salt
             A_SWA = ctd_sp[i] * SWA_Ext_at_T
             # subtract seasalt absorbance from measured absorbance
             Acomp = np.array(Absorbance - A_SWA, ndmin=2).T

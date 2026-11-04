@@ -15,88 +15,6 @@ from scipy import signal
 from ion_functions import deprecated
 
 
-"""
-#...................................................................................
-#...................................................................................
-    The FDCHP instrument outputs a dataset of 10 Hz data for approximately 20 minutes
-        every hour, resulting in around 12000 data records for each dataset.
-    The FDCHP data product algorithms parse incoming 1D array data into separate
-        datasets and operate on these datasets individually.
-    Each of the four L1 products (wind and temperature) consists of 11400 values for
-        each 20 minute dataset.
-    Each of the three L2 flux products consists of one value per 20 minute dataset.
-
-    Two additional auxiliary data products, not specified in the DPS, have been coded
-        to provide time bases for the L1 and L2 products.
-#...................................................................................
-#...................................................................................
-
-    LISTING OF SUBROUTINES BY ORDER IN THIS MODULE
-        Grouped by sections; alphabetical within each section.
-
-#...................................................................................
-#...................................................................................
-    Functions to compute the L1 FDCHP data products:
-
-        fdc_tmpatur:        TMPATUR
-        fdc_windtur_north:  WINDTUR-VLN
-        fdc_windtur_up:     WINDTUR-VLU
-        fdc_windtur_west:   WINDTUR-VLW
-#...................................................................................
-#...................................................................................
-    Functions to compute the L2 FDCHP data products:
-
-        fdc_fluxhot:            FLUXHOT
-        fdc_fluxmom_alongwind:  FLUXMOM-U
-        fdc_fluxmom_crosswind:  FLUXMOM-V
-#...................................................................................
-#...................................................................................
-    Functions to compute the auxiliary time base data products:
-
-        fdc_time_L1:  TIME_L1-AUX
-        fdc_time_L2:  TIME_L2-AUX
-#...................................................................................
-#...................................................................................
-    Primary routine to directly compute L1 wind products and L2 flux products:
-
-        fdc_flux_and_wind
-#...................................................................................
-#...................................................................................
-    Subroutines called by the primary routine fdc_flux_and_wind and its subroutines:
-
-        fdc_accelsclimode
-        fdc_alignwind
-        fdc_anglesclimodeyaw
-        fdc_despikesimple
-        fdc_detrend
-        fdc_filtcoef
-        fdc_grv
-        fdc_process_compass_data
-        fdc_quantize_data
-        fdc_sonic
-        fdc_trans
-        fdc_update
-#...................................................................................
-#...................................................................................
-
-"""
-####################################################################################
-####################################################################################
-####################################################################################
-"""
-#...................................................................................
-#...................................................................................
-    Functions to compute the L1 FDCHP data products:
-
-        fdc_tmpatur:        TMPATUR
-        fdc_windtur_north:  WINDTUR-VLN
-        fdc_windtur_up:     WINDTUR-VLU
-        fdc_windtur_west:   WINDTUR-VLW
-#...................................................................................
-#...................................................................................
-"""
-
-
 @deprecated
 def fdc_tmpatur(timestamp, sonicT):
     """
@@ -353,19 +271,6 @@ def fdc_windtur_west(timestamp, sonicU, sonicV, sonicW, heading,
     return wind_west
 
 
-"""
-#...................................................................................
-#...................................................................................
-    Functions to compute the L2 FDCHP data products:
-
-        fdc_fluxhot:            FLUXHOT
-        fdc_fluxmom_alongwind:  FLUXMOM-U
-        fdc_fluxmom_crosswind:  FLUXMOM-V
-#...................................................................................
-#...................................................................................
-"""
-
-
 @deprecated
 def fdc_fluxhot(timestamp, sonicU, sonicV, sonicW, sonicT, heading,
                 rateX, rateY, rateZ, accX, accY, accZ, lat):
@@ -556,18 +461,6 @@ def fdc_fluxmom_crosswind(timestamp, sonicU, sonicV, sonicW, heading,
     return fluxmom_cross
 
 
-"""
-#...................................................................................
-#...................................................................................
-    Functions to compute the auxiliary time base data products:
-
-        fdc_time_L1:  TIME_L1-AUX
-        fdc_time_L2:  TIME_L2-AUX
-#...................................................................................
-#...................................................................................
-"""
-
-
 @deprecated
 def fdc_time_L1(timestamp):
     """
@@ -664,17 +557,6 @@ def fdc_time_L2(timestamp):
     time_L2 = np.around(np.median(tmstmp, axis=-1))
 
     return time_L2
-
-
-"""
-#...................................................................................
-#...................................................................................
-    Primary routine to directly compute L1 wind products and L2 flux products:
-
-        fdc_flux_and_wind
-#...................................................................................
-#...................................................................................
-"""
 
 
 @deprecated
@@ -905,28 +787,6 @@ def fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT, heading,
     windspeeds = (vln, vlw, vlu)
 
     return fluxes, windspeeds
-
-
-"""
-#...................................................................................
-#...................................................................................
-    Subroutines called by the primary routine fdc_flux_and_wind and its subroutines:
-
-        fdc_accelsclimode
-        fdc_alignwind
-        fdc_anglesclimodeyaw
-        fdc_despikesimple
-        fdc_detrend
-        fdc_filtcoef
-        fdc_grv
-        fdc_process_compass_data
-        fdc_quantize_data
-        fdc_sonic
-        fdc_trans
-        fdc_update
-#...................................................................................
-#...................................................................................
-"""
 
 
 def fdc_accelsclimode(bhi, ahi, sf, accm, euler):
@@ -1316,8 +1176,9 @@ def fdc_filtcoef(fs, fc):
     fs : float
         Sampling frequency [Hz].
     fc : float
-        Inverse of the cutoff frequency used to derive the filter
-        (e.g. 1.0 / fltr_cutoff_freq) [s].
+        High-pass filter cutoff frequency [Hz]. Called with 1/12 Hz
+        from fdc_flux_and_wind and 1/240 Hz from
+        fdc_anglesclimodeyaw.
 
     Returns
     -------
@@ -1333,12 +1194,17 @@ def fdc_filtcoef(fs, fc):
     Not present in the DPS, which hardcodes the filter coefficients
     directly in Appendix A rather than computing them from a cutoff
     frequency; this function derives equivalent coefficients via
-    scipy.signal.buttord and scipy.signal.butter. High-pass filter
-    intended to retain real acceleration signal while removing drift;
-    the current filter design (chosen so the doubly-integrated
-    acceleration spectrum matches the frequency-domain integrated
-    power spectrum in the pass band) supersedes an earlier 1998
-    design.
+    scipy.signal.buttord and scipy.signal.butter, with the stopband
+    edge at 0.7 fc. The design follows DPS author Jim Edson's 1998
+    revision: a high-pass filter that retains real acceleration but
+    removes drift, chosen so that the spectrum of the doubly
+    integrated acceleration matches the frequency-domain integrated
+    power spectrum in the pass band. The comparison was most
+    sensitive to the transition width, which was placed in the
+    overlap region between the integrated angular-rate and
+    accelerometer-based angle estimates, shifting the filter to
+    higher frequencies by about 1/4 to 1/2 decade relative to the
+    earlier design.
     """
     nfreq = fs / 2.0
     wp = fc / nfreq
@@ -1488,6 +1354,13 @@ def fdc_quantize_data(*args):
     are truncated to 12000, and packets with fewer than 12000 records
     are padded to 12000 using the last data record. Also works if the
     only input variable is a 1D array of timestamps.
+
+    Short packets are padded with a constant copy of the last record
+    and are not flagged or excluded. Products computed from a heavily
+    padded packet are therefore based partly on synthetic data with
+    no turbulent fluctuation, which may bias the fluxes.
+    Discarding packets below a minimum record count was suggested by
+    the original developer as a possible enhancement.
     """
     # target number of datapoints per dataset: 10Hz for 20 minutes.
     npts = 12000

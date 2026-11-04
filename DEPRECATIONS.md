@@ -166,3 +166,6 @@ should not be used in new code. A future cleanup PR will remove them.
 | `met_functions.py` | `make_hourly_data` | Superseded by the official TOGA-COARE implementation (github.com/NOAA-PSL/COARE-algorithm); not decorated, internal-only helper |
 | `met_functions.py` | `warmlayer_time_keys` | Superseded by the official TOGA-COARE implementation (github.com/NOAA-PSL/COARE-algorithm); not decorated, internal-only helper |
 | `generic_functions.py` | `ntp_to_unix_time` | Superseded by the fixed 2208988800-second NTP/Unix epoch offset constant |
+| `prs_functions_ccmp_lily_compass_cals.py` | (entire module: `cmp_cal`) | Only consumer is the commented-out alternate algorithm in `prs_bottilt_ccmp`; remove both together. Not decorated, data module |
+| `qc/qc_functions.py` | `dataqc_solarelevation` | Never used in the OOI data system |
+| `qc/qc_functions.py` | `dataqc_condcompress` | Never used in the OOI data system |

@@ -154,11 +154,11 @@ def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578,
     ref : array_like, shape (nRec, 16)
         Raw blank reference and signal measurements from the PHSEN blank
         cycle. Contains 4 sets of 4 interleaved measurements:
-        [ref434, sig434, ref578, sig578] [counts].
+        ref434, sig434, ref578, sig578 [counts].
     light : array_like, shape (nRec, 92)
         Raw reference and signal measurements from the PHSEN measurement
         cycle. Contains 23 sets of 4 interleaved measurements:
-        [ref434, sig434, ref578, sig578] [counts].
+        ref434, sig434, ref578, sig578 [counts].
     therm : array_like, shape (nRec)
         Thermistor temperature at the end of the measurement cycle,
         converted to degrees C via ph_thermistor (ABSTHRM_L0) [deg_C].

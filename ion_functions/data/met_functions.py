@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.met_functions
-@file ion_functions/data/met_functions.py
-@author Russell Desiderio
-@brief Module containing functions for the met family of instruments
+Functions for the Bulk Meteorology (METBK) instrument package: L1
+barometric pressure and magnetically corrected wind velocity, the
+surface current and relative wind metadata products, and the L2 net
+shortwave irradiance, surface salinity, and specific humidity
+products. The TOGA-COARE bulk flux engine and the products built on
+it are deprecated in favor of the reference implementation at
+https://github.com/NOAA-PSL/COARE-algorithm.
+
+Author: Russell Desiderio
 """
 
 import numpy as np
@@ -12,196 +17,13 @@ import gsw
 from ion_functions.data.generic_functions import magnetic_declination, magnetic_correction
 from ion_functions import deprecated
 
-### July 2015
-""" use_velptmn_with_metbk """
-# Until VELPT current meters are
-#     (1) co-located with the METBK instrumentation to measure surface currents and
-#     (2) without ferrous interference aliasing the VELPT compass measurements,
-# VELPT current measurements should not be used to calculate relative wind speed (with
-# respect to water), which is the fundamental windspeed variable used in the METBK
-# calculations. Almost all of the METBK L2 data products require the relative wind speed
-# as a calling argument.
-#
-# The DPA to calculate relative wind speed over water is currently set to return actual
-# wind speed (as if the current velocities were measured to be 0) for all cases of input
-# current velocity values (absent, present, nan).
-#
-# A subset of the Endurance moorings are the only ones that have VELPT instruments
-# mounted to measure surface currents. However, their compass readings are inaccurate due
-# to the mounted instruments' proximity to iron ballast in the mooring.
-#
-# It is anticipated that these moorings will be modified to eliminate this magnetic
-# interference. To use the velptmn measurements for METBK calculations on these moorings,
-# a 5th variable, use_velptmn_with_metbk, has been added to the argument list of the
-# function met_relwind_speed. Implementation of the use_velptmn_with_metbk variable will
-# require that it be treated as a "platform/instrument instance specific metadata parameter
-# changeable in time". It has been coded to accept time-vectorized input.
-#
-### Further documentation is contained in the Notes to function met_relwind_speed in this module.
 
-"""
-    METBK SENSOR HEIGHTS
-
-    Note that the sensor heights may depend on the type of mooring:
-"""
-# these 4 sensor height variables were time-vectorized in the July 2015 revision.
-#     zwindsp = height of the wind measurement [m]
-#     ztmpair = height of air temperature measurement [m]
-#     zhumair = height of air humidity measurement [m]
-#     ztmpwat = depth of bulk sea surface water measurements [m]
-
-#     zvelptm = depth of surface current measurement [m]:
-#         this parameter is specified as metadata in the DPS;
-#         however, it is not used in the code.
-
-#     zinvpbl = planetary boundary layer/inversion height: this is
-#               set to a default value of 600m in the code, as is
-#               used in the DPS. this variable was written to accept
-#               time-vectorized input in the initial METBK code.
-
-"""
-    Set algorithm switches used in METBK bulk flux calculations
-"""
+# algorithm switches used in the (deprecated) METBK bulk flux calculations
 # The jcool and jwarm switches should be set to 1, always!
 JCOOLFL = 1      # 1=do coolskin calc
 JWARMFL = 1      # 1=do warmlayer calc
 #JWAVEFL         # only the windspeed parametrization of the charnok
                  # variable is coded; therefore this switch is not used.
-
-"""
-    LISTING OF SUBROUTINES BY ORDER IN THIS MODULE
-        Grouped by sections; alphabetical within each section.
-
-        The functions which directly calculate data products, both formal and meta,
-        are listed here as the actual data product name in upper case, rather than
-        by the name of the function; the functions themselves are named as
-        "met_prdname" except as noted.
-
-        All other functions are listed by function name.
-#...................................................................................
-    Functions to compute the L1 BULKMET (METBK) data products:
-    these do not require the 'warmlayer/coolskin' iteration algorithm:
-        BARPRES
-        WINDAVG-VLE  (function name: met_windavg_mag_corr_east)
-        WINDAVG-VLN  (function name: met_windavg_mag_corr_north)
-    These products are calculated at the native temporal resolution of the
-    instrument suite (roughly each minute).
-#...................................................................................
-#...................................................................................
-    Functions to compute the (simpler) metadata products that do not require
-    the 'warmlayer/coolskin' iteration algorithms:
-        CURRENT_DIR
-        CURRENT_SPD
-        RELWIND_DIR-AUX
-        RELWIND_SPD-AUX
-        TIMEFLX-AUX
-    These products are calculated at the native temporal resolution of the
-    instrument suite (roughly each minute), EXCEPT for TIMEFLX-AUX (hourly).
-#...................................................................................
-#...................................................................................
-    Functions to compute the (simpler) L2 METBK data products that do not require
-    the 'warmlayer/coolskin' iteration algorithm:
-        NETSIRR (this may operationally be an L1 product)
-        NETSIRR_HOURLY (on an hourly time base)
-        RAINRTE
-        SALSURF
-        SPECHUM
-    These products are calculated at the native temporal resolution of the
-    instrument suite (roughly each minute) except as noted.
-#...................................................................................
-#...................................................................................
-    Functions to compute the L2 METBK data products that do require
-    the 'warmlayer/coolskin' iteration algorithm:
-        BUOYFLS:  added DPA to match FDCHP, not in original DPS
-        BUOYFLX:  added DPA to match FDCHP, not in original DPS
-        FRSHFLX
-        HEATFLX
-        LATNFLX
-        MOMMFLX
-        NETLIRR
-        RAINFLX
-        SENSFLX
-        SPHUM2M
-        STABLTY:  metadata
-        TEMPA2M
-        TEMPSKN:  metadata
-        WIND10M
-    These products are calculated on hourly averages.
-#...................................................................................
-#...................................................................................
-    Functions to compute the L2 METBK data products (that do require
-    the 'warmlayer/coolskin' iteration algorithm) at the native temporal
-    resolution of the instrument suite (roughly per minute).
-
-    These functions were not specified in the DPS.
-        HEATFLX_MINUTE
-        LATNFLX_MINUTE
-        NETLIRR_MINUTE
-        SENSFLX_MINUTE
-#...................................................................................
-#...................................................................................
-    Simple subroutines used in the routines in the sections above.
-        air_density
-        airtemp_at_refheight
-        calc_rain_rate
-        gravity
-        latent_heat_vaporization_pure_water
-        net_longwave_up
-        psit_26
-        psiu_26
-        rain_heat_flux
-        sea_spechum
-        spechum_at_refheight
-        water_thermal_expansion
-        windspeed_at_refheight
-#...................................................................................
-#...................................................................................
-    seasurface_skintemp_correct  (wrapper; calls warmlayer and coare35vn)
-#...................................................................................
-#...................................................................................
-    warmlayer ('warmlayer' toga-coare routine)
-#...................................................................................
-#...................................................................................
-    coare35vn (bulk calculation + 'coolskin' toga-coare routines; plus subroutines)
-        charnock_wind
-        coolskin_parameters
-        effective_relwind
-        obukhov_for_init
-        obukhov_length_scale
-        roughness_lengths
-        roughness_lengths_for_init
-        scaling_parameters
-#...................................................................................
-#...................................................................................
-    Data conditioning and averaging routines
-        vet_velptmn_data
-        condition_data
-        make_hourly_data
-        warmlayer_time_keys
-#...................................................................................
-
-"""
-
-####################################################################################
-####################################################################################
-####################################################################################
-
-"""
-#...................................................................................
-#...................................................................................
-    Functions to compute the L1 BULKMET (METBK) data products:
-    do not require the 'warmlayer/coolskin' iteration algorithm:
-
-        BARPRES
-        WINDAVG-VLE  (met_windavg_mag_corr_east)
-        WINDAVG-VLN  (met_windavg_mag_corr_north)
-
-    These products are calculated at the native temporal resolution of the
-    instrument suite (roughly each minute).
-#...................................................................................
-#...................................................................................
-
-"""
 
 
 def met_barpres(mbar):
@@ -235,7 +57,7 @@ def met_windavg_mag_corr_east(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], 
     met_wind_mag_corr : Core algorithm; use directly for multi-output
         access to both corrected wind components.
     """
-    # calculate the magnetic declination using the WMM model and rotate the vectors
+    # calculate the magnetic declination using the IGRF model and rotate the vectors
     # from the magnetic to the true compass frame using met_wind_mag_corr
     uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr, zwindsp)
     return uu_cor
@@ -252,7 +74,7 @@ def met_windavg_mag_corr_north(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0],
     met_wind_mag_corr : Core algorithm; use directly for multi-output
         access to both corrected wind components.
     """
-    # calculate the magnetic declination using the WMM model and rotate the vectors
+    # calculate the magnetic declination using the IGRF model and rotate the vectors
     # from the magnetic to the true compass frame using met_wind_mag_corr
     uu_cor, vv_cor = met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr, zwindsp)
     return vv_cor
@@ -313,7 +135,9 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=
     wdir = np.where(wdir < 0, wdir + np.pi * 2, wdir)  # 0 to 360 degrees, but still in radians
 
     # apply the wind speed correction factors (array specific and provided as calibration coefficients).
-    # calibration coefficients are provided as an array of (n, 2) or (n, 4), where n is the number of records.
+    # calibration coefficients are provided as an array of (n, 2) or (n, 4), where n is the number of records;
+    # a single set of coefficients (e.g. the default [0.0, 1.0]) is promoted to shape (1, 2) or (1, 4).
+    spd_corr = np.atleast_2d(spd_corr)
     if spd_corr.shape[1] == 2:
         # linear correction only (offset and slope, where the offset can be zero for a pure slope correction)
         wspd_cor = spd_corr[:, 0] + spd_corr[:, 1] * wspd
@@ -331,22 +155,7 @@ def met_wind_mag_corr(uu, vv, lat, lon, timestamp, spd_corr=[0.0, 1.0], zwindsp=
     vv_cor = wspd_cor * np.cos(wdir)  # northward wind component
     return uu_cor, vv_cor
 
-"""
-#...................................................................................
-#...................................................................................
-    Functions to compute the (simpler) metadata products that do not require
-    the warmlayer/coolskin iteration algorithms:
-        CURRENT_DIR
-        CURRENT_SPD
-        RELWIND_DIR-AUX
-        RELWIND_SPD-AUX
-        TIMEFLX-AUX
 
-    These products are calculated at the native temporal resolution of the
-    instrument suite (roughly each minute), EXCEPT for TIMEFLX-AUX (hourly).
-#...................................................................................
-#...................................................................................
-"""
 def met_current_direction(vle_water, vln_water, use_velptmn_with_metbk=0):
     """
     Computes CURRENT_DIR, the direction of the METBK surface current,
@@ -516,7 +325,11 @@ def met_relwind_speed(vle_wind, vln_wind, vle_water=None, vln_water=None, use_ve
     Unlike met_relwind_direction, met_current_direction, and
     met_current_speed, bad or missing current data are set to 0 (not
     nan) here so actual wind speed is used in place of relative wind
-    speed, per the DPS. See docs site for full discussion.
+    speed, per the DPS. Earlier (non-OOI) FORTRAN and MATLAB
+    implementations of the COARE algorithm often used wind speed
+    rather than wind speed relative to the water, presumably because
+    surface current data were not available. See docs site for full
+    discussion.
     """
     # If the surface current velocities are missing or invalid, the actual windspeed
     # will be used in place of the relative windspeed over water to calculate the METBK
@@ -572,26 +385,6 @@ def met_timeflx(timestamp):
     # the only element of which is the desired rank 1 np.array
     fluxtime_hourly = make_hourly_data(timestamp)[0]
     return fluxtime_hourly
-
-
-"""
-#...................................................................................
-#...................................................................................
-    Functions to compute the (simpler) L2 METBK data products that do not require
-    the 'warmlayer/coolskin' iteration algorithm:
-
-        NETSIRR (this may operationally be an L1 product)
-        NETSIRR_HOURLY (hourly time base)
-        RAINRTE
-        SALSURF
-        SPECHUM
-
-    These products are calculated at the native temporal resolution of the
-    instrument suite (roughly each minute) except as noted.
-#...................................................................................
-#...................................................................................
-
-"""
 
 
 def met_netsirr(shortwave_down):
@@ -744,34 +537,6 @@ def met_spechum(tC_air, pr_air, relhum):
     return q_air
 
 
-"""
-#...................................................................................
-#...................................................................................
-    Functions to compute the L2 METBK data products that do require
-    the 'warmlayer/coolskin' iteration algorithm:
-
-        BUOYFLS:  added DPA to match FDCHP, not in original DPS
-        BUOYFLX:  added DPA to match FDCHP, not in original DPS
-        FRSHFLX
-        HEATFLX
-        LATNFLX
-        MOMMFLX
-        NETLIRR
-        RAINFLX
-        SENSFLX
-        SPHUM2M
-        STABLTY:  metadata
-        TEMPA2M
-        TEMPSKN:  metadata
-        WIND10M
-
-    These products are calculated on hourly averages.
-#...................................................................................
-#...................................................................................
-
-"""
-
-
 @deprecated
 def met_buoyfls(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
                 zwindsp, ztmpair, zhumair, lat=45.0, pr_air=1013.0,
@@ -786,6 +551,11 @@ def met_buoyfls(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     --------
     seasurface_skintemp_correct : Core algorithm; use directly for
         multi-output access.
+
+    Notes
+    -----
+    The FDCHP instrument computes the analogous FLUXHOT_L2 data
+    product, also as a buoyancy flux, using the sonic temperature.
     """
     # package input arguments.
     # 1st 4 arguments are warmlayer, followed by coolskin, then switches.
@@ -1351,22 +1121,6 @@ def met_wind10m(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
 
     return wind10m
 
-"""
-#...................................................................................
-#...................................................................................
-    Functions to compute the L2 METBK data products that do require
-    the 'warmlayer/coolskin' iteration algorithm, but at the native
-    temporal resolution of the instrument suite (roughly per minute).
-
-    These functions were not specified in the DPS.
-        HEATFLX_MINUTE
-        LATNFLX_MINUTE
-        NETLIRR_MINUTE
-        SENSFLX_MINUTE
-#...................................................................................
-#...................................................................................
-"""
-
 
 @deprecated
 def met_heatflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
@@ -1554,33 +1308,6 @@ def met_sensflx_minute(tC_sea, wnd, tC_air, relhum, timestamp, lon, ztmpwat,
     hsb = -rhoa * cpa * usr * tsr
 
     return hsb
-
-
-"""
-#...................................................................................
-#...................................................................................
-    Simple subroutines used in the routines in the sections above.
-        Does NOT include:
-            the routines condition_data and make_hourly_data
-            warmlayer and coolskin (coare35vn) routines
-
-    air_density
-    airtemp_at_refheight
-    calc_rain_rate
-    gravity
-    latent_heat_vaporization_pure_water
-    net_longwave_up
-    psit_26
-    psiu_26
-    rain_heat_flux
-    sea_spechum
-    spechum_at_refheight
-    water_thermal_expansion
-    windspeed_at_refheight
-#...................................................................................
-#...................................................................................
-
-"""
 
 
 def air_density(tC_air, air_pressure_mbar, relhum):
@@ -1894,9 +1621,9 @@ def rain_heat_flux(rainrate, Tsea, Tair, relhum, pr_air):
     Follows Gosnell, Fairall, and Webster (1995), with the raindrop
     wetbulb temperature approximated by a Taylor series expansion at
     the air temperature rather than the sea temperature, per a
-    correction suggested by Simon de Szoeke. See
-    rain_heat_flux_FLAWED [removed] for the superseded derivation this
-    replaced.
+    correction suggested by Simon de Szoeke. The problems with the
+    superseded derivation are described in the Additional Notes for
+    this function on the documentation site.
     """
     c2k = 273.15       # celsius to kelvin temperature constant
     Rgas_air = 287.05  # gas constant [J/kg/K] for air
@@ -2067,19 +1794,6 @@ def windspeed_at_refheight(wnd, usr, ut, zrefht, zwindsp, L):
     return windspeed
 
 
-"""
-#...................................................................................
-#...................................................................................
-
-    Wrapper function which calls the warmlayer and coolskin (coare35vn) routines:
-
-        seasurface_skintemp_correct
-
-#...................................................................................
-#...................................................................................
-"""
-
-
 @deprecated
 def seasurface_skintemp_correct(*args):
     """
@@ -2202,16 +1916,6 @@ def seasurface_skintemp_correct(*args):
     # append results of warmlayer calculation to output,
     # as is also done in original coare35vn warmlayer matlab code.
     return coare35vn(*coolskin_args) + (dt_wrm, tk_pwp, dsea)
-
-"""
-#...................................................................................
-#...................................................................................
-
-    warmlayer
-
-#...................................................................................
-#...................................................................................
-"""
 
 
 @deprecated
@@ -2441,27 +2145,6 @@ def warmlayer(rain_rate, timestamp, lon, ztmpwat, tC_sea, wnd, zwindsp, tC_air, 
 
     return dt_wrm, tk_pwp, dsea
 
-"""
-#...................................................................................
-#...................................................................................
-
-    coare35vn coolskin code and the subroutines unique to it.
-        coare35vn also calls subroutines located elsewhere in this module.
-
-    coare35vn
-
-        charnock_wind
-        coolskin_parameters
-        effective_relwind
-        obukhov_for_init
-        obukhov_length_scale
-        roughness_lengths
-        roughness_lengths_for_init
-        scaling_parameters
-#...................................................................................
-#...................................................................................
-"""
-
 
 @deprecated
 def coare35vn(tC_sea, wnd, zwindsp, tC_air, ztmpair, relhum, zhumair, pr_air,
@@ -2543,7 +2226,11 @@ def coare35vn(tC_sea, wnd, zwindsp, tC_air, ztmpair, relhum, zhumair, pr_air,
     variables are recomputed each pass; the original code carried
     little documentation of this structure. dter and dqer are forced
     to 0 when jcool=0, so downstream callers need no jcool
-    multiplicative factor.
+    multiplicative factor. Writing each data product as its own
+    function makes explicit where the coolskin and warmlayer
+    corrections are applied, and may expose inconsistent application
+    of those corrections to the bulk sea surface temperature between
+    data products.
     """
     # convert relative humidity to specific humidity [kg/kg]
     Qsea = sea_spechum(tC_sea, pr_air) / 1000.0          # surface water specific humidity
@@ -3098,20 +2785,6 @@ def scaling_parameters(dter, dqer, von, fdg, zwindsp, zhumair,
     return usr, qsr, tsr
 
 
-"""
-#...................................................................................
-#...................................................................................
-    Data conditioning and averaging routines
-
-        vet_velptmn_data
-        condition_data
-        make_hourly_data
-        warmlayer_time_keys
-#...................................................................................
-#...................................................................................
-"""
-
-
 def vet_velptmn_data(vle, vln, use_velptmn):
     """
     Replaces suspect VELPTMN current values with nan where the data
@@ -3247,7 +2920,10 @@ def make_hourly_data(*args):
     hourly timestamp is a half hour after the first each-minute
     datum, so hourly timestamps do not in general fall on the top of
     the hour. Uses np.bincount, weighted, to sum and average values
-    per bin.
+    per bin. Changing the timestamp to the start or end of the bin
+    (the latter may suit the time integrals in warmlayer) would change
+    the unit test check values and could warrant changing the
+    warmlayer threshold (see warmlayer_time_keys).
     """
     args = list(args)
 
@@ -3337,7 +3013,9 @@ def warmlayer_time_keys(localdate):
     fortran and MATLAB code. Applies a quality-control check the
     original code lacked: a day is only warmlayer-processed if it has
     data before the threshold, preventing e.g. a data gap that
-    straddles midnight from being misattributed to the wrong day.
+    straddles midnight from being misattributed to the wrong day. The
+    fixed threshold could in future be replaced by one calculated as
+    a function of time of year and latitude.
     """
     warmlayer_threshold_OOI = 21600.0  # equatorial sunrise: 6AM
 

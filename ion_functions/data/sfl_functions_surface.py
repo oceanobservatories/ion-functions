@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.sfl_functions_surface
-@file ion_functions/data/sfl_functions_surface.py
-@author Christopher Wingard
-@brief Module containing the temperature, conductivity and chloride calibration
-    surface from Larson et al 2007.
+Temperature, conductivity, and chloride calibration surface from
+Larson et al. (2007), used by sfl_functions.sfl_trhph_chloride.
+
+Author: Christopher Wingard
 """
 import numpy as np
 

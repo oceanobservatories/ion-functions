@@ -2,18 +2,25 @@
 
 ## Background
 
-The WAV instrument family consists of the TRIAXYS OEM Directional Wave Sensor
-(WAVSS), manufactured by AXYS Technologies, Inc. The WAVSS measures
+The WAV instrument family covers two kinds of wave instrument: the TRIAXYS OEM Directional Wave Sensor
+(WAVSS-A), manufactured by AXYS Technologies, Inc., and seafloor Teledyne RDI ADCPs with the waves option
+(WAVSS-M and WAVSS-Q), described below. The TRIAXYS (WAVSS-A) measures
 three-dimensional acceleration, rotation rate, and orientation in the Earth's
 magnetic field. From these measurements the instrument reconstructs the motion
 of the sea surface in the wave field. All wave statistics computations are
 performed internally by the instrument's proprietary firmware; ion-functions
 does not re-implement those algorithms.
 
-The WAVSS acquires accelerations over a sampling interval (typically 20 minutes) 
+The TRIAXYS acquires accelerations over a sampling interval (typically 20 minutes)
 and produces a single set of wave property values representing that interval, 
 along with a time series of platform displacement over the course of the 
 acquisition.
+
+| Class | Hardware | Platform | Designator Meaning |
+|---|---|---|---|
+| WAVSS-A | AXYS Technologies TRIAXYS OEM Directional Wave Sensor | Surface mooring buoys (Endurance, Pioneer, Global) | Surface Wave Spectra |
+| WAVSS-M | Teledyne RDI Workhorse Sentinel 600 kHz with Waves (WHS600-500-Waves), processed with WavesMon | Seafloor multi-function nodes at the Endurance inshore surface moorings (CE01ISSM, CE06ISSM) | ADCP Velocity Profiler (short range) with Waves |
+| WAVSS-Q | Teledyne RDI Workhorse Sentinel 600 kHz with Waves (WHS600-200-Waves), processed with WavesMon | Pioneer MAB seafloor frames (CP12CNSW, CP12WESW) | ADCP Velocity Profiler (short range) with Waves |
 
 Wave statistics are also measured by Teledyne RDI acoustic Doppler current
 profilers (ADCPs) mounted on the seafloor at the shallowest OOI Endurance
@@ -23,6 +30,17 @@ statistics. This measurement method is used at those sites because the moorings
 are shallow enough for a bottom-mounted ADCP to accurately measure wave parameters. 
 The WavesMon outputs map to the same WAVSTAT product namespace as the WAVSS outputs; 
 ion-functions is not involved in the WavesMon processing pipeline.
+
+Within the OOI data system, WAV data products fall under the Air-Sea Interface [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+No calibration coefficients are applied; the deployment latitude and longitude are used for the magnetic declination
+correction.
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -58,8 +76,8 @@ and their source(s).
 <tbody>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-N0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Number of zero crossings in displacement data (QC use)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">--</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA</td></tr>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HMAX</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Maximum wave height</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hmax</td></tr>
-<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HAVG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Mean significant wave height</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hm</td></tr>
-<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TAVG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Period associated with mean significant wave height</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Tz</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HAVG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Average wave height (zero-crossing)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hmean</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TAVG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Average wave period (zero-crossing)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Tmean</td></tr>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HSIG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height (average of highest 1/3)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: H13</td></tr>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-HM0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave height from spectral moments</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: Hs</td></tr>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-TSIG</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Significant wave period (average period of Hsig waves)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">s</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPWA. WavesMon: T13</td></tr>
@@ -82,7 +100,7 @@ and their source(s).
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-PND</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Power spectral density, non-directional spectra</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m<sup>2</sup> Hz<sup>-1</sup></td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPNA</td></tr>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-FND_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Frequency values for non-directional spectral bins</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Hz</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_nondir_freq</code></td></tr>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-FDS_L1</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Frequency values for directional spectral bins</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Hz</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_dir_freq</code></td></tr>
-<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-PDS</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Power spectral density, directional spectra</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m<sup>2</sup> Hz<sup>-1</sup></td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA. WavesMon: directional spectrum (mm<sup>2</sup> Hz<sup>-1</sup> per cycle, 90 directions x 128 frequencies)</td></tr>
+<tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-PDS</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Power spectral density of the directional frequency bins (direction and spread per bin in WAVSTAT-DDS and WAVSTAT-SDS)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">m<sup>2</sup> Hz<sup>-1</sup></td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA. WavesMon: two-dimensional directional spectrum, energy density (mm<sup>2</sup> Hz<sup>-1</sup>) for each of 90 direction bins (4 deg each) x 128 frequencies, as configured for OOI (DPS 1341-00450 describes the default of 64 frequencies and gives the units as "mm^2/Hz per cycle")</td></tr>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DDS_L0</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Wave directions from directional spectra (magnetic)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA</td></tr>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-DDS_L2</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Wave directions from directional spectra (true north)</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5"><code>wav_triaxys_correct_directional_wave_direction</code>. WavesMon: directional spectrum directions (reported to true north; no correction applied by ion-functions)</td></tr>
 <tr><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSTAT-SDS</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">Directional spread from directional spectra</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">deg</td><td style="white-space:normal;padding:6px 8px;border-bottom:1px solid #e1e4e5">WAVSS firmware; extracted from $TSPMA</td></tr>
@@ -97,6 +115,9 @@ and their source(s).
 </tbody>
 </table>
 
+WavesMon equivalences follow DPS 1341-00450 and are approximate; for example, the DPS maps the WavesMon peak direction
+(Dp) to WAVSTAT-D, which for the WAVSS is the mean wave direction.
+
 ### Frequency Vector Reconstruction
 
 WAVSTAT-FND_L1 and WAVSTAT-FDS_L1 are the frequency axis vectors for the
@@ -110,7 +131,7 @@ frequency bins, so the reconstruction is vectorized across packets. For the
 directional spectrum, the number of active bins (nfreq_dir) can vary between
 data packets as a function of ocean conditions -- it is always less than or
 equal to the number of non-directional bins. The output array is therefore
-sized to the (fixed) non-directional bin count, with fill values occupying
+sized to the (fixed) non-directional bin count, with the OOI system fill value (-9999999) occupying
 unused positions.
 
 The reconstruction for both products follows:
@@ -137,7 +158,8 @@ measurements.
 
 ### Magnetic Declination Correction
 
-The WAVSS contains an internal compass. Wave directions (WAVSTAT-D and
+All wave directions, from both the WAVSS and WavesMon, are reported as the direction from which the waves arrive,
+in degrees clockwise from north. The WAVSS contains an internal compass. Wave directions (WAVSTAT-D and
 WAVSTAT-DDS) and buoy displacement components (WAVSTAT-MOTX and WAVSTAT-MOTY)
 are reported in the magnetic reference frame. ion-functions corrects these to
 true north using the IGRF-14 magnetic declination model via
@@ -243,10 +265,10 @@ to NaN before applying the rotation and restoring fills afterward.
 #### Additional Notes
 
 The executable code in this function is identical to
-`magnetic_correction_vctrzd` in `adcp_functions.py`. It was written
+`magnetic_correction` in `adcp_functions.py`. It was written
 separately to handle the vectorized (i, j) case of one magnetic declination
 per ensemble of (u, v) pairs without a for loop. The ADCP DPS citations in
-the docstring reflect the origin of the rotation algorithm; the function
+the References section reflect the origin of the rotation algorithm; the function
 operates identically for (X, Y) displacement coordinates as for (u, v)
 velocity components.
 
@@ -291,19 +313,21 @@ Intensity. Document Control Number 1341-00750.](https://oceanobservatories.org/w
 [OOI (2013). Data Product Specification for Turbulent Velocity Profile and
 Echo Intensity. Document Control Number 1341-00760.](https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00760_Data_Product_SPEC_VELTURB_ECHOINT_OOI.pdf)
 
-Alken, P., Thebault, E., Beggan, C.D., et al. (2021). International
-Geomagnetic Reference Field: the thirteenth generation. *Earth Planets Space*,
-73, 49. <https://doi.org/10.1186/s40623-020-01288-x>
+Beggan, C.D., et al. (2026). International Geomagnetic Reference Field: the fourteenth
+generation. *Earth Planets Space*, 78, 127. <https://doi.org/10.1186/s40623-025-02360-0>
+
+International Association of Geomagnetism and Aeronomy (2024). IGRF-14. Zenodo.
+<https://doi.org/10.5281/zenodo.14012302>
 
 Strom, K.M., and Reistad, H. (2024). ppigrf: Python package for computing
 the International Geomagnetic Reference Field (IGRF).
 <https://github.com/IAGA-VMOD/ppigrf>
 
 AXYS Technologies Inc. *TRIAXYS OEM Directional Wave Sensor, User's Manual.*
-Sidney, BC: AXYS Technologies Inc. May 2005.
+Sidney, BC: AXYS Technologies Inc. May 2005. Available from the manufacturer (registration required).
 
 Teledyne RD Instruments. *WavesMon v3.08 User's Guide.* P/N 957-6232-00.
-Teledyne RD Instruments.
+Teledyne RD Instruments. Available from the manufacturer (registration required).
 
 Teledyne RD Instruments. *Waves Primer: Wave Measurements and the RDI ADCP
-Waves Array Technique.* Teledyne RD Instruments.
+Waves Array Technique.* Teledyne RD Instruments. Available from the manufacturer (registration required).

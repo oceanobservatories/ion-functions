@@ -35,10 +35,24 @@ def calc_l2_totlgas_smph2scon(port_timestamp_sampleint, L0_dissgas_sampleint,
 
     Parameters
     ----------
-    port_timestamp... : ndarray
-        L0 timing and intensity inputs; see calc_dissgas_smph2scon for
-        the full parameter list, which this function passes
-        through unchanged.
+    port_timestamp_sampleint : ndarray
+        Passed through unchanged to calc_dissgas_smph2scon.
+    L0_dissgas_sampleint : ndarray
+        Passed through unchanged to calc_dissgas_smph2scon.
+    gas_mode_sampleint : ndarray
+        Passed through unchanged to calc_dissgas_smph2scon.
+    port_timestamp_sampleint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_smph2scon.
+    ph_meter_sampleint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_smph2scon.
+    inlet_temp_sampleint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_smph2scon.
+    massp_rga_initial_mass : float
+        Passed through unchanged to calc_dissgas_smph2scon.
+    massp_rga_final_mass : float
+        Passed through unchanged to calc_dissgas_smph2scon.
+    massp_rga_steps_per_amu : float
+        Passed through unchanged to calc_dissgas_smph2scon.
     calibration_table : ndarray
         MASSP per-gas calibration coefficient table.
     l2_ph_calibration_table : ndarray
@@ -124,10 +138,24 @@ def calc_l2_totlgas_smpco2con(port_timestamp_sampleint, L0_dissgas_sampleint,
 
     Parameters
     ----------
-    port_timestamp... : ndarray
-        L0 timing and intensity inputs; see calc_dissgas_smpco2con for
-        the full parameter list, which this function passes
-        through unchanged.
+    port_timestamp_sampleint : ndarray
+        Passed through unchanged to calc_dissgas_smpco2con.
+    L0_dissgas_sampleint : ndarray
+        Passed through unchanged to calc_dissgas_smpco2con.
+    gas_mode_sampleint : ndarray
+        Passed through unchanged to calc_dissgas_smpco2con.
+    port_timestamp_sampleint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_smpco2con.
+    ph_meter_sampleint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_smpco2con.
+    inlet_temp_sampleint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_smpco2con.
+    massp_rga_initial_mass : float
+        Passed through unchanged to calc_dissgas_smpco2con.
+    massp_rga_final_mass : float
+        Passed through unchanged to calc_dissgas_smpco2con.
+    massp_rga_steps_per_amu : float
+        Passed through unchanged to calc_dissgas_smpco2con.
     calibration_table : ndarray
         MASSP per-gas calibration coefficient table.
     l2_ph_calibration_table : ndarray
@@ -301,10 +329,24 @@ def calc_l2_totlgas_bkgh2scon(port_timestamp_bkgndint, L0_dissgas_bkgndint,
 
     Parameters
     ----------
-    port_timestamp... : ndarray
-        L0 timing and intensity inputs; see calc_dissgas_bkgh2scon for
-        the full parameter list, which this function passes
-        through unchanged.
+    port_timestamp_bkgndint : ndarray
+        Passed through unchanged to calc_dissgas_bkgh2scon.
+    L0_dissgas_bkgndint : ndarray
+        Passed through unchanged to calc_dissgas_bkgh2scon.
+    gas_mode_bkgndint : ndarray
+        Passed through unchanged to calc_dissgas_bkgh2scon.
+    port_timestamp_bkgndint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_bkgh2scon.
+    ph_meter_bkgndint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_bkgh2scon.
+    inlet_temp_bkgndint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_bkgh2scon.
+    massp_rga_initial_mass : float
+        Passed through unchanged to calc_dissgas_bkgh2scon.
+    massp_rga_final_mass : float
+        Passed through unchanged to calc_dissgas_bkgh2scon.
+    massp_rga_steps_per_amu : float
+        Passed through unchanged to calc_dissgas_bkgh2scon.
     calibration_table : ndarray
         MASSP per-gas calibration coefficient table.
     l2_ph_calibration_table : ndarray
@@ -391,10 +433,24 @@ def calc_l2_totlgas_bkgco2con(port_timestamp_bkgndint, L0_dissgas_bkgndint,
 
     Parameters
     ----------
-    port_timestamp... : ndarray
-        L0 timing and intensity inputs; see calc_dissgas_bkgco2con for
-        the full parameter list, which this function passes
-        through unchanged.
+    port_timestamp_bkgndint : ndarray
+        Passed through unchanged to calc_dissgas_bkgco2con.
+    L0_dissgas_bkgndint : ndarray
+        Passed through unchanged to calc_dissgas_bkgco2con.
+    gas_mode_bkgndint : ndarray
+        Passed through unchanged to calc_dissgas_bkgco2con.
+    port_timestamp_bkgndint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_bkgco2con.
+    ph_meter_bkgndint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_bkgco2con.
+    inlet_temp_bkgndint_mcu : ndarray
+        Passed through unchanged to calc_dissgas_bkgco2con.
+    massp_rga_initial_mass : float
+        Passed through unchanged to calc_dissgas_bkgco2con.
+    massp_rga_final_mass : float
+        Passed through unchanged to calc_dissgas_bkgco2con.
+    massp_rga_steps_per_amu : float
+        Passed through unchanged to calc_dissgas_bkgco2con.
     calibration_table : ndarray
         MASSP per-gas calibration coefficient table.
     l2_ph_calibration_table : ndarray
@@ -567,10 +623,24 @@ def calc_l2_mswater_smpphval(port_timestamp_sampleint, L0_dissgas_sampleint,
 
     Parameters
     ----------
-    port_timestamp... : ndarray
-        L0 timing and intensity inputs; see SamplePreProcess for the
-        full parameter list, which this function passes through
-        unchanged.
+    port_timestamp_sampleint : ndarray
+        Passed through unchanged to SamplePreProcess.
+    L0_dissgas_sampleint : ndarray
+        Passed through unchanged to SamplePreProcess.
+    gas_mode_sampleint : ndarray
+        Passed through unchanged to SamplePreProcess.
+    port_timestamp_sampleint_mcu : ndarray
+        Passed through unchanged to SamplePreProcess.
+    ph_meter_sampleint_mcu : ndarray
+        Passed through unchanged to SamplePreProcess.
+    inlet_temp_sampleint_mcu : ndarray
+        Passed through unchanged to SamplePreProcess.
+    massp_rga_initial_mass : float
+        Passed through unchanged to SamplePreProcess.
+    massp_rga_final_mass : float
+        Passed through unchanged to SamplePreProcess.
+    massp_rga_steps_per_amu : float
+        Passed through unchanged to SamplePreProcess.
     calibration_table : ndarray
         MASSP per-gas calibration coefficient table.
     l2_ph_calibration_table : ndarray
@@ -636,10 +706,24 @@ def calc_l2_mswater_bkgphval(port_timestamp_bkgndint, L0_dissgas_bkgndint,
 
     Parameters
     ----------
-    port_timestamp... : ndarray
-        L0 timing and intensity inputs; see BackgroundPreProcess for the
-        full parameter list, which this function passes through
-        unchanged.
+    port_timestamp_bkgndint : ndarray
+        Passed through unchanged to BackgroundPreProcess.
+    L0_dissgas_bkgndint : ndarray
+        Passed through unchanged to BackgroundPreProcess.
+    gas_mode_bkgndint : ndarray
+        Passed through unchanged to BackgroundPreProcess.
+    port_timestamp_bkgndint_mcu : ndarray
+        Passed through unchanged to BackgroundPreProcess.
+    ph_meter_bkgndint_mcu : ndarray
+        Passed through unchanged to BackgroundPreProcess.
+    inlet_temp_bkgndint_mcu : ndarray
+        Passed through unchanged to BackgroundPreProcess.
+    massp_rga_initial_mass : float
+        Passed through unchanged to BackgroundPreProcess.
+    massp_rga_final_mass : float
+        Passed through unchanged to BackgroundPreProcess.
+    massp_rga_steps_per_amu : float
+        Passed through unchanged to BackgroundPreProcess.
     calibration_table : ndarray
         MASSP per-gas calibration coefficient table.
     l2_ph_calibration_table : ndarray
@@ -3349,17 +3433,17 @@ def SamplePreProcess(port_timestamp_sampleint, L0_dissgas_sampleint, gas_mode_sa
 
     Parameters
     ----------
-    port_timestamp... : ndarray
+    port_timestamp_sampleint : ndarray
         L0 port timestamps for the mass spectral data.
-    L0_dissgas... : ndarray
+    L0_dissgas_sampleint : ndarray
         L0 mass spectral intensity data set [A].
-    gas_mode... : ndarray
+    gas_mode_sampleint : ndarray
         GASMODE auxiliary data product for this water source.
-    port_timestamp..._mcu : ndarray
+    port_timestamp_sampleint_mcu : ndarray
         MCU timestamps for the pH and temperature sensors.
-    ph_meter..._mcu : ndarray
+    ph_meter_sampleint_mcu : ndarray
         Raw pH signal intensity [dimensionless].
-    inlet_temp..._mcu : ndarray
+    inlet_temp_sampleint_mcu : ndarray
         Sample or background temperature [deg_C]; -127 and 85 are
         replaced with NaN as instrument not-sampling fill values.
     mass_table : ndarray
@@ -3483,17 +3567,17 @@ def BackgroundPreProcess(port_timestamp_bkgndint, L0_dissgas_bkgndint, gas_mode_
 
     Parameters
     ----------
-    port_timestamp... : ndarray
+    port_timestamp_bkgndint : ndarray
         L0 port timestamps for the mass spectral data.
-    L0_dissgas... : ndarray
+    L0_dissgas_bkgndint : ndarray
         L0 mass spectral intensity data set [A].
-    gas_mode... : ndarray
+    gas_mode_bkgndint : ndarray
         GASMODE auxiliary data product for this water source.
-    port_timestamp..._mcu : ndarray
+    port_timestamp_bkgndint_mcu : ndarray
         MCU timestamps for the pH and temperature sensors.
-    ph_meter..._mcu : ndarray
+    ph_meter_bkgndint_mcu : ndarray
         Raw pH signal intensity [dimensionless].
-    inlet_temp..._mcu : ndarray
+    inlet_temp_bkgndint_mcu : ndarray
         Sample or background temperature [deg_C]; -127 and 85 are
         replaced with NaN as instrument not-sampling fill values.
     mass_table : ndarray
@@ -3603,17 +3687,17 @@ def Cal1PreProcess(port_timestamp_calint01, L0_dissgas_calint01, gas_mode_calint
 
     Parameters
     ----------
-    port_timestamp... : ndarray
+    port_timestamp_calint01 : ndarray
         L0 port timestamps for the mass spectral data.
-    L0_dissgas... : ndarray
+    L0_dissgas_calint01 : ndarray
         L0 mass spectral intensity data set [A].
-    gas_mode... : ndarray
+    gas_mode_calint01 : ndarray
         GASMODE auxiliary data product for this water source.
-    port_timestamp..._mcu : ndarray
+    port_timestamp_calint01_mcu : ndarray
         MCU timestamps for the pH and temperature sensors.
-    ph_meter..._mcu : ndarray
+    ph_meter_calint01_mcu : ndarray
         Raw pH signal intensity [dimensionless].
-    inlet_temp..._mcu : ndarray
+    inlet_temp_calint01_mcu : ndarray
         Sample or background temperature [deg_C]; -127 and 85 are
         replaced with NaN as instrument not-sampling fill values.
     mass_table : ndarray
@@ -3701,17 +3785,17 @@ def Cal2PreProcess(port_timestamp_calint02, L0_dissgas_calint02, gas_mode_calint
 
     Parameters
     ----------
-    port_timestamp... : ndarray
+    port_timestamp_calint02 : ndarray
         L0 port timestamps for the mass spectral data.
-    L0_dissgas... : ndarray
+    L0_dissgas_calint02 : ndarray
         L0 mass spectral intensity data set [A].
-    gas_mode... : ndarray
+    gas_mode_calint02 : ndarray
         GASMODE auxiliary data product for this water source.
-    port_timestamp..._mcu : ndarray
+    port_timestamp_calint02_mcu : ndarray
         MCU timestamps for the pH and temperature sensors.
-    ph_meter..._mcu : ndarray
+    ph_meter_calint02_mcu : ndarray
         Raw pH signal intensity [dimensionless].
-    inlet_temp..._mcu : ndarray
+    inlet_temp_calint02_mcu : ndarray
         Sample or background temperature [deg_C]; -127 and 85 are
         replaced with NaN as instrument not-sampling fill values.
     mass_table : ndarray

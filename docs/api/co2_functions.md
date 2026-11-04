@@ -6,18 +6,28 @@ The Ocean Observatories Initiative deploys two families of CO$_2$ instruments
 across its surface and subsurface platforms. The table below lists the OOI
 instrument classes covered by this module.
 
-| Class | Hardware | Platform                           | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|------------------------------------|--------------------|
-| PCO2W | Sunburst SAMI-CO2 | Moored (fixed depth) and Profiling | pCO$_2$, Seawater  |
-| PCO2A | Pro-Oceanus CO2-Pro | Surface buoys                      | pCO$_2$, Air-Sea   |
+| PCO2W | [Sunburst SAMI-CO2](#sami-co2-functions-pco2w) | Moored (fixed depth) and Profiling | pCO$_2$, Seawater  |
+| PCO2A | [Pro-Oceanus CO2-Pro](#pro-oceanus-co2-pro-functions-pco2a) | Surface buoys                      | pCO$_2$, Air-Sea   |
 
 `co2_functions.py` processes data from both instrument classes and computes
 a third derived product, CO$_2$ flux from the ocean to the atmosphere 
 (CO2FLUX_L2), using auxiliary bulk meteorology data from the METBK instrument 
-class. Within the OOI data system, PCO2W instruments fall under the Water
-Column science regime and the Dissolved CO$_2$ category. PCO2A instruments
-fall under the Air-Sea Interface and Surface Water regimes and the same
-Dissolved CO$_2$ category.
+class.
+
+Within the OOI data system, PCO2W data products (PCO2WAT) fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/); PCO2A data products (PCO2ATM, PCO2SSW) and CO2FLUX fall under
+the Air-Sea Interface sampling regime (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+PCO2W calibration coefficients are from factory calibration sheets supplied with individual instruments; PCO2A reports
+xCO$_2$ computed internally and requires no calibration coefficients.
+
+This page documents the algorithms used to compute the CO2 data products. For general guidance on working with OOI
+biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -29,24 +39,40 @@ Dissolved CO$_2$ category.
 
 ---
 
-### PCO2WAT_L1 — Partial Pressure of CO<sub>2</sub> in Seawater
+### PCO2WAT_L1 -- Partial Pressure of CO<sub>2</sub> in Seawater
 
 PCO2WAT_L1 is the partial pressure of CO$_2$ (pCO$_2$, $\mu$atm) in 
 seawater at depth, computed from the [Sunburst SAMI-CO2](https://www.sunburstsensors.com/products/oceanographic-carbon-dioxide-sensor.html) (PCO2W). The SAMI-CO2 
 uses a bromothymol blue (BTB) pH indicator solution that equilibrates with the
 ambient seawater through a permeable silicone membrane. The equilibrated
 indicator solution passes through an optical cell where absorbance is
-measured at 434 nm and 620 nm — the peak absorbance wavelengths for the
+measured at 434 nm and 620 nm -- the peak absorbance wavelengths for the
 protonated and deprotonated forms of the indicator. Periodic blank
 measurements (every 3.5 days) correct for drift in the electro-optical
 system.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `calt` | `CC_calt` | Factory calibration sheet |
+| `cala` | `CC_cala` | Factory calibration sheet |
+| `calb` | `CC_calb` | Factory calibration sheet |
+| `calc` | `CC_calc` | Factory calibration sheet |
+| `ea434` | `CC_ea434` | Factory calibration sheet (accepted but not used; see Additional Notes) |
+| `eb434` | `CC_eb434` | Factory calibration sheet (accepted but not used; see Additional Notes) |
+| `ea620` | `CC_ea620` | Factory calibration sheet (accepted but not used; see Additional Notes) |
+| `eb620` | `CC_eb620` | Factory calibration sheet (accepted but not used; see Additional Notes) |
+| `sami_bits` | `CC_sami_bits` | Instrument configuration (12- or 14-bit ADC) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 #### L0 Inputs and Blank Normalization
 
 The SAMI-CO2 outputs two record types:
 
-- **Type 4** — regular measurement (used to compute PCO2WAT_L1)
-- **Type 5** — blank measurement (used to correct Type 4 records)
+- **Type 4** -- regular measurement (used to compute PCO2WAT_L1)
+- **Type 5** -- blank measurement (used to correct Type 4 records)
 
 Each record contains a 434 nm ratio (`Ratio434`), a 620 nm ratio (`Ratio620`), 
 and a raw thermistor count (`Therm`). Raw blank counts from Type 5 records are
@@ -58,8 +84,8 @@ $$A_{620,blank} = \frac{\text{Ratio620}_{blank}}{16384}$$
 
 #### Thermistor Temperature
 
-The raw thermistor count is converted to degrees C. The conversion depends
-on the SAMI hardware generation (12-bit or 14-bit ADC). For 12-bit hardware
+The raw thermistor count is converted to degrees C. The conversion depends on the SAMI hardware generation (12-bit
+or 14-bit ADC), set by `sami_bits` from the instrument configuration. For 12-bit hardware
 (full-scale count $= 4096$):
 
 $$r_t = \ln\left(\frac{\text{Therm}}{4096 - \text{Therm}} \times 17400\right)$$
@@ -103,15 +129,14 @@ $$qcc = \frac{-\text{CalB} + \sqrt{\text{CalB}^2 - 4 \times \text{CalA} \times (
 
 $$pCO_2 = 10^{qcc}$$
 
+where CalT (`calt`, $^\circ$C) is the calibration temperature and CalA, CalB, and CalC (`cala`, `calb`, `calc`) are
+the quadratic calibration curve coefficients, all from the factory calibration sheet supplied after each calibration
+or refurbishment cycle.
+
 The equilibration constants $e_1 = 0.0043$, $e_2 = 2.136$, $e_3 = 0.2105$
 are fixed values provided by Sunburst Sensors based on laboratory
 determinations with the BTB indicator batch and are not recalculated per
 calibration cycle.
-
-The instrument-specific calibration coefficients CalT, CalA, CalB, and CalC
-are provided by the manufacturer after each calibration or refurbishment
-cycle and are made available to the [OOI Asset Management database via CSV files 
-uploaded to GitHub](https://github.com/oceanobservatories/asset-management/).
 
 **Algorithm note:** The Python implementation corrects errors present in the
 vendor-supplied Matlab example code distributed with DPS 1341-00490
@@ -122,7 +147,7 @@ Output accuracy: $\pm 3 \times \mu\text{atm}$; precision $<1 \times \mu\text{atm
 
 ---
 
-### PCO2ATM_L1 and PCO2SSW_L1 — pCO<sub>2</sub> in Air and Surface Seawater
+### PCO2ATM_L1 and PCO2SSW_L1 -- pCO<sub>2</sub> in Air and Surface Seawater
 
 PCO2ATM_L1 and PCO2SSW_L1 are the partial pressures of CO$_2$ (pCO$_2$, $\mu$atm) in
 atmosphere and surface seawater, respectively. Both are computed from the
@@ -152,7 +177,7 @@ Output accuracy: $\pm 1 \times \mu\text{atm}$; precision $\pm 0.01 \times \mu\te
 
 ---
 
-### CO2FLUX_L2 — Air-Sea Flux of CO<sub>2</sub>
+### CO2FLUX_L2 -- Air-Sea Flux of CO<sub>2</sub>
 
 CO2FLUX_L2 is the estimate of the flux of CO$_2$ across the air-sea 
 interface. It is computed from PCO2SSW_L1 and PCO2ATM_L1 and select 
@@ -163,25 +188,25 @@ speed at 10 m height (WIND10M_L2).
 The flux is positive when directed from the ocean to the atmosphere. The 
 computation follows these steps:
 
-**Step 1** — Convert pCO$_2$ (for both air and water) from $\mu$atm to atm.
+**Step 1** -- Convert pCO$_2$ (for both air and water) from $\mu$atm to atm.
 
 $$pCO_2,air = pCO_2,air \div 10^6$$
 
 $$pCO_2,water = pCO_2,water \div 10^6$$
 
-**Step 2** — Compute the Schmidt number $S_c$ from sea surface temperature
+**Step 2** -- Compute the Schmidt number $S_c$ from sea surface temperature
 $t$ ($^\circ$C) (Wanninkhof, 1992, Table A1):
 
 $$S_c = 2073.1 - 125.62 \times t + 3.6276 \times t^2 - 0.043219 \times t^3$$
 
-**Step 3** — Compute the gas transfer velocity $k$ in cm h$^{-1}$ and
+**Step 3** -- Compute the gas transfer velocity $k$ in cm h$^{-1}$ and
 convert to m s$^{-1}$ (Sweeney et al., 2007, Fig. 3 and Table 1):
 
 $$k = \frac{0.27 \times {u_{10}}^2 \times \sqrt{660 \div S_c}}{100 \times 3600}$$
 
 where $u_{10}$ is the 10 m wind speed in m s$^{-1}$.
 
-**Step 4** — Compute absolute temperature $T = t + 273.15$ (K), then
+**Step 4** -- Compute absolute temperature $T = t + 273.15$ (K), then
 compute CO$_2$ solubility $K_0$ in mol atm$^{-1}$ m$^{-3}$ using the volume
 formulation (Weiss, 1974, Eqn. 12 and Table I):
 
@@ -194,7 +219,7 @@ K_0 &= 1000 \times \exp(-58.0931 + 90.5069 \times (100 / T) + 22.2940 \times \ln
 
 where $s$ is the sea surface salinity.
 
-**Step 5** — Compute the flux (Wanninkhof, 1992, Eqn. A2):
+**Step 5** -- Compute the flux (Wanninkhof, 1992, Eqn. A2):
 
 $$F = k \times K_0 \times (pCO_2,water - pCO_2,air)$$
 
@@ -206,19 +231,19 @@ are listed in the [References](#references) section.
 
 ---
 
-## Core Functions
+## SAMI-CO2 Functions (PCO2W)
+
+### Core Functions
 
 ::: ion_functions.data.co2_functions.pco2_calc_pco2
 
 #### Additional Notes
-The `ea434`, `eb434`, `ea620`, and `eb620` calibration coefficient
-parameters are accepted as inputs for backward compatibility but are
-not used in the calculation. The original formulation derived $e_1$,
-$e_2$, and $e_3$ from these per-instrument values; the current
-algorithm uses fixed constants supplied by Sunburst Sensors
-($e_1 = 0.0043$, $e_2 = 2.136$, $e_3 = 0.2105$) for all instruments.
-The retained parameters and the commented-out original formulation in
-the code document this evolution.
+The `ea434`, `eb434`, `ea620`, and `eb620` calibration coefficient parameters are accepted as inputs for backward
+compatibility but are not used in the calculation. The original vendor formulation derived the constants from each
+instrument's calibration values: $e_1 = ea_{620}/ea'_{434}$, $e_2 = eb'_{620}/ea'_{434}$, $e_3 = eb_{434}/ea'_{434}$,
+with $ea'_{434} = ea_{434} - 29.3\,T_{cal}$ and $eb'_{620} = eb_{620} - 70.6\,T_{cal}$. The current algorithm replaces
+these with fixed constants supplied by Sunburst Sensors ($e_1 = 0.0043$, $e_2 = 2.136$, $e_3 = 0.2105$) for all
+instruments; the per-instrument parameters are retained as inputs for backward compatibility.
 
 #### History
 | Date | Author | Change |
@@ -234,29 +259,7 @@ the code document this evolution.
 
 ---
 
-::: ion_functions.data.co2_functions.pco2_ppressure
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2014-10-27 | Christopher Wingard | Initial Python code |
-| 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
-| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-::: ion_functions.data.co2_functions.pco2_co2flux
-
-#### History
-| Date | Author | Change |
-|---|---|---|
-| 2012-03-28 | Matthias Lankhorst | Original Matlab code |
-| 2013-04-20 | Christopher Wingard | Initial Python code |
-| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
-
----
-
-## Helper Functions
+### Helper Functions
 
 ::: ion_functions.data.co2_functions.pco2_abs434_ratio
 
@@ -316,7 +319,7 @@ the code document this evolution.
 
 ---
 
-## Wrapper Functions
+### Wrapper Functions
 
 `pco2_pco2wat` is the OOI single-output wrapper for the PCO2WAT_L1 data
 product. It calls `pco2_calc_pco2` for all records and then sets blank
@@ -333,6 +336,32 @@ OOI single-output data product requirement. External users should call
 | 2014-02-19 | Christopher Wingard | Updated comments |
 | 2014-03-19 | Christopher Wingard | Optimized |
 | 2017-04-04 | Pete Cable | Updated to use thermistor/blank counts per DPS |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+## Pro-Oceanus CO2-Pro Functions (PCO2A)
+
+### Core Functions
+
+::: ion_functions.data.co2_functions.pco2_ppressure
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2014-10-27 | Christopher Wingard | Initial Python code |
+| 2023-08-15 | Samuel Dahlberg | Removed use of numexpr |
+| 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+
+---
+
+::: ion_functions.data.co2_functions.pco2_co2flux
+
+#### History
+| Date | Author | Change |
+|---|---|---|
+| 2012-03-28 | Matthias Lankhorst | Original Matlab code |
+| 2013-04-20 | Christopher Wingard | Initial Python code |
 | 2026-04-20 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
 
 ---

@@ -415,10 +415,9 @@ def magnetic_correction_einsum(theta, u, v):
     and v=f(i,j). It uses numpy.einsum to apply the rotation matrix to
     all ensembles without a Python for loop.
 
-    The executable code is identical to magnetic_correction_vctrzd in
+    The executable code is identical to magnetic_correction in
     adcp_functions.py. It is reproduced here to avoid a cross-module
-    dependency within wav_functions.py. The ADCP DPS citations below
-    reflect the origin of the rotation algorithm.
+    dependency within wav_functions.py.
     """
     # force shapes of inputs to arrays
     theta = np.atleast_1d(theta)

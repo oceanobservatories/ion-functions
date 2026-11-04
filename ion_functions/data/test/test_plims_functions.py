@@ -7,6 +7,8 @@
 @brief Unit tests for plims_functions module
 """
 
+from nose.plugins.attrib import attr
+
 from ion_functions.data import plims_functions as plimsfunc
 from ion_functions.test.base_test import BaseUnitTestCase
 

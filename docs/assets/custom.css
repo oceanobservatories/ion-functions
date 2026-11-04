@@ -4,9 +4,20 @@ td, th {
     word-break: break-word;
 }
 
-/* Prevent 1st column from wrapping (first column of every table body row) */
+/* Prevent 1st column from wrapping (first column of every table, header and body rows) */
+thead th:nth-child(1),
 tbody td:nth-child(1) {
     white-space: nowrap !important;
+}
+
+/* Keep identifiers in code spans (e.g. calibration coefficient names) intact rather than breaking mid-word */
+td code {
+    word-break: normal;
+}
+
+/* Never split a header word mid-word (e.g. "Platfor-m"); headers wrap only at spaces */
+th {
+    word-break: normal !important;
 }
 
 /* White background for transparent logo PNG */
@@ -67,3 +78,35 @@ details.mkdocstrings-source {
     white-space: nowrap;
 }
 
+/* Print and PDF output (print-site page): drop the 350px sidebar offset and
+   the breadcrumbs so the content uses the full page width */
+@media print {
+    .wy-nav-content-wrap {
+        margin-left: 0;
+    }
+    .wy-nav-content {
+        max-width: none;
+        padding: 0;
+    }
+    .wy-nav-content::after {
+        left: 0;
+        width: 100%;
+    }
+    div[role="navigation"] {
+        display: none;
+    }
+    /* print-site: keep the first page of a nav section on the same page as the
+       section title instead of leaving the title alone on its own page */
+    #print-site-page section.md-section > h1 + section.print-page {
+        page-break-before: avoid;
+        break-before: avoid;
+    }
+    /* print-site: style nav section titles like an ordinary page title rather
+       than a centered title page */
+    body #print-site-page section.print-page.md-section > h1 {
+        align-content: normal;
+        text-align: left;
+        padding: 0;
+        font-size: 175%;
+    }
+}

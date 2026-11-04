@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.opt_functions_tscor
-@file ion_functions/data/opt_functions_tscor.py
-@author Christopher Wingard
-@brief Module containing OPTAA related temperature and salinity correction
-    coefficients.
+Temperature and salinity correction coefficients for the OPTAA
+(Sea-Bird ac-s) data products, used by opt_functions.
+
+Author: Christopher Wingard
 """
 
 import numpy as np

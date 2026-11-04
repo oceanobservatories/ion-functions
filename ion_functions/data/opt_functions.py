@@ -434,7 +434,9 @@ def opt_scatter_corr(apd_ts, awlngth, cpd_ts, cwlngth, rwlngth=715.):
     """
     Applies the scattering correction to the temperature- and
     salinity-corrected optical absorption coefficient, producing
-    OPTABSN_L2.
+    OPTABSN_L2. Uses the proportional scattering correction (method 3
+    of the ac Meter Protocol Document; Zaneveld et al., 1994), as
+    specified in DPS 1341-00700.
 
     Parameters
     ----------
@@ -522,11 +524,6 @@ def opt_scatter_corr(apd_ts, awlngth, cpd_ts, cwlngth, rwlngth=715.):
     return apd_ts_s
 
 
-# The next 2 functions are not used in calculating optical absorption and beam attenuation
-# coefficients from the OPTAA family of instruments. However, some of these instruments
-# may be outfitted with an auxiliary pressure sensor and/or external temperature sensor.
-#
-# opt_pressure is not used in the calculation of the final OPTAA data products.
 def opt_pressure(praw, offset, sfactor):
     """
     Calculates the depth of the ac-s from its optional auxiliary
@@ -579,8 +576,9 @@ def opt_external_temp(traw):
 
 def opt_par_satlantic(counts_output, a0, a1, Im):
     """
-    Computes OPTPARW_L1 from the Satlantic PAR LIN 600m instrument
-    (PARAD, RSN Shallow Profiler) using a linear calibration.
+    Computes OPTPARW_L1 from the Sea-Bird Scientific (formerly
+    Satlantic) PAR LIN 600m instrument (PARAD, RSN Shallow Profiler)
+    using a linear calibration.
 
     Parameters
     ----------
@@ -606,8 +604,8 @@ def opt_par_satlantic(counts_output, a0, a1, Im):
 
 def opt_par_wetlabs(counts_output, a0, a1, Im):
     """
-    Computes OPTPARW_L1 from the Sea-Bird Scientific ECO PAR /
-    ECOPARS instrument (PARAD-J, CSPP) using an exponential
+    Computes OPTPARW_L1 from the Sea-Bird Scientific (formerly WET
+    Labs) ECO PAR / ECOPARS instrument (PARAD-J, CSPP) using an exponential
     calibration.
 
     Parameters
@@ -615,11 +613,11 @@ def opt_par_wetlabs(counts_output, a0, a1, Im):
     counts_output : ndarray
         OPTPARW_L0 raw ADC counts.
     a0 : float
-        Voltage offset [counts].
+        Offset [counts].
     a1 : float
-        Scaling factor [umol photons m-2 s-1 count-1].
+        Scaling factor [counts].
     Im : float
-        Immersion coefficient.
+        Immersion coefficient [unitless].
 
     Returns
     -------
