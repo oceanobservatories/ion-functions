@@ -38,6 +38,9 @@ plugins:
             show_root_full_path: false
             heading_level: 4
             members_order: source
+  - autorefs
+  - print-site:
+      add_table_of_contents: false
 
 nav:
   - Home: index.md

@@ -1,3 +1,6 @@
+# Runtime environment for ion-functions. Versions match the OOI production
+# environment (ooi-config anaconda_env/engine3.yml). Test and documentation
+# tools are optional extras in pyproject.toml (pip install -e ".[dev]").
 name: ion
 channels:
   - conda-forge
@@ -5,13 +8,10 @@ dependencies:
   - python=3.12
   - cython
   - setuptools>=77
-  - numpy>=2.4
-  - scipy>=1.17
-  - matplotlib>=3.10
-  - gsw>=3.6
-  - numexpr
-  - ppigrf>=2.0
-  - pytest
-  - mkdocstrings
-  - mkdocstrings-python
-  - mkdocs
+  - numpy=1.26.0
+  - scipy=1.11.3
+  - pandas=2.1.1
+  - numexpr=2.8.7
+  - gsw=3.6.17
+  - ppigrf=2.1.0
+  - pip

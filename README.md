@@ -22,12 +22,14 @@ conda activate ion
 pip install --no-build-isolation --no-deps -e .
 ```
 
-Dependencies are listed in `conda_env.yml` and `pyproject.toml`. A C compiler is optional; see the
+Runtime dependencies are listed in `conda_env.yml` (pinned to the OOI production versions) and `pyproject.toml`; the
+test and documentation tools are optional extras in `pyproject.toml`. A C compiler is optional; see the
 [installation guide](https://oceanobservatories.github.io/ion-functions/installation/) for details.
 
 ## Running the tests
 
 ```bash
+pip install --no-build-isolation -e ".[test]"         # test tools (pytest, matplotlib)
 pytest                                                # full suite
 pytest ion_functions/data/test/test_ctd_functions.py  # one instrument family
 ```

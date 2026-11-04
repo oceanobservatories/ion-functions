@@ -3,8 +3,9 @@
 ## Requirements
 
 ion-functions is installed into a conda environment built from conda-forge packages. Install
-[Miniforge](https://github.com/conda-forge/miniforge), which uses the conda-forge channel by default. The dependencies,
-including the documentation tools, are listed in `conda_env.yml` at the repository root (and, for pip, in `pyproject.toml`).
+[Miniforge](https://github.com/conda-forge/miniforge), which uses the conda-forge channel by default. The runtime
+dependencies are listed in `conda_env.yml` at the repository root, pinned to the versions used in OOI production, and,
+for pip, in `pyproject.toml`. The test and documentation tools are optional extras in `pyproject.toml`.
 
 ## Installing
 
@@ -37,7 +38,10 @@ extensions were built.
 
 ## Running the tests
 
+Install the test tools (pytest and matplotlib), then run the suite:
+
 ```bash
+pip install --no-build-isolation -e ".[test]"
 pytest
 ```
 

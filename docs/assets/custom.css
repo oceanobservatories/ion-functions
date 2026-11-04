@@ -78,3 +78,35 @@ details.mkdocstrings-source {
     white-space: nowrap;
 }
 
+/* Print and PDF output (print-site page): drop the 350px sidebar offset and
+   the breadcrumbs so the content uses the full page width */
+@media print {
+    .wy-nav-content-wrap {
+        margin-left: 0;
+    }
+    .wy-nav-content {
+        max-width: none;
+        padding: 0;
+    }
+    .wy-nav-content::after {
+        left: 0;
+        width: 100%;
+    }
+    div[role="navigation"] {
+        display: none;
+    }
+    /* print-site: keep the first page of a nav section on the same page as the
+       section title instead of leaving the title alone on its own page */
+    #print-site-page section.md-section > h1 + section.print-page {
+        page-break-before: avoid;
+        break-before: avoid;
+    }
+    /* print-site: style nav section titles like an ordinary page title rather
+       than a centered title page */
+    body #print-site-page section.print-page.md-section > h1 {
+        align-content: normal;
+        text-align: left;
+        padding: 0;
+        font-size: 175%;
+    }
+}

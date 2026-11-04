@@ -22,17 +22,18 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "numpy>=2.4",
-    "scipy>=1.17",
-    "pandas",
-    "numexpr",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pandas>=2.1",
+    "numexpr>=2.8",
     "gsw>=3.6",
-    "ppigrf>=2.0",
+    "ppigrf>=2.1",
 ]
 
 [project.optional-dependencies]
 test = ["pytest", "matplotlib"]
-docs = ["mkdocs", "mkdocstrings-python"]
+docs = ["mkdocs", "mkdocstrings-python", "mkdocs-print-site-plugin", "playwright"]
+dev = ["ion-functions[test,docs]"]
 
 [project.urls]
 Homepage = "https://oceanobservatories.org/"

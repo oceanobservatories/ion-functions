@@ -165,7 +165,7 @@ conventions in that directory.
   implementations where available.
 - Include at least one test for a representative input array and one for
   scalar or edge-case inputs.
-- Do not introduce test dependencies beyond those already in `conda_env.yml`.
+- Do not introduce test dependencies beyond those already in the `test` extra in `pyproject.toml`.
 
 Run the full test suite before opening a pull request:
 
@@ -193,14 +193,23 @@ The documentation site is built with
 [MkDocs](https://www.mkdocs.org/) and
 [mkdocstrings](https://mkdocstrings.github.io/). Sources live under `docs/`.
 
-To build and preview locally:
+Install the test and documentation tools (the `dev` extra in `pyproject.toml`), then build and preview locally:
 
 ```bash
+pip install --no-build-isolation -e ".[dev]"
 mkdocs serve
 ```
 
 Then open `http://127.0.0.1:8000` in your browser. The site rebuilds
 automatically as you edit files.
+
+To build a single PDF of the whole site (written to `site/ion-functions.pdf`), run once
+`playwright install chromium`, then:
+
+```bash
+mkdocs build --strict
+python tools/build_pdf.py
+```
 
 If you add a new instrument family module, add a corresponding page under
 `docs/api/` and add it to the `nav` section of `mkdocs.yml`.
