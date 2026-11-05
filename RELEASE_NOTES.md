@@ -1,3 +1,11 @@
+# Release 2.5.9 2026-11-04
+
+Issue #16348 - Declination Error for Cabled ADCPs.
+
+Issue #16178 - Update Nitrate temperature-salinity correction algorithm in ion-function.
+
+Issue #16237 - Correction to PLIMS flow rate ion function and parameter definitions
+
 # Release 2.5.8 2026-10-19
 
 Issue #16336 - Fix new magnetic declination library affecting performance of data delivery.
