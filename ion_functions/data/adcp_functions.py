@@ -67,7 +67,7 @@ def adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf,
     lon : array_like
         Deployment longitude [decimal degrees].
     dt : array_like
-        Sample timestamp [seconds since 1970-01-01] (Unix time).
+        Sample timestamp [seconds since 1900-01-01] (NTP time).
 
     Returns
     -------
@@ -176,13 +176,9 @@ def adcp_beam_eastward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf,
     --------
     adcp_beam_velocity : Core function; use directly for multi-output access.
     """
-    # Convert the given ntp epoch timestamp in unix epoch timestamp.
-    dt_unix = dt - 2208988800
 
-    # call central adcp_beam_velocity function to get specific eastward
-    # velocity profile
-    u_cor, _, _, _ = adcp_beam_velocity(
-        b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt_unix)
+    # call central adcp_beam_velocity function to get specific eastward velocity profile
+    u_cor, _, _, _ = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
     # return the eastward velocity profile
     return u_cor
@@ -245,13 +241,9 @@ def adcp_beam_northward(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf,
     --------
     adcp_beam_velocity : Core function; use directly for multi-output access.
     """
-    # Convert the given ntp epoch timestamp in unix epoch timestamp.
-    dt_unix = dt - 2208988800
 
-    # call central adcp_beam_velocity function to get specific northward
-    # velocity profile
-    _, v_cor, _, _ = adcp_beam_velocity(
-        b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt_unix)
+    # call central adcp_beam_velocity function to get specific eastward velocity profile
+    _, v_cor, _, _ = adcp_beam_velocity(b1, b2, b3, b4, pg1, pg2, pg3, pg4, h, p, r, vf, lat, lon, dt)
 
     # return the northward velocity profile
     return v_cor
@@ -2065,6 +2057,8 @@ def adcp_bin_depths_meters(dist_first_bin, bin_size, num_bins, sensor_depth,
     -----
     The PD8 output format does not record dist_first_bin, bin_size, or
     num_bins; those values must be supplied externally for PD8 data.
+    When num_bins is time-vectorized, all records are assumed to have
+    the same number of bins.
     """
     # check for CI fill values.
     dist_first_bin, bin_size, num_bins, sensor_depth, adcp_orientation = (

@@ -14,13 +14,27 @@ seismic signals at the seafloor: the Broadband Ocean Bottom Seismometer
 classes are cabled, streaming data in real time to shore and to the
 Incorporated Research Institutions for Seismology (IRIS).
 
+| Class | Hardware | Platform | Designator Meaning |
+|---|---|---|---|
+| OBSBB | Guralp CMG-1T/5T | RCA cabled seafloor junction boxes | Ocean Bottom Seismometer, Broadband |
+| OBSSP | Guralp CMG-6TF | RCA cabled seafloor junction boxes | Ocean Bottom Seismometer, Short Period |
+
 `obs_functions.py` converts raw L0 digital counts from both instrument
 classes into their respective L1 data products: Broadband Ground Velocity
 (GRNDVEL_L1), Broadband Ground Acceleration (GRNDACC_L1), and Short Period
-Ground Velocity (SGRDVEL_L1). All calibration coefficients are from factory
-calibration sheets supplied with individual instruments. Within the OOI
-data system, OBS functions fall under the Seafloor/Crust science regime
-and the Ground Motion category.
+Ground Velocity (SGRDVEL_L1).
+
+Within the OOI data system, OBS data products fall under the Seafloor/Crust [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+These functions apply fixed nominal digitizer gain and sensor sensitivity values supplied as function defaults; no
+per-instrument calibration coefficients are used. They are not currently mapped to any data stream in the OOI data
+system; the cabled seismometer data are distributed through IRIS.
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -32,7 +46,7 @@ and the Ground Motion category.
 
 ---
 
-### OBSBB — Broadband Ocean Bottom Seismometer
+### OBSBB -- Broadband Ocean Bottom Seismometer
 
 OBSBB instruments provide characterization of seismicity and earthquake
 activity along tectonic plate boundaries. The OOI array of broadband
@@ -65,7 +79,7 @@ made available to OOI via an Antelope Orbserver export.
 
 ---
 
-### GRNDVEL_L1 — Broadband Ground Velocity
+### GRNDVEL_L1 -- Broadband Ground Velocity
 
 GRNDVEL_L1 is the broadband ground velocity (m/s) time-series measured by
 the Guralp CMG-1T seismometer channel of the OBSBB instrument. The L0
@@ -82,7 +96,7 @@ The result is the L1 ground velocity time-series in m/s.
 
 ---
 
-### GRNDACC_L1 — Broadband Ground Acceleration
+### GRNDACC_L1 -- Broadband Ground Acceleration
 
 GRNDACC_L1 is the broadband ground acceleration (m/s$^2$) time-series
 measured by the Guralp CMG-5T strong motion accelerometer channel of the
@@ -103,7 +117,7 @@ correlation across data products.
 
 ---
 
-### OBSSP — Short Period Ocean Bottom Seismometer
+### OBSSP -- Short Period Ocean Bottom Seismometer
 
 OBSSP instruments detect vibrations from small, locally generated
 earthquakes in the frequency range 0.1 Hz to 100 Hz. These events arise
@@ -124,7 +138,7 @@ export.
 
 ---
 
-### SGRDVEL_L1 — Short Period Ground Velocity
+### SGRDVEL_L1 -- Short Period Ground Velocity
 
 SGRDVEL_L1 is the short period ground velocity (m/s) time-series measured
 by the OBSSP instrument. The L0 input is the raw digital count output of

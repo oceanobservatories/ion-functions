@@ -64,10 +64,11 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
                             0.071326, -0.317352, 0.219148, 0.054787, 0.433129]]) * 1000.
 
         # set expected results -- magnetic variation correction applied
-        self.u_cor = np.array([[0.1099, -0.3221, -0.4025, 0.2092, 0.9243,
-                                -0.1595, 0.3471, -0.1983, 0.0053, -1.0261]])
-        self.v_cor = np.array([[-0.3855, -0.0916, -0.9773, -0.9707, -1.2140,
-                                0.3188, -0.9940, -0.0308, -0.3229, -0.2582]])
+        # expected values updated 2026-11-04 for the IGRF-14 magnetic declination model (previously WMM2010)
+        self.u_cor = np.array([[0.1100, -0.3221, -0.4022, 0.2095, 0.9247,
+                                -0.1596, 0.3474, -0.1983, 0.0054, -1.0260]])
+        self.v_cor = np.array([[-0.3854, -0.0917, -0.9774, -0.9707, -1.2137,
+                                0.3188, -0.9939, -0.0309, -0.3229, -0.2585]])
 
         # set the expected results -- echo intensity conversion from counts to dB
         self.dB = np.array([[0.00, 11.25, 22.50, 33.75, 45.00, 56.25, 67.50, 78.75, 90.00, 101.25, 112.50]])
@@ -110,8 +111,9 @@ class TestADCPFunctionsUnit(BaseUnitTestCase):
         """
         # adjust expected test values to include a 3-beam solution (computed in Matlab using modifications to functions
         # found in the scripts included with this repo).
-        u_cor = np.array([[0.1099, -0.3221, -0.4025, np.nan, 0.9243, -0.1595, 0.5387, -0.0651, -0.0726, -0.4735]])
-        v_cor = np.array([[-0.3854, -0.0916, -0.9773, np.nan, -1.2140, 0.3188, -0.5926, 0.2514, -0.2932, -0.5255]])
+        # expected values updated 2026-11-04 for the IGRF-14 magnetic declination model (previously WMM2010)
+        u_cor = np.array([[0.1100, -0.3221, -0.4023, np.nan, 0.9247, -0.1596, 0.5389, -0.0652, -0.0725, -0.4734]])
+        v_cor = np.array([[-0.3854, -0.0917, -0.9775, np.nan, -1.2138, 0.3187, -0.5925, 0.2514, -0.2933, -0.5257]])
         w = np.array([[0.1401, 0.3977, 0.1870, np.nan, 0.0091, -0.1290, -0.0681, -0.2591, 0.1215, 0.0926]])
         e = np.array([[0.7898,  0.6347, -0.0806, np.nan, 0.0641, 0.07133, 0., 0., 0., 0.]])
 

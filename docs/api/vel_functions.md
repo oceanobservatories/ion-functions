@@ -5,15 +5,15 @@
 The Ocean Observatories Initiative deploys two families of point velocity
 instruments across its moored and profiling platforms: **VELPTMN** (Mean
 Point Water Velocity) and **VELPTTU** (Turbulent Point Water Velocity). Both
-families produce three-component velocity data products — eastward (VLE),
-northward (VLN), and upward (VLU) — referenced to true Earth coordinates
-after correction for magnetic declination using the World Magnetic Model
-(WMM). The table below lists the OOI instrument classes covered by this
-module.
+families produce three-component velocity data products -- eastward (VLE),
+northward (VLN), and upward (VLU) -- referenced to true Earth coordinates
+after correction for magnetic declination using the International Geomagnetic
+Reference Field (IGRF-14). The table below lists the OOI instrument classes
+covered by this module.
 
-| Class | Hardware | Platform type | Designator meaning |
+| Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| VELPT-A/B/D/J | Nortek Aquadopp | Moored (fixed depth) | Velocity Point |
+| VELPT | Nortek Aquadopp | Moored (fixed depth) | Velocity Point |
 | VEL3D-B | Nobska MAVS-4 | Moored (fixed depth) | Velocity 3D |
 | VEL3D-C/D | Nortek Vector | Moored (fixed depth) | Velocity 3D |
 | VEL3D-A | FSI ACM-3D-MP (RSN) | Cabled deep profiler | Velocity 3D |
@@ -22,14 +22,21 @@ module.
 
 `vel_functions.py` converts L0 raw velocity data from each instrument class
 into calibrated L1 velocity data products in m/s, referenced to true North
-and true East. All magnetic declination corrections are computed from the WMM
+and true East. All magnetic declination corrections are computed from the IGRF
 using the deployment location (latitude, longitude, depth) and NTP timestamp.
-No factory calibration coefficients are applied by ion-functions for these
-instruments; the instruments perform onboard beam-to-ENU coordinate transforms
-and provide velocity components directly in earth coordinates as L0 output.
-Within the OOI data system, VEL functions fall under the Water velocity
-category. VELPT instruments fall under the Water Column science regime;
-VEL3D instruments fall under the Water Column and Seafloor/Crust regimes.
+
+Within the OOI data system, VEL data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+Apart from the VEL3D-A compass calibration, no calibration coefficients are applied by these functions; the deployment
+latitude and longitude are used for the magnetic declination correction. VELPT and VEL3D-B/C/D/L instruments report
+velocities in instrument earth coordinates (magnetic); VEL3D-K beam velocities are transformed to earth coordinates by
+ion-functions using the fixed instrument and profiler geometry.
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -43,24 +50,36 @@ VEL3D instruments fall under the Water Column and Seafloor/Crust regimes.
 
 ---
 
-### VELPTMN_L1 — Mean Point Water Velocity
+### VELPTMN_L1 -- Mean Point Water Velocity
 
 VELPTMN_L1 is the mean point water velocity (m/s) measured by moored and
 profiling current meters that average over an ensemble interval. The product
 comprises three components: eastward (VLE), northward (VLN), and upward
 (VLU), all referenced to true Earth coordinates.
 
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `hdg_cal` | `CC_hdg_cal` | Compass calibration spin test (MMP manual, Appendix D) |
+| `hx_cal` | `CC_hx_cal` | Compass calibration spin test (MMP manual, Appendix D) |
+| `hy_cal` | `CC_hy_cal` | Compass calibration spin test (MMP manual, Appendix D) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### VELPTMN_L1 Algorithm
+
 **VELPT-A/B/D/J (Nortek Aquadopp):** The Aquadopp outputs velocity components
 already converted to earth coordinates (East, North, Up) onboard using its
 internal heading, pitch, and roll sensors. The L0 data are in mm/s. The L1
 product is computed by `velpt_mag_corr_east` and `velpt_mag_corr_north`, which
-call `vel_mag_correction` to apply the WMM magnetic declination rotation and
+call `vel_mag_correction` to apply the IGRF magnetic declination rotation and
 convert units to m/s. The upward component requires only a unit conversion via
 `velpt_up_vel`.
 
 **VEL3D-A (FSI ACM-3D-MP, RSN cabled deep profiler):** The FSI ACM stinger
 configuration has four acoustic transducers at the tips of four prongs
-oriented 45$^\circ$ from a central post. Four raw beam velocities (vp1–vp4)
+oriented 45$^\circ$ from a central post. Four raw beam velocities (vp1-vp4)
 are produced; vp1 and vp3 lie in the horizontal plane and vp2 and vp4 lie in
 the vertical plane. The core function `fsi_acm_horz_vel` converts the
 horizontal beam pair to eastward and northward velocity in m/s using the
@@ -71,7 +90,7 @@ $$V_x = \frac{-\text{vp1} - \text{vp3}}{\sqrt{2}}$$
 $$V_y = \frac{\text{vp1} - \text{vp3}}{\sqrt{2}}$$
 
 The speed and cartesian heading are then combined with the nautical heading
-and the WMM magnetic declination to produce true-Earth-referenced components.
+and the IGRF magnetic declination to produce true-Earth-referenced components.
 Because pitch and roll are negligible for profiler-mounted instruments, no
 tilt correction is applied.
 
@@ -107,14 +126,14 @@ above reflect the corrected implementations in the code.
 
 ---
 
-### VELPTTU_L1 — Turbulent Point Water Velocity
+### VELPTTU_L1 -- Turbulent Point Water Velocity
 
 VELPTTU_L1 is the turbulent point water velocity (m/s) comprising eastward
 (VLE), northward (VLN), and upward (VLU) components in true Earth coordinates.
 
 **VEL3D-B (Nobska MAVS-4):** The MAVS-4 outputs velocity in earth coordinates
 in cm/s. The wrapper functions `nobska_mag_corr_east` and
-`nobska_mag_corr_north` call `vel_mag_correction` to apply the WMM rotation
+`nobska_mag_corr_north` call `vel_mag_correction` to apply the IGRF rotation
 and convert to m/s. The upward component requires only a unit conversion via
 `nobska_scale_up_vel`.
 
@@ -129,7 +148,7 @@ individual beam velocities that require a full beam-to-ENU coordinate
 transformation via the core function `vel3dk_transform`. The transformation
 proceeds in two stages:
 
-*Stage 1 — Beam to profiler XYZ:* Beam velocities are converted to Cartesian
+*Stage 1 -- Beam to profiler XYZ:* Beam velocities are converted to Cartesian
 coordinates in the profiler frame using a pre-computed transformation matrix
 $T_{beam2XYZ}$ selected by `get_XYZ_transform`. Three beam configurations are
 supported: upward-traveling profiles (beams 1, 2, 4), downward-traveling
@@ -142,7 +161,7 @@ direction (1 $\to$ 4 $\to$ 3 $\to$ 2), with elevation angles of 47.5$^\circ$
 (4-beam) transform has not been exercised in OOI deployments and is
 unverified.
 
-*Stage 2 — Profiler XYZ to Earth ENU:* The rotation matrix $T_{XYZ2ENU}$ is
+*Stage 2 -- Profiler XYZ to Earth ENU:* The rotation matrix $T_{XYZ2ENU}$ is
 constructed by `generate_ENU_transform` from the instrument attitude at each
 sample:
 
@@ -159,6 +178,12 @@ The wrapper functions `vel3dk_east`, `vel3dk_north`, and `vel3dk_up` each call
 `vel3dk_transform` and extract the appropriate component. Magnetic declination
 correction via `vel_mag_correction` is applied to the horizontal components.
 
+In 2017 the VEL3D-K velocities were found to be aliased by an ambiguity-velocity problem. In diagnosing it, data were
+sent to Nortek, who returned corrected data and code that differed significantly from the 2014 code used for the
+original implementation; the first set returned had a sign error that produced downward 'current' velocities during
+downward profiles. The 2018 revision matches Nortek's second set, and was independently derived from the transducer
+geometry, the radial beam-velocity sign convention, and the X-axis heading reference.
+
 The 2018 revision to `generate_beam_transforms` and `generate_ENU_transform`
 corrected three errors in the original 2014 Nortek-supplied code: (1) the
 transducer azimuthal angles were defined clockwise, producing a left-handed
@@ -170,7 +195,7 @@ being the instrument X-axis rather than the Y-axis.
 
 ### Magnetic Declination Correction
 
-The core function `vel_mag_correction` applies the WMM rotation to any
+The core function `vel_mag_correction` applies the IGRF rotation to any
 horizontal velocity pair:
 
 $$\begin{align}
@@ -552,6 +577,12 @@ caveats about the stationary case apply.
 
 ## References
 
+Beggan, C.D., et al. (2026). International Geomagnetic Reference Field: the fourteenth
+generation. *Earth Planets Space*, 78, 127. <https://doi.org/10.1186/s40623-025-02360-0>
+
+International Association of Geomagnetism and Aeronomy (2024). [IGRF-14.
+Zenodo.](https://doi.org/10.5281/zenodo.14012302)
+
 [OOI (2012). Data Product Specification for Turbulent Point Water Velocity
 (Nobska MAVS-4). Document Control Number 1341-00781.](https://oceanobservatories.org/wp-content/uploads/2023/09/Data_Product_SPEC_VELPTTU_combined.pdf)
 
@@ -563,3 +594,7 @@ Control Number 1341-00790.](https://oceanobservatories.org/wp-content/uploads/20
 
 OOI (2014). Data Product Specification for Mean Point Water Velocity Data from
 FSI Acoustic Current Meters. Document Control Number 1341-00792.
+
+Strom, K.M., and Reistad, H. (2024). [ppigrf: Python package for computing
+the International Geomagnetic Reference Field
+(IGRF).](https://github.com/IAGA-VMOD/ppigrf)

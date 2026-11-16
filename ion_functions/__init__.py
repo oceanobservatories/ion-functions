@@ -1,7 +1,12 @@
 import warnings
 import functools
 
-__version__ = '2.1.0'
+from importlib.metadata import PackageNotFoundError, version as _package_version
+
+try:
+    __version__ = _package_version("ion-functions")  # set from version.py at install time
+except PackageNotFoundError:  # running from a source tree that was never installed
+    __version__ = "unknown"
 
 
 def deprecated(func):

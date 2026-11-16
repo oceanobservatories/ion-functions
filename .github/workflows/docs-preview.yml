@@ -15,16 +15,20 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Check docs are ASCII
+        run: |
+          if grep -nP '[^\x00-\x7F]' README.md mkdocs.yml $(git ls-files 'docs/*.md'); then
+            echo "Non-ASCII characters found (listed above); use ASCII or HTML entities instead."
+            exit 1
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install numpy scipy gsw ppigrf numexpr mkdocs-material mkdocstrings[python]
-
-      - name: Add package to PYTHONPATH
-        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
+        run: pip install .[docs]
 
       - name: Set fork site_url
         run: |

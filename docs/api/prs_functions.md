@@ -16,6 +16,22 @@ functions are implemented in `prs_functions.py`.
 |---|---|---|---|
 | BOTPT | Paroscientific 42.4K-265 + LILY tiltmeter | Seafloor (RCA) | Bottom pressure and tilt |
 
+TMAG and TDIR apply to any two-axis tiltmeter. The CCMP correction is specific to the deployed LILY sensors: the
+lookup tables in `prs_functions_ccmp.py` are selected by sensor serial number and include the 17-degree magnetic
+declination at Axial Seamount. The BOTSFLU products are specific to Axial Seamount: the predicted tides are for the
+caldera center, and the pressure-to-depth factor is fixed.
+
+Within the OOI data system, PRS data products fall under the Seafloor/Crust [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+No factory calibration coefficients are passed to these functions. BOTPRES is computed onboard the instrument; the
+CCMP lookup table is selected by the LILY serial number reported in the data stream.
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
+
 ### Primary Sources
 
 | DCN | Document |
@@ -94,6 +110,18 @@ Tide Model Driver software with the TPXO7.2 global tidal model. All three
 BOTPT sites at Axial Seamount are sufficiently close together that a single
 caldera-center location is used for all. Tide values are stored as signed
 4-byte integers in units of 0.001 mm and scaled to meters on read.
+In the OOI data system, predicted tides are now supplied by a separate predicted-tide data stream
+(`instrument_predicted_tide`) rather than by `prs_botsflu_predtide`. Instrument-specific predicted tide tables for
+each of the four BOTPT instruments (ASHES, Central Caldera, Eastern Caldera, and International District) were provided
+by the RCA team and ingested as recovered data; they extend well beyond the present (OOINet does not display predicted
+tide values later than the current time). The lookup table used by `prs_botsflu_predtide` covers 2014-01-01 through
+2019-12-31 only; the function cannot be used for later data.
+
+To compute the BOTSFLU products outside the OOI system, pass the predicted tide from the `instrument_predicted_tide`
+stream as the `predtide` argument of `prs_botsflu_meandepth`, `prs_botsflu_5minrate`, and `prs_botsflu_10minrate`.
+These functions add `predtide` element by element to the 15-second binned depths, so it must be on the same time base:
+one value for each non-empty 15-second bin returned by `prs_botsflu_time15s`, in the same order. If the predicted tide
+record is at a different time step or has gaps, interpolate it to the `prs_botsflu_time15s` timestamps first.
 
 **15-second binning.** Raw pressure data are binned into 15-second
 time-centered means anchored at the quarter-minute (0, 15, 30, 45 seconds
@@ -111,6 +139,10 @@ a negative convention, so the predicted tide (m) is added to de-tide the
 record:
 
 $$MEANDEPTH = (MEANPRES \times -0.67) + PREDTIDE$$
+
+MEANDEPTH and DAYDEPTH are derived from the measured pressure. Because atmospheric pressure is
+not removed and a fixed conversion factor is used, they are intended for tracking relative vertical change (uplift and
+subsidence), not as absolute depths.
 
 **Daily binning.** The 15-second MEANDEPTH record is binned into 24-hour
 noon-to-noon bins anchored at midnight to produce DAYDEPTH_L2 (m). A
@@ -486,6 +518,7 @@ data window.
 #### History
 | Date | Author | Change |
 |---|---|---|
+| unknown | John D'Errico | Original MATLAB algorithm (MATLAB Central Answers thread 49181; `movingslope.m`, File Exchange 16997) |
 | 2015-01-13 | Russell Desiderio | Initial code |
 | 2017-05-03 | Russell Desiderio | Deprecated; nan-masking cannot be implemented with this algorithm |
 | 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |

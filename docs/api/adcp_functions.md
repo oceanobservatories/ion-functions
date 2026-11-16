@@ -10,18 +10,30 @@
 
 ## Background
 
-The ADCP instrument family covers Teledyne RDI Workhorse acoustic Doppler
+The ADCP instrument family covers Teledyne RDI and Nortek acoustic Doppler
 current profilers (ADCPs) deployed across the OOI network. Three instrument
 classes produce the VELPROF and ECHOINT data products, and one class produces
 the VELTURB and ECHOINT data products.
 
 | Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| ADCPA | TRDI Explorer PA DVL | Coastal glider | ADCP, glider-mounted |
-| ADCPS | TRDI Workhorse Long Ranger (75 kHz) | Subsurface mooring | ADCP, subsurface |
-| ADCPT | TRDI Workhorse Quartermaster (150 kHz) | Surface mooring | ADCP, surface |
-| VADCP | TRDI Workhorse Sentinel, 5-beam (600 kHz) | RSN 200 m platform | Vertical ADCP |
-| VADCP-B | Nortek Signature 55 | RSN 200 m platform | Vertical ADCP, 2nd generation |
+| ADCPA | TRDI Explorer DVL (M) and Workhorse Navigator (N), 600 kHz | Coastal gliders (M) and AUVs (N) | ADCP, mobile assets |
+| ADCPS | TRDI Workhorse Long Ranger, 75 kHz | Mooring risers, seafloor multi-function nodes, and cabled seafloor junction boxes | Velocity Profiler, long range |
+| ADCPT | TRDI Workhorse Sentinel, Monitor, and Quartermaster, 150-600 kHz | Near-surface instrument frames, mooring risers, seafloor multi-function nodes, cabled junction boxes, and RCA 200 m platforms | Velocity Profiler, short range |
+| VADCP-A | TRDI Workhorse 5-beam, 600 kHz | RCA 200 m platforms | Vertical ADCP |
+| VADCP-B | Nortek Signature 55 | RCA 200 m platforms | Vertical ADCP, 2nd generation |
+
+Within the OOI data system, ADCP data products fall under the Water Column [sampling
+regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
+products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+Velocity calculations use no calibration coefficients beyond the deployment location used for the magnetic declination
+correction; echo intensity uses the vendor scale factor, and bin depths use the instrument configuration (bin size,
+distance to the first bin, and orientation).
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 
@@ -55,6 +67,17 @@ final L1 products are scaled from mm/s to m/s.
 
 **ADCPA (glider):** The ADCPA produces L1 VELPROF directly onboard; only
 the magnetic declination correction is applied by ion-functions.
+
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `sfactor` | `CC_scale_factor1`-`CC_scale_factor4` | TRDI echo intensity scale factor, per beam (vendor) |
+| `bin_size` | `CC_bin_size` | Instrument configuration (deployment setup) |
+| `dist_first_bin` | `CC_dist_first_bin` | Instrument configuration (deployment setup) |
+| `adcp_orientation` | `CC_orientation` | Instrument configuration (deployment setup) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
 #### Beam to Instrument Coordinates
 
@@ -171,8 +194,8 @@ function accepts depth in meters directly.
 ### VELTURB_L1 and ECHOINT_L1 -- Turbulent Velocity Profile
 
 VELTURB_L1 is the turbulent velocity profile (m/s) in Earth coordinates with
-magnetic variation correction applied, produced by the VADCP and VADCP-B
-instruments deployed on RSN 200 m platforms. ECHOINT_L1 is the echo intensity
+magnetic variation correction applied, produced by the VADCP-A and VADCP-B
+instruments deployed on RCA 200 m platforms. ECHOINT_L1 is the echo intensity
 (dB) for each beam.
 
 The original VADCP (Teledyne RDI Workhorse Sentinel, 600 kHz) is a 5-beam
@@ -187,7 +210,16 @@ numbering convention, beam velocity units (m/s directly, not mm/s), and a
 vendor-supplied 4x4 transformation matrix (`tm`) in place of the fixed
 analytical matrix used for TRDI instruments.
 
-#### VELTURB -- Original VADCP (TRDI)
+#### Calibration Coefficients
+
+| Function Argument | Calibration Coefficient | Source |
+|---|---|---|
+| `tm` | `CC_TM` | Nortek beam-to-XYZ transformation matrix (VADCP-B, factory) |
+| `orientation` | `CC_vadcpb_orientation` | Instrument configuration (VADCP-B) |
+
+OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
+
+#### VELTURB Algorithm -- Original VADCP (TRDI)
 
 The beam-to-instrument and instrument-to-Earth transforms for the original
 VADCP use the same matrix formulation as VELPROF (DPS 1341-00760, Equations
@@ -209,9 +241,9 @@ The TRDI `vadcp_beam_eastward`, `vadcp_beam_northward`, and
 `vadcp_beam_error` functions use the standard 4-beam `adcp_beam2ins` and
 `adcp_ins2earth` pipeline. `vadcp_beam_vertical_est` and
 `vadcp_beam_vertical_true` use the same pipeline but incorporate the 5th
-beam; see [Wrapper Functions -- VELTURB (Original VADCP)](#velturb----original-vadcp-trdi).
+beam; see [Wrapper Functions -- VELTURB (Original VADCP)](#velturb-original-vadcp-trdi).
 
-#### VELTURB -- VADCP-B (Nortek Signature 55)
+#### VELTURB Algorithm -- VADCP-B (Nortek Signature 55)
 
 The VADCP-B beam-to-instrument transform uses the vendor-supplied
 transformation matrix `tm` (a 4x4 matrix) applied via Einstein summation.
@@ -242,13 +274,14 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
 | 2019-03-11 | Christopher Wingard | Removed multiple wrapper functions; made function standalone returning all velocity components |
 | 2023-08-15 | Samuel Dahlberg | Ported from Pyseas for CGSN compatibility |
 | 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-11-02 | Christopher Wingard | Corrected dt to NTP time, so the magnetic declination is computed for the sample date |
 
 ---
 
@@ -274,13 +307,14 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
 | 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
 | 2023-08-15 | Samuel Dahlberg | Refactored as wrapper calling adcp_beam_velocity; added NTP to Unix timestamp conversion |
 | 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-11-02 | Christopher Wingard | Removed the NTP to Unix timestamp conversion; NTP time is passed to adcp_beam_velocity |
 
 ---
 
@@ -290,7 +324,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
 | 2014-03-28 | Russell Desiderio | Documentation correction |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
@@ -298,6 +332,7 @@ are listed in the [References](#references) section.
 | 2019-08-13 | Christopher Wingard | Added 3-beam solution support |
 | 2023-08-15 | Samuel Dahlberg | Refactored as wrapper calling adcp_beam_velocity; added NTP to Unix timestamp conversion |
 | 2026-06-10 | Christopher Wingard | Converted to NumPy docstring format; updated documentation |
+| 2026-11-02 | Christopher Wingard | Removed the NTP to Unix timestamp conversion; NTP time is passed to adcp_beam_velocity |
 
 ---
 
@@ -307,7 +342,7 @@ are listed in the [References](#references) section.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions |
@@ -342,7 +377,7 @@ implementation.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Removed depth dependence from magnetic declination |
@@ -363,7 +398,7 @@ implementation.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code |
-| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Removed depth dependence from magnetic declination |
@@ -402,7 +437,7 @@ implementation.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code (as adcp_beam_eastward) |
-| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
 | 2015-06-10 | Russell Desiderio | Moved beam and compass conditioning to helper functions; removed depth dependence from magnetic declination |
@@ -418,7 +453,7 @@ implementation.
 | Date | Author | Change |
 |---|---|---|
 | 2013-04-10 | Christopher Wingard | Initial code (as adcp_beam_northward) |
-| 2014-02-03 | Christopher Wingard | Updated to use IGRF-14 magnetic declination |
+| 2014-02-03 | Christopher Wingard | Updated to use WMM 2010 magnetic declination |
 | 2014-03-28 | Russell Desiderio | Documentation correction |
 | 2014-04-04 | Russell Desiderio | Replaced for loops with np.einsum |
 | 2014-06-25 | Christopher Wingard | Corrected units for heading, pitch, roll, depth |
@@ -709,9 +744,11 @@ OOI (2020). Data Product Specification for Velocity Profile and Echo
 Intensity. Document Control Number 1341-00750.
 https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf
 
-Alken, P., Thebault, E., Beggan, C.D., et al. (2021). International
-Geomagnetic Reference Field: the thirteenth generation. *Earth Planets Space*,
-73, 49. <https://doi.org/10.1186/s40623-020-01288-x>
+Beggan, C.D., et al. (2026). International Geomagnetic Reference Field: the fourteenth
+generation. *Earth Planets Space*, 78, 127. <https://doi.org/10.1186/s40623-025-02360-0>
+
+International Association of Geomagnetism and Aeronomy (2024). IGRF-14. Zenodo.
+<https://doi.org/10.5281/zenodo.14012302>
 
 Strom, K.M., and Reistad, H. (2024). ppigrf: Python package for computing
 the International Geomagnetic Reference Field (IGRF).

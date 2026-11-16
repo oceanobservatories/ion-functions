@@ -1,18 +1,20 @@
 #!/usr/bin/env python
 
 """
-@package ion_functions.qc_functions
-@file ion_functions/qc_functions.py
-@author Christopher Mueller
-@brief Module containing QC functions ported from matlab samples in DPS documents
+Automated quality control (QC) tests for OOI data products, ported from
+the MATLAB example code in the OOI Data Product Specifications. The stuck
+value, spike, and gradient tests, and the month conversion used by the
+local range test wrapper, call compiled routines in qc_extensions.
+
+Author: Christopher Mueller
 """
-from ion_functions.qc.qc_extensions import stuckvalues, spikevalues, gradientvalues, ntp_to_month 
+from ion_functions.qc.qc_extensions import stuckvalues, spikevalues, gradientvalues, ntp_to_month
 
 import time
 import numpy as np
 import numexpr as ne
 from scipy.interpolate import LinearNDInterpolator
-from ion_functions import utils
+from ion_functions import deprecated, utils
 from ion_functions.utils import fill_value
 
 # try to load the OOI logging module, using default Python logging module if
@@ -24,15 +26,70 @@ except ImportError:
     log = logging.getLogger('ion-functions')
 
 def is_fill(arr):
+    """
+    Tests whether a QC parameter holds the -9999 fill value.
+
+    Parameters
+    ----------
+    arr : array_like
+        QC parameter value(s) from the QC lookup table. Only the last
+        element is tested.
+
+    Returns
+    -------
+    out : bool
+        True if the last element equals -9999.
+
+    Notes
+    -----
+    -9999 is the fill value used in the QC parameter tables; it is not the
+    system fill value used for integer data products.
+    """
     return np.atleast_1d(arr)[-1] == -9999. # Not the normal fill value, it's hardcoded to the QC params
 def is_none(arr):
+    """
+    Tests whether a QC parameter is missing.
+
+    Parameters
+    ----------
+    arr : array_like or None
+        QC parameter value(s) from the QC lookup table. Only the last
+        element is tested.
+
+    Returns
+    -------
+    out : bool
+        True if arr is None or its last element is None.
+    """
     return arr is None or (np.atleast_1d(arr).flatten()[-1] == None)
 
 def dataqc_globalrangetest_minmax(dat, dat_min, dat_max, strict_validation=False):
-    '''
-    Python wrapper for dataqc_globalrangetest
-    Combines the min/max arguments into list for dataqc_globalrangetest
-    '''
+    """
+    OOI wrapper for the Global Range Test (GLBLRNG). Combines separate
+    minimum and maximum limits into the two-element range expected by
+    dataqc_globalrangetest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    dat_min : array_like
+        Minimum valid value; the last element is used.
+    dat_max : array_like
+        Maximum valid value; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_globalrangetest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 where dat is within the range, 0 elsewhere. -99 for every point
+        if either limit is missing or holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_globalrangetest : Core algorithm.
+    """
     if is_none(dat_min) or is_none(dat_max) or is_fill(dat_min) or is_fill(dat_max):
         out = np.empty(dat.shape, dtype=np.int8)
         out.fill(-99)
@@ -42,40 +99,24 @@ def dataqc_globalrangetest_minmax(dat, dat_min, dat_max, strict_validation=False
 
 def dataqc_globalrangetest(dat, datlim, strict_validation=False):
     """
-    Description:
+    Global Range Test (GLBLRNG): flags data that fall outside a fixed
+    valid range.
 
-        Data quality control algorithm testing if measurements fall into a
-        user-defined valid range. Returns 1 for presumably good data and 0 for
-        data presumed bad.
+    Parameters
+    ----------
+    dat : array_like
+        Input data; numeric and real.
+    datlim : array_like
+        Valid range. The minimum and maximum of datlim are used as the
+        lower and upper limits.
+    strict_validation : bool, optional
+        If True, raise ValueError unless dat and datlim are numeric and
+        real and datlim has at least 2 elements. Default False.
 
-    Implemented by:
-
-        2010-07-28: DPS authored by Mathias Lankhorst. Example code provided
-        for Matlab.
-        2013-04-06: Christopher Wingard. Initial python implementation.
-        2013-05-30: Christopher Mueller. Performance improvements by adding
-            strict_validation flag.
-
-    Usage:
-
-        qcflag = dataqc_globalrangetest(dat, datlim, strict_validation)
-
-            where
-
-        qcflag = Boolean, 0 if value is outside range, else = 1.
-
-        dat = Input dataset, any scalar or vector. Must be numeric and real.
-        datlim = Two-element vector with the minimum and maximum values
-            considered to be valid.
-        strict_validation = Flag (default is False) to assert testing of input
-            types (e.g. isreal, isnumeric)
-
-    References:
-
-        OOI (2012). Data Product Specification for Global Range Test. Document
-            Control Number 1341-10004. https://alfresco.oceanobservatories.org
-            (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-10004_Data_Product_SPEC_GLBLRNG_OOI.pdf)
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 where min(datlim) <= dat <= max(datlim), 0 elsewhere.
     """
     dat = np.atleast_1d(dat)
     datlim = np.atleast_1d(datlim)
@@ -99,6 +140,35 @@ def dataqc_globalrangetest(dat, datlim, strict_validation=False):
     return (datlim.min() <= dat) & (dat <= datlim.max()).astype('int8')
 
 def dataqc_localrangetest_wrapper(dat, datlim, datlimz, dims, pval_callback):
+    """
+    OOI wrapper for the Local Range Test (LOCLRNG). Builds the coordinate
+    array z from the named dimensions and calls dataqc_localrangetest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    datlim : ndarray
+        Valid ranges, one [min, max] row per row of datlimz.
+    datlimz : ndarray
+        Coordinates at which datlim is given, one column per dimension.
+    dims : list of str
+        Names of the coordinate dimensions, in the column order of datlimz.
+        'month' is computed from the 'time' parameter (NTP seconds); any
+        other name is fetched with pval_callback.
+    pval_callback : callable
+        Function returning the values of a named parameter.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_localrangetest. -99 for every point if an input
+        is missing or datlim holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_localrangetest : Core algorithm.
+    """
     if is_none(datlim) or np.all(np.atleast_1d(datlim).flatten() == -9999):
         out = np.empty(dat.shape, dtype=np.int8)
         out.fill(-99)
@@ -138,41 +208,40 @@ def dataqc_localrangetest_wrapper(dat, datlim, datlimz, dims, pval_callback):
 
 def dataqc_localrangetest(dat, z, datlim, datlimz, strict_validation=False):
     """
-    Description:
+    Local Range Test (LOCLRNG): flags data that fall outside a valid range
+    that varies with one or more coordinates (e.g. depth or month).
 
-        Data quality control algorithm testing if measurements fall into a
-        user-defined valid range. This range is not constant but varies with
-        measurement location. Returns 1 for presumably good data and 0 for data
-        presumed bad.
+    Parameters
+    ----------
+    dat : ndarray
+        Input data; a numeric, real vector.
+    z : ndarray
+        Coordinates of each value in dat: one row per value and the same
+        number of columns as datlimz.
+    datlim : ndarray
+        Valid ranges: a 2-column array of [min, max], one row per row of
+        datlimz.
+    datlimz : ndarray
+        Coordinates at which datlim is given.
+    strict_validation : bool, optional
+        If True, check that dat is a vector, datlim is a matrix, and all
+        inputs are numeric and real. Default False.
 
-    Implemented by:
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 where dat is within the interpolated limits, 0 elsewhere.
 
-        2012-07-17: DPS authored by Mathias Lankhorst. Example code provided
-        for Matlab.
-        2013-04-06: Christopher Wingard. Initial python implementation.
+    Raises
+    ------
+    ValueError
+        If the shapes of dat, z, datlim, and datlimz are inconsistent, or
+        a minimum in datlim is not less than its maximum.
 
-    Usage:
-
-        qcflag = dataqc_localrangetest(dat, z, datlim, datlimz)
-
-            where
-
-        qcflag = Boolean, 0 if value is outside range, else = 1.
-
-        dat = input data set, a numeric real scalar or column vector.
-        z = location of measurement dat. must have same # of rows as dat and
-            same # of columns as datlimz
-        datlim = two column array with the minimum (column 1) and maximum
-            (column 2) values considered valid.
-        datlimz = array with the locations where datlim is given. must have
-            same # of rows as datlim and same # of columns as z.
-
-    References:
-
-        OOI (2012). Data Product Specification for Local Range Test. Document
-            Control Number 1341-10005. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-10005_Data_Product_SPEC_LOCLRNG_OOI.pdf)
+    Notes
+    -----
+    The limits are linearly interpolated to z. Points outside the
+    coordinates covered by datlimz are flagged 0.
     """
     if strict_validation:
         # check if dat and datlim are matrices
@@ -268,6 +337,33 @@ def dataqc_localrangetest(dat, z, datlim, datlimz, strict_validation=False):
 
 
 def dataqc_spiketest_wrapper(dat, acc, N, L, strict_validation=False):
+    """
+    OOI wrapper for the Spike Test (SPKETST). Extracts scalar test
+    parameters and calls dataqc_spiketest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    acc : array_like
+        Measurement accuracy; the last element is used.
+    N : array_like
+        Range multiplier; the last element is used.
+    L : array_like
+        Window length; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_spiketest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_spiketest. -99 for every point if a parameter is
+        missing or holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_spiketest : Core algorithm.
+    """
     if is_none(acc) or is_fill(acc) or is_none(N) or is_fill(N) or is_none(L) or is_fill(L):
         out = np.empty(dat.shape, dtype=np.int8)
         out.fill(-99)
@@ -276,54 +372,34 @@ def dataqc_spiketest_wrapper(dat, acc, N, L, strict_validation=False):
 
 def dataqc_spiketest(dat, acc, N=5, L=5, strict_validation=False):
     """
-    Description:
+    Spike Test (SPKETST): flags single values that deviate strongly from
+    their neighbors.
 
-        Data quality control algorithm testing a time series for spikes.
-        Returns 1 for presumably good data and 0 for data presumed bad.
+    Parameters
+    ----------
+    dat : array_like
+        Input data; a numeric, real vector.
+    acc : float
+        Measurement accuracy. Deviations smaller than N * acc are never
+        flagged; use 0 to disable this threshold.
+    N : float, optional
+        Range multiplier. Default 5.
+    L : int, optional
+        Window length; an odd integer. Default 5.
+    strict_validation : bool, optional
+        If True, check that dat is a numeric, real vector and that acc, N,
+        and L are numeric and real. Default False.
 
-        The time series is divided into windows of len L (an odd integer
-        number). Then, window by window, each value is compared to its (L-1)
-        neighboring values: a range R of these (L-1) values is computed (max.
-        minus min.), and replaced with the measurement accuracy ACC if ACC>R. A
-        value is presumed to be good, i.e. no spike, if it deviates from the
-        mean of the (L-1) peers by less than a multiple of the range,
-        N*max(R,ACC).
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 for good data, 0 for spikes.
 
-        Further than (L-1)/2 values from the start or end points, the peer
-        values are symmetrically before and after the test value. Within that
-        range of the start and end, the peers are the first/last L values
-        (without the test value itself).
-
-        The purpose of ACC is to restrict spike detection to deviations
-        exceeding a minimum threshold value (N*ACC) even if the data have
-        little variability. Use ACC=0 to disable this behavior.
-
-    Implemented by:
-
-        2012-07-28: DPS authored by Mathias Lankhorst. Example code provided
-        for Matlab.
-        2013-04-06: Christopher Wingard. Initial python implementation.
-        2013-05-30: Christopher Mueller. Performance optimizations.
-
-    Usage:
-
-        qcflag = dataqc_spiketest(dat, acc, N, L)
-
-            where
-
-        qcflag = Boolean, 0 if value is outside range, else = 1.
-
-        dat = input data set, a numeric, real vector.
-        acc = Accuracy of any input measurement.
-        N = (optional, defaults to 5) Range multiplier, cf. above
-        L = (optional, defaults to 5) Window len, cf. above
-
-    References:
-
-        OOI (2012). Data Product Specification for Spike Test. Document
-            Control Number 1341-10006. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-10006_Data_Product_SPEC_SPKETST_OOI.pdf)
+    Notes
+    -----
+    Each value is compared with the mean of its L-1 neighbors and flagged
+    if it deviates by N * max(R, acc) or more, where R is the range of the
+    neighbors. The test runs in compiled code (qc_extensions).
     """
     dat = np.atleast_1d(dat)
 
@@ -350,6 +426,33 @@ def dataqc_spiketest(dat, acc, N=5, L=5, strict_validation=False):
 
 
 def dataqc_polytrendtest_wrapper(dat, t, ord_n, nstd, strict_validation=False):
+    """
+    OOI wrapper for the Trend Test (TRNDTST). Extracts scalar test
+    parameters and calls dataqc_polytrendtest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    t : ndarray
+        Time associated with dat.
+    ord_n : array_like
+        Polynomial order; the last element is used.
+    nstd : array_like
+        Threshold factor; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_polytrendtest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_polytrendtest. -99 for every point if a parameter
+        is missing or ord_n holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_polytrendtest : Core algorithm.
+    """
     if is_none(ord_n) or is_fill(ord_n) or is_none(nstd) or is_fill(ord_n):
         out = np.empty(dat.shape, dtype=np.int8)
         out.fill(-99)
@@ -358,51 +461,35 @@ def dataqc_polytrendtest_wrapper(dat, t, ord_n, nstd, strict_validation=False):
 
 def dataqc_polytrendtest(dat, t, ord_n=1, nstd=3, strict_validation=False):
     """
-    Description:
+    Trend Test (TRNDTST): flags a time series that contains a significant
+    polynomial trend, such as sensor drift.
 
-        Data quality control algorithm testing if measurements contain a
-        significant portion of a polynomial. Returns 1 if this is not the case,
-        else 0.
+    Parameters
+    ----------
+    dat : array_like
+        Input data; a numeric, real vector.
+    t : array_like
+        Time associated with dat.
+    ord_n : int, optional
+        Polynomial order; 1 tests for a linear trend. Default 1.
+    nstd : int, optional
+        Threshold factor. Default 3.
+    strict_validation : bool, optional
+        If True, check that dat and t are numeric, real vectors and that
+        ord_n and nstd are numeric, real scalars. Default False.
 
-        The purpose of this test is to check if a significant fraction of the
-        variability in a time series can be explained by a drift, possibly
-        interpreted as a sensor drift. This drift is assumed to be a polynomial
-        of order ORD. Use ORD=1 to consider a linear drift
+    Returns
+    -------
+    qcflag : ndarray of int8
+        The same value for every point: 0 if a trend is detected, 1
+        otherwise.
 
-        The time series dat is passed to MatLab's POLYFIT routine to obtain a
-        polynomial fit PP to dat, and the difference dat-PP is compared to the
-        original dat. If the standard deviation of (dat-PP) is less than that
-        of dat by a factor of NSTD, the time series is assumed to contain a
-        significant trend (output will be 0), else not (output will be 1).
-
-    Implemented by:
-
-        2012-10-29: DPS authored by Mathias Lankhorst. Example code provided
-        for Matlab.
-        2013-04-06: Christopher Wingard. Initial python implementation.
-        2013-05-30: Christopher Mueller. Performance optimizations.
-
-    Usage:
-
-        qcflag = dataqc_polytrendtest(dat, t, ord_n, nstd, strict_validation)
-
-            where
-
-        qcflag = Boolean, 0 a trend is detected, 1 elsewhere.
-        dat = Input dataset, a numeric real vector.
-        t = time record associated with dat
-        ord_n (optional, defaults to 1) = Polynomial order.
-        nstd (optional, defaults to 3) = Factor by how much the standard
-            deviation must be reduced before qcflag switches from 1 to 0
-        strict_validation (optional, defaults to False) = Flag asserting
-            testing of inputs.
-
-    References:
-
-        OOI (2012). Data Product Specification for Trend Test. Document
-            Control Number 1341-10007. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-10007_Data_Product_SPEC_TRNDTST_OOI.pdf)
+    Notes
+    -----
+    A trend is detected if nstd times the standard deviation of the
+    residuals from the polynomial fit is less than the standard deviation
+    of dat. ord_n is rounded to the nearest integer and nstd is truncated
+    to an integer.
     """
     dat = np.atleast_1d(dat)
     t = np.atleast_1d(t)
@@ -445,6 +532,31 @@ def dataqc_polytrendtest(dat, t, ord_n=1, nstd=3, strict_validation=False):
 
 
 def dataqc_stuckvaluetest_wrapper(x, reso, num, strict_validation=False):
+    """
+    OOI wrapper for the Stuck Value Test (STUCKVL). Extracts scalar test
+    parameters and calls dataqc_stuckvaluetest.
+
+    Parameters
+    ----------
+    x : ndarray
+        Input time series.
+    reso : array_like
+        Resolution; the last element is used.
+    num : array_like
+        Minimum number of repeats; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_stuckvaluetest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_stuckvaluetest. -99 for every point if a parameter
+        is missing or holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_stuckvaluetest : Core algorithm.
+    """
     if is_none(reso) or is_fill(reso) or is_none(num) or is_fill(num):
         out = np.empty(x.shape, np.int8)
         out.fill(-99)
@@ -453,38 +565,32 @@ def dataqc_stuckvaluetest_wrapper(x, reso, num, strict_validation=False):
 
 def dataqc_stuckvaluetest(x, reso, num=10, strict_validation=False):
     """
-    Description:
+    Stuck Value Test (STUCKVL): flags runs of repeated values in a time
+    series.
 
-        Data quality control algorithm testing a time series for "stuck
-        values", i.e. repeated occurences of one value. Returns 1 for
-        presumably good data and 0 for data presumed bad.
+    Parameters
+    ----------
+    x : array_like
+        Input time series; a numeric, real vector.
+    reso : float
+        Resolution; successive values less than reso apart count as
+        repeats.
+    num : int, optional
+        Minimum number of successive repeats that marks values as stuck.
+        Default 10.
+    strict_validation : bool, optional
+        If True, check that x is a numeric, real vector and that reso and
+        num are numeric, real scalars. Default False.
 
-    Implemented by:
+    Returns
+    -------
+    qcflag : ndarray of int8
+        0 where stuck values are found, 1 elsewhere. Every point is 0 if x
+        has fewer than num values.
 
-        2012-10-29: DPS authored by Mathias Lankhorst. Example code provided
-        for Matlab.
-        2013-04-06: Christopher Wingard. Initial python implementation.
-
-    Usage:
-
-        qcflag = =dataqc_stuckvaluetest(x, RESO, NUM);
-
-            where
-
-        qcflag = Boolean output: 0 where stuck values are found, 1 elsewhere.
-        x = Input time series (vector, numeric).
-        reso = Resolution; repeat values less than reso apart will be
-            considered "stuck values".
-        num = Minimum number of successive values within reso of each other
-            that will trigger the "stuck value". num is optional and defaults
-            to 10 if omitted or empty.
-
-    References:
-
-        OOI (2012). Data Product Specification for Stuck Value Test. Document
-            Control Number 1341-10008. https://alfresco.oceanobservatories.org/
-            (See: Company Home >> OOI >> Controlled >> 1000 System Level >>
-            1341-10008_Data_Product_SPEC_STUCKVL_OOI.pdf)
+    Notes
+    -----
+    The test runs in compiled code (qc_extensions).
     """
     dat = np.atleast_1d(x)
 
@@ -520,6 +626,39 @@ def dataqc_stuckvaluetest(x, reso, num=10, strict_validation=False):
     return out
 
 def dataqc_gradienttest_wrapper(dat, x, ddatdx, mindx, startdat, toldat, strict_validation=False):
+    """
+    OOI wrapper for the Gradient Test (GRADTST). Builds the symmetric valid
+    range [-ddatdx, ddatdx] from a single gradient limit and calls
+    dataqc_gradienttest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    x : ndarray
+        Coordinate of each value in dat.
+    ddatdx : array_like
+        Maximum absolute change in dat per unit x; the last element is
+        used.
+    mindx : array_like
+        Minimum separation in x; the last element is used.
+    startdat : array_like
+        Start value presumed good; the last element is used.
+    toldat : array_like
+        Tolerance for returning to good data; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_gradienttest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_gradienttest. -99 for every point if a parameter
+        is missing or holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_gradienttest : Core algorithm.
+    """
     if is_none(ddatdx) or is_fill(ddatdx) or is_none(mindx) or is_fill(mindx) or is_none(startdat) or is_fill(startdat) or is_none(toldat) or is_fill(toldat):
         out = np.empty(dat.shape, dtype=np.int8)
         out.fill(-99)
@@ -530,65 +669,41 @@ def dataqc_gradienttest_wrapper(dat, x, ddatdx, mindx, startdat, toldat, strict_
 
 def dataqc_gradienttest(dat, x, ddatdx, mindx, startdat, toldat, strict_validation=False):
     """
-    Description
+    Gradient Test (GRADTST): flags data where the change between successive
+    points falls outside a valid range.
 
-        Data quality control algorithm testing if changes between successive
-        data points fall within a certain range.
+    Parameters
+    ----------
+    dat : array_like
+        Input data; a numeric, real vector.
+    x : array_like
+        Coordinate (e.g. time or distance) of each value in dat; the same
+        length as dat and strictly increasing.
+    ddatdx : array_like
+        Two-element [min, max] valid range of the change in dat per unit x.
+    mindx : float
+        Minimum separation in x for the test to be applied; points closer
+        than mindx to the last tested point are skipped. NaN or 0 disables
+        this.
+    startdat : float
+        Value presumed good, used to test the first point. NaN or 0 means
+        the first point is presumed good.
+    toldat : float
+        Tolerance. After a failure, data are flagged 0 until a value comes
+        within toldat of the last good value.
+    strict_validation : bool, optional
+        If True, check that dat and x are vectors of equal length and that
+        x is strictly increasing. Default False.
 
-        Input data dat are given as a function of coordinate x. The algorithm
-        will flag dat values as bad if the change deltaDAT/deltaX between
-        successive dat values exceeds thresholds given in ddatdx. Once the
-        threshold is exceeded, following dat are considered bad until a dat
-        value returns to within toldat of the last known good value.
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 for good data, 0 for bad data, and -99 for points skipped because
+        of mindx.
 
-        It is possible to remove data points that are too close together in x
-        coordinates (use mindx).
-
-        By default, the first value of dat is considered good. To change this,
-        use startdat and toldat to set as the first good data point the first
-        one that comes within toldat of startdat.
-
-    Implemented by:
-
-        2012-07-17: DPS authored by Mathias Lankhorst. Example code provided
-        for Matlab.
-        2013-04-06: Christopher Wingard. Initial python implementation.
-
-    Usage:
-
-        outdat, outx, outqc = dataqc_gradienttest(dat, x, ddatdx, mindx,
-                                                  startdat, toldat);
-
-            where
-
-        outdat = same as dat except that NaNs and values not meeting mindx are
-            removed.
-        outx = same as x except that NaNs and values not meeting mindx are
-            removed.
-        outqc = output quality control flags for outdat. 0 means bad data, 1
-            means good data.
-
-        dat = input dataset, a numeric real vector.
-        x = coordinate (e.g. time, distance) along which dat is given. Must be
-            of the same size as dat and strictly increasing.
-        ddatdx = two-element vector defining the valid range of ddat/dx
-            from one point to the next.
-        mindx = scalar. minimum dx for which this test will be applied (data
-            that are less than mindx apart will be deleted). defaults to zero
-            if NaN/empty.
-        startdat = start value (scalar) of dat that is presumed good. defaults
-            to first non-NaN value of dat if NaN/empty.
-        toldat = tolerance value (scalar) for dat; threshold to within which
-            dat must return to be counted as good, after exceeding a ddatdx
-            threshold detected bad data.
-
-    References:
-
-        OOI (2012). Data Product Specification for Gradient Test. Document
-            Control Number 1341-100010.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-10010_Data_Product_SPEC_GRDTEST_OOI.pdf)
+    Notes
+    -----
+    The test runs in compiled code (qc_extensions).
     """
 
     if strict_validation:
@@ -634,58 +749,35 @@ def dataqc_gradienttest(dat, x, ddatdx, mindx, startdat, toldat, strict_validati
     return out
 
 
+@deprecated
 def dataqc_solarelevation(lon, lat, dt):
     """
-    Description
+    Solar Elevation (SOLAREL): computes the solar elevation and the solar
+    radiation in the absence of an atmosphere for a given location and
+    time.
 
-        Computes instantaneous no-sky solar radiation and altitude from date
-        and time stamp and position data. It is put together from expressions
-        taken from Appendix E in the 1978 edition of Almanac for Computers,
-        Nautical Almanac Office, U.S. Naval Observatory. They are reduced
-        accuracy expressions valid for the years 1800-2100. Solar declination
-        computed from these expressions is accurate to at least 1'. The solar
-        constant (1368.0 W/m^2) represents a mean of satellite measurements
-        made over the last sunspot cycle (1979-1995) taken from Coffey et al
-        (1995), Earth System Monitor, 6, 6-10.
+    Parameters
+    ----------
+    lon : array_like
+        Longitude [decimal degrees]; east is positive.
+    lat : array_like
+        Latitude [decimal degrees]; north is positive.
+    dt : array_like
+        Time stamp [seconds since 1970-01-01 UTC].
 
-        This code is a python implementation of soradna1.m available in Air-Sea
-        Toolbox.
+    Returns
+    -------
+    z : ndarray
+        Solar elevation (altitude) [degrees].
+    sorad : ndarray
+        Solar radiation with no atmosphere [W m^-2]; 0 when the sun is
+        below the horizon.
 
-    Implemented by:
-
-        1997-03-08: Version 1.0 (author unknown) of soradna1.m.
-        1998-08-28: Version 1.1 (author unknown) of soradna1.m.
-        1999-08-05: Version 2.0 (author unknown) of soradna1.m.
-
-        2013-04-07: Christopher Wingard. Initial python implementation. Note,
-        this function is derived from old, unmaintained code. More robust
-        implementations exist (e.g. PyEphem and PySolar) that will probably
-        calculate these values more accurately.
-
-    Usage:
-
-        z, sorad = dataqc_solarelevation(lon, lat, dt)
-
-            where
-
-        z = solar altitude [degrees]
-        sorad = no atmosphere solar radiation [W m^-2]
-
-        lon = longitude (east is positive) [decimal degress]
-        lat = latitude [decimal degrees]
-        dt = date and time stamp in UTC [seconds since 1970-01-01]
-
-    Examples
-
-        dt = 1329177600     # 2012-02-14 00:00:00
-        z, sorad = dataqc_solarelevation(120, 30, dt)
-        z = 15.1566, sorad = 366.8129
-
-        OOI (2012). Data Product Specification for Solar Elevation. Document
-            Control Number 1341-100011.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-10011_Data_Product_SPEC_SOLRELV_OOI.pdf)
+    Notes
+    -----
+    Python implementation of soradna1.m from the Air-Sea Toolbox, using
+    reduced-accuracy expressions valid for the years 1800-2100.
+    Deprecated: never used in the OOI data system.
     """
     # Test lengths and types of inputs. Latitude and longitude must be the same
     # size and can either be a scalar or a vecotr. The date and time stamp
@@ -810,10 +902,32 @@ def dataqc_solarelevation(lon, lat, dt):
     return (z, sorad)
 
 def dataqc_propagateflags_wrapper(strict_validation=False, *args):
-    '''
-    This is a function that wraps dataqc_propagateflags for use in ION
-    It accepts a variable number of vector arguments (of the same shape) and calls dataqc_propagateflags
-    '''
+    """
+    OOI wrapper for Combined QC Flags (CMBNFLG). Stacks a variable number of
+    flag vectors and calls dataqc_propagateflags.
+
+    Parameters
+    ----------
+    strict_validation : bool, optional
+        Passed to dataqc_propagateflags. Default False.
+    *args : ndarray
+        Flag vectors of the same length.
+
+    Returns
+    -------
+    outflag : ndarray of int8
+        1 where all inputs are 1, 0 elsewhere.
+
+    Raises
+    ------
+    ValueError
+        If the vectors differ in length (checked only when
+        strict_validation is False).
+
+    See Also
+    --------
+    dataqc_propagateflags : Core algorithm.
+    """
 
     if not strict_validation:
 
@@ -827,46 +941,23 @@ def dataqc_propagateflags_wrapper(strict_validation=False, *args):
 
 def dataqc_propagateflags(inflags, strict_validation=False):
     """
-    Description:
+    Combined QC Flags (CMBNFLG): merges several sets of QC flags into one,
+    e.g. to flag a derived product such as salinity from the flags of its
+    inputs (conductivity, temperature, and pressure).
 
-        Propagate "bad" qc flags (from an arbitrary number of source datasets)
-        to another (derived) dataset.
+    Parameters
+    ----------
+    inflags : ndarray
+        M-by-N array of flags, one row per input data set; 1 is good and 0
+        is bad.
+    strict_validation : bool, optional
+        If True, raise ValueError unless inflags contains only 0 and 1.
+        Default False.
 
-        Consider data from an oceanographic CTD (conductivity, temperature, and
-        pressure) instrument. From these three time series, you want to compute
-        salinity. If any of the three source data (conductivity, temperature,
-        pressure) is of bad quality, the salinity will be bad as well. You can
-        feed your QC assessment of the former three into this routine, which
-        will then give you the combined assessment for the derived (here:
-        salinity) property.
-
-    Implemented by:
-
-        2012-07-17: DPS authored by Mathias Lankhorst. Example code provided
-        for Matlab.
-
-        2013-04-06: Christopher Wingard. Initial python implementation.
-
-    Usage:
-
-        outflag = dataqc_propagateflags(inflags)
-
-            where
-
-        outflag = a 1-by-N boolean vector that contains 1 where all of the
-            inflags are 1, and 0 otherwise.
-
-        inflags = an M-by-N boolean matrix, where each of the M rows contains
-            flags of an independent data set such that "0" means bad data and
-            "1" means good data.
-
-    References:
-
-        OOI (2012). Data Product Specification for Combined QC Flags. Document
-            Control Number 1341-100012.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-10012_Data_Product_SPEC_CMBNFLG_OOI.pdf)
+    Returns
+    -------
+    outflag : ndarray of int8
+        Length-N flags: 1 where every input is 1, 0 otherwise.
     """
 
     if strict_validation:
@@ -883,40 +974,33 @@ def dataqc_propagateflags(inflags, strict_validation=False):
     return outflag.astype('int8')
 
 
+@deprecated
 def dataqc_condcompress(p_orig, p_new, c_orig, cpcor=-9.57e-8):
     """
-    Description:
+    Conductivity Compressibility Compensation (CONDCMP): rescales
+    conductivity computed with one pressure to a corrected pressure.
 
-        Implementation of the Sea-Bird conductivity compressibility correction,
-        scaling the input conductivity based on ratio of the original pressure
-        and the updated pressure.
+    Parameters
+    ----------
+    p_orig : array_like
+        Pressure used to compute the original conductivity, typically L1a
+        PRESWAT [dbar].
+    p_new : array_like
+        Updated pressure, typically L1b PRESWAT [dbar].
+    c_orig : array_like
+        Original conductivity, typically L1a CONDWAT [S m^-1].
+    cpcor : float, optional
+        Pressure correction coefficient used to compute c_orig. Default
+        -9.57e-8.
 
-    Implemented by:
+    Returns
+    -------
+    c_new : array_like
+        Conductivity corrected to p_new [S m^-1].
 
-        2013-04-07: Christopher Wingard. Initial python implementation.
-
-    Usage:
-
-        c_new = dataqc_condcompress(p_orig, p_new, c_orig, cpcor)
-
-            where
-
-        c_new = updated conductivity record [S/m]
-
-        p_orig = original pressure used to calculate original conductivity,
-            this typically the L1a PRESWAT [dbar]
-        p_new = updated pressure, typically L1b PRESWAT [dbar]
-        c_orig = original conductivty record, typically L1a CONDWAT [S/m]
-        cpcor = pressure correction coefficient used to calculate original
-            conductivity, default is -9.57e-8
-
-    References:
-
-        OOI (2012). Data Product Specification for Conductivity Compressibility
-            Correction. Document Control Number 1341-10030.
-            https://alfresco.oceanobservatories.org/ (See: Company Home >> OOI
-            >> Controlled >> 1000 System Level >>
-            1341-10030_Data_Product_SPEC_CNDCMPR_OOI.pdf)
+    Notes
+    -----
+    Deprecated: never used in the OOI data system.
     """
     c_new = c_orig * (1 + cpcor * p_orig) / (1 + cpcor * p_new)
     return c_new

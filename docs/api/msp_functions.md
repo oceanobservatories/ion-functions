@@ -19,10 +19,25 @@ water, a background water reference, and two shipboard calibration
 solutions. For methane, Nafion mode scan data is used; for the other six
 gases, Direct mode scan data is used.
 
+| Class | Hardware | Platform | Designator Meaning |
+|---|---|---|---|
+| MASSP | Cabled mass spectrometer (P. Girguis, Harvard University) | RCA seafloor junction boxes (International District Vent Field, Southern Hydrate Summit) | Mass Spectrometer |
+
 A Level 2 Total Dissolved Gas Concentration product (TOTLGAS) is derived
 from the L1 DISSGAS hydrogen sulfide and carbon dioxide concentrations,
 applying a temperature-, salinity-, and pressure-dependent speciation
 correction using the equilibrated water pH.
+
+Within the OOI data system, MSP data products fall under the Seafloor/Crust [sampling
+regime](https://oceanobservatories.org/data-products/); the DISSGAS products are listed there as MASSPEC (see the
+[complete list of OOI data products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
+
+No calibration coefficients are passed to these functions; the calibration tables and deconvolution constants
+specified in the DPS are fixed in the code.
+
+For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
+with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
 

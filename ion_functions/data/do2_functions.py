@@ -15,81 +15,6 @@ import gsw
 
 from ion_functions.data.generic_functions import replace_fill_with_nan
 
-"""
-DOSTA Processing Configurations:
-
-    DOSTA configured for analog output of calphase and T_opt to CTD
-    voltage channels:
-        T_optode_degC = dosta_Topt_volt_to_degC(T_optode_volts)
-        DOCONCS-DEG_L0 = dosta_phase_volt_to_degree(DOCONCS-VLT_L0)
-        DOCONCS_L1 = do2_SVU(DOCONCS-DEG_L0, T_optode_degC, ...)
-        DOXYGEN_L2 = do2_salinity_correction(DOCONCS_L1, ...)
-
-    DOSTA configured for digital output of oxygen concentration to CTD
-    RS-232:
-        DOCONCS_L1 = o2_counts_to_uM(DOCONCS-CNT_L0)
-        DOXYGEN_L2 = do2_salinity_correction(DOCONCS_L1, ...)
-
-    DOSTA, autonomous operation, digital output of calphase and T_opt:
-        DOCONCS_L1 = do2_SVU(DOCONCS-DEG_L0, T_optode_degC, ...)
-        DOXYGEN_L2 = do2_salinity_correction(DOCONCS_L1, ...)
-
-
-DOSTA DATA PRODUCTS:
-
-    DOCONCS-CNT_L0 [counts]: oxygen concentration, uncorrected for
-        salinity and pressure.
-        (a) parsed from digital DOSTA output when routed through
-            RS-232 CTD.
-    DOCONCS-DEG_L0 [degrees]: CalPhase (calibrated phase). Two sources:
-        (a) parsed from autonomous DOSTA digital output.
-        (b) calculated by dosta_phase_volt_to_degree from
-            DOCONCS-VLT_L0 when the DOSTA is connected to a CTD
-            analog voltage channel.
-    DOCONCS-VLT_L0 [volts]: CalPhase (calibrated phase).
-        (a) parsed from analog DOSTA output when routed through CTD.
-
-    DOCONCS_L1 [micro-mole/liter]: oxygen concentration, uncorrected
-        for salinity and pressure.
-
-        As of Aug 2015, SAF has not been updated to reflect the change
-        of units from micro-mole/kg to micro-mole/liter.
-
-        Two sources:
-        (a) calculated by o2_counts_to_uM from DOCONCS-CNT_L0.
-        (b) calculated by do2_SVU from DOCONCS-DEG_L0.
-
-    DOXYGEN_L2 [micro-mole/kg]: oxygen concentration, corrected for
-        salinity and pressure (and inherently temperature). Previously
-        named DOCONCS_L2; renamed in DPS 1341-00520 version 1-02
-        (2014-04-11).
-        (a) calculated by do2_salinity_correction from DOCONCS_L1.
-
-
-    Temperature in DOSTA data product calculations:
-
-    The temperature input to the function do2_SVU should be the
-    sensor's optode foil temperature [degC] measured by the optode's
-    thermistor (Topt in the DPS). This variable is directly parsed from
-    digital autonomous DOSTA data streams; if instead the DOSTA is
-    connected to a CTD through an analog voltage channel, then
-    Topt[degC] is calculated from Topt[V] by the function
-    dosta_Topt_volt_to_degC.
-
-    The temperature input to the function do2_salinity_correction is
-    TEMPWAT from the co-located CTD.
-
-
-DOFST DATA PRODUCTS:
-
-    DOCONCF_L0 [counts]: represents either voltage_counts or frequency,
-        depending on DOFST series.
-    DOCONCF_L2 [micro-mole/kg]: oxygen concentration, corrected for
-        temperature, salinity and pressure.
-        (a) calculated by do2_dofst_volt and do2_dofst_frequency via
-            the shared core function dofst_calc.
-"""
-
 
 def dosta_phase_volt_to_degree(phase_volt):
     """
@@ -174,12 +99,6 @@ def o2_counts_to_uM(o2_counts):
     DO : ndarray
         Dissolved oxygen concentration uncorrected for salinity and
         pressure, DOCONCS_L1 [micro-mole/L].
-
-    Notes
-    -----
-    The DOCONCS_L1 data product has units of micromole/liter. The OOI
-    Software Application Framework (SAF) incorrectly lists the units
-    for this L1 product as micromole/kg.
     """
     # replace fill values with nan
     o2_counts = replace_fill_with_nan(None, o2_counts)
@@ -248,10 +167,6 @@ def do2_SVU(calphase, temp, csv, conc_coef=np.array([0.0, 1.0])):
     gliders, differences between CTD and optode temperature readings of
     1 degC can translate to approximately 5% differences in calculated
     oxygen concentration.
-
-    The DOCONCS_L1 data product has units of micromole/liter. The OOI
-    Software Application Framework (SAF) incorrectly lists the units
-    for this L1 product as micromole/kg.
     """
     conc_coef = np.atleast_2d(conc_coef)
     # this will work for both old and new CI implementations of cal coeffs.

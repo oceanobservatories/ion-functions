@@ -1,21 +1,41 @@
-*pyc
-*.swp
-bin
-eggs
-develop-eggs
-ion_functions.egg-info
-parts
-.installed.cfg
-ion_functions/data/tmp/
-build
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+
+# Build and packaging
+build/
+dist/
+.eggs/
+*.egg-info/
 *.egg
+
+# Compiled C extensions and Cython-generated C (the hand-written C in extensions/ is tracked)
+*.so
+*.pyd
 *.o
 *.c
 !extensions/*.c
 extensions/test
-*.so
-notebooks/
-.idea
 
-.claude
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation build output (includes the PDF from tools/build_pdf.py)
+site/
+
+# Virtual environments
+.venv/
+venv/
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Local only
+.claude/
 CLAUDE.md

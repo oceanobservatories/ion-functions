@@ -54,12 +54,13 @@ VN_VELPT = VN_NOBSKA * 10.
 VU_VELPT = VU_NOBSKA * 10.
 
 # expected output velocities in m/s
+# expected values updated 2026-11-04 for the IGRF-14 magnetic declination model (previously WMM2010)
 VE_EXPECTED = np.array([
-    -0.085136, -0.028752, -0.036007, 0.002136, -0.023158,
-    0.043218, 0.056451, 0.054727, 0.088446, 0.085952])
+    -0.085184, -0.028780, -0.036041, 0.002116, -0.023179,
+    0.043203, 0.056454, 0.054722, 0.088442, 0.085931])
 VN_EXPECTED = np.array([
-    0.164012,  0.094738,  0.114471,  0.06986,  0.07029,
-    0.049237, -0.009499,  0.019311,  0.012096,  0.070017])
+    0.163987,  0.094730,  0.114460,  0.069861,  0.070283,
+    0.049249, -0.009482,  0.019327,  0.012122,  0.070042])
 VU_EXPECTED = np.array([
     -0.011, -0.006, -0.014, -0.02, -0.017, -0.02,
     0.013, -0.016, -0.011, -0.045])
@@ -344,13 +345,14 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
         vu_calcd = vel3dk_up(
             VEL0, VEL1, VEL2, HDG, PTCH, RLL, beams, VSCALE)
 
+        # expected values updated 2026-11-04 for the IGRF-14 magnetic declination model (previously WMM2010)
         VE_expected = np.array([
-            0.82249603, -0.22633049,  0.49801448, -0.07904969,  0.38632842,
-            0.88336431, -1.84831136,  0.43001174,  0.06043974,  0.41225013])
+            0.82231419, -0.22639410,  0.49805672, -0.07917150,  0.38646794,
+            0.88358534, -1.84856906,  0.42976812,  0.06097282,  0.41225488])
 
         VN_expected = np.array([
-            0.62296765,  0.21800797, -0.14479311,  0.41739691, -0.47814240,
-            -0.75753862, 0.88334724,  0.83473984, -1.82667954, -0.01635351])
+            0.62320764,  0.21794192, -0.14464777,  0.41737383, -0.47802964,
+            -0.75728080, 0.88280781,  0.83486530, -1.82666182, -0.01623321])
 
         vU_expected = np.array([
             -0.27506406,  0.75059143,  0.58418777,  1.36163388,  0.85850869,
@@ -397,13 +399,14 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
         vu_calcd = vel3dk_up(
             VEL0, VEL1, VEL2, HDG, PTCH, RLL, beams, VSCALE)
 
+        # expected values updated 2026-11-04 for the IGRF-14 magnetic declination model (previously WMM2010)
         VE_expected = np.array([
-            0.82249603, -0.22633049,  0.49801448, -0.07904969,  np.nan,
-            0.88336431, -1.84831136,  0.43001174,  0.06043974,  0.41225013])
+            0.82231419, -0.22639410,  0.49805672, -0.07917150,  np.nan,
+            0.88358534, -1.84856906,  0.42976812,  0.06097282,  0.41225488])
 
         VN_expected = np.array([
-            0.62296765,  0.21800797, -0.14479311,  0.41739691, np.nan,
-            -0.75753862, 0.88334724,  0.83473984, -1.82667954, -0.01635351])
+            0.62320764,  0.21794192, -0.14464777,  0.41737383, np.nan,
+            -0.75728080, 0.88280781,  0.83486530, -1.82666182, -0.01623321])
 
         vU_expected = np.array([
             -0.27506406,  0.75059143,  0.58418777,  1.36163388,  np.nan,
@@ -450,13 +453,14 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
         vu_calcd = vel3dk_up(
             VEL0, VEL1, VEL2, HDG, PTCH, RLL, beams, VSCALE)
 
+        # expected values updated 2026-11-04 for the IGRF-14 magnetic declination model (previously WMM2010)
         VE_expected = np.array([
             np.nan, np.nan,  np.nan, np.nan, np.nan,
-            np.nan, np.nan,  np.nan, 0.06043974, np.nan])
+            np.nan, np.nan,  np.nan, 0.06097282, np.nan])
 
         VN_expected = np.array([
             np.nan, np.nan,  np.nan, np.nan, np.nan,
-            np.nan, np.nan,  np.nan, -1.82667954, np.nan])
+            np.nan, np.nan,  np.nan, -1.82666182, np.nan])
 
         vU_expected = np.array([
             np.nan, np.nan,  np.nan, np.nan, np.nan,
@@ -722,9 +726,10 @@ class TestVelFunctionsUnit(BaseUnitTestCase):
         ref_ts = ts_unix_time + delta_epoch
         # pick a test lat and lon which with this timestamp gives a magnetic variation of
         # close to 15 degrees.
-        ref_lat = 37.768812
+        ref_lat = 37.8892
         ref_lon = -135.0
-        # this will give a magnetic variation value of magvar = 15.000000171 (WMM).
+        # this will give a magnetic variation value of magvar = 15.0000075 (IGRF-14; originally
+        # ref_lat = 37.768812, which gave 15.000000171 with WMM2010).
 
         # the standard convention is that a positive magnetic variation delta indicates that
         # magnetic north lies delta degrees to the east (clockwise) of true north. this means

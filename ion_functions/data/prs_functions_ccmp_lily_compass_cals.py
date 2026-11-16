@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.prs_functions_ccmp_lily_compass_cals
-@file ion_functions/data/prs_functions_ccmp_lily_compass_cals.py
-@author Russell Desiderio
-@brief Module containing BOTTILT-CCMP correction coefficients.
+BOTTILT-CCMP compass correction coefficients, keyed by sensor serial
+number only.
+
+Deprecated. Not imported anywhere; retained only for the commented-out
+alternate algorithm in prs_functions.prs_bottilt_ccmp. Scheduled for
+removal together with that commented-out code.
+
+Author: Russell Desiderio
 """
 
 # Returns the corrected compass direction based on the sensor compass direction

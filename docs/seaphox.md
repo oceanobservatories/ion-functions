@@ -43,25 +43,25 @@ rather than collected on a single page (although they are all collected in a
 single python module, `phsen_h_functions.py`). Each sub-instrument's functions 
 are documented with the family they belong to scientifically:
 
-**SBE 37 MicroCAT (CTD)** — Raw A/D counts to calibrated temperature,
+**SBE 37 MicroCAT (CTD)** -- Raw A/D counts to calibrated temperature,
 pressure, and conductivity. The SBE 37 uses the same calibration polynomial
 families as other Sea-Bird MicroCAT instruments. See
-[CTD Functions — SeapHOx CTD Functions](api/ctd_functions.md#seaphox-ctd-functions).
+[CTD Functions -- temperature_raw_conversion](api/ctd_functions.md#ion_functions.data.phsen_h_functions.temperature_raw_conversion).
 
 Functions: `temperature_raw_conversion`, `pressure_raw_conversion`,
 `conductivity_raw_conversion` (all in `phsen_h_functions.py`).
 
-**SBE 63 Optical DO Sensor** — Raw phase and thermistor counts to dissolved
+**SBE 63 Optical DO Sensor** -- Raw phase and thermistor counts to dissolved
 oxygen concentration in $\mu$mol kg$^{-1}$. Uses a Stern-Volmer fluorescence
 quenching model with salinity and pressure corrections. See
-[DO Functions — PHSEN-H Dissolved Oxygen](api/do2_functions.md#phsen-h-dissolved-oxygen-sbe-63-optical-sensor).
+[DO2 Functions -- Deep SeapHOx V2 DO Functions](api/do2_functions.md#deep-seaphox-v2-do-functions-sbe-63).
 
 Functions: `dissolved_oxygen`, `convert_sbe63_thermistor`
 (both in `phsen_h_functions.py`).
 
-**Deep SeaFET V2 ISFET (pH)** — Raw ISFET voltage counts to pH on the total
+**Deep SeaFET V2 ISFET (pH)** -- Raw ISFET voltage counts to pH on the total
 hydrogen ion scale (PHWATER_L2). See
-[pH Functions — Sea-Bird Scientific Deep SeapHOx V2](api/ph_functions.md#sea-bird-scientific-deep-seaphox-v2).
+[pH Functions -- Deep SeapHOx V2](api/ph_functions.md#deep-seaphox-v2-phsen-gh).
 
 Functions: `convert_ph_voltage_counts`, `ph_total`
 (both in `phsen_h_functions.py`).
