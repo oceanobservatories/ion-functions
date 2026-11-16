@@ -1,0 +1,5212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/fdc_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>FDC Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "FDC Functions";
+        var mkdocs_page_input_path = "api/fdc_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/fdc_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">FDC Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#windtur_l1-motion-corrected-wind-velocity">WINDTUR_L1 -- Motion-Corrected Wind Velocity</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#tmpatur_l1-sonic-temperature">TMPATUR_L1 -- Sonic Temperature</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fluxmom_l2-momentum-flux">FLUXMOM_L2 -- Momentum Flux</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fluxhot_l2-buoyancy-flux">FLUXHOT_L2 -- Buoyancy Flux</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#wrapper-functions">Wrapper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">FDC Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="fdc-functions">FDC Functions</h1>
+<div class="admonition note">
+<p class="admonition-title">All Functions Deprecated</p>
+<p>These functions were used to process data from the FDCHP instrument. They
+are no longer in use because the OOI data system assembles instrument
+bursts in a way that is incompatible with this processing pipeline. They
+are retained for reference but are no longer used in OOI data production.
+The FDCHP products in the <code>fdchp_a_dcl_instrument</code> stream are computed
+onboard the instrument and reported directly.</p>
+</div>
+<h2 id="background">Background</h2>
+<p>The Flux Direct Covariance High Power (FDCHP) system directly computes air-sea fluxes of
+momentum and buoyancy using the motion-corrected direct covariance (MCDC) method. The system
+combines a Gill Windmaster Pro (Model 1561-PK-020) 3-axis sonic anemometer/thermometer with a
+Lord MicroStrain 3DM-GX3-25 Inertial Measurement Unit (IMU, integrating 3-axis linear
+accelerometers, 3-axis angular rate sensors, and a 3-axis magnetometer), forming the FDCHP
+instrument class deployed on select OOI surface buoys. Note, MicroStrain was acquired by Hottinger
+Bruel and Kjaer (HBK) in September 2023 and now operates as MicroStrain by HBK.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FDCHP-A</td>
+<td>Gill Windmaster Pro (1561-PK-020) sonic anemometer with Lord MicroStrain 3DM-GX3-25 IMU</td>
+<td>Surface moorings (CE02SHSM, CP01CNSM, GI01SUMO, GS01SUMO)</td>
+<td>Flux Direct Covariance High Power</td>
+</tr>
+</tbody>
+</table>
+<p>FDCHP collects 10 Hz data for 20 minutes out of every hour, yielding roughly 12000 records per
+dataset. <code>fdc_functions.py</code> parses the raw 1D input streams into discrete 12000-record dataset
+packets, computes the motion-corrected L1 wind velocity (WINDTUR) and sonic temperature
+(TMPATUR) products, and derives the L2 momentum (FLUXMOM) and buoyancy (FLUXHOT) flux products
+from those L1 products. Two auxiliary time-base products, not specified in the DPS, provide
+timestamps for the L1 and L2 arrays.</p>
+<p>Within the OOI data system, FDC data products fall under the Air-Sea Interface <a href="https://oceanobservatories.org/data-products/">sampling
+regime</a> (see the <a href="https://oceanobservatories.org/data-products/data-products-complete-list/">complete list of OOI data
+products</a>).</p>
+<p>The FDCHP has no calibration coefficients. The conversions from raw counts to physical units are fixed in the code
+(see <a href="#instrument-frame-data-and-unit-conversion">Instrument Frame Data and Unit Conversion</a>), and the only
+calibration-record input, <code>CC_latitude</code>, is the deployment latitude taken from the deployment record.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00280</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00280_Data_Product_SPEC_DCHPFLX.pdf">OOI (2015). Data Product Specification for FDCHP Data Products. Document Control Number 1341-00280.</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="windtur_l1-motion-corrected-wind-velocity">WINDTUR_L1 -- Motion-Corrected Wind Velocity</h3>
+<p>WINDTUR_L1 is the motion-corrected wind velocity (m/s) in the earth reference frame (see
+<a href="#true-wind-velocity">True Wind Velocity</a> below), reported as three
+directional components: WINDTUR-VLN_L1 (positive North), WINDTUR-VLW_L1 (positive West), and
+WINDTUR-VLU_L1 (positive up). The sign convention follows a right-handed (x, y, z) buoy frame
+with x positive toward the buoy vane, y positive to port, z positive upward, and yaw positive
+for counter-clockwise rotation (the opposite of the typical left-handed compass convention).</p>
+<h4 id="instrument-frame-data-and-unit-conversion">Instrument Frame Data and Unit Conversion</h4>
+<p>Raw sonic anemometer velocities and speed of sound are converted from counts to physical units
+with a gain of 0.01 (cm/s to m/s). Raw angular rates and heading/pitch/roll are stored as
+decimal counts equal to the physical value directly (gain of 1, no unit conversion).</p>
+<p>The DPS Table 1 (Section 4.2) states a gain of 1 for the accelerometers, implying raw counts
+are already in m/s<span class="arithmatex">\(^2\)</span>. This conflicts with the DPS's own Appendix A MATLAB reference code,
+which multiplies the raw counts by G = 9.80665 (<code>platform = dcfsdata(13:15,1:L)*G;</code>), and with
+the module's own docstrings, which label the raw units as counts of 9.80665 m/s<span class="arithmatex">\(^2\)</span> (i.e. units
+of g). Since the code and the DPS's own reference implementation agree with each other, and
+only the summary table disagrees, <code>ion-functions</code> follows the code and Appendix A: raw
+accelerometer counts are multiplied by G = 9.80665 to obtain m/s<span class="arithmatex">\(^2\)</span>.</p>
+<p>Before use, the IMU angular rate (y, z), acceleration (y, z), and heading are negated to
+convert from the IMU's North-East-Down convention to the sonic anemometer's North-West-Up
+convention.</p>
+<h4 id="euler-angle-estimation">Euler Angle Estimation</h4>
+<p>Platform orientation is described by Euler angles roll (<span class="arithmatex">\(\phi\)</span>), pitch (<span class="arithmatex">\(\theta\)</span>), and yaw
+(<span class="arithmatex">\(\psi\)</span>), combined into the coordinate transformation matrix:</p>
+<div class="arithmatex">\[T(\phi, \theta, \psi) = A(\psi) A(\theta) A(\phi)\]</div>
+<div class="arithmatex">\[A(\psi) = \begin{pmatrix}
+\cos\psi &amp; -\sin\psi &amp; 0 \\
+\sin\psi &amp; \cos\psi &amp; 0 \\
+0 &amp; 0 &amp; 1
+\end{pmatrix}\]</div>
+<div class="arithmatex">\[A(\theta) = \begin{pmatrix}
+\cos\theta &amp; 0 &amp; \sin\theta \\
+0 &amp; 1 &amp; 0 \\
+-\sin\theta &amp; 0 &amp; \cos\theta
+\end{pmatrix}\]</div>
+<div class="arithmatex">\[A(\phi) = \begin{pmatrix}
+1 &amp; 0 &amp; 0 \\
+0 &amp; \cos\phi &amp; -\sin\phi \\
+0 &amp; \sin\phi &amp; \cos\phi
+\end{pmatrix}\]</div>
+<p>Because the FDCHP is a strapped-down system (the motion sensors are fixed to the buoy frame,
+not gyro-stabilized), the Euler angles are not measured directly and must be estimated from the
+angular rate sensors. The time derivatives of the Euler angles are related to the
+strapped-down angular rate vector by:</p>
+<div class="arithmatex">\[\begin{pmatrix} \dot\phi \\ \dot\theta \\ \dot\psi \end{pmatrix} =
+\begin{pmatrix}
+\dot\phi_{obs} + [\dot\psi_{obs}\cos\phi + \dot\theta_{obs}\sin\phi]\tan\theta \\
+\dot\theta_{obs}\cos\phi - \dot\psi_{obs}\sin\phi \\
+[\dot\psi_{obs}\cos\phi + \dot\theta_{obs}\sin\phi] / \cos\theta
+\end{pmatrix}\]</div>
+<p>implemented in <code>fdc_update</code>. Integrating the angular rates directly is subject to low-frequency
+sensor drift, so a complementary filter combines the integrated (fast) angle estimate with a
+low-frequency (slow) reference angle derived from accelerometer tilt, using a 4th-order
+Butterworth high-pass filter (<code>fdc_filtcoef</code>) applied forward and backward (zero-phase) to
+avoid distorting the phase:</p>
+<div class="arithmatex">\[\phi \approx \left[\frac{\ddot y_{obs}}{g} -
+HP\left(\frac{\ddot y_{obs}}{g}\right)\right] + HP(\phi_{obs})\]</div>
+<p>where <span class="arithmatex">\(HP\)</span> denotes the zero-phase high-pass filter operator and <span class="arithmatex">\(g\)</span> is the gravitational
+acceleration from <code>fdc_grv</code>. The slow yaw angle is derived from the unwrapped gyro (compass)
+signal when the compass is judged reliable (<code>goodcompass</code>, from <code>fdc_process_compass_data</code>);
+otherwise it is held at the median gyro value. Starting from the slow angles as a first guess,
+<code>fdc_anglesclimodeyaw</code> refines the Euler angle estimate over 5 iterations, each time
+integrating and filtering the updated angular rates and adding the result to the slow angles.
+The high-pass filter cutoff frequency is hardcoded to 1/12 Hz per e-mail guidance from DPS
+author Jim Edson, consistent with the DPS's discussion of theoretical limitations (Section
+3.3), which notes the initial code implementation used the same cutoff.</p>
+<h4 id="platform-velocity">Platform Velocity</h4>
+<p>The Euler angle estimate is used to rotate the measured linear accelerations into the earth
+frame, remove the gravity vector, and integrate to platform velocity, high-pass filtering to
+remove drift (<code>fdc_accelsclimode</code>):</p>
+<div class="arithmatex">\[\vec{V}_{hp} = HP\left[\int \left(T\ddot{\vec x}_{obs} + \vec g\right) dt\right]\]</div>
+<p>where <span class="arithmatex">\(\vec g = -\hat k g\)</span>.</p>
+<h4 id="true-wind-velocity">True Wind Velocity</h4>
+<p>The measured wind velocity is combined with the angular-rate cross-product correction (which
+accounts for the offset between the IMU and the sonic anemometer sampling volume) and rotated
+into the earth frame, then added to the high-pass filtered platform velocity (<code>fdc_sonic</code>, <code>fdc_trans</code>). The result
+is expressed in the earth reference frame; because only the high-frequency platform motion can be recovered from the
+accelerometers, it is the wind relative to the slowly varying (low-frequency) motion of the buoy, which DPS 1341-00280
+(Eq. 14) labels the true wind relative to the buoy. For a moored buoy this approximates the wind relative to Earth:</p>
+<div class="arithmatex">\[\vec{V}^{buoy}_{true} = T\left(\vec{V}_{obs} + \vec\Omega_{obs} \times \vec R\right) +
+\vec{V}_{hp}\]</div>
+<p><span class="arithmatex">\(\vec R\)</span> is the fixed distance vector between the IMU and the sonic anemometer sampling volume,
+hardcoded to 0.753 m vertical separation, matching the DPS Appendix A code. The first and last
+30 seconds of <span class="arithmatex">\(\vec{V}^{buoy}_{true}\)</span> are discarded to remove filter edge effects, yielding the
+19-minute WINDTUR-VLN_L1, WINDTUR-VLW_L1, and WINDTUR-VLU_L1 time series.</p>
+<h4 id="streamwise-rotation">Streamwise Rotation</h4>
+<p>For the L2 flux calculations, the WINDTUR_L1 velocity components are rotated into the
+longitudinal (streamwise) wind direction (<code>fdc_alignwind</code>), forcing the mean cross-wind and
+vertical components to zero. This rotation has been shown to reduce the effect of flow
+distortion on the fluxes (Oost et al., 1994).</p>
+<h3 id="tmpatur_l1-sonic-temperature">TMPATUR_L1 -- Sonic Temperature</h3>
+<p>TMPATUR_L1 is the sonic temperature (<span class="arithmatex">\(^\circ\)</span>C) derived from the speed of sound measured by
+the sonic anemometer:</p>
+<div class="arithmatex">\[T_{s}\ [^\circ C] = \frac{C_s^2}{403} - 273.15\]</div>
+<p>where <span class="arithmatex">\(C_s\)</span> is the calibrated speed of sound (m/s). This conversion is applied both by the
+standalone <code>fdc_tmpatur</code> wrapper and internally within <code>fdc_flux_and_wind</code> in the course of
+computing FLUXHOT_L2; the two implementations are not linked by a function call and must be
+kept in sync manually if the conversion changes.</p>
+<h3 id="fluxmom_l2-momentum-flux">FLUXMOM_L2 -- Momentum Flux</h3>
+<p>FLUXMOM_L2 is the kinematic form of the momentum flux (m<span class="arithmatex">\(^2\)</span>/s<span class="arithmatex">\(^2\)</span>) (Stull, 1988), computed
+using the motion-corrected direct covariance method. After streamwise rotation, the along-wind
+and cross-wind velocity components are linearly detrended (removing a least-squares fit) to
+give the fluctuating components <span class="arithmatex">\(u'\)</span>, <span class="arithmatex">\(v'\)</span>, <span class="arithmatex">\(w'\)</span>, from which the along-wind and cross-wind
+momentum flux components are computed over each 19-minute dataset:</p>
+<div class="arithmatex">\[\text{FLUXMOM-U_L2} = \overline{u'w'}\]</div>
+<div class="arithmatex">\[\text{FLUXMOM-V_L2} = \overline{v'w'}\]</div>
+<p>The along-wind component (FLUXMOM-U_L2) generally carries most of the momentum flux; the
+cross-wind component (FLUXMOM-V_L2) is usually smaller but can approach or exceed the along-wind
+component near the ocean surface in the presence of waves, or in light winds where the wind and
+stress vectors are poorly defined.</p>
+<h3 id="fluxhot_l2-buoyancy-flux">FLUXHOT_L2 -- Buoyancy Flux</h3>
+<p>FLUXHOT_L2 is the kinematic form of the buoyancy flux (m/s K), computed as the covariance of
+the detrended vertical wind fluctuation <span class="arithmatex">\(w'\)</span> with the detrended sonic temperature fluctuation
+<span class="arithmatex">\(T_s'\)</span>:</p>
+<div class="arithmatex">\[\text{FLUXHOT_L2} = \overline{w'T_s'}\]</div>
+<p>The buoyancy flux is properly defined in terms of fluctuations in virtual temperature, which the
+sonic temperature closely approximates; the small correction needed to convert from sonic to
+virtual temperature (using an independent estimate of the latent heat flux) is left to
+post-processing and is not computed by <code>ion-functions</code>.</p>
+<p>Full algorithm derivations and source references are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_flux_and_wind" class="doc doc-heading">
+            <code class="highlight language-python">fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT, heading, rateX, rateY, rateZ, accX, accY, accZ, lat)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes the three L2 flux data products and the three L1 wind
+velocity components for the FDCHP instrument using the
+motion-corrected direct covariance (MCDC) method.</p>
+<p>Parses the input 1D arrays into discrete 20-minute, 12000-record
+datasets, estimates platform Euler angles from a complementary
+filter combining gyro-integrated angular rate and accelerometer
+tilt reference, computes platform velocity by rotating and
+integrating the linear accelerations, assembles the true wind
+velocity relative to Earth, rotates it into the streamwise
+coordinate system, and computes the kinematic momentum and
+buoyancy fluxes from the detrended fluctuations.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data date and time values, TIME [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicU</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicV</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicW</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicT</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw speed of sound measured by the sonic anemometer,
+TMPATUR_L0 [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>heading</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>X-component platform linear acceleration, MOTFLUX-ACX_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Y-component platform linear acceleration, MOTFLUX-ACY_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>fluxes</code></b>(                  <code>tuple of ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Three-element tuple of L2 flux products, one value per
+dataset: (fluxmom_u, fluxmom_v, fluxhot). fluxmom_u is the
+along-wind momentum flux, FLUXMOM-U_L2 [m^2/s^2]; fluxmom_v
+is the cross-wind momentum flux, FLUXMOM-V_L2 [m^2/s^2];
+fluxhot is the buoyancy flux, FLUXHOT_L2 [m/s K].</p>
+              </div>
+            </li>
+            <li>
+<b><code>windspeeds</code></b>(                  <code>tuple of list of ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Three-element tuple of L1 windspeed products, one array per
+dataset per element: (windtur_vln, windtur_vlw, windtur_vlu),
+the motion-corrected North, West, and Up wind velocity
+components, WINDTUR-VLN_L1, WINDTUR-VLW_L1, WINDTUR-VLU_L1
+[m/s].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Pitch and roll are accepted as inputs but not used in any FDCHP
+data product calculation, per the DPS; the machinery to process
+them is retained for possible future use. The high-pass filter
+cutoff frequency is hardcoded to 1/12 Hz per e-mail guidance from
+DPS author Jim Edson, consistent with the DPS's own discussion of
+theoretical limitations (Section 3.3).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT, heading,
+                      rateX, rateY, rateZ, accX, accY, accZ, lat):
+    """
+    Computes the three L2 flux data products and the three L1 wind
+    velocity components for the FDCHP instrument using the
+    motion-corrected direct covariance (MCDC) method.
+
+    Parses the input 1D arrays into discrete 20-minute, 12000-record
+    datasets, estimates platform Euler angles from a complementary
+    filter combining gyro-integrated angular rate and accelerometer
+    tilt reference, computes platform velocity by rotating and
+    integrating the linear accelerations, assembles the true wind
+    velocity relative to Earth, rotates it into the streamwise
+    coordinate system, and computes the kinematic momentum and
+    buoyancy fluxes from the detrended fluctuations.
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Data date and time values, TIME [seconds since 1900-01-01].
+    sonicU : ndarray
+        U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].
+    sonicV : ndarray
+        V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].
+    sonicW : ndarray
+        W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].
+    sonicT : ndarray
+        Raw speed of sound measured by the sonic anemometer,
+        TMPATUR_L0 [counts].
+    heading : ndarray
+        Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].
+    rateX : ndarray
+        Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+        [radians/s].
+    rateY : ndarray
+        Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+        [radians/s].
+    rateZ : ndarray
+        Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+        [radians/s].
+    accX : ndarray
+        X-component platform linear acceleration, MOTFLUX-ACX_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accY : ndarray
+        Y-component platform linear acceleration, MOTFLUX-ACY_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accZ : ndarray
+        Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    lat : float or ndarray
+        Latitude of the instrument [decimal degrees].
+
+    Returns
+    -------
+    fluxes : tuple of ndarray
+        Three-element tuple of L2 flux products, one value per
+        dataset: (fluxmom_u, fluxmom_v, fluxhot). fluxmom_u is the
+        along-wind momentum flux, FLUXMOM-U_L2 [m^2/s^2]; fluxmom_v
+        is the cross-wind momentum flux, FLUXMOM-V_L2 [m^2/s^2];
+        fluxhot is the buoyancy flux, FLUXHOT_L2 [m/s K].
+    windspeeds : tuple of list of ndarray
+        Three-element tuple of L1 windspeed products, one array per
+        dataset per element: (windtur_vln, windtur_vlw, windtur_vlu),
+        the motion-corrected North, West, and Up wind velocity
+        components, WINDTUR-VLN_L1, WINDTUR-VLW_L1, WINDTUR-VLU_L1
+        [m/s].
+
+    Notes
+    -----
+    Pitch and roll are accepted as inputs but not used in any FDCHP
+    data product calculation, per the DPS; the machinery to process
+    them is retained for possible future use. The high-pass filter
+    cutoff frequency is hardcoded to 1/12 Hz per e-mail guidance from
+    DPS author Jim Edson, consistent with the DPS's own discussion of
+    theoretical limitations (Section 3.3).
+    """
+    # uncertainty in how latitude will be broadcasted. so.
+    lat = np.atleast_1d(lat)
+    if lat.size == 1:
+        lat = np.repeat(lat, sonicT.size)
+
+    # condition data and parse it into discrete datasets.
+    # the heading data is passed 2 extra times, once to take the place of pitch
+    # data, once for roll, which in the original matlab code are processed but
+    # not used to calculate any data products.
+    data = fdc_quantize_data(timestamp, sonicU, sonicV, sonicW, sonicT, heading,
+                             heading, heading, rateX, rateY, rateZ, accX, accY,
+                             accZ, lat)
+
+    # the shape of the data array is [n_var, n_packets, pts per packet].
+    #print data.shape
+    n_pack = data.shape[1]
+
+    # for clarity in following the DPS code, unpack the data into its constituent
+    # variables as 2D arrays so that the index of the lead dimension of each
+    # variable array indicates the dataset number; sonicU[0, :] will be a vector
+    # containing the U wind data for the first dataset packet.
+    sonicU = data[1, :, :]
+    sonicV = data[2, :, :]
+    sonicW = data[3, :, :]
+    sonicT = data[4, :, :]
+    heading = data[5, :, :]
+    roll = data[6, :, :]      # not used to calculate any data products
+    pitch = data[7, :, :]     # not used to calculate any data products
+    rateX = data[8, :, :]
+    rateY = data[9, :, :]
+    rateZ = data[10, :, :]
+    accX = data[11, :, :]
+    accY = data[12, :, :]
+    accZ = data[13, :, :]
+    lat = data[14, :, :]
+
+    # pitch and roll aren't currently used. to emphasize this:
+    roll = np.nan
+    pitch = np.nan
+
+    # calculate the gravitational acceleration for each dataset
+    gv = fdc_grv(np.median(lat, axis=-1))
+
+    # process L0 data
+    sonicU = 0.01 * sonicU
+    sonicV = 0.01 * sonicV
+    sonicW = 0.01 * sonicW
+    sonicT = 0.01 * sonicT
+    sonicT = sonicT * sonicT / 403.0
+
+    # convert IMU from N,E,Down to match Sonic N,W,Up coordinate system
+    rateY = -rateY
+    rateZ = -rateZ
+    accY = -accY
+    accZ = -accZ
+    pitch = -pitch
+    heading = -heading
+
+    # hardcoded variables in the DPS code
+    G = 9.80665  # units of accelerometer values
+    roffset = 0.0
+    poffset = 0.0
+    # z distance between IMU and sonic sampling volume: ok to hardcode
+    z_imu_2_smplvol = 0.753
+    # distance vector between IMU and sonic sampling volume
+    Rvec = np.array([0.0, 0.0, z_imu_2_smplvol])
+
+    fs = 10                         # sampling frequency, Hz
+    #fltr_cutoff_freq = 10.0        # cutoff frequency to generate filter coeffs
+    # 16-oct-2014 e-mail from Jim Edson (DPS author): use
+    fltr_cutoff_freq = 12.0
+
+    bhi, ahi = fdc_filtcoef(fs, 1.0/fltr_cutoff_freq)
+
+    # gyro is the processed compass data, and,
+    # goodcompass is a switch signifying whether these data are good.
+    # this subroutine is vectorized.
+    gyro, goodcompass = fdc_process_compass_data(heading)
+
+    # number of seconds of data to remove from the beginning and end of the processed
+    # data before calculating the mean of the products of the elements of two vectors.
+    edge_sec = 30
+    # number of edge data values to remove, based on sampling frequency
+    edge = int(fs * edge_sec)
+    # set up sonic temperature for buoyancy flux calculation;
+    # the temperature processing can be vectorized outside the loop
+    Ts_L1 = sonicT[:, edge:-edge]
+    Ts = fdc_detrend(Ts_L1, -1, 'linear')
+
+    # initialize L2 dataproduct arrays
+    fluxmom_u = np.zeros(n_pack)
+    fluxmom_v = np.zeros(n_pack)
+    fluxhot = np.zeros(n_pack)
+
+    # and lists to contain the L1 dataproducts
+    vln = [None] * n_pack
+    vlw = [None] * n_pack
+    vlu = [None] * n_pack
+    Tmp = [None] * n_pack
+
+    # process one datapacket at a time
+    for ii in range(n_pack):
+        # wind speeds
+        sonics = np.vstack((sonicU[ii, :], sonicV[ii, :], sonicW[ii, :]))
+
+        # process angular rate data; already in radians
+        deg_rate = np.vstack((rateX[ii, :], rateY[ii, :], rateZ[ii, :]))
+        deg_rate = fdc_despikesimple(deg_rate)
+
+        # process the linear accelerometer data:
+        platform = np.vstack((accX[ii, :], accY[ii, :], accZ[ii, :])) * G
+        platform = fdc_despikesimple(platform)
+        gcomp = np.mean(platform, axis=-1)
+        g = np.array([np.sqrt(np.sum(gcomp*gcomp))])
+        platform = platform * gv[ii]/g
+
+        platform[0, :] = platform[0, :] + poffset
+        platform[1, :] = platform[1, :] + roffset
+
+        gcomp = np.mean(platform, axis=-1)
+        g = np.array([np.sqrt(np.sum(gcomp*gcomp))])
+        platform = platform * gv[ii] / g
+
+        euler, dr = fdc_anglesclimodeyaw(ahi, bhi, fs, platform, deg_rate,
+                                         gyro[ii, :], goodcompass[ii, 0])
+
+        # euler angles are right-handed
+        _, uvwplat, _ = fdc_accelsclimode(bhi, ahi, fs, platform, euler)
+
+        uvw, _, _ = fdc_sonic(sonics, dr, euler, uvwplat, Rvec)
+
+        UVW_L1 = uvw[:, edge:-edge]
+
+        # rotate wind velocity components into windstream
+        u = fdc_alignwind(UVW_L1)
+
+        u = fdc_detrend(u, -1, 'linear')
+
+        # calculate flux products
+        fluxmom_u[ii] = np.mean(u[2, :] * u[0, :])
+        fluxmom_v[ii] = np.mean(u[2, :] * u[1, :])
+        fluxhot[ii] = np.mean(u[2, :] * Ts[ii])
+
+        # save the L1 wind data products
+        (vln[ii], vlw[ii], vlu[ii]) = (UVW_L1[0, :], UVW_L1[1, :], UVW_L1[2, :])
+
+    fluxes = (fluxmom_u, fluxmom_v, fluxhot)
+
+    windspeeds = (vln, vlw, vlu)
+
+    return fluxes, windspeeds</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-20</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-11-06</td>
+<td>Russell Desiderio</td>
+<td>Incorporated fdc_quantize_data routine</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wrapper-functions">Wrapper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_tmpatur" class="doc doc-heading">
+            <code class="highlight language-python">fdc_tmpatur(timestamp, sonicT)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-product wrapper for TMPATUR_L1, sonic temperature [degC].</p>
+<p>Independently reproduces the sonic temperature conversion also
+computed internally by <code>fdc_flux_and_wind</code>; does not call that
+function directly.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data date and time values, TIME [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicT</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw speed of sound measured by the sonic anemometer,
+TMPATUR_L0 [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Ts</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Sonic temperature, TMPATUR_L1 [degC].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>fdc_flux_and_wind : Core algorithm; computes TMPATUR_L1 internally
+    as part of the full motion-correction pipeline.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_tmpatur(timestamp, sonicT):
+    """
+    OOI single-product wrapper for TMPATUR_L1, sonic temperature [degC].
+
+    Independently reproduces the sonic temperature conversion also
+    computed internally by `fdc_flux_and_wind`; does not call that
+    function directly.
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Data date and time values, TIME [seconds since 1900-01-01].
+    sonicT : ndarray
+        Raw speed of sound measured by the sonic anemometer,
+        TMPATUR_L0 [counts].
+
+    Returns
+    -------
+    Ts : ndarray
+        Sonic temperature, TMPATUR_L1 [degC].
+
+    See Also
+    --------
+    fdc_flux_and_wind : Core algorithm; computes TMPATUR_L1 internally
+        as part of the full motion-correction pipeline.
+    """
+    # condition data and parse it into discrete datasets.
+    data = fdc_quantize_data(timestamp, sonicT)
+    # the shape of the data array is [n_var, n_packets, pts per packet].
+
+    # there is no despiking or filtering to be done on these data, so truncate now.
+    # number of seconds of data to remove from the beginning and end of the processed
+    # data before calculating the mean of the products of the elements of two vectors.
+    edge_sec = 30
+    # sampling frequency
+    fs = 10
+    # number of edge data values to remove, based on sampling frequency fs in Hz
+    edge = fs * edge_sec
+    data = data[:, :, edge:-edge]
+
+    # for clarity in following the DPS code, unpack the data into its constituent
+    # variables as 2D arrays so that the index of the lead dimension of each
+    # variable array indicates the dataset number; sonicT[0, :] will be a vector
+    # containing the L0 temperature data for the first dataset packet.
+    sonicT = data[1, :, :]
+
+    # process L0 temperature data
+    Ts = 0.01 * sonicT
+    Ts = Ts * Ts / 403.0 - 273.15
+    Ts = Ts.flatten()
+
+    return Ts</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>Independently reproduces the sonic temperature conversion also computed internally by
+<code>fdc_flux_and_wind</code>; the two are not linked by a function call, so a change to one requires a
+matching change to the other.</p>
+<h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-01-29</td>
+<td>Russell Desiderio</td>
+<td>Changed units from kelvin to degrees Celsius</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_windtur_north" class="doc doc-heading">
+            <code class="highlight language-python">fdc_windtur_north(timestamp, sonicU, sonicV, sonicW, heading, rateX, rateY, rateZ, accX, accY, accZ, lat)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for WINDTUR-VLN_L1, motion-corrected
+northward wind speed [m/s], uncorrected for magnetic variation.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data date and time values, TIME [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicU</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicV</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicW</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>heading</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>X-component platform linear acceleration, MOTFLUX-ACX_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Y-component platform linear acceleration, MOTFLUX-ACY_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>wind_north</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Motion-corrected northward wind speed, WINDTUR-VLN_L1 [m/s].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Pitch and roll are not used in any FDCHP data product calculation;
+only heading (yaw) and the gyro angular rates are used, per the
+DPS.</p>
+</details>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>fdc_flux_and_wind : Core algorithm; computes all three WINDTUR_L1
+    components and all three L2 flux products in a single call.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_windtur_north(timestamp, sonicU, sonicV, sonicW, heading,
+                      rateX, rateY, rateZ, accX, accY, accZ, lat):
+    """
+    OOI single-output wrapper for WINDTUR-VLN_L1, motion-corrected
+    northward wind speed [m/s], uncorrected for magnetic variation.
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Data date and time values, TIME [seconds since 1900-01-01].
+    sonicU : ndarray
+        U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].
+    sonicV : ndarray
+        V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].
+    sonicW : ndarray
+        W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].
+    heading : ndarray
+        Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].
+    rateX : ndarray
+        Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+        [radians/s].
+    rateY : ndarray
+        Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+        [radians/s].
+    rateZ : ndarray
+        Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+        [radians/s].
+    accX : ndarray
+        X-component platform linear acceleration, MOTFLUX-ACX_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accY : ndarray
+        Y-component platform linear acceleration, MOTFLUX-ACY_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accZ : ndarray
+        Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    lat : float or ndarray
+        Latitude of the instrument [decimal degrees].
+
+    Returns
+    -------
+    wind_north : ndarray
+        Motion-corrected northward wind speed, WINDTUR-VLN_L1 [m/s].
+
+    Notes
+    -----
+    Pitch and roll are not used in any FDCHP data product calculation;
+    only heading (yaw) and the gyro angular rates are used, per the
+    DPS.
+
+    See Also
+    --------
+    fdc_flux_and_wind : Core algorithm; computes all three WINDTUR_L1
+        components and all three L2 flux products in a single call.
+    """
+    # this data product is temperature independent
+    sonicT = sonicW * np.nan
+    _, windspeeds = fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT,
+                                      heading, rateX, rateY, rateZ, accX, accY,
+                                      accZ, lat)
+
+    wind_north = np.asarray(windspeeds[0]).flatten()
+
+    return wind_north</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-01-29</td>
+<td>Russell Desiderio</td>
+<td>Removed temperature from calling arguments</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_windtur_up" class="doc doc-heading">
+            <code class="highlight language-python">fdc_windtur_up(timestamp, sonicU, sonicV, sonicW, heading, rateX, rateY, rateZ, accX, accY, accZ, lat)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for WINDTUR-VLU_L1, motion-corrected
+upward wind speed [m/s].</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data date and time values, TIME [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicU</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicV</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicW</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>heading</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>X-component platform linear acceleration, MOTFLUX-ACX_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Y-component platform linear acceleration, MOTFLUX-ACY_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>wind_up</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Motion-corrected upward wind speed, WINDTUR-VLU_L1 [m/s].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Pitch and roll are not used in any FDCHP data product calculation;
+only heading (yaw) and the gyro angular rates are used, per the
+DPS.</p>
+</details>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>fdc_flux_and_wind : Core algorithm; computes all three WINDTUR_L1
+    components and all three L2 flux products in a single call.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_windtur_up(timestamp, sonicU, sonicV, sonicW, heading,
+                   rateX, rateY, rateZ, accX, accY, accZ, lat):
+    """
+    OOI single-output wrapper for WINDTUR-VLU_L1, motion-corrected
+    upward wind speed [m/s].
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Data date and time values, TIME [seconds since 1900-01-01].
+    sonicU : ndarray
+        U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].
+    sonicV : ndarray
+        V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].
+    sonicW : ndarray
+        W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].
+    heading : ndarray
+        Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].
+    rateX : ndarray
+        Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+        [radians/s].
+    rateY : ndarray
+        Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+        [radians/s].
+    rateZ : ndarray
+        Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+        [radians/s].
+    accX : ndarray
+        X-component platform linear acceleration, MOTFLUX-ACX_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accY : ndarray
+        Y-component platform linear acceleration, MOTFLUX-ACY_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accZ : ndarray
+        Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    lat : float or ndarray
+        Latitude of the instrument [decimal degrees].
+
+    Returns
+    -------
+    wind_up : ndarray
+        Motion-corrected upward wind speed, WINDTUR-VLU_L1 [m/s].
+
+    Notes
+    -----
+    Pitch and roll are not used in any FDCHP data product calculation;
+    only heading (yaw) and the gyro angular rates are used, per the
+    DPS.
+
+    See Also
+    --------
+    fdc_flux_and_wind : Core algorithm; computes all three WINDTUR_L1
+        components and all three L2 flux products in a single call.
+    """
+    # this data product is temperature independent
+    sonicT = sonicW * np.nan
+    _, windspeeds = fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT,
+                                      heading, rateX, rateY, rateZ, accX, accY,
+                                      accZ, lat)
+
+    wind_up = np.asarray(windspeeds[2]).flatten()
+
+    return wind_up</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-01-29</td>
+<td>Russell Desiderio</td>
+<td>Removed temperature from calling arguments</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_windtur_west" class="doc doc-heading">
+            <code class="highlight language-python">fdc_windtur_west(timestamp, sonicU, sonicV, sonicW, heading, rateX, rateY, rateZ, accX, accY, accZ, lat)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for WINDTUR-VLW_L1, motion-corrected
+westward wind speed [m/s], uncorrected for magnetic variation.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data date and time values, TIME [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicU</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicV</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicW</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>heading</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>X-component platform linear acceleration, MOTFLUX-ACX_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Y-component platform linear acceleration, MOTFLUX-ACY_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>wind_west</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Motion-corrected westward wind speed, WINDTUR-VLW_L1 [m/s].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Pitch and roll are not used in any FDCHP data product calculation;
+only heading (yaw) and the gyro angular rates are used, per the
+DPS.</p>
+</details>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>fdc_flux_and_wind : Core algorithm; computes all three WINDTUR_L1
+    components and all three L2 flux products in a single call.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_windtur_west(timestamp, sonicU, sonicV, sonicW, heading,
+                     rateX, rateY, rateZ, accX, accY, accZ, lat):
+    """
+    OOI single-output wrapper for WINDTUR-VLW_L1, motion-corrected
+    westward wind speed [m/s], uncorrected for magnetic variation.
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Data date and time values, TIME [seconds since 1900-01-01].
+    sonicU : ndarray
+        U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].
+    sonicV : ndarray
+        V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].
+    sonicW : ndarray
+        W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].
+    heading : ndarray
+        Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].
+    rateX : ndarray
+        Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+        [radians/s].
+    rateY : ndarray
+        Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+        [radians/s].
+    rateZ : ndarray
+        Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+        [radians/s].
+    accX : ndarray
+        X-component platform linear acceleration, MOTFLUX-ACX_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accY : ndarray
+        Y-component platform linear acceleration, MOTFLUX-ACY_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accZ : ndarray
+        Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    lat : float or ndarray
+        Latitude of the instrument [decimal degrees].
+
+    Returns
+    -------
+    wind_west : ndarray
+        Motion-corrected westward wind speed, WINDTUR-VLW_L1 [m/s].
+
+    Notes
+    -----
+    Pitch and roll are not used in any FDCHP data product calculation;
+    only heading (yaw) and the gyro angular rates are used, per the
+    DPS.
+
+    See Also
+    --------
+    fdc_flux_and_wind : Core algorithm; computes all three WINDTUR_L1
+        components and all three L2 flux products in a single call.
+    """
+    # this data product is temperature independent
+    sonicT = sonicW * np.nan
+    _, windspeeds = fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT,
+                                      heading, rateX, rateY, rateZ, accX, accY,
+                                      accZ, lat)
+
+    wind_west = np.asarray(windspeeds[1]).flatten()
+
+    return wind_west</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-01-29</td>
+<td>Russell Desiderio</td>
+<td>Removed temperature from calling arguments</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_fluxhot" class="doc doc-heading">
+            <code class="highlight language-python">fdc_fluxhot(timestamp, sonicU, sonicV, sonicW, sonicT, heading, rateX, rateY, rateZ, accX, accY, accZ, lat)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for FLUXHOT_L2, the sonic buoyancy flux
+[m/s K].</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data date and time values, TIME [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicU</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicV</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicW</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicT</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw speed of sound measured by the sonic anemometer,
+TMPATUR_L0 [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>heading</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>X-component platform linear acceleration, MOTFLUX-ACX_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Y-component platform linear acceleration, MOTFLUX-ACY_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>fluxhot</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Sonic buoyancy flux, FLUXHOT_L2, one value per 20-minute
+dataset [m/s K].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>fdc_flux_and_wind : Core algorithm; computes all three L2 flux
+    products and all three WINDTUR_L1 components in a single
+    call.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_fluxhot(timestamp, sonicU, sonicV, sonicW, sonicT, heading,
+                rateX, rateY, rateZ, accX, accY, accZ, lat):
+    """
+    OOI single-output wrapper for FLUXHOT_L2, the sonic buoyancy flux
+    [m/s K].
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Data date and time values, TIME [seconds since 1900-01-01].
+    sonicU : ndarray
+        U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].
+    sonicV : ndarray
+        V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].
+    sonicW : ndarray
+        W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].
+    sonicT : ndarray
+        Raw speed of sound measured by the sonic anemometer,
+        TMPATUR_L0 [counts].
+    heading : ndarray
+        Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].
+    rateX : ndarray
+        Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+        [radians/s].
+    rateY : ndarray
+        Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+        [radians/s].
+    rateZ : ndarray
+        Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+        [radians/s].
+    accX : ndarray
+        X-component platform linear acceleration, MOTFLUX-ACX_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accY : ndarray
+        Y-component platform linear acceleration, MOTFLUX-ACY_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accZ : ndarray
+        Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    lat : float or ndarray
+        Latitude of the instrument [decimal degrees].
+
+    Returns
+    -------
+    fluxhot : ndarray
+        Sonic buoyancy flux, FLUXHOT_L2, one value per 20-minute
+        dataset [m/s K].
+
+    See Also
+    --------
+    fdc_flux_and_wind : Core algorithm; computes all three L2 flux
+        products and all three WINDTUR_L1 components in a single
+        call.
+    """
+    fluxes, _ = fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT,
+                                  heading, rateX, rateY, rateZ, accX, accY,
+                                  accZ, lat)
+
+    fluxhot = fluxes[2]
+
+    return fluxhot</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_fluxmom_alongwind" class="doc doc-heading">
+            <code class="highlight language-python">fdc_fluxmom_alongwind(timestamp, sonicU, sonicV, sonicW, heading, rateX, rateY, rateZ, accX, accY, accZ, lat)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for FLUXMOM-U_L2, the along-wind
+component of the momentum flux [m^2/s^2].</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data date and time values, TIME [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicU</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicV</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicW</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>heading</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>X-component platform linear acceleration, MOTFLUX-ACX_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Y-component platform linear acceleration, MOTFLUX-ACY_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>fluxmom_along</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Along-wind component of momentum flux, FLUXMOM-U_L2, one
+value per 20-minute dataset [m^2/s^2].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>fdc_flux_and_wind : Core algorithm; computes all three L2 flux
+    products and all three WINDTUR_L1 components in a single
+    call.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_fluxmom_alongwind(timestamp, sonicU, sonicV, sonicW, heading,
+                          rateX, rateY, rateZ, accX, accY, accZ, lat):
+    """
+    OOI single-output wrapper for FLUXMOM-U_L2, the along-wind
+    component of the momentum flux [m^2/s^2].
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Data date and time values, TIME [seconds since 1900-01-01].
+    sonicU : ndarray
+        U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].
+    sonicV : ndarray
+        V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].
+    sonicW : ndarray
+        W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].
+    heading : ndarray
+        Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].
+    rateX : ndarray
+        Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+        [radians/s].
+    rateY : ndarray
+        Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+        [radians/s].
+    rateZ : ndarray
+        Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+        [radians/s].
+    accX : ndarray
+        X-component platform linear acceleration, MOTFLUX-ACX_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accY : ndarray
+        Y-component platform linear acceleration, MOTFLUX-ACY_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accZ : ndarray
+        Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    lat : float or ndarray
+        Latitude of the instrument [decimal degrees].
+
+    Returns
+    -------
+    fluxmom_along : ndarray
+        Along-wind component of momentum flux, FLUXMOM-U_L2, one
+        value per 20-minute dataset [m^2/s^2].
+
+    See Also
+    --------
+    fdc_flux_and_wind : Core algorithm; computes all three L2 flux
+        products and all three WINDTUR_L1 components in a single
+        call.
+    """
+    # this data product is temperature independent
+    sonicT = sonicW * np.nan
+    fluxes, _ = fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT,
+                                  heading, rateX, rateY, rateZ, accX, accY,
+                                  accZ, lat)
+
+    fluxmom_along = fluxes[0]
+
+    return fluxmom_along</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-01-29</td>
+<td>Russell Desiderio</td>
+<td>Removed temperature from calling arguments</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_fluxmom_crosswind" class="doc doc-heading">
+            <code class="highlight language-python">fdc_fluxmom_crosswind(timestamp, sonicU, sonicV, sonicW, heading, rateX, rateY, rateZ, accX, accY, accZ, lat)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for FLUXMOM-V_L2, the cross-wind
+component of the momentum flux [m^2/s^2].</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data date and time values, TIME [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicU</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicV</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sonicW</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>heading</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rateZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accX</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>X-component platform linear acceleration, MOTFLUX-ACX_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accY</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Y-component platform linear acceleration, MOTFLUX-ACY_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accZ</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+[counts; 1 count = 9.80665 m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>fluxmom_cross</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Cross-wind component of momentum flux, FLUXMOM-V_L2, one
+value per 20-minute dataset [m^2/s^2].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>fdc_flux_and_wind : Core algorithm; computes all three L2 flux
+    products and all three WINDTUR_L1 components in a single
+    call.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_fluxmom_crosswind(timestamp, sonicU, sonicV, sonicW, heading,
+                          rateX, rateY, rateZ, accX, accY, accZ, lat):
+    """
+    OOI single-output wrapper for FLUXMOM-V_L2, the cross-wind
+    component of the momentum flux [m^2/s^2].
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Data date and time values, TIME [seconds since 1900-01-01].
+    sonicU : ndarray
+        U-component windspeed in the buoy frame, WINDTUR-U_L0 [cm/s].
+    sonicV : ndarray
+        V-component windspeed in the buoy frame, WINDTUR-V_L0 [cm/s].
+    sonicW : ndarray
+        W-component windspeed in the buoy frame, WINDTUR-W_L0 [cm/s].
+    heading : ndarray
+        Magnetometer heading (yaw), MOTFLUX-YAW_L0 [radians].
+    rateX : ndarray
+        Roll angular rate from the gyro, MOTFLUX-ROLL_RATEX_L0
+        [radians/s].
+    rateY : ndarray
+        Pitch angular rate from the gyro, MOTFLUX-PITCH_RATEY_L0
+        [radians/s].
+    rateZ : ndarray
+        Yaw angular rate from the gyro, MOTFLUX-YAW_RATEZ_L0
+        [radians/s].
+    accX : ndarray
+        X-component platform linear acceleration, MOTFLUX-ACX_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accY : ndarray
+        Y-component platform linear acceleration, MOTFLUX-ACY_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    accZ : ndarray
+        Z-component platform linear acceleration, MOTFLUX-ACZ_L0
+        [counts; 1 count = 9.80665 m/s^2].
+    lat : float or ndarray
+        Latitude of the instrument [decimal degrees].
+
+    Returns
+    -------
+    fluxmom_cross : ndarray
+        Cross-wind component of momentum flux, FLUXMOM-V_L2, one
+        value per 20-minute dataset [m^2/s^2].
+
+    See Also
+    --------
+    fdc_flux_and_wind : Core algorithm; computes all three L2 flux
+        products and all three WINDTUR_L1 components in a single
+        call.
+    """
+    # this data product is temperature independent
+    sonicT = sonicW * np.nan
+    fluxes, _ = fdc_flux_and_wind(timestamp, sonicU, sonicV, sonicW, sonicT,
+                                  heading, rateX, rateY, rateZ, accX, accY,
+                                  accZ, lat)
+
+    fluxmom_cross = fluxes[1]
+
+    return fluxmom_cross</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-01-29</td>
+<td>Russell Desiderio</td>
+<td>Removed temperature from calling arguments</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_accelsclimode" class="doc doc-heading">
+            <code class="highlight language-python">fdc_accelsclimode(bhi, ahi, sf, accm, euler)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Rotates linear accelerations measured on the FDCHP platform into
+an earth reference system, then integrates to get platform
+velocity and displacement.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>bhi</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Numerator coefficients for the high-pass filter.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ahi</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Denominator coefficients for the high-pass filter.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sf</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Sampling frequency [Hz].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accm</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Measured platform linear accelerations, shape (3, n_rec)
+[m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>euler</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Euler angles phi, theta, psi, shape (3, n_rec) [radians].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>acc</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Linear accelerations in the earth reference frame, shape
+(3, n_rec) [m/s^2]. Not used downstream in the data product
+algorithm.</p>
+              </div>
+            </li>
+            <li>
+<b><code>uvwplat</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Platform linear velocities at the point of measurement, shape
+(3, n_rec) [m/s].</p>
+              </div>
+            </li>
+            <li>
+<b><code>xyzplat</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Platform displacements from the mean position, shape
+(3, n_rec) [m]. Not used downstream in the data product
+algorithm.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Follows the DPS Appendix A MATLAB code directly. Gravity is
+removed from the rotated vertical acceleration before integrating
+to velocity and displacement; both integration stages are high-
+pass filtered forward and backward (filtfilt) to remove drift.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_accelsclimode(bhi, ahi, sf, accm, euler):
+    """
+    Rotates linear accelerations measured on the FDCHP platform into
+    an earth reference system, then integrates to get platform
+    velocity and displacement.
+
+    Parameters
+    ----------
+    bhi : ndarray
+        Numerator coefficients for the high-pass filter.
+    ahi : ndarray
+        Denominator coefficients for the high-pass filter.
+    sf : float
+        Sampling frequency [Hz].
+    accm : ndarray
+        Measured platform linear accelerations, shape (3, n_rec)
+        [m/s^2].
+    euler : ndarray
+        Euler angles phi, theta, psi, shape (3, n_rec) [radians].
+
+    Returns
+    -------
+    acc : ndarray
+        Linear accelerations in the earth reference frame, shape
+        (3, n_rec) [m/s^2]. Not used downstream in the data product
+        algorithm.
+    uvwplat : ndarray
+        Platform linear velocities at the point of measurement, shape
+        (3, n_rec) [m/s].
+    xyzplat : ndarray
+        Platform displacements from the mean position, shape
+        (3, n_rec) [m]. Not used downstream in the data product
+        algorithm.
+
+    Notes
+    -----
+    Follows the DPS Appendix A MATLAB code directly. Gravity is
+    removed from the rotated vertical acceleration before integrating
+    to velocity and displacement; both integration stages are high-
+    pass filtered forward and backward (filtfilt) to remove drift.
+    """
+    # keep DPS variable names and comments
+    gravxyz = np.mean(accm, axis=-1)
+    gravity = np.sqrt(gravxyz.dot(gravxyz))
+
+    # rotate measured accelerations into earth frame
+    acc = fdc_trans(accm, euler)
+    acc[2, :] = acc[2, :] - gravity
+
+    # integrate accelerations to get velocities
+    uvwplat = integrate.cumtrapz(acc, axis=-1, initial=0.0) / sf
+    uvwplat = signal.filtfilt(bhi, ahi, uvwplat, axis=-1, padtype='odd', padlen=15)
+
+    # integrate again to get displacements
+    xyzplat = integrate.cumtrapz(uvwplat, axis=-1, initial=0.0) / sf
+    xyzplat = signal.filtfilt(bhi, ahi, xyzplat, axis=-1, padtype='odd', padlen=15)
+
+    return acc, uvwplat, xyzplat</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_8">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-19</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_alignwind" class="doc doc-heading">
+            <code class="highlight language-python">fdc_alignwind(u)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Rotates wind velocity components into the streamwise wind.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>u</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Wind velocity in the earth frame, uncorrected for magnetic
+declination, shape (3, n_rec) [m/s].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>u_rot</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Wind velocity rotated into the streamwise coordinate system,
+shape (3, n_rec) [m/s].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The rotation angles are computed from the mean wind vector so
+that the mean cross-wind and vertical components are forced to
+zero, per the DPS Appendix A MATLAB code. Implemented here as
+direct arithmetic rather than matrix multiplication for speed.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_alignwind(u):
+    """
+    Rotates wind velocity components into the streamwise wind.
+
+    Parameters
+    ----------
+    u : ndarray
+        Wind velocity in the earth frame, uncorrected for magnetic
+        declination, shape (3, n_rec) [m/s].
+
+    Returns
+    -------
+    u_rot : ndarray
+        Wind velocity rotated into the streamwise coordinate system,
+        shape (3, n_rec) [m/s].
+
+    Notes
+    -----
+    The rotation angles are computed from the mean wind vector so
+    that the mean cross-wind and vertical components are forced to
+    zero, per the DPS Appendix A MATLAB code. Implemented here as
+    direct arithmetic rather than matrix multiplication for speed.
+    """
+    # mean wind velocity components
+    u_mean = np.mean(u, axis=-1)
+
+    # calculate angles for coordinate rotation
+    u_hor = np.sqrt(u_mean[0] * u_mean[0] + u_mean[1] * u_mean[1])
+    beta = np.arctan2(u_mean[2], u_hor)
+    alpha = np.arctan2(u_mean[1], u_mean[0])
+
+    # populate rotation matrix
+    sin_a = np.sin(alpha)
+    cos_a = np.cos(alpha)
+    sin_b = np.sin(beta)
+    cos_b = np.cos(beta)
+
+    ur = u[0, :] * cos_a * cos_b + u[1, :] * sin_a * cos_b + u[2, :] * sin_b
+    vr = -u[0, :] * sin_a + u[1, :] * cos_a
+    wr = -u[0, :] * cos_a * sin_b - u[1, :] * sin_a * sin_b + u[2, :] * cos_b
+
+    u_rot = np.vstack((ur, vr, wr))
+
+    return u_rot</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_9">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-19</td>
+<td>Russell Desiderio</td>
+<td>Initial code; converted arithmetic to matrix multiplication</td>
+</tr>
+<tr>
+<td>2014-05-29</td>
+<td>Russell Desiderio</td>
+<td>Programmed original arithmetic, faster than matrix operations</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_anglesclimodeyaw" class="doc doc-heading">
+            <code class="highlight language-python">fdc_anglesclimodeyaw(ahi, bhi, sf, accm, ratem, gyro, goodcompass)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes the Euler angles for the FDCHP instrument platform using
+complementary filtering of accelerometer tilt and integrated
+gyro angular rate.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ahi</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Denominator coefficients for the high-pass filter.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>bhi</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Numerator coefficients for the high-pass filter.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sf</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Sampling frequency [Hz].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>accm</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Recalibrated platform linear accelerations, shape (3, n_rec)
+[m/s^2].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ratem</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Recalibrated angular rates, shape (3, n_rec) [radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gyro</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Gyro signal (heading/compass), shape (1, n_rec) [radians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>goodcompass</code></b>
+                  (<code><span title="bool">bool</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Whether the gyro (compass) measurements are reliable enough
+to use.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>euler</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Euler angles phi, theta, psi, shape (3, n_rec) [radians].</p>
+              </div>
+            </li>
+            <li>
+<b><code>dr</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Detrended angular rate velocities, shape (3, n_rec)
+[radians/s].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Follows the DPS Appendix A MATLAB code. Slow (low-frequency) roll
+and pitch angles are derived from the accelerometer tilt; slow
+yaw is derived from the unwrapped gyro signal if goodcompass is
+True, otherwise held at the median gyro value. The slow angles
+are used as a first guess, then refined over 5 iterations by
+integrating and high-pass filtering the angular rates and adding
+the result to the slow angles.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_anglesclimodeyaw(ahi, bhi, sf, accm, ratem, gyro, goodcompass):
+    """
+    Computes the Euler angles for the FDCHP instrument platform using
+    complementary filtering of accelerometer tilt and integrated
+    gyro angular rate.
+
+    Parameters
+    ----------
+    ahi : ndarray
+        Denominator coefficients for the high-pass filter.
+    bhi : ndarray
+        Numerator coefficients for the high-pass filter.
+    sf : float
+        Sampling frequency [Hz].
+    accm : ndarray
+        Recalibrated platform linear accelerations, shape (3, n_rec)
+        [m/s^2].
+    ratem : ndarray
+        Recalibrated angular rates, shape (3, n_rec) [radians/s].
+    gyro : ndarray
+        Gyro signal (heading/compass), shape (1, n_rec) [radians].
+    goodcompass : bool
+        Whether the gyro (compass) measurements are reliable enough
+        to use.
+
+    Returns
+    -------
+    euler : ndarray
+        Euler angles phi, theta, psi, shape (3, n_rec) [radians].
+    dr : ndarray
+        Detrended angular rate velocities, shape (3, n_rec)
+        [radians/s].
+
+    Notes
+    -----
+    Follows the DPS Appendix A MATLAB code. Slow (low-frequency) roll
+    and pitch angles are derived from the accelerometer tilt; slow
+    yaw is derived from the unwrapped gyro signal if goodcompass is
+    True, otherwise held at the median gyro value. The slow angles
+    are used as a first guess, then refined over 5 iterations by
+    integrating and high-pass filtering the angular rates and adding
+    the result to the slow angles.
+    """
+    # hardcoded number of iterations for integrations
+    n_iterations = 5
+
+    # keep DPS variable names and comments
+    gravxyz = np.mean(accm, axis=-1)
+    gravity = np.sqrt(np.sum(gravxyz*gravxyz))
+
+    # unwrap compass
+    gyro = np.unwrap(gyro)
+
+    # DPS comment: "remove mean from rate sensors".
+    # However, the DPS code removes the linear trend.
+    # note that the matlab function detrend used with the 'linear'
+    # option specified subtracts piecewise linear values, whereas
+    # the scipy version acts to subtract least fit values (as does
+    # the matlab version with no options specified).
+    ratem = fdc_detrend(ratem, -1, 'linear')
+
+    ### documentation from DPS code verbatim:
+    # low frequency angles from accelerometers and gyro
+    # slow roll from gravity effects on horizontal accelerations. low pass
+    # filter since high frequency horizontal accelerations may be 'real'
+
+    ## avoid imaginary numbers by making sure that arcsin operates on [-1 1].
+    # RAD version of revised DPS pitch
+    # also, trap out runtime warnings when theta has nans
+    theta = np.array(-accm[0, :] / gravity, ndmin=2)
+    nanmask = np.isnan(theta)
+    theta[nanmask] = 0.0
+    theta[theta &lt;= -1.0] = -np.pi/2.0
+    theta[theta &gt;= 1.0] = np.pi/2.0
+    mask = np.absolute(theta) &lt; 1.0
+    theta[mask] = np.arcsin(theta[mask])
+    theta[nanmask] = np.nan
+    theta_slow = theta - signal.filtfilt(bhi, ahi, theta, axis=-1, padtype='odd', padlen=15)
+
+    # RAD version of revised DPS roll
+    # nanmask used for the same reason as above
+    phi = np.array(accm[1, :] / gravity, ndmin=2) / np.cos(theta_slow)
+    nanmask = np.isnan(phi)
+    phi[nanmask] = 0.0
+    phi[phi &lt;= -1.0] = -np.pi/2.0
+    phi[phi &gt;= 1.0] = np.pi/2.0
+    mask = np.absolute(phi) &lt; 1.0
+    phi[mask] = np.arcsin(phi[mask])
+    phi[nanmask] = np.nan
+    phi_slow = phi - signal.filtfilt(bhi, ahi, phi, axis=-1, padtype='odd', padlen=15)
+
+    ### documentation from DPS code verbatim:
+    # yaw
+    # here, we estimate the slow heading. the 'fast heading' is not needed
+    # for the euler angle update matrix. the negative sign puts the gyro
+    # signal into a right handed system.
+
+    # these are from revised DPS code: fs = 10, cutoff_freq = 1/240
+    #ahi2 = np.array([1.0, -4.989457431527359, 9.957885277614746, -9.936911062858101,
+    #                 4.957996019344925, -0.989512802573847])
+    #bhi2 = np.array([0.994742581059968, -4.973712905299841, 9.947425810599682, -9.947425810599682,
+    #                 4.973712905299841, -0.994742581059968])
+
+    # Using 1.0/240.0 as the second argument results in matrices approaching singularity
+    # (computation on the edge of robustness).
+    bhi2, ahi2 = fdc_filtcoef(sf, 1.0/240.0)
+
+    if goodcompass:
+        psi_slow = -gyro - signal.filtfilt(bhi2, ahi2, -gyro, axis=-1, padtype='odd', padlen=15)
+    else:
+        psi_slow = -np.median(gyro)*np.ones(phi.shape)
+
+    # use slow angles as first guess
+    euler = np.vstack((phi_slow, theta_slow, psi_slow))
+    rates = fdc_update(ratem, euler)
+
+    # "i will use this filter with a lower cutoff for yaw
+    #  since the compass is having issues"
+
+    # integrate and filter angle rates, and add to slow angles
+    for ii in range(n_iterations):
+        phi_int = integrate.cumtrapz(rates[0, :], axis=-1, initial=0.0) / sf
+        phi = phi_slow + signal.filtfilt(bhi, ahi, phi_int, axis=-1, padtype='odd', padlen=15)
+        theta_int = integrate.cumtrapz(rates[1, :], axis=-1, initial=0.0) / sf
+        theta = theta_slow + signal.filtfilt(bhi, ahi, theta_int, axis=-1, padtype='odd', padlen=15)
+        psi_int = integrate.cumtrapz(rates[2, :], axis=-1, initial=0.0) / sf
+        # rad: note that psi_slow values are also a function of the goodcompass value
+        if goodcompass:
+            psi = psi_slow + signal.filtfilt(bhi2, ahi2, psi_int, axis=-1, padtype='odd', padlen=15)
+        else:
+            psi = psi_slow + psi_int
+
+        euler = np.vstack((phi, theta, psi))
+        rates = fdc_update(ratem, euler)
+        rates = fdc_detrend(rates, -1, 'constant')
+
+    dr = ratem
+
+    return euler, dr</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_10">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-19</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-09-25</td>
+<td>Russell Desiderio</td>
+<td>Incorporated latest changes to pitch and roll calculation</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_despikesimple" class="doc doc-heading">
+            <code class="highlight language-python">fdc_despikesimple(data)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Removes outliers from FDCHP platform motion and angular rate
+data streams by iterative median/standard-deviation thresholding
+and nearest-neighbor interpolation.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>data</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data values, shape (3, N).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>data</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Despiked data values, shape (3, N).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Matches the DPS Appendix A MATLAB code: 3 iterations, points
+outside median +/- 4 standard deviations are replaced by nearest-
+neighbor interpolation. Python's nearest-neighbor interpolation
+replaces from the left where MATLAB's interp1 replaces from the
+right for equidistant abscissae; the input is flipped before and
+after despiking to better match the MATLAB reference output.
+bounds_error is set to False (with fill_value=nan) to avoid
+ValueErrors when replacing an outlier would require extrapolation,
+which requires nanmedian/nanstd in place of median/std so that
+interp1d is never called with an empty array. This is a
+documented weak point in the original algorithm: it does not
+exclude low-frequency trend/variability from the spike threshold,
+so a Tukey-style approach may be more robust.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_despikesimple(data):
+    """
+    Removes outliers from FDCHP platform motion and angular rate
+    data streams by iterative median/standard-deviation thresholding
+    and nearest-neighbor interpolation.
+
+    Parameters
+    ----------
+    data : ndarray
+        Data values, shape (3, N).
+
+    Returns
+    -------
+    data : ndarray
+        Despiked data values, shape (3, N).
+
+    Notes
+    -----
+    Matches the DPS Appendix A MATLAB code: 3 iterations, points
+    outside median +/- 4 standard deviations are replaced by nearest-
+    neighbor interpolation. Python's nearest-neighbor interpolation
+    replaces from the left where MATLAB's interp1 replaces from the
+    right for equidistant abscissae; the input is flipped before and
+    after despiking to better match the MATLAB reference output.
+    bounds_error is set to False (with fill_value=nan) to avoid
+    ValueErrors when replacing an outlier would require extrapolation,
+    which requires nanmedian/nanstd in place of median/std so that
+    interp1d is never called with an empty array. This is a
+    documented weak point in the original algorithm: it does not
+    exclude low-frequency trend/variability from the spike threshold,
+    so a Tukey-style approach may be more robust.
+    """
+    # at first the matlab test code flux results for the goodcompass=0 case differed
+    # in the 4th decimal place compared to the python results; this agreement extends
+    # out to the 11th decimal place if the data is flipped before and after this routine
+    # is run. (the rest of the discrepancy results because filtfilt.m and scipy.filtfilt
+    # do not give exactly the same results).
+
+    # the reason flipping the python data increases agreement is because matlab
+    # nearest neighbor interpolation replaces from the right while scipy replaces
+    # from the left.
+    data = np.fliplr(data)  # to match the matlab results
+
+    # number of times to run each vector stream through the despiking routine
+    n_iterations = 3
+    # standard deviation span; this was 6 in the original DPS and revised code;
+    # Jim Edson (DPS author) says to set this at 4
+    n_std = 4
+    # interpolation method; 'nearest' in test code
+    ntrpmeth = 'nearest'
+    #print "interpolation method", ntrpmeth
+
+    array_size = np.shape(data)
+    t = np.arange(0, array_size[1])
+
+    for jj in range(n_iterations):
+
+        # vectorize the median, stdev, and masking operations outside of the inner
+        # loop, which should help program efficiency when processing large numbers
+        # of datasets.
+
+        # calculate the median and stdev as column vectors for broadcasting
+        M = np.atleast_2d(np.nanmedian(data, axis=-1)).T
+        # original code used matlab std function, which has a "N-1" in denominator -
+        # so, ddof=1.
+        Sn = np.nanstd(data, axis=-1, ddof=1, keepdims=True) * n_std
+        mask = np.logical_and(data &lt;= M + Sn, data &gt;= M - Sn)
+        # the interp1d function is vectorized for the second argument 2D array ONLY IF
+        # the first argument 1D array is unchanging - which it's not.
+        # therefore, here a for loop is required.
+        for ii in range(array_size[0]):
+            f = interpolate.interp1d(t[mask[ii, :]], data[ii, mask[ii, :]], kind=ntrpmeth,
+                                     bounds_error=False, fill_value=np.nan)
+            data[ii, :] = f(t)
+
+        ## as coded in DPS
+        #for tot in range(array_size[0]):
+        #    M = np.median(data[tot, :])
+        #    # original code used matlab std function, which has a "N-1" in denom, so ddof=1
+        #    stan = np.std(data[tot, :], ddof=1)
+        #    Sn = stan * n_std
+        #    mask = np.logical_and(data[tot, :] &lt; M + Sn, data[tot, :] &gt; M - Sn)
+        #    f = interpolate.interp1d(t[mask], data[tot, mask], kind=ntrpmeth)
+        #    data[tot, :] = f(t)
+
+    # re-orient the data to the way it came into the routine
+    data = np.fliplr(data)
+
+    return data</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_11">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-19</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-05-30</td>
+<td>Russell Desiderio</td>
+<td>Vectorized some of the code</td>
+</tr>
+<tr>
+<td>2014-11-19</td>
+<td>Russell Desiderio</td>
+<td>Made code more robust to avoid runtime errors on out-of-range interpolations</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_detrend" class="doc doc-heading">
+            <code class="highlight language-python">fdc_detrend(data, axis=-1, type='linear')</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Detrends data using scipy.signal.detrend, trapping NaN values
+that would otherwise raise a runtime execution error.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>data</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Data to detrend.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>axis</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>-1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Data axis along which detrend is applied. Default is the
+last axis (-1).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>type</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;linear&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Detrend method, either 'linear' or 'constant'. Default is
+'linear'.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>detrended</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Detrended data, same shape as <code>data</code>. If any input value is
+non-finite (NaN or inf), all output values are set to NaN,
+regardless of the dimensionality of <code>data</code> or the axis
+designated, since scipy.signal.detrend cannot process NaNs.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Not present in the DPS; a Python-only wrapper around
+scipy.signal.detrend needed to avoid runtime errors on NaN-
+containing input.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_detrend(data, axis=-1, type='linear'):
+    """
+    Detrends data using scipy.signal.detrend, trapping NaN values
+    that would otherwise raise a runtime execution error.
+
+    Parameters
+    ----------
+    data : ndarray
+        Data to detrend.
+    axis : int, optional
+        Data axis along which detrend is applied. Default is the
+        last axis (-1).
+    type : str, optional
+        Detrend method, either 'linear' or 'constant'. Default is
+        'linear'.
+
+    Returns
+    -------
+    detrended : ndarray
+        Detrended data, same shape as `data`. If any input value is
+        non-finite (NaN or inf), all output values are set to NaN,
+        regardless of the dimensionality of `data` or the axis
+        designated, since scipy.signal.detrend cannot process NaNs.
+
+    Notes
+    -----
+    Not present in the DPS; a Python-only wrapper around
+    scipy.signal.detrend needed to avoid runtime errors on NaN-
+    containing input.
+    """
+    # trap out nans and infs
+    if np.any(~np.isfinite(data)):
+        detrended = np.zeros(data.shape) + np.nan
+        return detrended
+    # else run the data through the scipy function
+    detrended = signal.detrend(data, axis=axis, type=type)
+    return detrended</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_12">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-19</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_filtcoef" class="doc doc-heading">
+            <code class="highlight language-python">fdc_filtcoef(fs, fc)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes Butterworth high-pass filter coefficients as a function
+of sampling frequency and cutoff frequency.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>fs</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Sampling frequency [Hz].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>fc</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>High-pass filter cutoff frequency [Hz]. Called with 1/12 Hz
+from fdc_flux_and_wind and 1/240 Hz from
+fdc_anglesclimodeyaw.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>bhigh</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Numerator (b) Butterworth filter coefficients, for use with
+scipy.signal.filtfilt.</p>
+              </div>
+            </li>
+            <li>
+<b><code>ahigh</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Denominator (a) Butterworth filter coefficients, for use with
+scipy.signal.filtfilt.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Not present in the DPS, which hardcodes the filter coefficients
+directly in Appendix A rather than computing them from a cutoff
+frequency; this function derives equivalent coefficients via
+scipy.signal.buttord and scipy.signal.butter, with the stopband
+edge at 0.7 fc. The design follows DPS author Jim Edson's 1998
+revision: a high-pass filter that retains real acceleration but
+removes drift, chosen so that the spectrum of the doubly
+integrated acceleration matches the frequency-domain integrated
+power spectrum in the pass band. The comparison was most
+sensitive to the transition width, which was placed in the
+overlap region between the integrated angular-rate and
+accelerometer-based angle estimates, shifting the filter to
+higher frequencies by about 1/4 to 1/2 decade relative to the
+earlier design.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_filtcoef(fs, fc):
+    """
+    Computes Butterworth high-pass filter coefficients as a function
+    of sampling frequency and cutoff frequency.
+
+    Parameters
+    ----------
+    fs : float
+        Sampling frequency [Hz].
+    fc : float
+        High-pass filter cutoff frequency [Hz]. Called with 1/12 Hz
+        from fdc_flux_and_wind and 1/240 Hz from
+        fdc_anglesclimodeyaw.
+
+    Returns
+    -------
+    bhigh : ndarray
+        Numerator (b) Butterworth filter coefficients, for use with
+        scipy.signal.filtfilt.
+    ahigh : ndarray
+        Denominator (a) Butterworth filter coefficients, for use with
+        scipy.signal.filtfilt.
+
+    Notes
+    -----
+    Not present in the DPS, which hardcodes the filter coefficients
+    directly in Appendix A rather than computing them from a cutoff
+    frequency; this function derives equivalent coefficients via
+    scipy.signal.buttord and scipy.signal.butter, with the stopband
+    edge at 0.7 fc. The design follows DPS author Jim Edson's 1998
+    revision: a high-pass filter that retains real acceleration but
+    removes drift, chosen so that the spectrum of the doubly
+    integrated acceleration matches the frequency-domain integrated
+    power spectrum in the pass band. The comparison was most
+    sensitive to the transition width, which was placed in the
+    overlap region between the integrated angular-rate and
+    accelerometer-based angle estimates, shifting the filter to
+    higher frequencies by about 1/4 to 1/2 decade relative to the
+    earlier design.
+    """
+    nfreq = fs / 2.0
+    wp = fc / nfreq
+    ws = .7 * wp
+    n, wn = signal.buttord(wp, ws, 10.0, 25.0)
+    bhigh, ahigh = signal.butter(n, wn, 'high')
+    return bhigh, ahigh</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_13">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-09-25</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_grv" class="doc doc-heading">
+            <code class="highlight language-python">fdc_grv(lat)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes gravitational acceleration as a function of latitude.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span> or ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>g</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Acceleration due to earth's gravitational field [m/s^2].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Evaluated as a polynomial in sin(lat)^2 using Horner's method,
+following the DPS Appendix A MATLAB code exactly (equatorial
+gravity gamma = 9.7803267715 m/s^2, plus latitude-dependent
+correction terms).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_grv(lat):
+    """
+    Computes gravitational acceleration as a function of latitude.
+
+    Parameters
+    ----------
+    lat : float or ndarray
+        Latitude of the instrument [decimal degrees].
+
+    Returns
+    -------
+    g : ndarray
+        Acceleration due to earth's gravitational field [m/s^2].
+
+    Notes
+    -----
+    Evaluated as a polynomial in sin(lat)^2 using Horner's method,
+    following the DPS Appendix A MATLAB code exactly (equatorial
+    gravity gamma = 9.7803267715 m/s^2, plus latitude-dependent
+    correction terms).
+    """
+    # constants from the DPS:
+    # equatorial value for 'g'
+    gamma = 9.7803267715
+    # coefficients of polynomial in (sin(lat))^2
+    c1 = 0.0052790414
+    c2 = 0.0000232718
+    c3 = 0.0000001262
+    c4 = 0.0000000007
+
+    x = sp.sin(np.radians(lat))
+    xsq = x * x
+
+    # Horner's method for calculating polynomials
+    g = gamma * (1.0 + xsq * (c1 + xsq * (c2 + xsq * (c3 + xsq * c4))))
+
+    ## straightforward powers method
+    #g=gamma*(1.0+c1*x**2+c2*x**4+c3*x**6+c4*x**8)
+
+    return g</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_14">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-15</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_process_compass_data" class="doc doc-heading">
+            <code class="highlight language-python">fdc_process_compass_data(heading)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Vectorized routine that processes raw compass (heading) data from
+the FDCHP instrument and determines whether it is reliable enough
+to use.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>heading</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Heading in a (N, W, Up) coordinate system, shape
+(n_packets, n_pts) [radians].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>gyro</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Processed compass data, same shape as <code>heading</code> [radians].</p>
+              </div>
+            </li>
+            <li>
+<b><code>goodcompass</code></b>(                  <code>ndarray of bool</code>
+)              –
+              <div class="doc-md-description">
+                <p>Per-packet switch denoting reliability of the heading data:
+False if the heading range exceeds 120 degrees or the
+standard deviation exceeds 45 degrees, True otherwise.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Not a standalone function in the DPS Appendix A MATLAB code,
+where this processing is inline in the main routine; factored out
+here for clarity and to vectorize across dataset packets. The
+first and last 10 samples of each packet are overwritten with
+their nearest interior neighbor before despiking, since edge
+compass readings are often bad.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_process_compass_data(heading):
+    """
+    Vectorized routine that processes raw compass (heading) data from
+    the FDCHP instrument and determines whether it is reliable enough
+    to use.
+
+    Parameters
+    ----------
+    heading : ndarray
+        Heading in a (N, W, Up) coordinate system, shape
+        (n_packets, n_pts) [radians].
+
+    Returns
+    -------
+    gyro : ndarray
+        Processed compass data, same shape as `heading` [radians].
+    goodcompass : ndarray of bool
+        Per-packet switch denoting reliability of the heading data:
+        False if the heading range exceeds 120 degrees or the
+        standard deviation exceeds 45 degrees, True otherwise.
+
+    Notes
+    -----
+    Not a standalone function in the DPS Appendix A MATLAB code,
+    where this processing is inline in the main routine; factored out
+    here for clarity and to vectorize across dataset packets. The
+    first and last 10 samples of each packet are overwritten with
+    their nearest interior neighbor before despiking, since edge
+    compass readings are often bad.
+    """
+    # this routine is vectorized as noted above.
+    # number of values on either edge of the compass readings to overwrite:
+    edge_compass = 10
+
+    # gyro = 'heading' = compass (may be in N,W,Up cpoordinate sytem); already in radians
+    gyro = heading
+    # overwrite edge values
+    gyro[:, 0:edge_compass] = gyro[:, [edge_compass]]     # right side is a column vector
+    gyro[:, -edge_compass:] = gyro[:, [-edge_compass-1]]  # right side is a column vector
+
+    # process gyro values
+    gx = np.cos(gyro)
+    gy = np.sin(gyro)
+    gx = fdc_despikesimple(gx)
+    gy = fdc_despikesimple(gy)
+    gyro = np.arctan2(gy, gx)
+    gyro[gyro &lt; 0] = gyro[gyro &lt; 0] + 2.0 * np.pi
+
+    # determine whether gyro data is good
+    gchk = np.unwrap(gyro)
+    # matlab std uses (N-1) in the denominator, so set ddof=1
+    stdhdg = np.std(gchk, axis=-1, ddof=1, keepdims=True)
+    hdg_range = np.amax(gchk, axis=-1, keepdims=True) - np.amin(gchk, axis=-1, keepdims=True)
+
+    # set the goodcompass vector:
+    #    if ( hdg_range&gt;(120/180*pi) or stdhdg&gt;(45/180*pi) )
+    #        goodcompass = 0
+    #    else
+    #        goodcompass = 1
+    #    end
+    #
+    # do the same thing without conditional
+    goodcompass = np.logical_not(np.logical_or(
+        hdg_range &gt; (120.0/180.0*np.pi), stdhdg &gt; (45.0/180.0*np.pi)))
+
+    #print 'goodcompass value: ', goodcompass
+    return gyro, goodcompass</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_15">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-09-25</td>
+<td>Russell Desiderio</td>
+<td>Separated out from main code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_quantize_data" class="doc doc-heading">
+            <code class="highlight language-python">fdc_quantize_data(*args)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Groups FDCHP data into discrete 12000-record (20-minute) dataset
+packets by parsing record timestamps.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>*args</code></b>
+                  (<code>ndarray</code>, default:
+                      <code>()</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Variable-length argument list of 1D input data arrays, all
+the same length (on the order of npts * n_packets). The
+first array must be the timestamps.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>data</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>3D array of the input variables grouped into datasets, shape
+(n_variables, n_packets, 12000).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Not present in the DPS Appendix A code, which operates on a
+single pre-chunked 12000-point dataset. FDCHP collects 10 Hz data
+for 20 minutes every hour, so consecutive dataset packets are
+separated by roughly 40 minutes; packets are identified from gaps
+greater than 1800 seconds in the timestamp array. Per guidance
+from DPS author Jim Edson, packets with more than 12000 records
+are truncated to 12000, and packets with fewer than 12000 records
+are padded to 12000 using the last data record. Also works if the
+only input variable is a 1D array of timestamps.</p>
+<p>Short packets are padded with a constant copy of the last record
+and are not flagged or excluded. Products computed from a heavily
+padded packet are therefore based partly on synthetic data with
+no turbulent fluctuation, which may bias the fluxes.
+Discarding packets below a minimum record count was suggested by
+the original developer as a possible enhancement.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_quantize_data(*args):
+    """
+    Groups FDCHP data into discrete 12000-record (20-minute) dataset
+    packets by parsing record timestamps.
+
+    Parameters
+    ----------
+    *args : ndarray
+        Variable-length argument list of 1D input data arrays, all
+        the same length (on the order of npts * n_packets). The
+        first array must be the timestamps.
+
+    Returns
+    -------
+    data : ndarray
+        3D array of the input variables grouped into datasets, shape
+        (n_variables, n_packets, 12000).
+
+    Notes
+    -----
+    Not present in the DPS Appendix A code, which operates on a
+    single pre-chunked 12000-point dataset. FDCHP collects 10 Hz data
+    for 20 minutes every hour, so consecutive dataset packets are
+    separated by roughly 40 minutes; packets are identified from gaps
+    greater than 1800 seconds in the timestamp array. Per guidance
+    from DPS author Jim Edson, packets with more than 12000 records
+    are truncated to 12000, and packets with fewer than 12000 records
+    are padded to 12000 using the last data record. Also works if the
+    only input variable is a 1D array of timestamps.
+
+    Short packets are padded with a constant copy of the last record
+    and are not flagged or excluded. Products computed from a heavily
+    padded packet are therefore based partly on synthetic data with
+    no turbulent fluctuation, which may bias the fluxes.
+    Discarding packets below a minimum record count was suggested by
+    the original developer as a possible enhancement.
+    """
+    # target number of datapoints per dataset: 10Hz for 20 minutes.
+    npts = 12000
+    # time in between dataset chunks (last of n_th and first of n+1_th)
+    # is expected to be 40 minutes = 2400 seconds; use a lower value as
+    # the time discriminant.
+    time_gap = 1800.0
+
+    data = np.atleast_2d(args)  # data is a 2D array
+
+    # parse into discrete datasets by finding the number of datapoints in each chunk.
+    # data are expected to come in chunks of 20 minutes duration, separated by 40 min.
+    # the first row of data must be the timestamps.
+    # first find the indices at these timegaps
+    idx_at_gap = np.where(np.diff(data[0, :]) &gt; time_gap)[0]
+
+    # prepend and append values to get accurate counts for 1st and last dataset
+    idx_at_gap = np.hstack((-1, idx_at_gap, data.shape[1]-1))
+
+    # difference to get answer
+    chunklengths = np.diff(idx_at_gap)
+    #print chunklengths
+
+    # process one dataset chunk at a time.
+    # process all data streams for each dataset at the same time,
+    # inspecting each chunk to see if it has (less than), (equal to),
+    # or (greater than) npts and then processing it accordingly.
+    for ii in range(chunklengths.size):
+        if chunklengths[ii] &lt; npts:
+            # pad dataset with last set of datapoints.
+            # here idx is the insertion point index (1st element = 1);
+            # pad data and insert after this point and before start of next dataset
+            idx = ii * npts + chunklengths[ii]
+            # number of rows to insert
+            n_nsrt = npts-chunklengths[ii]
+            # now go to python array indexing conventions;
+            # tile the column vector data[:,idx-1:idx]
+            filldata = np.tile(data[:, idx-1:idx], (1, n_nsrt))
+            # correct the timestamps of the filldata.
+            delta_time = np.median(np.diff(data[0, idx-chunklengths[ii]:idx]))
+            filldata[0, :] = filldata[0, :] + np.arange(1.0, n_nsrt+1) * delta_time
+            # and insert filldata into the data array
+            data = np.hstack((data[:, 0:idx], filldata, data[:, idx:]))
+        elif chunklengths[ii] == npts:
+            continue  # no action needed
+        else:  # chunklengths[ii] &gt; npts
+            # delete data after npts in this dataset and before next dataset.
+            idx_del_beg = (ii + 1) * npts
+            idx_del_end = ii * npts + chunklengths[ii]
+            data = np.delete(data, np.s_[idx_del_beg:idx_del_end], 1)
+
+    # convert data to a 3D array so that calling program can parse its shape
+    # to figure out dataset dimensions (n_var, n_dataset_packets, npts per dataset)
+    data = np.reshape(data, (data.shape[0], -1, npts))
+
+    return data</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_16">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-06</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_sonic" class="doc doc-heading">
+            <code class="highlight language-python">fdc_sonic(sonics, omegam, euler, uvwplat, dist_vec)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Corrects the sonic anemometer wind velocity components for
+platform motion and orientation.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sonics</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Sonic anemometer wind velocity components in the buoy frame,
+shape (3, N) [m/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>omegam</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Measured angular rate in the platform frame, shape (3, N)
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>euler</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Euler angles phi, theta, psi, shape (3, N) [radians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>uvwplat</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Platform velocities, shape (3, N) [m/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dist_vec</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Distance vector between the IMU and the sonic anemometer
+sampling volume, shape (3,) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>uvw</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Corrected sonic anemometer components in the fixed earth
+(North, West, Up) frame, shape (3, N) [m/s].</p>
+              </div>
+            </li>
+            <li>
+<b><code>uvwr</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Intermediate rotated sonic components prior to adding
+platform velocity, shape (3, N) [m/s]. Not used downstream in
+the data product algorithm.</p>
+              </div>
+            </li>
+            <li>
+<b><code>uvwrot</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Angular-rate cross-product correction term, shape (3, N)
+[m/s]. Not used downstream in the data product algorithm.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>From the EDDYCORR toolbox, per the DPS Appendix A MATLAB code.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_sonic(sonics, omegam, euler, uvwplat, dist_vec):
+    """
+    Corrects the sonic anemometer wind velocity components for
+    platform motion and orientation.
+
+    Parameters
+    ----------
+    sonics : ndarray
+        Sonic anemometer wind velocity components in the buoy frame,
+        shape (3, N) [m/s].
+    omegam : ndarray
+        Measured angular rate in the platform frame, shape (3, N)
+        [radians/s].
+    euler : ndarray
+        Euler angles phi, theta, psi, shape (3, N) [radians].
+    uvwplat : ndarray
+        Platform velocities, shape (3, N) [m/s].
+    dist_vec : ndarray
+        Distance vector between the IMU and the sonic anemometer
+        sampling volume, shape (3,) [m].
+
+    Returns
+    -------
+    uvw : ndarray
+        Corrected sonic anemometer components in the fixed earth
+        (North, West, Up) frame, shape (3, N) [m/s].
+    uvwr : ndarray
+        Intermediate rotated sonic components prior to adding
+        platform velocity, shape (3, N) [m/s]. Not used downstream in
+        the data product algorithm.
+    uvwrot : ndarray
+        Angular-rate cross-product correction term, shape (3, N)
+        [m/s]. Not used downstream in the data product algorithm.
+
+    Notes
+    -----
+    From the EDDYCORR toolbox, per the DPS Appendix A MATLAB code.
+    """
+
+    n_rec = euler.shape[-1]
+    Rvec = np.transpose(np.tile(dist_vec, (n_rec, 1)))
+    # override default cross product vector axis definition, which is -1
+    uvwrot = np.cross(omegam, Rvec, axis=-2)
+
+    uvwr = fdc_trans(sonics + uvwrot, euler)
+    uvw = uvwr + uvwplat
+
+    return uvw, uvwr, uvwrot</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_17">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-16</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_time_L1" class="doc doc-heading">
+            <code class="highlight language-python">fdc_time_L1(timestamp)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes TIME_L1-AUX, the timestamps associated with the L1 wind
+and temperature data products.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data date and time values, TIME [seconds since
+1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>time_L1</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Timestamps associated with the L1 data products,
+TIME_L1-AUX [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Not specified in the DPS. The L1 data products discard 30 seconds
+of data from the beginning and end of each 20-minute, 12000-record
+dataset; TIME_L1-AUX provides the corresponding timestamps for the
+remaining records, since the DPS does not otherwise document how
+timestamps are associated with the L1 arrays.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_time_L1(timestamp):
+    """
+    Computes TIME_L1-AUX, the timestamps associated with the L1 wind
+    and temperature data products.
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Input data date and time values, TIME [seconds since
+        1900-01-01].
+
+    Returns
+    -------
+    time_L1 : ndarray
+        Timestamps associated with the L1 data products,
+        TIME_L1-AUX [seconds since 1900-01-01].
+
+    Notes
+    -----
+    Not specified in the DPS. The L1 data products discard 30 seconds
+    of data from the beginning and end of each 20-minute, 12000-record
+    dataset; TIME_L1-AUX provides the corresponding timestamps for the
+    remaining records, since the DPS does not otherwise document how
+    timestamps are associated with the L1 arrays.
+    """
+    # condition data and parse it into discrete datasets.
+    data = fdc_quantize_data(timestamp)
+    # the shape of the data array is [n_var, n_packets, pts per packet].
+
+    # number of seconds of data to remove from the beginning and end of the processed data
+    edge_sec = 30
+    # sampling frequency
+    fs = 10
+    # number of edge data values to remove, based on sampling frequency fs in Hz
+    edge = fs * edge_sec
+    data = data[:, :, edge:-edge]
+
+    # for clarity in following the DPS code, unpack the data into its constituent
+    # variables as 2D arrays so that the index of the lead dimension of each
+    # variable array indicates the dataset number.
+    tmstmp = data[0, :, :]
+
+    time_L1 = tmstmp.flatten()
+
+    return time_L1</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_18">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_time_L2" class="doc doc-heading">
+            <code class="highlight language-python">fdc_time_L2(timestamp)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes TIME_L2-AUX, the timestamps associated with the L2 flux
+data products.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data date and time values, TIME [seconds since
+1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>time_L2</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Median timestamp of each 20-minute dataset, one value per
+dataset packet, TIME_L2-AUX [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Not specified in the DPS. Each L2 flux product is a single value
+per 20-minute dataset; TIME_L2-AUX provides the corresponding
+(rounded, median) timestamp for each dataset, since the DPS does
+not otherwise document how timestamps are associated with the L2
+values.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def fdc_time_L2(timestamp):
+    """
+    Computes TIME_L2-AUX, the timestamps associated with the L2 flux
+    data products.
+
+    Parameters
+    ----------
+    timestamp : ndarray
+        Input data date and time values, TIME [seconds since
+        1900-01-01].
+
+    Returns
+    -------
+    time_L2 : ndarray
+        Median timestamp of each 20-minute dataset, one value per
+        dataset packet, TIME_L2-AUX [seconds since 1900-01-01].
+
+    Notes
+    -----
+    Not specified in the DPS. Each L2 flux product is a single value
+    per 20-minute dataset; TIME_L2-AUX provides the corresponding
+    (rounded, median) timestamp for each dataset, since the DPS does
+    not otherwise document how timestamps are associated with the L2
+    values.
+    """
+    # condition data and parse it into discrete datasets.
+    data = fdc_quantize_data(timestamp)
+    # the shape of the data array is [n_var, n_packets, pts per packet].
+
+    # number of seconds of data to remove from the beginning and end of the processed
+    # data before calculating the mean of the products of the elements of two vectors.
+    edge_sec = 30
+    # sampling frequency
+    fs = 10
+    # number of edge data values to remove, based on sampling frequency fs in Hz
+    edge = fs * edge_sec
+    data = data[:, :, edge:-edge]
+
+    # for clarity in following the DPS code, unpack the data into its constituent
+    # variables as 2D arrays so that the index of the lead dimension of each
+    # variable array indicates the dataset number.
+    tmstmp = data[0, :, :]
+
+    # round the median L1 time values to get the L2 flux timestamps
+    time_L2 = np.around(np.median(tmstmp, axis=-1))
+
+    return time_L2</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_19">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-11-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_trans" class="doc doc-heading">
+            <code class="highlight language-python">fdc_trans(ang_rates, angles)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Rotates a 3-component vector (linear acceleration or wind
+velocity) from the platform frame into the earth frame of
+reference using the Euler angle rotation matrix.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ang_rates</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>3-component vector to rotate (e.g. linear accelerations or
+sonic wind velocity plus angular-rate cross-product term),
+shape (3, N).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>angles</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Euler angles phi, theta, psi, shape (3, N) [radians].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>values</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Rotated vector in the earth frame, shape (3, N).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Implements the coordinate transformation matrix T(phi, theta,
+psi) = A(psi) A(theta) A(phi) defined in the DPS (Section 3.2.1,
+Equation 5).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_trans(ang_rates, angles):
+    """
+    Rotates a 3-component vector (linear acceleration or wind
+    velocity) from the platform frame into the earth frame of
+    reference using the Euler angle rotation matrix.
+
+    Parameters
+    ----------
+    ang_rates : ndarray
+        3-component vector to rotate (e.g. linear accelerations or
+        sonic wind velocity plus angular-rate cross-product term),
+        shape (3, N).
+    angles : ndarray
+        Euler angles phi, theta, psi, shape (3, N) [radians].
+
+    Returns
+    -------
+    values : ndarray
+        Rotated vector in the earth frame, shape (3, N).
+
+    Notes
+    -----
+    Implements the coordinate transformation matrix T(phi, theta,
+    psi) = A(psi) A(theta) A(phi) defined in the DPS (Section 3.2.1,
+    Equation 5).
+    """
+
+    p = angles[0, :]
+    t = angles[1, :]
+    ps = angles[2, :]
+
+    up = ang_rates[0, :]
+    vp = ang_rates[1, :]
+    wp = ang_rates[2, :]
+
+    u = (up * sp.cos(t) * sp.cos(ps) + vp * (sp.sin(p) * sp.sin(t) *
+         sp.cos(ps) - sp.cos(p) * sp.sin(ps)) + wp * (sp.cos(p) *
+         sp.sin(t) * sp.cos(ps) + sp.sin(p) * sp.sin(ps)))
+    v = (up * sp.cos(t) * sp.sin(ps) + vp * (sp.sin(p) * sp.sin(t) *
+         sp.sin(ps) + sp.cos(p) * sp.cos(ps)) + wp * (sp.cos(p) *
+         sp.sin(t) * sp.sin(ps) - sp.sin(p) * sp.cos(ps)))
+    w = (up * (-sp.sin(t)) + vp * (sp.cos(t) * sp.sin(p)) + wp *
+         (sp.cos(t) * sp.cos(p)))
+
+    values = np.vstack((u, v, w))
+
+    return values</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_20">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-16</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-05-30</td>
+<td>Russell Desiderio</td>
+<td>Removed conditional iflag (always True)</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.fdc_functions.fdc_update" class="doc doc-heading">
+            <code class="highlight language-python">fdc_update(ang_rates, angles)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes the angular update matrix relating measured
+strapped-down angular rates to the time derivatives of the Euler
+angles.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ang_rates</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Angular rates in the platform frame, shape (3, N)
+[radians/s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>angles</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Euler angles phi, theta, psi, shape (3, N) [radians].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>values</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Euler angle rates (phi_dot, theta_dot, psi_dot), shape
+(3, N) [radians/s].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>From the EDDYCORR toolbox. Implements the strapped-down angular
+rate relation given in the DPS (Section 3.2.2, Equation 8);
+matches Edson et al. (1998).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/fdc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def fdc_update(ang_rates, angles):
+    """
+    Computes the angular update matrix relating measured
+    strapped-down angular rates to the time derivatives of the Euler
+    angles.
+
+    Parameters
+    ----------
+    ang_rates : ndarray
+        Angular rates in the platform frame, shape (3, N)
+        [radians/s].
+    angles : ndarray
+        Euler angles phi, theta, psi, shape (3, N) [radians].
+
+    Returns
+    -------
+    values : ndarray
+        Euler angle rates (phi_dot, theta_dot, psi_dot), shape
+        (3, N) [radians/s].
+
+    Notes
+    -----
+    From the EDDYCORR toolbox. Implements the strapped-down angular
+    rate relation given in the DPS (Section 3.2.2, Equation 8);
+    matches Edson et al. (1998).
+    """
+
+    p = angles[0, :]
+    t = angles[1, :]
+    ps = angles[2, :]
+
+    up = ang_rates[0, :]
+    vp = ang_rates[1, :]
+    wp = ang_rates[2, :]
+
+    u = up + vp * sp.sin(p) * np.tan(t) + wp * sp.cos(p) * np.tan(t)
+    v = 0 + vp * sp.cos(p) - wp * sp.sin(p)
+    w = 0 + vp * sp.sin(p) / sp.cos(t) + wp * sp.cos(p) / sp.cos(t)
+
+    values = np.vstack((u, v, w))
+    return values</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_21">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-16</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-24</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Edson, J.B., Hinton, A.A., Prada, K.E., Hare, J.E., and Fairall, C.W. (1998). Direct covariance
+flux estimates from mobile platforms at sea. J. Atmos. Oceanic Tech., 15, 547-562.</p>
+<p>Fujitani, T. (1981). Direct measurement of turbulent fluxes over the sea during AMTEX. Pap.
+Meteor. Geophys., 32, 119-134.</p>
+<p>Fujitani, T. (1985). Method of turbulent flux measurement on a ship by using a stable platform
+system. Pap. Meteor. Geophys., 36, 157-170.</p>
+<p>Goldstein, H. (1965). Classical Mechanics. Addison-Wesley, 398 pp.</p>
+<p>Miller, S., Friehe, C., Hristov, T., and Edson, J. (2008). Platform motion effects on
+measurements of turbulence and air-sea exchange over the open ocean. J. Atmos. Oceanic Tech.,
+25, 1683-1694.</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00280_Data_Product_SPEC_DCHPFLX.pdf">OOI (2015). Data Product Specification for FDCHP Data Products. Document Control Number
+1341-00280.</a></p>
+<p>Oost, W.A., Fairall, C.W., Edson, J.B., Smith, S.D., Anderson, R.J., Wills, J.A.B., Katsaros,
+K.B., and DeCosmo, J. (1994). Flow distortion calculations and their application in HEXMAX. J.
+Atmos. Oceanic Technol., 11, 366-386.</p>
+<p>Stull, R.B. (1988). An Introduction to Boundary Layer Meteorology. Kluwer Academic Publishers,
+666 pp.</p>
+<p>Ware, J. (2014). Interface Document for the Flux Direct Covariance High Power System. Ocean
+Observatories Initiative internal document.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../do2_functions/" class="btn btn-neutral float-left" title="DO2 Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../flo_functions/" class="btn btn-neutral float-right" title="FLO Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../do2_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../flo_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,3203 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/opt_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>OPT Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "OPT Functions";
+        var mkdocs_page_input_path = "api/opt_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/opt_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">OPT Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#optattn_l2-and-optabsn_l2-optaa-data-products">OPTATTN_L2 and OPTABSN_L2 -- OPTAA Data Products</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#optparw_l1-photosynthetically-active-radiation">OPTPARW_L1 -- Photosynthetically Active Radiation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#spectir_l1-downwelling-spectral-irradiance">SPECTIR_L1 -- Downwelling Spectral Irradiance</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#wrapper-functions">Wrapper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">OPT Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="opt-functions">OPT Functions</h1>
+<h2 id="background">Background</h2>
+<p>The OPT instrument family covers three distinct optical measurement systems
+deployed across the OOI arrays: the Sea-Bird Scientific ac-s spectral
+absorption and attenuation meter (OPTAA), scalar PAR sensors from multiple
+manufacturers (PARAD), and the Sea-Bird Scientific OCR-507 multispectral
+downwelling irradiance radiometer (SPKIR). All three produce L1 or L2 data products from raw
+counts or voltage, using instrument-specific factory calibration
+coefficients.</p>
+<p><code>opt_functions.py</code> computes four data products: OPTATTN_L2 and OPTABSN_L2
+from the OPTAA instrument, OPTPARW_L1 from four PARAD variants, and
+SPECTIR_L1 from the SPKIR instrument. A companion module,
+<code>opt_functions_tscor.py</code>, provides the wavelength-indexed dictionary of
+temperature and salinity correction coefficients used in the OPTAA
+processing chain.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPTAA</td>
+<td>Sea-Bird Scientific ac-s</td>
+<td>Moored (fixed depth), cabled seafloor nodes and profilers, and coastal surface-piercing profilers</td>
+<td>Optical Absorption and Attenuation</td>
+</tr>
+<tr>
+<td>PARAD-A</td>
+<td>Sea-Bird Scientific (formerly Satlantic) PAR LIN 600m</td>
+<td>RCA cabled shallow profilers</td>
+<td>Photosynthetically Active Radiation</td>
+</tr>
+<tr>
+<td>PARAD-J</td>
+<td>Sea-Bird Scientific (formerly WET Labs) ECO PAR (ECOPARS)</td>
+<td>Coastal surface-piercing profilers (CSPP)</td>
+<td>Photosynthetically Active Radiation</td>
+</tr>
+<tr>
+<td>PARAD-M/N</td>
+<td>Biospherical Instruments QSP-2100 series (QSP-2155, QSP-2150)</td>
+<td>Coastal gliders (M) and AUVs (N)</td>
+<td>Photosynthetically Active Radiation</td>
+</tr>
+<tr>
+<td>PARAD-K</td>
+<td>Biospherical Instruments QSP-2200</td>
+<td>Wire-following profilers</td>
+<td>Photosynthetically Active Radiation</td>
+</tr>
+<tr>
+<td>SPKIR</td>
+<td>Sea-Bird Scientific OCR-507</td>
+<td>Surface moorings, RCA cabled shallow profilers, and coastal surface-piercing profilers</td>
+<td>Spectral Irradiance</td>
+</tr>
+</tbody>
+</table>
+<p>Within the OOI data system, OPT data products fall under the Water Column <a href="https://oceanobservatories.org/data-products/">sampling
+regime</a> (see the <a href="https://oceanobservatories.org/data-products/data-products-complete-list/">complete list of OOI data
+products</a>).</p>
+<p>For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see <a href="../../calibrations/">Calibration Coefficients</a> and <a href="../../using-ooi-data/">Using These Functions
+with OOI Data</a>.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00690</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf">OOI (2014). Data Product Specification for Optical Beam Attenuation Coefficient. Document Control Number 1341-00690.</a></td>
+</tr>
+<tr>
+<td>1341-00700</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf">OOI (2014). Data Product Specification for Optical Absorption Coefficient. Document Control Number 1341-00700.</a></td>
+</tr>
+<tr>
+<td>1341-00720</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00720_Data_Product_SPEC_OPTPARW_Satl_OOI-2.pdf">OOI (2012). Data Product Specification for Photosynthetically Active Radiation (PAR) from Instruments on Cabled Shallow Profilers. Document Control Number 1341-00720.</a></td>
+</tr>
+<tr>
+<td>1341-00721</td>
+<td>OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721. (Not publicly posted.)</td>
+</tr>
+<tr>
+<td>1341-00722</td>
+<td>OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722. (Not publicly posted.)</td>
+</tr>
+<tr>
+<td>1341-00730</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00730_DATA_PRODUCT_SPEC_SPECTIR_OOI.pdf">OOI (2014). Data Product Specification for Downwelling Spectral Irradiance. Document Control Number 1341-00730.</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="optattn_l2-and-optabsn_l2-optaa-data-products">OPTATTN_L2 and OPTABSN_L2 -- OPTAA Data Products</h3>
+<p>The Sea-Bird Scientific ac-s (OPTAA) produces two data products: the beam attenuation coefficient (OPTATTN_L2)
+and the optical absorption coefficient (OPTABSN_L2). The instrument provides approximately 75 wavelength channels
+spanning roughly 400-750 nm in approximately 4 nm steps. It performs concurrent attenuation and absorption
+measurements via a dual optical path in a single instrument, with an optical path length of 0.25 m. The attenuation
+channel uses a non-reflecting tube; the absorption channel uses a highly polished reflecting tube.</p>
+<p>Both are L2 products because they require co-located and synchronized measurements of water temperature
+(TEMPWAT_L1) and practical salinity (PRACSAL_L2) from a CTD in addition to the raw ac-s signals. OPTABSN_L2 also
+requires the simultaneously computed OPTATTN_L2 for the scattering correction.</p>
+<h4 id="calibration-coefficients">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cwl</code></td>
+<td><code>CC_cwlngth</code></td>
+<td>Factory device file (<code>*.dev</code>)</td>
+</tr>
+<tr>
+<td><code>awl</code></td>
+<td><code>CC_awlngth</code></td>
+<td>Factory device file (<code>*.dev</code>)</td>
+</tr>
+<tr>
+<td><code>coff</code></td>
+<td><code>CC_ccwo</code></td>
+<td>Factory device file (<code>*.dev</code>)</td>
+</tr>
+<tr>
+<td><code>aoff</code></td>
+<td><code>CC_acwo</code></td>
+<td>Factory device file (<code>*.dev</code>)</td>
+</tr>
+<tr>
+<td><code>tc_arr</code></td>
+<td><code>CC_tcarray</code></td>
+<td>Factory device file (<code>*.dev</code>)</td>
+</tr>
+<tr>
+<td><code>ta_arr</code></td>
+<td><code>CC_taarray</code></td>
+<td>Factory device file (<code>*.dev</code>)</td>
+</tr>
+<tr>
+<td><code>tbins</code></td>
+<td><code>CC_tbins</code></td>
+<td>Factory device file (<code>*.dev</code>)</td>
+</tr>
+<tr>
+<td><code>tcal</code></td>
+<td><code>CC_tcal</code></td>
+<td>Factory device file (<code>*.dev</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="optattn_l2-optical-beam-attenuation-coefficient">OPTATTN_L2 -- Optical Beam Attenuation Coefficient</h4>
+<p>OPTATTN_L2 is the spectral beam attenuation coefficient for all water impurities (<span class="arithmatex">\(c_{pd}(\lambda)\)</span>, m<span class="arithmatex">\(^{-1}\)</span>), computed
+from the ac-s attenuation channel. It represents the difference between the total beam attenuation of the water mixture
+and that of pure seawater: <span class="arithmatex">\(c_{pd} = c - c_w\)</span>.</p>
+<p>The computation proceeds in three steps (DPS 1341-00690, Section 4.3):</p>
+<p><strong>Step 1 -- Compute internal instrument temperature</strong> from the raw thermistor
+count (OPTTEMP_L0):</p>
+<div class="arithmatex">\[T_{intr} = \frac{1}{a + b \ln R + c (\ln R)^3} - 273.15\]</div>
+<p>where <span class="arithmatex">\(R\)</span> is the thermistor resistance derived from the raw count, and
+<span class="arithmatex">\(a\)</span>, <span class="arithmatex">\(b\)</span>, <span class="arithmatex">\(c\)</span> are fixed constants.</p>
+<p><strong>Step 2 -- Convert raw counts to uncorrected beam attenuation</strong> and apply
+the internal temperature correction:</p>
+<div class="arithmatex">\[c_{pd}(\lambda) = \left[c_{off}(\lambda) - \frac{1}{r}
+\ln\!\left(\frac{C_{sig}}{C_{ref}}\right)\right] - \Delta T(\lambda)\]</div>
+<p>where <span class="arithmatex">\(r = 0.25\)</span> m is the path length, <span class="arithmatex">\(C_{sig}\)</span> and <span class="arithmatex">\(C_{ref}\)</span> are the
+raw signal and reference counts (OPTCSIG_L0 and OPTCREF_L0), <span class="arithmatex">\(\lambda\)</span> is each attenuation channel wavelength (<code>cwl</code>),
+<span class="arithmatex">\(c_{off}\)</span> is the pure water offset for the attenuation channel at each wavelength (<code>coff</code>, m<span class="arithmatex">\(^{-1}\)</span>), and <span class="arithmatex">\(\Delta
+T(\lambda)\)</span> is the linearly interpolated internal temperature correction:</p>
+<div class="arithmatex">\[\Delta T(\lambda) = \Delta T_0(\lambda) +
+\frac{T_{intr} - T_0}{T_1 - T_0}
+\times \left[\Delta T_1(\lambda) - \Delta T_0(\lambda)\right]\]</div>
+<p>where <span class="arithmatex">\(T_0\)</span> and <span class="arithmatex">\(T_1\)</span> are the bracketing internal temperature bin values (<code>tbins</code>, <span class="arithmatex">\(^\circ\)</span>C) and <span class="arithmatex">\(\Delta T_0\)</span>,
+<span class="arithmatex">\(\Delta T_1\)</span> are the corresponding correction coefficients (<code>tc_arr</code>, m<span class="arithmatex">\(^{-1}\)</span>, a 2-D array indexed by wavelength and
+temperature bin). The wavelengths, offsets, temperature bins, and correction coefficients are all from the
+instrument's factory device file (<code>*.dev</code>).</p>
+<p><strong>Step 3 -- Apply the water temperature and salinity correction:</strong></p>
+<div class="arithmatex">\[c_{pd;ts}(\lambda) = c_{pd}(\lambda)
+- \Psi_t(\lambda) \times (t - t_r)
+- \Psi_{sc}(\lambda) \times s\]</div>
+<p>where <span class="arithmatex">\(t\)</span> is the in situ temperature (TEMPWAT_L1) and <span class="arithmatex">\(s\)</span> the in situ practical salinity (PRACSAL_L2), both from the
+co-located CTD; <span class="arithmatex">\(t_r\)</span> is the factory calibration reference temperature (<code>tcal</code>, <span class="arithmatex">\(^\circ\)</span>C, from the device file) at
+which the pure water offsets were determined; and <span class="arithmatex">\(\Psi_t\)</span> and <span class="arithmatex">\(\Psi_{sc}\)</span> are the wavelength-dependent temperature
+and salinity correction constants from the Sea-Bird Scientific ac Meter Protocol Document (Revision P), tabulated in
+<code>opt_functions_tscor.py</code>. The resulting <span class="arithmatex">\(c_{pd;ts}(\lambda)\)</span> is OPTATTN_L2.</p>
+<h4 id="optabsn_l2-optical-absorption-coefficient">OPTABSN_L2 -- Optical Absorption Coefficient</h4>
+<p>OPTABSN_L2 is the spectral optical absorption coefficient for all water impurities (<span class="arithmatex">\(a_{pd}(\lambda)\)</span>, m<span class="arithmatex">\(^{-1}\)</span>),
+computed from the ac-s absorption channel. It represents the difference between the total absorption of the water
+mixture and that of pure seawater:</p>
+<div class="arithmatex">\[a_{pd} = a - a_w\]</div>
+<p>The computation follows four steps (DPS 1341-00700, Section 4.3), using the same raw-to-scientific conversion and
+internal temperature correction as OPTATTN_L2 (Steps 1 and 2 of
+<a href="#optattn_l2-optical-beam-attenuation-coefficient">OPTATTN_L2</a>), but applied to the absorption channel (OPTASIG_L0 and
+OPTAREF_L0 in place of OPTCSIG_L0 and OPTCREF_L0, and the absorption channel wavelengths, pure water offsets, and
+internal temperature correction coefficients <code>awl</code>, <code>aoff</code>, and <code>ta_arr</code> from the device file in place of <code>cwl</code>, <code>coff</code>,
+and <code>tc_arr</code>).</p>
+<p><strong>Step 3 -- Apply the water temperature and salinity correction:</strong></p>
+<div class="arithmatex">\[a_{pd;ts}(\lambda) = a_{pd}(\lambda) - \Psi_t(\lambda) \times (t - t_r) - \Psi_{sa}(\lambda) \times s\]</div>
+<p>where <span class="arithmatex">\(\Psi_{sa}\)</span> is the absorption-channel salinity correction constant
+(distinct from the attenuation-channel <span class="arithmatex">\(\Psi_{sc}\)</span> used in OPTATTN).</p>
+<p><strong>Step 4 -- Apply the scattering correction.</strong> The ac-s absorption tube does
+not detect light scattered into the backward direction; the measured signal
+therefore overestimates absorption. The ac Meter Protocol Document describes
+three scattering correction methods; OOI uses the proportional method (method 3;
+Zaneveld et al., 1994), as specified in DPS 1341-00700. The correction parameterizes the
+fraction of undetected scatter <span class="arithmatex">\(\tilde{\beta}\)</span> using a reference wavelength
+(default 715 nm) where absorption by water impurities is assumed negligible:</p>
+<div class="arithmatex">\[\tilde{\beta} = \frac{a_{pd;ts}(\lambda_{ref})}
+{c_{pd;ts}(\lambda_{ref}) - a_{pd;ts}(\lambda_{ref})}\]</div>
+<div class="arithmatex">\[a_{pd;ts;s}(\lambda) = a_{pd;ts}(\lambda)
+- \tilde{\beta} \times \left[c_{pd;ts}(\lambda) - a_{pd;ts}(\lambda)\right]\]</div>
+<p>where <span class="arithmatex">\(c_{pd;ts}(\lambda)\)</span> values are interpolated from the attenuation
+channel wavelength grid onto the absorption channel wavelength grid before
+the subtraction. The correction is suppressed when
+<span class="arithmatex">\(c_{pd;ts}(\lambda_{ref}) - a_{pd;ts}(\lambda_{ref}) \leq 0.02\)</span> or when
+<span class="arithmatex">\(a_{pd;ts}(\lambda_{ref}) \leq 0\)</span>. The resulting
+<span class="arithmatex">\(a_{pd;ts;s}(\lambda)\)</span> is OPTABSN_L2.</p>
+<hr />
+<h3 id="optparw_l1-photosynthetically-active-radiation">OPTPARW_L1 -- Photosynthetically Active Radiation</h3>
+<p>OPTPARW_L1 is the photosynthetically active radiation (<span class="arithmatex">\(\mu\)</span>mol photons
+m<span class="arithmatex">\(^{-2}\)</span> s<span class="arithmatex">\(^{-1}\)</span>) within the spectral range 400-700 nm, the wavelengths photosynthetic organisms use for
+photosynthesis. Four instrument
+variants are deployed across the OOI arrays, each using a different
+calibration equation. The function names <code>opt_par_satlantic</code> and
+<code>opt_par_wetlabs</code> reflect the manufacturers at the time the DPS documents
+were written; both product lines are now part of Sea-Bird Scientific.</p>
+<h4 id="calibration-coefficients_1">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>a0</code></td>
+<td><code>CC_a0</code></td>
+<td>Factory calibration sheet (PAR LIN 600m, ECO PAR)</td>
+</tr>
+<tr>
+<td><code>a1</code></td>
+<td><code>CC_a1</code></td>
+<td>Factory calibration sheet (PAR LIN 600m, ECO PAR)</td>
+</tr>
+<tr>
+<td><code>Im</code></td>
+<td><code>CC_Im</code></td>
+<td>Factory calibration sheet (PAR LIN 600m, ECO PAR)</td>
+</tr>
+<tr>
+<td><code>dark_offset</code></td>
+<td><code>CC_dark_offset</code></td>
+<td>Factory calibration sheet (QSP-2100 series, QSP-2200)</td>
+</tr>
+<tr>
+<td><code>scale_wet</code></td>
+<td><code>CC_scale_wet</code></td>
+<td>Factory calibration sheet (QSP-2100 series, QSP-2200)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="optparw_l1-algorithm">OPTPARW_L1 Algorithm</h4>
+<p><strong>Sea-Bird Scientific (formerly Satlantic) PAR LIN 600m</strong> (PARAD, RSN Shallow Profiler): applies a linear
+calibration to 32-bit ADC counts (DPS 1341-00720):</p>
+<div class="arithmatex">\[OPTPARW = I_m \times a_1 \times (x - a_0)\]</div>
+<p>where <span class="arithmatex">\(x\)</span> is the L0 count output, <span class="arithmatex">\(a_0\)</span> is the voltage offset (counts),
+<span class="arithmatex">\(a_1\)</span> is the scaling factor (<span class="arithmatex">\(\mu\)</span>mol photons m<span class="arithmatex">\(^{-2}\)</span> s<span class="arithmatex">\(^{-1}\)</span> count<span class="arithmatex">\(^{-1}\)</span>),
+and <span class="arithmatex">\(I_m\)</span> is the immersion coefficient.</p>
+<p><strong>Sea-Bird Scientific (formerly WET Labs) ECO PAR / ECOPARS</strong> (PARAD-J, CSPP): applies an exponential
+calibration to 14-bit ADC counts (DPS 1341-00722):</p>
+<div class="arithmatex">\[OPTPARW = I_m \times 10^{(x - a_0) / a_1}\]</div>
+<p>where <span class="arithmatex">\(x\)</span> is the L0 output (counts), <span class="arithmatex">\(a_0\)</span> is the offset (counts), <span class="arithmatex">\(a_1\)</span> is the scaling factor (counts), and <span class="arithmatex">\(I_m\)</span>
+is the dimensionless immersion coefficient (1.0 in air). The sensor output is logarithmic in PAR, so <span class="arithmatex">\(a_1\)</span> is the
+change in counts corresponding to a tenfold change in PAR. DPS 1341-00722 lists <span class="arithmatex">\(a_1\)</span> in <span class="arithmatex">\(\mu\)</span>mol photons
+m<span class="arithmatex">\(^{-2}\)</span> s<span class="arithmatex">\(^{-1}\)</span> count<span class="arithmatex">\(^{-1}\)</span>, carried over from the linear calibration; that unit does not apply to the
+logarithmic form (Sea-Bird Scientific ECO PAR User Manual, Rev. D).</p>
+<p><strong>Biospherical QSP-2100</strong> (PARAD, glider / mobile assets): applies a
+linear calibration to a voltage signal (DPS 1341-00721):</p>
+<div class="arithmatex">\[OPTPARW = \frac{output - dark\_offset}{scale\_wet}\]</div>
+<p>where <span class="arithmatex">\(output\)</span> is the sensor reading in volts, <span class="arithmatex">\(dark\_offset\)</span> is the dark
+reading in volts, and <span class="arithmatex">\(scale\_wet\)</span> is the wet calibration scale factor
+(V per <span class="arithmatex">\(\mu\)</span>mol photons m<span class="arithmatex">\(^{-2}\)</span> s<span class="arithmatex">\(^{-1}\)</span>).</p>
+<p><strong>Biospherical QSP-2200</strong> (PARAD, WFP): uses the same equation as the
+QSP-2100, but the input is in millivolts and <span class="arithmatex">\(scale\_wet\)</span> is in
+V per quanta cm<span class="arithmatex">\(^{-2}\)</span> s<span class="arithmatex">\(^{-1}\)</span>. The function converts millivolt inputs to
+volts and the scale factor to SI units
+(1 <span class="arithmatex">\(\mu\)</span>mol photons m<span class="arithmatex">\(^{-2}\)</span> s<span class="arithmatex">\(^{-1}\)</span> = <span class="arithmatex">\(6.02 \times 10^{13}\)</span> quanta
+cm<span class="arithmatex">\(^{-2}\)</span> s<span class="arithmatex">\(^{-1}\)</span>) before applying the linear equation.</p>
+<hr />
+<h3 id="spectir_l1-downwelling-spectral-irradiance">SPECTIR_L1 -- Downwelling Spectral Irradiance</h3>
+<p>SPECTIR_L1 is the downwelling spectral "vector" irradiance (<span class="arithmatex">\(E_d(\lambda)\)</span>,
+<span class="arithmatex">\(\mu\)</span>W cm<span class="arithmatex">\(^{-2}\)</span> nm<span class="arithmatex">\(^{-1}\)</span>) measured by the Sea-Bird Scientific OCR-507
+multispectral radiometer (SPKIR). "Vector" (or planar) irradiance is the downwelling light weighted by the cosine
+of its zenith angle, i.e., the light incident on a horizontal surface; it is distinct from scalar irradiance
+(<span class="arithmatex">\(E_o(\lambda)\)</span>), which weights light from all directions equally (DPS 1341-00730, Section 3.1). The OCR-507
+provides seven user-defined wavelength
+channels, typically spanning 400-700 nm in bandwidths of nominally 10 or
+20 nm, with center wavelengths specified at instrument purchase.</p>
+<h4 id="calibration-coefficients_2">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>offset</code></td>
+<td><code>CC_offset</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>scale</code></td>
+<td><code>CC_scale</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>immersion_factor</code></td>
+<td><code>CC_immersion_factor</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="spectir_l1-algorithm">SPECTIR_L1 Algorithm</h4>
+<p>SPECTIR_L1 is an L1 product computed from 32-bit ADC counts using three
+instrument-specific calibration coefficients per channel, supplied by the
+manufacturer:</p>
+<div class="arithmatex">\[E_d(\lambda) = I_m \times a_1 \times (x - a_0)\]</div>
+<p>where <span class="arithmatex">\(x\)</span> is the raw ADC count (SPECTIR_L0), <span class="arithmatex">\(a_0\)</span> is the dark offset (<code>offset</code>, counts), <span class="arithmatex">\(a_1\)</span> is the scale factor
+(<code>scale</code>, <span class="arithmatex">\(\mu\)</span>W cm<span class="arithmatex">\(^{-2}\)</span> nm<span class="arithmatex">\(^{-1}\)</span> count<span class="arithmatex">\(^{-1}\)</span>), and <span class="arithmatex">\(I_m\)</span> is the immersion coefficient (<code>immersion_factor</code>, set to
+1.0 when the sensor is not immersed), all from the factory calibration sheet, one per channel. The calibration
+equation type is designated <code>OPTICS2</code> in the Sea-Bird Scientific calibration file format (DPS 1341-00730, Section
+4.2).</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_internal_temp" class="doc doc-heading">
+            <code class="highlight language-python">opt_internal_temp(traw)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Calculates the internal ac-s instrument temperature from the raw
+thermistor count. Used internally by opt_pd_calc.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>traw</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw internal instrument temperature, OPTTEMP_L0 [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>tintrn</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Calculated internal instrument temperature [deg_C].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_internal_temp(traw):
+    """
+    Calculates the internal ac-s instrument temperature from the raw
+    thermistor count. Used internally by opt_pd_calc.
+
+    Parameters
+    ----------
+    traw : ndarray
+        Raw internal instrument temperature, OPTTEMP_L0 [counts].
+
+    Returns
+    -------
+    tintrn : ndarray
+        Calculated internal instrument temperature [deg_C].
+    """
+    # convert counts to volts
+    volts = 5. * traw / 65535.
+
+    # calculate the resistance of the thermistor
+    res = 10000. * volts / (4.516 - volts)
+
+    # convert resistance to temperature
+    a = 0.00093135
+    b = 0.000221631
+    c = 0.000000125741
+
+    log_res = np.log(res)
+    degC = (1. / (a + b * log_res + c * log_res**3)) - 273.15
+    return degC</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-25</td>
+<td>Christopher Wingard</td>
+<td>Initial implementation</td>
+</tr>
+<tr>
+<td>2014-03-07</td>
+<td>Russell Desiderio</td>
+<td>Reduced calls to np.log</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_pd_calc" class="doc doc-heading">
+            <code class="highlight language-python">opt_pd_calc(ref, sig, offset, tintrn, tbins, tarray)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Converts raw reference and signal measurements to an uncorrected
+beam attenuation or optical absorption coefficient. The 'c' (beam
+attenuation) and 'a' (absorption) cases are isomorphic; they differ
+only in which calibration coefficients are supplied. The returned
+values are not final data products.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ref</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw reference light measurements, OPTCREF_L0 or OPTAREF_L0 as
+appropriate [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sig</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw signal light measurements, OPTCSIG_L0 or OPTASIG_L0 as
+appropriate [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>offset</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pure water offsets from the ac-s device file; use the 'c' or
+'a' offsets as appropriate [m-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tintrn</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Internal instrument temperature [deg_C], from
+opt_internal_temp.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tbins</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Internal temperature calibration bin values, from the ac-s
+device file [deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tarray</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Internal temperature calibration correction coefficients from
+the ac-s device file, indexed by wavelength and temperature
+bin; use the 'c' or 'a' array as appropriate [m-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>pd</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Uncorrected beam attenuation or optical absorption
+coefficient [m-1].</p>
+              </div>
+            </li>
+            <li>
+<b><code>deltaT</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Internal temperature correction applied to pd [m-1]; returned
+for unit testing and not used in subsequent processing.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_pd_calc(ref, sig, offset, tintrn, tbins, tarray):
+    """
+    Converts raw reference and signal measurements to an uncorrected
+    beam attenuation or optical absorption coefficient. The 'c' (beam
+    attenuation) and 'a' (absorption) cases are isomorphic; they differ
+    only in which calibration coefficients are supplied. The returned
+    values are not final data products.
+
+    Parameters
+    ----------
+    ref : ndarray
+        Raw reference light measurements, OPTCREF_L0 or OPTAREF_L0 as
+        appropriate [counts].
+    sig : ndarray
+        Raw signal light measurements, OPTCSIG_L0 or OPTASIG_L0 as
+        appropriate [counts].
+    offset : ndarray
+        Pure water offsets from the ac-s device file; use the 'c' or
+        'a' offsets as appropriate [m-1].
+    tintrn : float
+        Internal instrument temperature [deg_C], from
+        opt_internal_temp.
+    tbins : ndarray
+        Internal temperature calibration bin values, from the ac-s
+        device file [deg_C].
+    tarray : ndarray
+        Internal temperature calibration correction coefficients from
+        the ac-s device file, indexed by wavelength and temperature
+        bin; use the 'c' or 'a' array as appropriate [m-1].
+
+    Returns
+    -------
+    pd : ndarray
+        Uncorrected beam attenuation or optical absorption
+        coefficient [m-1].
+    deltaT : ndarray
+        Internal temperature correction applied to pd [m-1]; returned
+        for unit testing and not used in subsequent processing.
+    """
+    # Raw reference and signal values are imported as 1D arrays. They must be
+    # the same length.
+    ref = np.atleast_1d(ref).astype(float)
+    sig = np.atleast_1d(sig).astype(float)
+    lFlag = len(ref) != len(sig)
+    if lFlag:
+        raise ValueError('Reference and Signal arrays must be the same length')
+
+    nValues = len(sig)
+
+    # The offsets are imported as a 1D array. They must be the same length as
+    # ref and sig.
+    offset = np.atleast_1d(offset)
+    lFlag = len(offset) != nValues
+    if lFlag:
+        str1 = 'The number of calibration offset channels ('
+        str2 = ') from the cal devfile must match the number of Signal and Reference channels ('
+        str3 = ') from the rawdata.'
+        offsetErrorString = str1 + str(len(offset)) + str2 + str(nValues) + str3
+        raise ValueError(offsetErrorString)
+
+    # The temperature bins are imported as a 1D array
+    tbins = np.atleast_1d(tbins)
+    tValues = np.size(tbins)
+
+    # The internal temperature compensation array 'tarray' is a 2D array. The # of
+    # columns must equal the length of the tbins array. The number of rows must equal
+    # the number of wavelengths.
+    tarray = np.atleast_2d(tarray)
+    r, c = tarray.shape
+
+    if r != nValues:
+        str1 = 'The number of rows in the internal temperature compensation calibration array ('
+        str2 = ') must match the number of wavelength channels in the rawdata ('
+        str3 = ').'
+        rErrorString = str1 + str(r) + str2 + str(nValues) + str3
+        raise ValueError(rErrorString)
+
+    if c != tValues:
+        # since both tbins and tarray (should) come from the same dev file, this exception is not likely.
+        str1 = 'Number of columns in the internal temperature compensation calibration array ('
+        str2 = ') must match the number of internal temp comp cal bin values = ('
+        cErrorString = str1 + str(c) + str2 + str(tValues) + ').'
+        raise ValueError(cErrorString)
+
+    # find the indexes in the temperature bins corresponding to the values
+    # bracketing the internal temperature.
+    ind1 = np.nonzero(tbins-tintrn &lt; 0)[0][-1]
+    ind2 = np.nonzero(tintrn-tbins &lt; 0)[0][0]
+    T0 = tbins[ind1]    # set first bracketing temperature
+    T1 = tbins[ind2]    # set second bracketing temperaure
+
+    # Calculate the linear temperature correction.
+    dT0 = tarray[:, ind1]
+    dT1 = tarray[:, ind2]
+    deltaT = dT0 + ((tintrn - T0) / (T1 - T0)) * (dT1 - dT0)
+
+    # Calculate the uncorrected signal [m-1]; the pathlength is 0.25m.
+    # Apply the corrections for the clean water offsets (offset) and
+    # the instrument's internal temperature (deltaT).
+    pd = (offset - (1./0.25) * np.log(sig/ref)) - deltaT
+
+    return pd, deltaT</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-25</td>
+<td>Christopher Wingard</td>
+<td>Initial implementation</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Russell Desiderio</td>
+<td>Expanded documentation</td>
+</tr>
+<tr>
+<td>2015-04-21</td>
+<td>Russell Desiderio</td>
+<td>Added diagnostics to ValueError exceptions</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_tempsal_corr" class="doc doc-heading">
+            <code class="highlight language-python">opt_tempsal_corr(channel, pd, wlngth, tcal, T, PS)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Applies the wavelength- and channel-specific temperature and
+salinity correction to an uncorrected beam attenuation or
+absorption coefficient.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>channel</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Measurement channel: 'c' for beam attenuation or 'a' for
+absorption.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pd</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected beam attenuation or absorption coefficient [m-1],
+from opt_pd_calc.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wlngth</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Wavelengths at which the measurements were made [nm], from
+the ac-s device file; use the 'c' or 'a' wavelengths as
+appropriate.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tcal</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Factory calibration reference (pure water) temperature
+[deg_C], supplied by the manufacturer.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ temperature, TEMPWAT_L1, from a co-located CTD
+[deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>PS</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ practical salinity, PRACSAL_L2, from a co-located CTD
+[unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>pd_ts</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Temperature- and salinity-corrected data [m-1]: OPTATTN_L2 for
+channel 'c'; an intermediate absorption product still
+requiring the scattering correction for channel 'a'.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_tempsal_corr(channel, pd, wlngth, tcal, T, PS):
+    """
+    Applies the wavelength- and channel-specific temperature and
+    salinity correction to an uncorrected beam attenuation or
+    absorption coefficient.
+
+    Parameters
+    ----------
+    channel : str
+        Measurement channel: 'c' for beam attenuation or 'a' for
+        absorption.
+    pd : ndarray
+        Uncorrected beam attenuation or absorption coefficient [m-1],
+        from opt_pd_calc.
+    wlngth : ndarray
+        Wavelengths at which the measurements were made [nm], from
+        the ac-s device file; use the 'c' or 'a' wavelengths as
+        appropriate.
+    tcal : float
+        Factory calibration reference (pure water) temperature
+        [deg_C], supplied by the manufacturer.
+    T : float
+        In situ temperature, TEMPWAT_L1, from a co-located CTD
+        [deg_C].
+    PS : float
+        In situ practical salinity, PRACSAL_L2, from a co-located CTD
+        [unitless].
+
+    Returns
+    -------
+    pd_ts : ndarray
+        Temperature- and salinity-corrected data [m-1]: OPTATTN_L2 for
+        channel 'c'; an intermediate absorption product still
+        requiring the scattering correction for channel 'a'.
+    """
+    # Absorption/attenuation and the wavelength values are imported as 1D
+    # arrays. They must be the same length.
+    pd = np.atleast_1d(pd)
+    wlngth = np.atleast_1d(wlngth)
+    lFlag = len(pd) != len(wlngth)
+    if lFlag:
+        raise ValueError('pd and wavelength arrays must be the same length')
+
+    nValues = np.size(pd)
+
+    # apply the temperature and salinity corrections for each wavelength
+    # use a dictionary comprehension to read in only those values required into a np array
+    np_tscor = np.array([tscor[ii] for ii in wlngth])
+    dT = T - tcal
+    if channel == 'a':
+        pd_ts = pd - dT * np_tscor[:, 0] - PS * np_tscor[:, 2]
+    elif channel == 'c':
+        pd_ts = pd - dT * np_tscor[:, 0] - PS * np_tscor[:, 1]
+    else:
+        raise ValueError('Channel must be either "a" or "c"')
+
+    return pd_ts</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-25</td>
+<td>Christopher Wingard</td>
+<td>Initial implementation</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Russell Desiderio</td>
+<td>Expanded documentation; removed incorrect vector length requirement</td>
+</tr>
+<tr>
+<td>2014-03-21</td>
+<td>Russell Desiderio</td>
+<td>Added dictionary comprehension to vectorize correction calculation</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_scatter_corr" class="doc doc-heading">
+            <code class="highlight language-python">opt_scatter_corr(apd_ts, awlngth, cpd_ts, cwlngth, rwlngth=715.0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Applies the scattering correction to the temperature- and
+salinity-corrected optical absorption coefficient, producing
+OPTABSN_L2. Uses the proportional scattering correction (method 3
+of the ac Meter Protocol Document; Zaneveld et al., 1994), as
+specified in DPS 1341-00700.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>apd_ts</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Absorption coefficient corrected for temperature and
+salinity [m-1], from opt_tempsal_corr.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>awlngth</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Absorption channel wavelengths [nm], from the ac-s device
+file.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cpd_ts</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Beam attenuation coefficient corrected for temperature and
+salinity, OPTATTN_L2 [m-1], from opt_tempsal_corr.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cwlngth</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Attenuation channel wavelengths [nm], from the ac-s device
+file.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rwlngth</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>715.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Scattering correction reference wavelength [nm] (default
+715).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>apd_ts_s</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Absorption coefficient corrected for temperature, salinity,
+and scattering, OPTABSN_L2 [m-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Numpy 1.10.1 interpolation changes caused unphysical values
+(-10^15) instead of the expected null correction when cref =
+aref, due to a divide-by-near-zero in the scatter ratio
+calculation. The fix traps the divide-by-zero more robustly and
+also accounts for baseline variability in the optical signals
+(not specified in the DPS): since attenuation c = absorption a +
+scattering b, and a, b, c are all non-negative, c is always &gt;= a,
+so a small or noisy c-a difference should not drive an unstable
+correction. A minimum reference-wavelength scattering leakage
+value (ref_scatter_leakage_min = 0.02, chosen empirically) is used
+below which the correction is not applied; see Additional Notes on
+the docs page for further detail, including known limitations of
+the two-intake-tube deployment configuration.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_scatter_corr(apd_ts, awlngth, cpd_ts, cwlngth, rwlngth=715.):
+    """
+    Applies the scattering correction to the temperature- and
+    salinity-corrected optical absorption coefficient, producing
+    OPTABSN_L2. Uses the proportional scattering correction (method 3
+    of the ac Meter Protocol Document; Zaneveld et al., 1994), as
+    specified in DPS 1341-00700.
+
+    Parameters
+    ----------
+    apd_ts : ndarray
+        Absorption coefficient corrected for temperature and
+        salinity [m-1], from opt_tempsal_corr.
+    awlngth : ndarray
+        Absorption channel wavelengths [nm], from the ac-s device
+        file.
+    cpd_ts : ndarray
+        Beam attenuation coefficient corrected for temperature and
+        salinity, OPTATTN_L2 [m-1], from opt_tempsal_corr.
+    cwlngth : ndarray
+        Attenuation channel wavelengths [nm], from the ac-s device
+        file.
+    rwlngth : float, optional
+        Scattering correction reference wavelength [nm] (default
+        715).
+
+    Returns
+    -------
+    apd_ts_s : ndarray
+        Absorption coefficient corrected for temperature, salinity,
+        and scattering, OPTABSN_L2 [m-1].
+
+    Notes
+    -----
+    Numpy 1.10.1 interpolation changes caused unphysical values
+    (-10^15) instead of the expected null correction when cref =
+    aref, due to a divide-by-near-zero in the scatter ratio
+    calculation. The fix traps the divide-by-zero more robustly and
+    also accounts for baseline variability in the optical signals
+    (not specified in the DPS): since attenuation c = absorption a +
+    scattering b, and a, b, c are all non-negative, c is always &gt;= a,
+    so a small or noisy c-a difference should not drive an unstable
+    correction. A minimum reference-wavelength scattering leakage
+    value (ref_scatter_leakage_min = 0.02, chosen empirically) is used
+    below which the correction is not applied; see Additional Notes on
+    the docs page for further detail, including known limitations of
+    the two-intake-tube deployment configuration.
+    """
+    ref_scatter_leakage_min = 0.02  # see Notes
+
+    # Absorption and the absorption wavelength values are imported as 1D
+    # arrays. They must be the same length.
+    apd_ts = np.atleast_1d(apd_ts)
+    awlngth = np.atleast_1d(awlngth)
+    lFlag = len(apd_ts) != len(awlngth)
+    if lFlag:
+        raise ValueError('Absorption and absorption wavelength arrays must ',
+                         'be the same length')
+
+    # Attenuation and the attenuation wavelength values are imported as 1D
+    # arrays. They must be the same length.
+    cpd_ts = np.atleast_1d(cpd_ts)
+    cwlngth = np.atleast_1d(cwlngth)
+    lFlag = len(cpd_ts) != len(cwlngth)
+    if lFlag:
+        raise ValueError('Attenuation and attenuation wavelength arrays must ',
+                         'be the same length')
+
+    # find the the 'a' channel wavelength closest to the reference wavelength
+    # for scattering and set the 'a' scattering reference value.
+    idx = (np.abs(awlngth-rwlngth)).argmin()
+    aref = apd_ts[idx]
+
+    # interpolate the 'c' channel cpd_ts values to match the 'a' channel
+    # wavelengths and set the 'c' scattering reference value. 
+    cintrp = np.interp(awlngth, cwlngth, cpd_ts)
+    cref = cintrp[idx]
+
+    # trap out potential problems in scat_ratio calculation:
+    # scat_ratio = aref / (cref - aref).
+    #     aref must be &gt; 0 AND scat_ratio must be &gt; a pre-determined minimum;
+    #     else, scat_ratio = 0.
+    if aref &lt;= 0.0:
+        scat_ratio = 0.
+    elif cref - aref &lt;= ref_scatter_leakage_min:
+        scat_ratio = 0.
+    else:
+        scat_ratio = aref / (cref - aref)
+
+    # apply the scattering corrections
+    apd_ts_s = apd_ts - scat_ratio * (cintrp - apd_ts)
+    return apd_ts_s</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>The scattering correction is suppressed when <span class="arithmatex">\(c_{pd;ts}(\lambda_{ref}) - a_{pd;ts}(\lambda_{ref}) \leq 0.02\)</span> or when
+<span class="arithmatex">\(a_{pd;ts}(\lambda_{ref}) \leq 0\)</span>. This behavior is not specified in DPS 1341-00700; it was added in the 2015-12-08
+revision (R. Desiderio). Because attenuation is the sum of absorption and scattering (<span class="arithmatex">\(c = a + b\)</span>, all
+non-negative), <span class="arithmatex">\(c \geq a\)</span> at every wavelength. When scattering is small, <span class="arithmatex">\(c - a\)</span> can fluctuate around a value such as
+0.005, and applying the correction would add artificial variability that obscures the data. The minimum
+reference-wavelength scattering leakage of 0.02 was chosen empirically.</p>
+<p>Instrumental and mechanical factors also limit the correction. When the ac-s is plumbed with a single intake split
+by a wye junction, experiments have shown that asymmetries in the two flow paths partition particles unevenly
+between the 'a' and 'c' tubes. The accepted deployment protocol is therefore a separate intake for each tube, but
+the two tubes then do not sample exactly the same water, so natural variability in the 'a' and 'c' signals is not
+precisely correlated and the <span class="arithmatex">\(c_{pd;ts}(\lambda_{ref}) - a_{pd;ts}(\lambda_{ref})\)</span> quantity is uncertain. The
+absorption and attenuation baselines also drift differently over time, from electronic drift and biofouling,
+particularly on moored instruments left unattended for long periods.</p>
+<p>The 2015-12-08 revision recommended replacing this algorithm with the flat (baseline) scattering correction:
+subtracting <span class="arithmatex">\(a_{pd;ts}(\lambda_{ref})\)</span> from the absorption at all wavelengths. This assumes the absorption signal
+at the reference wavelength is entirely scattering leakage, and is the most robust of the three scattering
+correction methods described in the ac Meter Protocol Document. This change has not been implemented.</p>
+<h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-25</td>
+<td>Christopher Wingard</td>
+<td>Initial implementation</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Russell Desiderio</td>
+<td>Trapped out potential problems in scatter ratio calculation</td>
+</tr>
+<tr>
+<td>2015-12-08</td>
+<td>Russell Desiderio</td>
+<td>Made the scatter ratio calculation more robust; added minimum threshold</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_par_satlantic" class="doc doc-heading">
+            <code class="highlight language-python">opt_par_satlantic(counts_output, a0, a1, Im)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes OPTPARW_L1 from the Sea-Bird Scientific (formerly
+Satlantic) PAR LIN 600m instrument (PARAD, RSN Shallow Profiler)
+using a linear calibration.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>counts_output</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>OPTPARW_L0 raw ADC counts.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Voltage offset [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Scaling factor [umol photons m-2 s-1 count-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>Im</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Immersion coefficient.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>OPTPARW_L1</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Photosynthetically active radiation [umol photons m-2 s-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_par_satlantic(counts_output, a0, a1, Im):
+    """
+    Computes OPTPARW_L1 from the Sea-Bird Scientific (formerly
+    Satlantic) PAR LIN 600m instrument (PARAD, RSN Shallow Profiler)
+    using a linear calibration.
+
+    Parameters
+    ----------
+    counts_output : ndarray
+        OPTPARW_L0 raw ADC counts.
+    a0 : float
+        Voltage offset [counts].
+    a1 : float
+        Scaling factor [umol photons m-2 s-1 count-1].
+    Im : float
+        Immersion coefficient.
+
+    Returns
+    -------
+    OPTPARW_L1 : ndarray
+        Photosynthetically active radiation [umol photons m-2 s-1].
+    """
+
+    OPTPARW_L1 = np.atleast_1d(Im * a1 * (counts_output - a0))
+
+    return OPTPARW_L1</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-01-31</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_par_wetlabs" class="doc doc-heading">
+            <code class="highlight language-python">opt_par_wetlabs(counts_output, a0, a1, Im)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes OPTPARW_L1 from the Sea-Bird Scientific (formerly WET
+Labs) ECO PAR / ECOPARS instrument (PARAD-J, CSPP) using an exponential
+calibration.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>counts_output</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>OPTPARW_L0 raw ADC counts.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Offset [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Scaling factor [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>Im</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Immersion coefficient [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>OPTPARW_L1</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Photosynthetically active radiation [umol photons m-2 s-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_par_wetlabs(counts_output, a0, a1, Im):
+    """
+    Computes OPTPARW_L1 from the Sea-Bird Scientific (formerly WET
+    Labs) ECO PAR / ECOPARS instrument (PARAD-J, CSPP) using an exponential
+    calibration.
+
+    Parameters
+    ----------
+    counts_output : ndarray
+        OPTPARW_L0 raw ADC counts.
+    a0 : float
+        Offset [counts].
+    a1 : float
+        Scaling factor [counts].
+    Im : float
+        Immersion coefficient [unitless].
+
+    Returns
+    -------
+    OPTPARW_L1 : ndarray
+        Photosynthetically active radiation [umol photons m-2 s-1].
+    """
+
+    counts_output = counts_output * 1.0  # type conversion
+
+    OPTPARW_L1 = np.atleast_1d(Im * 10**((counts_output - a0) / a1))
+
+    return OPTPARW_L1</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-12-10</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-04-09</td>
+<td>Russell Desiderio</td>
+<td>Fixed bug so that the function runs correctly on time-vectorized arguments</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_par_biospherical_mobile" class="doc doc-heading">
+            <code class="highlight language-python">opt_par_biospherical_mobile(output, dark_offset, scale_wet)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes OPTPARW_L1 from the Biospherical QSP-2100 scalar PAR
+instrument (PARAD, glider and other mobile assets).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>output</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>OPTPARW_L0 raw sensor output [V].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dark_offset</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Dark reading [V].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>scale_wet</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Wet calibration scale factor [V per umol photons m-2 s-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>OPTPARW_L1</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Photosynthetically active radiation [umol photons m-2 s-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_par_biospherical_mobile(output, dark_offset, scale_wet):
+    """
+    Computes OPTPARW_L1 from the Biospherical QSP-2100 scalar PAR
+    instrument (PARAD, glider and other mobile assets).
+
+    Parameters
+    ----------
+    output : ndarray
+        OPTPARW_L0 raw sensor output [V].
+    dark_offset : float
+        Dark reading [V].
+    scale_wet : float
+        Wet calibration scale factor [V per umol photons m-2 s-1].
+
+    Returns
+    -------
+    OPTPARW_L1 : ndarray
+        Photosynthetically active radiation [umol photons m-2 s-1].
+    """
+
+    OPTPARW_L1 = np.atleast_1d((output - dark_offset) / scale_wet)
+
+    return OPTPARW_L1</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-01-31</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_par_biospherical_wfp" class="doc doc-heading">
+            <code class="highlight language-python">opt_par_biospherical_wfp(output, dark_offset, scale_wet)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes OPTPARW_L1 from the Biospherical QSP-2200 scalar PAR
+instrument (PARAD, wire-following profiler).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>output</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>OPTPARW_L0 raw sensor output [mV].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dark_offset</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Dark reading [mV].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>scale_wet</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Wet calibration scale factor [V per quanta cm-2 s-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>OPTPARW_L1</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Photosynthetically active radiation [umol photons m-2 s-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Converts the millivolt inputs to volts and the scale factor to SI
+units (1 umol photons m-2 s-1 = 6.02e13 quanta cm-2 s-1) before
+applying the same linear equation used by
+opt_par_biospherical_mobile.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_par_biospherical_wfp(output, dark_offset, scale_wet):
+    """
+    Computes OPTPARW_L1 from the Biospherical QSP-2200 scalar PAR
+    instrument (PARAD, wire-following profiler).
+
+    Parameters
+    ----------
+    output : ndarray
+        OPTPARW_L0 raw sensor output [mV].
+    dark_offset : float
+        Dark reading [mV].
+    scale_wet : float
+        Wet calibration scale factor [V per quanta cm-2 s-1].
+
+    Returns
+    -------
+    OPTPARW_L1 : ndarray
+        Photosynthetically active radiation [umol photons m-2 s-1].
+
+    Notes
+    -----
+    Converts the millivolt inputs to volts and the scale factor to SI
+    units (1 umol photons m-2 s-1 = 6.02e13 quanta cm-2 s-1) before
+    applying the same linear equation used by
+    opt_par_biospherical_mobile.
+    """
+
+    #Convert output from mvolts to volts
+    output_volts = output / 1000.
+
+    #Convert dark_offset from mvolts to volts
+    dark_offset_volts = dark_offset / 1000.
+
+    #Convert scale_wet from Volts/(quanta/cm^2.s^1) to Volts/(umol photons/m^2.s^1)
+    #1uE/sec/m^2 PAR= 1umole/sec/m^2 PAR = 6.02*10**13 quanta/sec/cm^2 PAR
+    scale_wet_converted = scale_wet * (6.02 * 10**13)
+
+    OPTPARW_L1 = np.atleast_1d((output_volts - dark_offset_volts) / scale_wet_converted)
+
+    return OPTPARW_L1</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-03-07</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_ocr507_irradiance" class="doc doc-heading">
+            <code class="highlight language-python">opt_ocr507_irradiance(counts, offset, scale, immersion_factor)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes SPECTIR_L1 from the Sea-Bird Scientific OCR-507
+multispectral radiometer (SPKIR).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>counts</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>SPECTIR_L0 raw ADC counts, one column per wavelength channel
+(7 channels).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>offset</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Dark offset calibration coefficient, per channel.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>scale</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Scale factor calibration coefficient, per channel.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>immersion_factor</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Immersion coefficient, per channel.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Ed</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Downwelling vector irradiance, SPECTIR_L1 [uW cm-2 nm-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_ocr507_irradiance(counts, offset, scale, immersion_factor):
+    """
+    Computes SPECTIR_L1 from the Sea-Bird Scientific OCR-507
+    multispectral radiometer (SPKIR).
+
+    Parameters
+    ----------
+    counts : ndarray
+        SPECTIR_L0 raw ADC counts, one column per wavelength channel
+        (7 channels).
+    offset : ndarray
+        Dark offset calibration coefficient, per channel.
+    scale : ndarray
+        Scale factor calibration coefficient, per channel.
+    immersion_factor : ndarray
+        Immersion coefficient, per channel.
+
+    Returns
+    -------
+    Ed : ndarray
+        Downwelling vector irradiance, SPECTIR_L1 [uW cm-2 nm-1].
+    """
+    # condition input to be arrays for error-checking, in case scalars are input
+    counts = np.atleast_2d(counts*1.0)  # type conversion from fix to float in case needed.
+    offset = np.atleast_2d(offset)
+    scale = np.atleast_2d(scale)
+    immersion_factor = np.atleast_2d(immersion_factor)
+
+    # check to see that there are 7 columns (corresponding to 7 wavelength channels) ...
+    lFlag1 = counts.shape[-1] != 7
+    # ... and check that the shapes of all input arguments are identical
+    lFlag2 = not (counts.shape == offset.shape == scale.shape == immersion_factor.shape)
+    if lFlag1 or lFlag2:
+        raise ValueError('counts, offset, scale, and immersion arrays must have the same shape and have 7 columns')
+
+    # Apply cal coeffs to raw data
+    Ed = (counts - offset) * scale * immersion_factor
+    return Ed</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_8">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-03-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-03-25</td>
+<td>Russell Desiderio</td>
+<td>Changed code to require data inputs to be arrays with 7 columns</td>
+</tr>
+<tr>
+<td>2015-04-09</td>
+<td>Russell Desiderio</td>
+<td>Revised for time-vectorized calibration coefficient arrays</td>
+</tr>
+<tr>
+<td>2015-04-21</td>
+<td>Russell Desiderio</td>
+<td>Revised for 2-D array input and output</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+<p>Two helper functions support optional auxiliary sensors that may be fitted
+to some OPTAA units. Neither is used in the computation of OPTATTN_L2 or
+OPTABSN_L2.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_pressure" class="doc doc-heading">
+            <code class="highlight language-python">opt_pressure(praw, offset, sfactor)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Calculates the depth of the ac-s from its optional auxiliary
+pressure sensor. Not used in computing OPTATTN_L2 or OPTABSN_L2.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>praw</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw pressure reading [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>offset</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Depth offset from the instrument device file [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sfactor</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Scale factor from the instrument device file [m counts-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>depth</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Depth of the instrument [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_pressure(praw, offset, sfactor):
+    """
+    Calculates the depth of the ac-s from its optional auxiliary
+    pressure sensor. Not used in computing OPTATTN_L2 or OPTABSN_L2.
+
+    Parameters
+    ----------
+    praw : ndarray
+        Raw pressure reading [counts].
+    offset : float
+        Depth offset from the instrument device file [m].
+    sfactor : float
+        Scale factor from the instrument device file [m counts-1].
+
+    Returns
+    -------
+    depth : ndarray
+        Depth of the instrument [m].
+    """
+    depth = praw * sfactor + offset
+    return depth</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_1">Additional Notes</h4>
+<p>This function is not used in the computation of OPTATTN_L2 or OPTABSN_L2.
+It supports the optional auxiliary pressure sensor available on some OPTAA
+units.</p>
+<h4 id="history_9">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-25</td>
+<td>Christopher Wingard</td>
+<td>Initial implementation</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_external_temp" class="doc doc-heading">
+            <code class="highlight language-python">opt_external_temp(traw)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Calculates the external environmental temperature of the ac-s from
+its optional auxiliary temperature sensor. Not used in computing
+OPTATTN_L2 or OPTABSN_L2.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>traw</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw external temperature [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>degC</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Calculated external environment temperature [deg_C].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_external_temp(traw):
+    """
+    Calculates the external environmental temperature of the ac-s from
+    its optional auxiliary temperature sensor. Not used in computing
+    OPTATTN_L2 or OPTABSN_L2.
+
+    Parameters
+    ----------
+    traw : ndarray
+        Raw external temperature [counts].
+
+    Returns
+    -------
+    degC : ndarray
+        Calculated external environment temperature [deg_C].
+    """
+    # convert counts to degrees Centigrade
+    a = -7.1023317e-13
+    b = 7.09341920e-08
+    c = -3.87065673e-03
+    d = 95.8241397
+
+    degC = a * traw**3 + b * traw**2 + c * traw + d
+    return degC</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_2">Additional Notes</h4>
+<p>This function is not used in the computation of OPTATTN_L2 or OPTABSN_L2.
+It supports the optional auxiliary temperature sensor available on some
+OPTAA units.</p>
+<h4 id="history_10">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-25</td>
+<td>Christopher Wingard</td>
+<td>Initial implementation</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wrapper-functions">Wrapper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_beam_attenuation" class="doc doc-heading">
+            <code class="highlight language-python">opt_beam_attenuation(cref, csig, traw, cwl, coff, tcal, tbins, tc_arr, T, PS)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for OPTATTN_L2. Computes the beam attenuation coefficient
+corrected for temperature and salinity from the Sea-Bird Scientific
+ac-s (OPTAA).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>cref</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw reference light measurements, OPTCREF_L0 [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>csig</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw signal light transmission measurements, OPTCSIG_L0
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>traw</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw internal instrument temperature, OPTTEMP_L0 [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cwl</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Attenuation channel wavelengths [nm], from the ac-s device
+file.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>coff</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pure water offsets for the attenuation channel, from the ac-s
+device file [m-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tcal</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Factory calibration reference (pure water) temperature
+[deg_C], supplied by the manufacturer.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tbins</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Internal temperature calibration bin values, from the ac-s
+device file [deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tc_arr</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Internal temperature calibration correction coefficients for
+the attenuation channel, from the ac-s device file [m-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ temperature, TEMPWAT_L1, from a co-located CTD
+[deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>PS</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ practical salinity, PRACSAL_L2, from a co-located CTD
+[unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>cpd_ts</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Beam attenuation coefficient corrected for temperature and
+salinity, OPTATTN_L2 [m-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>opt_internal_temp : Computes the internal instrument temperature
+    used here.
+opt_pd_calc : Computes the uncorrected beam attenuation
+    coefficient.
+opt_tempsal_corr : Applies the temperature and salinity
+    correction.</p>
+</details>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>All input arrays are assumed to be vectorized over data packets,
+with the first dimension iterating over packet number; the
+function loops over packets, calling opt_internal_temp,
+opt_pd_calc, and opt_tempsal_corr for each.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_beam_attenuation(cref, csig, traw, cwl, coff, tcal, tbins, tc_arr,
+                         T, PS):
+
+    """
+    OOI wrapper for OPTATTN_L2. Computes the beam attenuation coefficient
+    corrected for temperature and salinity from the Sea-Bird Scientific
+    ac-s (OPTAA).
+
+    Parameters
+    ----------
+    cref : ndarray
+        Raw reference light measurements, OPTCREF_L0 [counts].
+    csig : ndarray
+        Raw signal light transmission measurements, OPTCSIG_L0
+        [counts].
+    traw : ndarray
+        Raw internal instrument temperature, OPTTEMP_L0 [counts].
+    cwl : ndarray
+        Attenuation channel wavelengths [nm], from the ac-s device
+        file.
+    coff : ndarray
+        Pure water offsets for the attenuation channel, from the ac-s
+        device file [m-1].
+    tcal : ndarray
+        Factory calibration reference (pure water) temperature
+        [deg_C], supplied by the manufacturer.
+    tbins : ndarray
+        Internal temperature calibration bin values, from the ac-s
+        device file [deg_C].
+    tc_arr : ndarray
+        Internal temperature calibration correction coefficients for
+        the attenuation channel, from the ac-s device file [m-1].
+    T : ndarray
+        In situ temperature, TEMPWAT_L1, from a co-located CTD
+        [deg_C].
+    PS : ndarray
+        In situ practical salinity, PRACSAL_L2, from a co-located CTD
+        [unitless].
+
+    Returns
+    -------
+    cpd_ts : ndarray
+        Beam attenuation coefficient corrected for temperature and
+        salinity, OPTATTN_L2 [m-1].
+
+    See Also
+    --------
+    opt_internal_temp : Computes the internal instrument temperature
+        used here.
+    opt_pd_calc : Computes the uncorrected beam attenuation
+        coefficient.
+    opt_tempsal_corr : Applies the temperature and salinity
+        correction.
+
+    Notes
+    -----
+    All input arrays are assumed to be vectorized over data packets,
+    with the first dimension iterating over packet number; the
+    function loops over packets, calling opt_internal_temp,
+    opt_pd_calc, and opt_tempsal_corr for each.
+    """
+    # reset shapes of input arguments
+    #    using np.array([], ndmin=#) seems faster than using np.atleast_#d
+    cref = np.array(cref, ndmin=2)
+    csig = np.array(csig, ndmin=2)
+    traw = np.array(traw, ndmin=1)
+    cwl = np.around(np.array(cwl, ndmin=2), decimals=1)
+    coff = np.array(coff, ndmin=2)
+    tcal = np.array(tcal, ndmin=1)
+    tbins = np.array(tbins, ndmin=2)
+    T = np.array(T, ndmin=1)
+    PS = np.array(PS, ndmin=1)
+    # note, np.atleast_3d appends the extra dimension;
+    # np.array using ndmin prepends the extra dimension.
+    tc_arr = np.array(tc_arr, ndmin=3)
+
+    # size up inputs
+    npackets = cwl.shape[0]
+    nwavelengths = cwl.shape[1]
+    # initialize output array
+    cpd_ts = np.zeros([npackets, nwavelengths])
+
+    for ii in range(npackets):
+
+        # calculate the internal instrument temperature [deg_C]
+        tintrn = opt_internal_temp(traw[ii])
+
+        # calculate the uncorrected beam attenuation coefficient [m^-1]
+        cpd, _ = opt_pd_calc(cref[ii, :], csig[ii, :], coff[ii, :], tintrn,
+                             tbins[ii, :], tc_arr[ii, :, :])
+
+        # correct the beam attenuation coefficient for temperature and salinity.
+        cpd_ts_row = opt_tempsal_corr('c', cpd, cwl[ii, :], tcal[ii], T[ii], PS[ii])
+        cpd_ts[ii, :] = cpd_ts_row
+
+    # return the temperature and salinity corrected beam attenuation
+    # coefficient OPTATTN_L2 [m^-1]
+    return cpd_ts</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_3">Additional Notes</h4>
+<p>All input arrays are assumed to be vectorized over data packets such that
+the first dimension iterates over packet number. The function loops over
+packets and calls <code>opt_internal_temp</code>, <code>opt_pd_calc</code>, and
+<code>opt_tempsal_corr</code> for each.</p>
+<h4 id="history_11">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-25</td>
+<td>Christopher Wingard</td>
+<td>Initial implementation</td>
+</tr>
+<tr>
+<td>2014-03-06</td>
+<td>Russell Desiderio</td>
+<td>Reset dimensions of arguments; implemented loop for vectorized input</td>
+</tr>
+<tr>
+<td>2014-03-07</td>
+<td>Russell Desiderio</td>
+<td>Added documentation</td>
+</tr>
+<tr>
+<td>2014-03-21</td>
+<td>Russell Desiderio</td>
+<td>Added wavelength rounding to match tscor dictionary keys</td>
+</tr>
+<tr>
+<td>2014-05-29</td>
+<td>Russell Desiderio</td>
+<td>Added handling for wavelengths outside the T/S correction table range</td>
+</tr>
+<tr>
+<td>2015-04-17</td>
+<td>Russell Desiderio</td>
+<td>Use np.nan instead of fill value</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.opt_functions.opt_optical_absorption" class="doc doc-heading">
+            <code class="highlight language-python">opt_optical_absorption(aref, asig, traw, awl, aoff, tcal, tbins, ta_arr, cpd_ts, cwl, T, PS, rwlngth=715.0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for OPTABSN_L2. Computes the optical absorption
+coefficient corrected for temperature, salinity, and scattering
+from the Sea-Bird Scientific ac-s (OPTAA).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>aref</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw reference light measurements, OPTAREF_L0 [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>asig</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw signal light transmission measurements, OPTASIG_L0
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>traw</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw internal instrument temperature, OPTTEMP_L0 [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>awl</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Absorption channel wavelengths [nm], from the ac-s device
+file.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>aoff</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pure water offsets for the absorption channel, from the ac-s
+device file [m-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tcal</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Factory calibration reference (pure water) temperature
+[deg_C], supplied by the manufacturer.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tbins</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Internal temperature calibration bin values, from the ac-s
+device file [deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ta_arr</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Internal temperature calibration correction coefficients for
+the absorption channel, from the ac-s device file [m-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cpd_ts</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Beam attenuation coefficient corrected for temperature and
+salinity, OPTATTN_L2 [m-1], from opt_beam_attenuation.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cwl</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Attenuation channel wavelengths [nm], from the ac-s device
+file.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ temperature, TEMPWAT_L1, from a co-located CTD
+[deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>PS</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ practical salinity, PRACSAL_L2, from a co-located CTD
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rwlngth</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>715.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Scattering correction reference wavelength [nm] (default
+715).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>apd_ts_s</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Absorption coefficient corrected for temperature, salinity,
+and scattering, OPTABSN_L2 [m-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>opt_internal_temp : Computes the internal instrument temperature
+    used here.
+opt_pd_calc : Computes the uncorrected absorption coefficient.
+opt_tempsal_corr : Applies the temperature and salinity
+    correction.
+opt_scatter_corr : Applies the scattering correction.</p>
+</details>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>All input arrays are assumed to be vectorized over data packets,
+with the first dimension iterating over packet number; the
+function loops over packets, calling opt_internal_temp,
+opt_pd_calc, opt_tempsal_corr, and opt_scatter_corr for each.
+rwlngth defaults to 715 nm per DPS 1341-00700, but is exposed for
+override if needed.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/opt_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def opt_optical_absorption(aref, asig, traw, awl, aoff, tcal, tbins, ta_arr,
+                           cpd_ts, cwl, T, PS, rwlngth=715.):
+    """
+    OOI wrapper for OPTABSN_L2. Computes the optical absorption
+    coefficient corrected for temperature, salinity, and scattering
+    from the Sea-Bird Scientific ac-s (OPTAA).
+
+    Parameters
+    ----------
+    aref : ndarray
+        Raw reference light measurements, OPTAREF_L0 [counts].
+    asig : ndarray
+        Raw signal light transmission measurements, OPTASIG_L0
+        [counts].
+    traw : ndarray
+        Raw internal instrument temperature, OPTTEMP_L0 [counts].
+    awl : ndarray
+        Absorption channel wavelengths [nm], from the ac-s device
+        file.
+    aoff : ndarray
+        Pure water offsets for the absorption channel, from the ac-s
+        device file [m-1].
+    tcal : ndarray
+        Factory calibration reference (pure water) temperature
+        [deg_C], supplied by the manufacturer.
+    tbins : ndarray
+        Internal temperature calibration bin values, from the ac-s
+        device file [deg_C].
+    ta_arr : ndarray
+        Internal temperature calibration correction coefficients for
+        the absorption channel, from the ac-s device file [m-1].
+    cpd_ts : ndarray
+        Beam attenuation coefficient corrected for temperature and
+        salinity, OPTATTN_L2 [m-1], from opt_beam_attenuation.
+    cwl : ndarray
+        Attenuation channel wavelengths [nm], from the ac-s device
+        file.
+    T : ndarray
+        In situ temperature, TEMPWAT_L1, from a co-located CTD
+        [deg_C].
+    PS : ndarray
+        In situ practical salinity, PRACSAL_L2, from a co-located CTD
+        [unitless].
+    rwlngth : float, optional
+        Scattering correction reference wavelength [nm] (default
+        715).
+
+    Returns
+    -------
+    apd_ts_s : ndarray
+        Absorption coefficient corrected for temperature, salinity,
+        and scattering, OPTABSN_L2 [m-1].
+
+    See Also
+    --------
+    opt_internal_temp : Computes the internal instrument temperature
+        used here.
+    opt_pd_calc : Computes the uncorrected absorption coefficient.
+    opt_tempsal_corr : Applies the temperature and salinity
+        correction.
+    opt_scatter_corr : Applies the scattering correction.
+
+    Notes
+    -----
+    All input arrays are assumed to be vectorized over data packets,
+    with the first dimension iterating over packet number; the
+    function loops over packets, calling opt_internal_temp,
+    opt_pd_calc, opt_tempsal_corr, and opt_scatter_corr for each.
+    rwlngth defaults to 715 nm per DPS 1341-00700, but is exposed for
+    override if needed.
+    """
+    # reset shapes of input arguments
+    #    using np.array ndmin=# seems faster than using np.atleast_#d
+    aref = np.array(aref, ndmin=2)
+    asig = np.array(asig, ndmin=2)
+    traw = np.array(traw, ndmin=1)
+    awl = np.around(np.array(awl, ndmin=2), decimals=1)
+    aoff = np.array(aoff, ndmin=2)
+    tcal = np.array(tcal, ndmin=1)
+    tbins = np.array(tbins, ndmin=2)
+    # note, np.atleast_3d appends the extra dimension;
+    # np.array using ndmin prepends the extra dimension.
+    ta_arr = np.array(ta_arr, ndmin=3)
+    cpd_ts = np.array(cpd_ts, ndmin=2)
+    cwl = np.array(cwl, ndmin=2)
+    T = np.array(T, ndmin=1)
+    PS = np.array(PS, ndmin=1)
+
+    # size up inputs
+    npackets = awl.shape[0]
+    nwavelengths = awl.shape[1]
+    # initialize output array
+    apd_ts_s = np.zeros([npackets, nwavelengths])
+
+    for ii in range(npackets):
+
+        # calculate the internal instrument temperature [deg_C]
+        tintrn = opt_internal_temp(traw[ii])
+
+        # calculate the uncorrected optical absorption coefficient [m^-1]
+        apd, _ = opt_pd_calc(aref[ii, :], asig[ii, :], aoff[ii, :], tintrn,
+                             tbins[ii, :], ta_arr[ii, :, :])
+
+        # correct the optical absorption coefficient for temperature and salinity.
+        apd_ts = opt_tempsal_corr('a', apd, awl[ii, :], tcal[ii], T[ii], PS[ii])
+
+        # correct the optical absorption coefficient for scattering effects
+        apd_ts_s_row = opt_scatter_corr(apd_ts, awl[ii, :], cpd_ts[ii, :], cwl[ii, :], rwlngth)
+        apd_ts_s[ii, :] = apd_ts_s_row
+
+    # return the temperature, salinity and scattering corrected optical
+    # absorption coefficient OPTABSN_L2 [m^-1]
+    return apd_ts_s</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_4">Additional Notes</h4>
+<p>All input arrays are assumed to be vectorized over data packets such that
+the first dimension iterates over packet number. The function loops over
+packets and calls <code>opt_internal_temp</code>, <code>opt_pd_calc</code>, <code>opt_tempsal_corr</code>,
+and <code>opt_scatter_corr</code> for each.</p>
+<p>The <code>rwlngth</code> parameter (default 715 nm) sets the reference wavelength for
+the proportional scattering correction. The default of 715 nm is specified
+in DPS 1341-00700; the parameter is exposed to allow overriding when the
+instrument's channel closest to 715 nm differs significantly.</p>
+<h4 id="history_12">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-25</td>
+<td>Christopher Wingard</td>
+<td>Initial implementation</td>
+</tr>
+<tr>
+<td>2014-02-19</td>
+<td>Russell Desiderio</td>
+<td>Added rwlngth to argument list</td>
+</tr>
+<tr>
+<td>2014-03-06</td>
+<td>Russell Desiderio</td>
+<td>Reset dimensions of arguments; implemented loop for vectorized input</td>
+</tr>
+<tr>
+<td>2014-03-07</td>
+<td>Russell Desiderio</td>
+<td>Added documentation</td>
+</tr>
+<tr>
+<td>2014-03-21</td>
+<td>Russell Desiderio</td>
+<td>Added wavelength rounding to match tscor dictionary keys</td>
+</tr>
+<tr>
+<td>2014-05-29</td>
+<td>Russell Desiderio</td>
+<td>Added handling for wavelengths outside the T/S correction table range</td>
+</tr>
+<tr>
+<td>2015-04-17</td>
+<td>Russell Desiderio</td>
+<td>Use np.nan instead of fill value</td>
+</tr>
+<tr>
+<td>2026-07-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Ackleson, S. G. and O'Donnell, J. (2011). Small-scale variability in
+suspended matter associated with the Connecticut River plume front.
+J. Geophys. Res., 116(C10013), doi:10.1029/2011JC007053.</p>
+<p>Boss, E. et al. (2001). Spectral particulate attenuation and particle size
+distribution in the bottom boundary layer of a continental shelf.
+J. Geophys. Res., 106(C5), 9509-9516, doi:10.1029/2000JC900077.</p>
+<p>Kitchen, J. C., Zaneveld, J. R. V., and Pak, H. (1982). Effects of particle
+size distribution and chlorophyll content on beam attenuation spectra.
+Appl. Opt., 21, 3913-3918.</p>
+<p>Mobley, C. D. (1994). Light and Water. San Diego, CA: Academic Press.</p>
+<p>Mueller, J. L. et al. (2003). Ocean Optics Protocols for Satellite Ocean
+Color Sensor Validation, Revision 4, Volume IV: Inherent Optical Properties.
+NASA/TM-2003-211621, Vol. IV.</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00690_Data_Product_SPEC_OPTATTN_OOI.pdf">OOI (2014). Data Product Specification for Optical Beam Attenuation Coefficient. Document Control Number 1341-00690.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00700_Data_Product_SPEC_OPTABSN_OOI.pdf">OOI (2014). Data Product Specification for Optical Absorption Coefficient. Document Control Number 1341-00700.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00720_Data_Product_SPEC_OPTPARW_Satl_OOI-2.pdf">OOI (2012). Data Product Specification for Photosynthetically Active Radiation (PAR) from Instruments on Cabled Shallow Profilers. Document Control Number 1341-00720.</a></p>
+<p>OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from Biospherical Instruments on CGSN Profilers and Mobile Assets. Document Control Number 1341-00721. (Not publicly posted.)</p>
+<p>OOI (2014). Data Product Specification for Photosynthetically Active Radiation (PAR) from WET Labs Instrument on Coastal Surface Piercing Profiler. Document Control Number 1341-00722. (Not publicly posted.)</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00730_DATA_PRODUCT_SPEC_SPECTIR_OOI.pdf">OOI (2014). Data Product Specification for Downwelling Spectral Irradiance. Document Control Number 1341-00730.</a></p>
+<p>Pegau, W. S., Gray, D., and Zaneveld, J. R. V. (1997). Absorption and
+attenuation of visible and near-infrared light in water: dependence on
+temperature and salinity. Appl. Opt., 36, 6035-6046.</p>
+<p>Sea-Bird Scientific. <em>Spectral Absorption and Attenuation Meter ac-s
+User's Guide, Revision J.</em> Philomath, OR: Sea-Bird Scientific.</p>
+<p>Sea-Bird Scientific. <em>ac Meter Protocol Document, Revision P.</em> Philomath,
+OR: Sea-Bird Scientific.</p>
+<p>Sea-Bird Scientific. <em>ECO PAR Sensor User Manual, Edition 5.</em> Philomath,
+OR: Sea-Bird Scientific.</p>
+<p>Sea-Bird Scientific (2023). <em>ECO PAR Sensor User Manual, Version D.</em>
+Philomath, OR: Sea-Bird Scientific.</p>
+<p>Sea-Bird Scientific. <em>OCR-507 Operation Manual, SAT-DN-0027, Rev E.</em>
+Philomath, OR: Sea-Bird Scientific.</p>
+<p>Sea-Bird Scientific. <em>PAR Sensor Operation Manual, SAT-DN-00462, Rev B.</em>
+Philomath, OR: Sea-Bird Scientific.</p>
+<p>Sullivan, J. M., Twardowski, M. S., Zaneveld, J. R. V., Moore, C. M.,
+Barnard, A. H., Donaghay, P. L., and Rhoades, B. (2006). The hyperspectral
+temperature and salt dependencies of absorption by water and heavy water in
+the 400-750 nm spectral range. Appl. Opt., 45, 5294-5309.</p>
+<p>Zaneveld, J. R. V., Kitchen, J. C., and Moore, C. C. (1994). Scattering
+error correction of reflecting-tube absorption meters. Ocean Optics XII,
+Proc. SPIE 2258, 44-55.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../nit_functions/" class="btn btn-neutral float-left" title="NIT Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../prs_functions/" class="btn btn-neutral float-right" title="PRS Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../nit_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../prs_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

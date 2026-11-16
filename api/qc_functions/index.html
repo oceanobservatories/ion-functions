@@ -1,0 +1,3817 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/qc_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>QC Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "QC Functions";
+        var mkdocs_page_input_path = "api/qc_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/qc_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">QC Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#flag-convention">Flag Convention</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#tests-applied-by-the-ooi-data-system">Tests Applied by the OOI Data System</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#compiled-routines">Compiled Routines</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#glblrng-global-range-test">GLBLRNG -- Global Range Test</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#loclrng-local-range-test">LOCLRNG -- Local Range Test</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#spketst-spike-test">SPKETST -- Spike Test</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#trndtst-trend-test">TRNDTST -- Trend Test</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#stuckvl-stuck-value-test">STUCKVL -- Stuck Value Test</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#gradtst-gradient-test">GRADTST -- Gradient Test</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#cmbnflg-combined-qc-flags">CMBNFLG -- Combined QC Flags</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#specifications-without-functions">Specifications Without Functions</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#wrapper-functions">Wrapper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#deprecated-functions">Deprecated Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Quality Control</li>
+      <li class="breadcrumb-item active">QC Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="qc-functions">QC Functions</h1>
+<h2 id="background">Background</h2>
+<p><code>qc_functions.py</code> implements the automated quality control (QC) algorithms specified in the OOI Data Product
+Specifications (DPS) for quality control, ported from the MATLAB example code in those documents. Each test examines a
+data product and returns a flag for every data point. The tests are configured with parameters (valid ranges,
+accuracies, window lengths, thresholds) taken from QC lookup tables, which the DPS documents keep separate from the
+algorithms themselves.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-10001</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10001_Data_Product_SPEC_MODULUS_OOI.pdf">OOI (2012). Data Product Specification for Modulus (MODULUS).</a></td>
+</tr>
+<tr>
+<td>1341-10002</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10002_Data_Product_SPEC_INTERP1_OOI.pdf">OOI (2012). Data Product Specification for 1-D Interpolation (INTERP1).</a></td>
+</tr>
+<tr>
+<td>1341-10003</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10003_Data_Product_SPEC_POLYVAL_OOI.pdf">OOI (2012). Data Product Specification for Evaluate Polynomial (POLYVAL).</a></td>
+</tr>
+<tr>
+<td>1341-10004</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10004_Data_Product_SPEC_GLBLRNG_OOI.pdf">OOI (2012). Data Product Specification for Global Range Test.</a></td>
+</tr>
+<tr>
+<td>1341-10005</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10005_Data_Product_SPEC_LOCLRNG_OOI.pdf">OOI (2012). Data Product Specification for Local Range Test.</a></td>
+</tr>
+<tr>
+<td>1341-10006</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10006_Data_Product_SPEC_SPKETST_OOI.pdf">OOI (2012). Data Product Specification for Spike Test.</a></td>
+</tr>
+<tr>
+<td>1341-10007</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10007_Data_Product_SPEC_TRNDTST_OOI.pdf">OOI (2012). Data Product Specification for Trend Test.</a></td>
+</tr>
+<tr>
+<td>1341-10008</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10008_Data_Product_SPEC_STUCKVL_OOI.pdf">OOI (2012). Data Product Specification for Stuck Value Test.</a></td>
+</tr>
+<tr>
+<td>1341-10010</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10010_Data_Product_SPEC_GRADTST_OOI.pdf">OOI (2012). Data Product Specification for Gradient Test.</a></td>
+</tr>
+<tr>
+<td>1341-10011</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10011_Data_Product_SPEC_SOLAREL_OOI.pdf">OOI (2012). Data Product Specification for Solar Elevation.</a></td>
+</tr>
+<tr>
+<td>1341-10012</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10012_Data_Product_SPEC_CMBNFLG_OOI.pdf">OOI (2012). Data Product Specification for Combined QC Flags.</a></td>
+</tr>
+<tr>
+<td>1341-10030</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10030_Data_Product_SPEC_CONDCMP_OOI.pdf">OOI (2012). Data Product Specification for Conductivity Compressibility Compensation.</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="flag-convention">Flag Convention</h3>
+<p>Following the DPS documents, a flag of 1 marks data that passed a test (presumed good) and 0 marks data that failed it
+(presumed bad). Two further cases return -99:</p>
+<ul>
+<li>The OOI wrapper functions return -99 for every data point when a required test parameter is missing or holds the
+  QC lookup table fill value of -9999, meaning the test was not run.</li>
+<li>The gradient test returns -99 for data points it skipped because they are closer than the minimum separation in the
+  coordinate (<code>mindx</code>) to the previous point.</li>
+</ul>
+<p>-99 does not appear in OOI data sets. The OOI stream engine converts any result other than 0 or 1 to 0 (and logs an
+error), so a test that returns -99 is recorded as executed and failed. For each tested parameter, the delivered data
+carry two bitmap variables, <code>&lt;parameter&gt;_qc_executed</code> and <code>&lt;parameter&gt;_qc_results</code>. Each bit corresponds to one test: in <code>qc_executed</code> a set bit
+means the test was run, and in <code>qc_results</code> a set bit means the data passed (1) and a clear bit that they failed (0).</p>
+<table>
+<thead>
+<tr>
+<th>Bit</th>
+<th>Test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>dataqc_globalrangetest</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>dataqc_localrangetest</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>dataqc_spiketest</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>dataqc_polytrendtest</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>dataqc_stuckvaluetest</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>dataqc_gradienttest</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Not assigned</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>dataqc_propagateflags</code></td>
+</tr>
+</tbody>
+</table>
+<p>See OOI, Interpreting QC Variables and Results, in the <a href="#references">References</a> for more on reading these variables.</p>
+<h3 id="tests-applied-by-the-ooi-data-system">Tests Applied by the OOI Data System</h3>
+<p>The OOI stream engine calls the wrapper functions (not the core functions), passing the test parameters for each data
+product from the QC lookup tables maintained in the
+<a href="https://github.com/oceanobservatories/qc-lookup">oceanobservatories/qc-lookup</a> repository. A test runs for a data
+product only when the lookup tables supply parameters for it; the <code>qc_executed</code> bits show which tests were run on a
+given data set.</p>
+<ul>
+<li>The lookup tables define parameters for the global range, spike, stuck value, and trend tests for most data
+  products, and for the gradient test for a small subset.</li>
+<li>The local range test and the combined QC flags are not applied. The local range test wrapper requires a callback
+  argument (<code>pval_callback</code>) that the stream engine does not supply, and there is no lookup table for the combined
+  flags, whose wrapper expects flag vectors as positional arguments.</li>
+</ul>
+<h3 id="compiled-routines">Compiled Routines</h3>
+<p>The stuck value, spike, and gradient tests run in compiled C code (<code>extensions/stuck.c</code>, <code>spike.c</code>, and
+<code>gradient.c</code>), called through the Cython module <code>ion_functions/qc/qc_extensions.pyx</code> as <code>stuckvalues</code>, <code>spikevalues</code>,
+and <code>gradientvalues</code>. The same module provides <code>ntp_to_month</code>, which the local range test wrapper uses to convert NTP
+time stamps into the month of the year. Because these routines are compiled, they are described here rather than
+listed as function entries below; <code>qc_functions.py</code> requires the compiled <code>qc_extensions</code> module to import.</p>
+<h3 id="glblrng-global-range-test">GLBLRNG -- Global Range Test</h3>
+<p>The global range test flags data points (1 or 0) according to whether they fall within a fixed valid range, thought
+of as universally valid -- hence "global". Data flagged 0 should be assumed to be of bad quality and not used for
+scientific analysis.</p>
+<h3 id="loclrng-local-range-test">LOCLRNG -- Local Range Test</h3>
+<p>The local range test uses valid ranges that are site-specific -- hence "local" -- and can vary as a function of one or
+more independent coordinates, such as the depth of the measurement or the month of the year. The minimum and maximum
+limits, given in a lookup table at fixed coordinates, are linearly interpolated to the coordinates of each data point:
+with <code>numpy.interp</code> for one coordinate, or with <code>scipy.interpolate.LinearNDInterpolator</code> (Delaunay triangulation) for
+more than one. Data points outside the coordinates covered by the table are flagged 0. The validity of the output is
+limited by the quality of the ranges in the lookup table.</p>
+<h3 id="spketst-spike-test">SPKETST -- Spike Test</h3>
+<p>The spike test flags single values that deviate significantly from the surrounding values. Each value is compared with
+its <span class="arithmatex">\(L-1\)</span> neighbors within a window of length <span class="arithmatex">\(L\)</span> (an odd integer). With <span class="arithmatex">\(R\)</span> the range (maximum minus minimum) of the
+neighbors and <span class="arithmatex">\(ACC\)</span> the measurement accuracy, the value is presumed good if it deviates from the mean of the neighbors
+by less than</p>
+<div class="arithmatex">\[N \times \max(R, ACC)\]</div>
+<p>Away from the ends of the series the neighbors lie symmetrically before and after the test value; within <span class="arithmatex">\((L-1)/2\)</span>
+values of either end, the neighbors are the first or last <span class="arithmatex">\(L\)</span> values. <span class="arithmatex">\(ACC\)</span> restricts spike detection to deviations
+larger than <span class="arithmatex">\(N \times ACC\)</span> even when the data have little variability; setting it to 0 disables this. The test can only
+detect single outliers, and it assumes regularly spaced measurements, although OOI runs it on data with gaps or
+changes in sampling.</p>
+<h3 id="trndtst-trend-test">TRNDTST -- Trend Test</h3>
+<p>The trend test checks whether a significant fraction of the variability in a time series can be explained by a
+polynomial drift, possibly a sensor drift. A polynomial of order <span class="arithmatex">\(n\)</span> (1 for a linear drift) is fitted to the series;
+the series is taken as containing a significant trend if</p>
+<div class="arithmatex">\[nstd \times \sigma(x - P) &lt; \sigma(x)\]</div>
+<p>where <span class="arithmatex">\(P\)</span> is the fitted polynomial, <span class="arithmatex">\(\sigma\)</span> the standard deviation, and <span class="arithmatex">\(nstd\)</span> a threshold factor. The result applies
+to the whole series, so every point receives the same flag (0 if a trend is detected). The DPS specifies that the input
+is aggregated over a measurement interval set in the lookup table.</p>
+<h3 id="stuckvl-stuck-value-test">STUCKVL -- Stuck Value Test</h3>
+<p>The stuck value test flags repeated occurrences of one value. When at least <span class="arithmatex">\(N\)</span> successive values lie within the
+resolution <span class="arithmatex">\(R\)</span> of each other, all of them are flagged 0. Like the spike test, it assumes regularly spaced measurements
+but is run on data with gaps or changes in sampling.</p>
+<h3 id="gradtst-gradient-test">GRADTST -- Gradient Test</h3>
+<p>The gradient test scans the data point by point. Starting from a point assumed to be good, the next point is good if
+the change between the two, divided by the change in the coordinate <span class="arithmatex">\(x\)</span> (e.g. time or pressure), lies within the valid
+range <code>ddatdx</code>; otherwise it is bad. Once a point is bad, the following points stay bad until one returns to within
+<code>toldat</code> of the last good value. By default the first point is presumed good; a start value (<code>startdat</code>) can be given
+instead, in which case the first point within <code>toldat</code> of it is the first good point. Because a large change between
+two points does not show which of them is wrong, the result depends on this starting assumption, and a natural trend
+during a stretch of bad data can prevent a return to good values. Points closer together in <span class="arithmatex">\(x\)</span> than <code>mindx</code> can be
+excluded to avoid exaggerated gradients from small coordinate steps. The implementation differs from the DPS example
+code in several respects; see the Additional Notes for <code>dataqc_gradienttest</code>.</p>
+<h3 id="cmbnflg-combined-qc-flags">CMBNFLG -- Combined QC Flags</h3>
+<p>The combined flag merges several sets of flags into one with a logical "and": the result is 1 only where every input
+flag is 1. One use is propagating the flags of input parameters (e.g. conductivity, temperature, and pressure) to a
+derived product (e.g. salinity); another is merging the results of several tests on a single data product.</p>
+<h3 id="specifications-without-functions">Specifications Without Functions</h3>
+<p>DPS 1341-10001 (MODULUS), 1341-10002 (INTERP1), and 1341-10003 (POLYVAL) specify single-step operations used to apply
+calibrations or adjustments: wrapping values such as compass directions back into a nominal range, one-dimensional
+linear interpolation, and evaluating a polynomial. They correspond to the NumPy functions <code>numpy.mod</code>,
+<code>numpy.interp</code>, and <code>numpy.polyval</code> and are not implemented as functions in this module.</p>
+<p>Full algorithm derivations and source references are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_globalrangetest" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_globalrangetest(dat, datlim, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Global Range Test (GLBLRNG): flags data that fall outside a fixed
+valid range.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data; numeric and real.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>datlim</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Valid range. The minimum and maximum of datlim are used as the
+lower and upper limits.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, raise ValueError unless dat and datlim are numeric and
+real and datlim has at least 2 elements. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>1 where min(datlim) &lt;= dat &lt;= max(datlim), 0 elsewhere.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_globalrangetest(dat, datlim, strict_validation=False):
+    """
+    Global Range Test (GLBLRNG): flags data that fall outside a fixed
+    valid range.
+
+    Parameters
+    ----------
+    dat : array_like
+        Input data; numeric and real.
+    datlim : array_like
+        Valid range. The minimum and maximum of datlim are used as the
+        lower and upper limits.
+    strict_validation : bool, optional
+        If True, raise ValueError unless dat and datlim are numeric and
+        real and datlim has at least 2 elements. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 where min(datlim) &lt;= dat &lt;= max(datlim), 0 elsewhere.
+    """
+    dat = np.atleast_1d(dat)
+    datlim = np.atleast_1d(datlim)
+
+    if strict_validation:
+        if not utils.isnumeric(dat).all():
+            raise ValueError('\'dat\' must be numeric')
+
+        if not utils.isreal(dat).all():
+            raise ValueError('\'dat\' must be real')
+
+        if not utils.isnumeric(datlim).all():
+            raise ValueError('\'datlim\' must be numeric')
+
+        if not utils.isreal(datlim).all():
+            raise ValueError('\'datlim\' must be real')
+
+        if len(datlim) &lt; 2:  # Must have at least 2 elements
+            raise ValueError('\'datlim\' must have at least 2 elements')
+
+    return (datlim.min() &lt;= dat) &amp; (dat &lt;= datlim.max()).astype('int8')</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-06</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-05-30</td>
+<td>Christopher Mueller</td>
+<td>Performance improvements; added strict_validation flag</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_localrangetest" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_localrangetest(dat, z, datlim, datlimz, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Local Range Test (LOCLRNG): flags data that fall outside a valid range
+that varies with one or more coordinates (e.g. depth or month).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data; a numeric, real vector.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>z</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Coordinates of each value in dat: one row per value and the same
+number of columns as datlimz.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>datlim</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Valid ranges: a 2-column array of [min, max], one row per row of
+datlimz.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>datlimz</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Coordinates at which datlim is given.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, check that dat is a vector, datlim is a matrix, and all
+inputs are numeric and real. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>1 where dat is within the interpolated limits, 0 elsewhere.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If the shapes of dat, z, datlim, and datlimz are inconsistent, or
+a minimum in datlim is not less than its maximum.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The limits are linearly interpolated to z. Points outside the
+coordinates covered by datlimz are flagged 0.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_localrangetest(dat, z, datlim, datlimz, strict_validation=False):
+    """
+    Local Range Test (LOCLRNG): flags data that fall outside a valid range
+    that varies with one or more coordinates (e.g. depth or month).
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data; a numeric, real vector.
+    z : ndarray
+        Coordinates of each value in dat: one row per value and the same
+        number of columns as datlimz.
+    datlim : ndarray
+        Valid ranges: a 2-column array of [min, max], one row per row of
+        datlimz.
+    datlimz : ndarray
+        Coordinates at which datlim is given.
+    strict_validation : bool, optional
+        If True, check that dat is a vector, datlim is a matrix, and all
+        inputs are numeric and real. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 where dat is within the interpolated limits, 0 elsewhere.
+
+    Raises
+    ------
+    ValueError
+        If the shapes of dat, z, datlim, and datlimz are inconsistent, or
+        a minimum in datlim is not less than its maximum.
+
+    Notes
+    -----
+    The limits are linearly interpolated to z. Points outside the
+    coordinates covered by datlimz are flagged 0.
+    """
+    if strict_validation:
+        # check if dat and datlim are matrices
+        if not utils.isvector(dat):
+            raise ValueError('\'dat\' must be a matrix')
+
+        if not utils.ismatrix(datlim):
+            raise ValueError('\'datlim\' must be a matrix')
+
+        # check if all inputs are numeric and real
+        for k, arg in {'dat': dat, 'z': z, 'datlim': datlim,
+                       'datlimz': datlimz}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
+            if not utils.isnumeric(arg).all():
+                raise ValueError('\'{0}\' must be numeric'.format(k))
+
+            if not utils.isreal(arg).all():
+                raise ValueError('\'{0}\' must be real'.format(k))
+
+    if len(datlim.shape) == 3 and datlim.shape[0] == 1:
+        datlim = datlim.reshape(datlim.shape[1:])
+
+    if len(datlimz.shape) == 3 and datlimz.shape[0] == 1:
+        datlimz = datlimz.reshape(datlimz.shape[1:])
+
+    # test size and shape of the input arrays datlimz and datlim, setting test
+    # variables.
+    array_size = datlimz.shape
+    if len(array_size) == 1:
+        numlim = array_size[0]
+        ndim = 1
+    else:
+        numlim = array_size[0]
+        ndim = array_size[1]
+
+    array_size = datlim.shape
+    tmp1 = array_size[0]
+    tmp2 = array_size[1]
+    if tmp1 != numlim:
+        raise ValueError('\'datlim\' and \'datlimz\' must '
+                         'have the same number of rows.')
+
+    if tmp2 != 2:
+        raise ValueError('\'datlim\' must be structured as 2-D array '
+                         'with exactly 2 columns and 1 through N rows.')
+
+    # test the size and shape of the z input array
+    array_size = z.shape
+    if len(array_size) == 1:
+        num = array_size[0]
+        tmp2 = 1
+    else:
+        num = array_size[0]
+        tmp2 = array_size[1]
+
+    if tmp2 != ndim:
+        raise ValueError('\'z\' must have the same number of columns '
+                         'as \'datlimz\'.')
+
+    if num != dat.size:
+        raise ValueError('Len of \'dat\' must match number of '
+                         'rows in \'z\'')
+
+    # test datlim, values in column 2 must be greater than those in column 1
+    if not all(datlim[:, 1] &gt; datlim[:, 0]):
+        raise ValueError('Second column values of \'datlim\' should be '
+                         'greater than first column values.')
+
+    # calculate the upper and lower limits for the data set
+    if ndim == 1:
+        # determine the lower limits using linear interpolation
+        lim1 = np.interp(z, datlimz, datlim[:, 0], left=np.nan, right=np.nan)
+        # determine the upper limits using linear interpolation
+        lim2 = np.interp(z, datlimz, datlim[:, 1], left=np.nan, right=np.nan)
+    else:
+        # Compute Delaunay Triangulation and use linear interpolation to
+        # determine the N-dimensional lower limits
+        F = LinearNDInterpolator(datlimz, datlim[:, 0].reshape(numlim, 1))
+        lim1 = F(z).reshape(dat.size)
+
+        # Compute Delaunay Triangulation and use linear interpolation to
+        # determine the N-dimensional upper limits
+        F = LinearNDInterpolator(datlimz, datlim[:, 1].reshape(numlim, 1))
+        lim2 = F(z).reshape(dat.size)
+
+    # replace NaNs from above interpolations
+    ff = (np.isnan(lim1)) | (np.isnan(lim2))
+    lim1[ff] = np.max(datlim[:, 1])
+    lim2[ff] = np.min(datlim[:, 0])
+
+    # compute the qcflags
+    qcflag = (dat &gt;= lim1) &amp; (dat &lt;= lim2)
+    return qcflag.astype('int8')</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-06</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_spiketest" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_spiketest(dat, acc, N=5, L=5, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Spike Test (SPKETST): flags single values that deviate strongly from
+their neighbors.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data; a numeric, real vector.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>acc</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Measurement accuracy. Deviations smaller than N * acc are never
+flagged; use 0 to disable this threshold.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>N</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>5</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Range multiplier. Default 5.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>L</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>5</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Window length; an odd integer. Default 5.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, check that dat is a numeric, real vector and that acc, N,
+and L are numeric and real. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>1 for good data, 0 for spikes.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Each value is compared with the mean of its L-1 neighbors and flagged
+if it deviates by N * max(R, acc) or more, where R is the range of the
+neighbors. The test runs in compiled code (qc_extensions).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_spiketest(dat, acc, N=5, L=5, strict_validation=False):
+    """
+    Spike Test (SPKETST): flags single values that deviate strongly from
+    their neighbors.
+
+    Parameters
+    ----------
+    dat : array_like
+        Input data; a numeric, real vector.
+    acc : float
+        Measurement accuracy. Deviations smaller than N * acc are never
+        flagged; use 0 to disable this threshold.
+    N : float, optional
+        Range multiplier. Default 5.
+    L : int, optional
+        Window length; an odd integer. Default 5.
+    strict_validation : bool, optional
+        If True, check that dat is a numeric, real vector and that acc, N,
+        and L are numeric and real. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 for good data, 0 for spikes.
+
+    Notes
+    -----
+    Each value is compared with the mean of its L-1 neighbors and flagged
+    if it deviates by N * max(R, acc) or more, where R is the range of the
+    neighbors. The test runs in compiled code (qc_extensions).
+    """
+    dat = np.atleast_1d(dat)
+
+    if strict_validation:
+        if not utils.isnumeric(dat).all():
+            raise ValueError('\'dat\' must be numeric')
+
+        if not utils.isreal(dat).all():
+            raise ValueError('\'dat\' must be real')
+
+        if not utils.isvector(dat):
+            raise ValueError('\'dat\' must be a vector')
+
+        for k, arg in {'acc': acc, 'N': N, 'L': L}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
+            if not utils.isnumeric(arg).all():
+                raise ValueError('\'{0}\' must be numeric'.format(k))
+
+            if not utils.isreal(arg).all():
+                raise ValueError('\'{0}\' must be real'.format(k))
+    dat = np.asanyarray(dat, dtype=float)
+
+    out = spikevalues(dat, L, N, acc)
+    return out</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>If the input has fewer values than the window length <span class="arithmatex">\(L\)</span>, the test is not applied and every point is flagged 1.</p>
+<h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-06</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-05-30</td>
+<td>Christopher Mueller</td>
+<td>Performance improvements</td>
+</tr>
+<tr>
+<td>2013-06-03</td>
+<td>Luke Campbell</td>
+<td>Moved the test into compiled C code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_polytrendtest" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_polytrendtest(dat, t, ord_n=1, nstd=3, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Trend Test (TRNDTST): flags a time series that contains a significant
+polynomial trend, such as sensor drift.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data; a numeric, real vector.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>t</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Time associated with dat.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ord_n</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Polynomial order; 1 tests for a linear trend. Default 1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>nstd</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>3</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Threshold factor. Default 3.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, check that dat and t are numeric, real vectors and that
+ord_n and nstd are numeric, real scalars. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>The same value for every point: 0 if a trend is detected, 1
+otherwise.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>A trend is detected if nstd times the standard deviation of the
+residuals from the polynomial fit is less than the standard deviation
+of dat. ord_n is rounded to the nearest integer and nstd is truncated
+to an integer.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_polytrendtest(dat, t, ord_n=1, nstd=3, strict_validation=False):
+    """
+    Trend Test (TRNDTST): flags a time series that contains a significant
+    polynomial trend, such as sensor drift.
+
+    Parameters
+    ----------
+    dat : array_like
+        Input data; a numeric, real vector.
+    t : array_like
+        Time associated with dat.
+    ord_n : int, optional
+        Polynomial order; 1 tests for a linear trend. Default 1.
+    nstd : int, optional
+        Threshold factor. Default 3.
+    strict_validation : bool, optional
+        If True, check that dat and t are numeric, real vectors and that
+        ord_n and nstd are numeric, real scalars. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        The same value for every point: 0 if a trend is detected, 1
+        otherwise.
+
+    Notes
+    -----
+    A trend is detected if nstd times the standard deviation of the
+    residuals from the polynomial fit is less than the standard deviation
+    of dat. ord_n is rounded to the nearest integer and nstd is truncated
+    to an integer.
+    """
+    dat = np.atleast_1d(dat)
+    t = np.atleast_1d(t)
+
+    if strict_validation:
+        for k, arg in {'dat': dat, 't': t, 'ord_n': ord_n, 'nstd': nstd}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
+            if not utils.isnumeric(arg).all():
+                raise ValueError('\'{0}\' must be numeric'.format(k))
+
+            if not utils.isreal(arg).all():
+                raise ValueError('\'{0}\' must be real'.format(k))
+
+        for k, arg in {'dat': dat, 't': t}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
+            if not utils.isvector(arg):
+                raise ValueError('\'{0}\' must be a vector'.format(k))
+
+        for k, arg in {'ord_n': ord_n, 'nstd': nstd}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
+            if not utils.isscalar(arg):
+                raise ValueError('\'{0}\' must be a scalar'.format(k))
+
+    ord_n = int(round(abs(ord_n)))
+    nstd = int(abs(nstd))
+
+    ll = len(dat)
+    # Not needed because time is incorporated as 't'
+    # t = range(ll)
+
+    pp = np.polyfit(t, dat, ord_n)
+    datpp = np.polyval(pp, t)
+
+    # test for a trend
+    if np.atleast_1d((np.std(dat - datpp) * nstd) &lt; np.std(dat)).all():
+        trndtst = 0
+    else:
+        trndtst = 1
+
+    # insure output size equals input, even though test yields a single value.
+    qcflag = np.ones(dat.shape).astype('int8') * trndtst
+    return qcflag</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-06</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-05-30</td>
+<td>Christopher Mueller</td>
+<td>Performance improvements</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_stuckvaluetest" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_stuckvaluetest(x, reso, num=10, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Stuck Value Test (STUCKVL): flags runs of repeated values in a time
+series.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>x</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input time series; a numeric, real vector.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>reso</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Resolution; successive values less than reso apart count as
+repeats.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>num</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>10</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Minimum number of successive repeats that marks values as stuck.
+Default 10.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, check that x is a numeric, real vector and that reso and
+num are numeric, real scalars. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>0 where stuck values are found, 1 elsewhere. Every point is 0 if x
+has fewer than num values.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The test runs in compiled code (qc_extensions).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_stuckvaluetest(x, reso, num=10, strict_validation=False):
+    """
+    Stuck Value Test (STUCKVL): flags runs of repeated values in a time
+    series.
+
+    Parameters
+    ----------
+    x : array_like
+        Input time series; a numeric, real vector.
+    reso : float
+        Resolution; successive values less than reso apart count as
+        repeats.
+    num : int, optional
+        Minimum number of successive repeats that marks values as stuck.
+        Default 10.
+    strict_validation : bool, optional
+        If True, check that x is a numeric, real vector and that reso and
+        num are numeric, real scalars. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        0 where stuck values are found, 1 elsewhere. Every point is 0 if x
+        has fewer than num values.
+
+    Notes
+    -----
+    The test runs in compiled code (qc_extensions).
+    """
+    dat = np.atleast_1d(x)
+
+    if strict_validation:
+        if not utils.isnumeric(dat).all():
+            raise ValueError('\'x\' must be numeric')
+
+        if not utils.isvector(dat):
+            raise ValueError('\'x\' must be a vector')
+
+        if not utils.isreal(dat).all():
+            raise ValueError('\'x\' must be real')
+
+        for k, arg in {'reso': reso, 'num': num}.items(): # Might not be a proper 2to3 port, keep an eye on it. https://stackoverflow.com/questions/13998492/when-should-iteritems-be-used-instead-of-items
+            if not utils.isnumeric(arg).all():
+                raise ValueError('\'{0}\' must be numeric'.format(k))
+
+            if not utils.isscalar(arg):
+                raise ValueError('\'{0}\' must be a scalar'.format(k))
+
+            if not utils.isreal(arg).all():
+                raise ValueError('\'{0}\' must be real'.format(k))
+
+    num = np.abs(num)
+    dat = np.asanyarray(dat, dtype=float)
+    ll = len(x)
+    if ll &lt; num:
+        # Warn - 'num' is greater than len(x), returning zeros
+        out = np.zeros(dat.size, dtype='int8')
+    else:
+        out = stuckvalues(dat, reso, num)
+
+    return out</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_1">Additional Notes</h4>
+<p>As in the DPS example code, every point is flagged 0 when the input has fewer values than <code>num</code>. Within each window
+of <code>num</code> values, the compiled code compares each value with the last value of the window, where the DPS example code
+compares with the first; a <code>num</code> of 0 is treated as the default of 10.</p>
+<h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-06</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-05-31</td>
+<td>Luke Campbell</td>
+<td>Moved the test into compiled C code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_gradienttest" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_gradienttest(dat, x, ddatdx, mindx, startdat, toldat, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Gradient Test (GRADTST): flags data where the change between successive
+points falls outside a valid range.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data; a numeric, real vector.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>x</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Coordinate (e.g. time or distance) of each value in dat; the same
+length as dat and strictly increasing.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ddatdx</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Two-element [min, max] valid range of the change in dat per unit x.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mindx</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Minimum separation in x for the test to be applied; points closer
+than mindx to the last tested point are skipped. NaN or 0 disables
+this.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>startdat</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Value presumed good, used to test the first point. NaN or 0 means
+the first point is presumed good.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>toldat</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Tolerance. After a failure, data are flagged 0 until a value comes
+within toldat of the last good value.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, check that dat and x are vectors of equal length and that
+x is strictly increasing. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>1 for good data, 0 for bad data, and -99 for points skipped because
+of mindx.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The test runs in compiled code (qc_extensions).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_gradienttest(dat, x, ddatdx, mindx, startdat, toldat, strict_validation=False):
+    """
+    Gradient Test (GRADTST): flags data where the change between successive
+    points falls outside a valid range.
+
+    Parameters
+    ----------
+    dat : array_like
+        Input data; a numeric, real vector.
+    x : array_like
+        Coordinate (e.g. time or distance) of each value in dat; the same
+        length as dat and strictly increasing.
+    ddatdx : array_like
+        Two-element [min, max] valid range of the change in dat per unit x.
+    mindx : float
+        Minimum separation in x for the test to be applied; points closer
+        than mindx to the last tested point are skipped. NaN or 0 disables
+        this.
+    startdat : float
+        Value presumed good, used to test the first point. NaN or 0 means
+        the first point is presumed good.
+    toldat : float
+        Tolerance. After a failure, data are flagged 0 until a value comes
+        within toldat of the last good value.
+    strict_validation : bool, optional
+        If True, check that dat and x are vectors of equal length and that
+        x is strictly increasing. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 for good data, 0 for bad data, and -99 for points skipped because
+        of mindx.
+
+    Notes
+    -----
+    The test runs in compiled code (qc_extensions).
+    """
+
+    if strict_validation:
+        if not utils.isvector(dat) or not utils.isvector(x):
+            raise ValueError('\'dat\' and \'x\' must be vectors')
+
+        if len(dat) != len(x):
+            raise ValueError('\'dat\' and \'x\' must be of equal len')
+
+        if not all(np.diff(x) &gt; 0):
+            raise ValueError('\'x\' must be montonically increasing')
+
+    dat = np.asanyarray(dat, dtype=float).flatten()
+    x = np.asanyarray(x, dtype=float).flatten()
+
+    if np.isnan(mindx):
+        mindx = 0
+    mindx = mindx or 0
+    if np.isnan(startdat):
+        startdat = 0
+    startdat = startdat or 0
+
+    # No strict validation here, they are scalards and they must be validated
+    # before going into the C-layer
+    if not utils.isscalar(mindx):
+        raise ValueError("'mindx' must be scalar, NaN, or empty.")
+    if not utils.isscalar(startdat):
+        raise ValueError("'startdat' must be scalar, NaN, or empty.")
+
+
+    # Confirm that there are still data points left, else abort:
+    if np.abs(x[0] - x[-1]) &lt; mindx:
+        out = np.zeros(x.shape)
+        out.fill(1)
+        log.warn('Too few values to inspect')
+        return out
+
+
+    grad_min = ddatdx[0]
+    grad_max = ddatdx[1]
+    out = gradientvalues(dat, x, grad_min, grad_max, mindx, startdat, toldat)
+
+    return out</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_2">Additional Notes</h4>
+<p>The implementation differs from the DPS example code:</p>
+<table>
+<thead>
+<tr>
+<th>Behavior</th>
+<th>DPS 1341-10010 example code</th>
+<th>This implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Points closer than <code>mindx</code></td>
+<td>Removed; the output is shorter than the input</td>
+<td>Kept and flagged -99, so the output matches the input length. If the next gradient fails, the skipped points are set to 0.</td>
+</tr>
+<tr>
+<td>No start value</td>
+<td>NaN or empty <code>startdat</code> presumes the first point good</td>
+<td>NaN is converted to 0, and 0 means "not set"; a start value of exactly 0 cannot be used.</td>
+</tr>
+<tr>
+<td>NaN data values</td>
+<td>Removed before testing</td>
+<td>Not removed</td>
+</tr>
+<tr>
+<td>Too few points</td>
+<td>Warns when one point or fewer remains</td>
+<td>Returns 1 for every point, as floating-point values, when the full range of <code>x</code> is less than <code>mindx</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-06</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-06-05</td>
+<td>Luke Campbell</td>
+<td>Moved the test into compiled C code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_propagateflags" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_propagateflags(inflags, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Combined QC Flags (CMBNFLG): merges several sets of QC flags into one,
+e.g. to flag a derived product such as salinity from the flags of its
+inputs (conductivity, temperature, and pressure).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>inflags</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>M-by-N array of flags, one row per input data set; 1 is good and 0
+is bad.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If True, raise ValueError unless inflags contains only 0 and 1.
+Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>outflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>Length-N flags: 1 where every input is 1, 0 otherwise.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_propagateflags(inflags, strict_validation=False):
+    """
+    Combined QC Flags (CMBNFLG): merges several sets of QC flags into one,
+    e.g. to flag a derived product such as salinity from the flags of its
+    inputs (conductivity, temperature, and pressure).
+
+    Parameters
+    ----------
+    inflags : ndarray
+        M-by-N array of flags, one row per input data set; 1 is good and 0
+        is bad.
+    strict_validation : bool, optional
+        If True, raise ValueError unless inflags contains only 0 and 1.
+        Default False.
+
+    Returns
+    -------
+    outflag : ndarray of int8
+        Length-N flags: 1 where every input is 1, 0 otherwise.
+    """
+
+    if strict_validation:
+        if not utils.islogical(inflags):
+            raise ValueError('\'inflags\' must be \'0\' or \'1\' '
+                             'integer flag array')
+
+    array_size = inflags.shape
+    nrows = array_size[0]
+    if nrows &lt; 2:
+        error('\'inflags\' must be at least a two-dimensional array')
+
+    outflag = np.all(inflags, 0)
+    return outflag.astype('int8')</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_3">Additional Notes</h4>
+<p>An <code>inflags</code> array with fewer than two rows raises a <code>NameError</code> (the code calls an undefined <code>error</code> function) rather
+than a descriptive error.</p>
+<h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-06</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wrapper-functions">Wrapper Functions</h2>
+<p>The OOI data system calls these wrappers. Each extracts scalar test parameters from the arrays supplied by the system
+(using the last element), returns -99 for every point if a parameter is missing or holds the -9999 fill value, and
+otherwise calls the corresponding core function. External users should call the core functions directly.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_globalrangetest_minmax" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_globalrangetest_minmax(dat, dat_min, dat_max, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for the Global Range Test (GLBLRNG). Combines separate
+minimum and maximum limits into the two-element range expected by
+dataqc_globalrangetest.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dat_min</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Minimum valid value; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dat_max</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Maximum valid value; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Passed to dataqc_globalrangetest. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>1 where dat is within the range, 0 elsewhere. -99 for every point
+if either limit is missing or holds the -9999 fill value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>dataqc_globalrangetest : Core algorithm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_globalrangetest_minmax(dat, dat_min, dat_max, strict_validation=False):
+    """
+    OOI wrapper for the Global Range Test (GLBLRNG). Combines separate
+    minimum and maximum limits into the two-element range expected by
+    dataqc_globalrangetest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    dat_min : array_like
+        Minimum valid value; the last element is used.
+    dat_max : array_like
+        Maximum valid value; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_globalrangetest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        1 where dat is within the range, 0 elsewhere. -99 for every point
+        if either limit is missing or holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_globalrangetest : Core algorithm.
+    """
+    if is_none(dat_min) or is_none(dat_max) or is_fill(dat_min) or is_fill(dat_max):
+        out = np.empty(dat.shape, dtype=np.int8)
+        out.fill(-99)
+        return out
+    return dataqc_globalrangetest(dat, [np.atleast_1d(dat_min)[-1], np.atleast_1d(dat_max)[-1]], strict_validation=strict_validation)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-02</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_localrangetest_wrapper" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_localrangetest_wrapper(dat, datlim, datlimz, dims, pval_callback)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for the Local Range Test (LOCLRNG). Builds the coordinate
+array z from the named dimensions and calls dataqc_localrangetest.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>datlim</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Valid ranges, one [min, max] row per row of datlimz.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>datlimz</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Coordinates at which datlim is given, one column per dimension.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dims</code></b>
+                  (<code>list of str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Names of the coordinate dimensions, in the column order of datlimz.
+'month' is computed from the 'time' parameter (NTP seconds); any
+other name is fetched with pval_callback.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pval_callback</code></b>
+                  (<code><span title="callable">callable</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Function returning the values of a named parameter.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>Output of dataqc_localrangetest. -99 for every point if an input
+is missing or datlim holds the -9999 fill value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>dataqc_localrangetest : Core algorithm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_localrangetest_wrapper(dat, datlim, datlimz, dims, pval_callback):
+    """
+    OOI wrapper for the Local Range Test (LOCLRNG). Builds the coordinate
+    array z from the named dimensions and calls dataqc_localrangetest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    datlim : ndarray
+        Valid ranges, one [min, max] row per row of datlimz.
+    datlimz : ndarray
+        Coordinates at which datlim is given, one column per dimension.
+    dims : list of str
+        Names of the coordinate dimensions, in the column order of datlimz.
+        'month' is computed from the 'time' parameter (NTP seconds); any
+        other name is fetched with pval_callback.
+    pval_callback : callable
+        Function returning the values of a named parameter.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_localrangetest. -99 for every point if an input
+        is missing or datlim holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_localrangetest : Core algorithm.
+    """
+    if is_none(datlim) or np.all(np.atleast_1d(datlim).flatten() == -9999):
+        out = np.empty(dat.shape, dtype=np.int8)
+        out.fill(-99)
+        return out
+    if is_none(datlimz) or np.all(np.atleast_1d(datlim).flatten() == -9999):
+        out = np.empty(dat.shape, dtype=np.int8)
+        out.fill(-99)
+        return out
+    if is_none(dims):
+        out = np.empty(dat.shape, dtype=np.int8)
+        out.fill(-99)
+        return out
+    if is_none(pval_callback):
+        out = np.empty(dat.shape, dtype=np.int8)
+        out.fill(-99)
+        return out
+
+    z = []
+    for dim in dims:
+        if dim == 'month':
+            # Convert time vector to vector of months
+            v = pval_callback('time')
+            v = np.asanyarray(v, dtype=float)
+            v = ntp_to_month(v)
+            z.append(v)
+        else:
+            # Fetch the dimension from the callback method
+            v = pval_callback(dim)
+            z.append(v)
+    if len(dims)&gt;1:
+        z = np.column_stack(z)
+    else:
+        z = z[0]
+        datlimz = datlimz[:,0]
+    return dataqc_localrangetest(dat, z, datlim, datlimz)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_4">Additional Notes</h4>
+<p>The second fill-value check tests <code>datlim</code> again where it should test <code>datlimz</code>, so a -9999 fill value in <code>datlimz</code>
+is not detected.</p>
+<p>The OOI stream engine does not supply <code>pval_callback</code>, so this wrapper is not run in the OOI data system.</p>
+<h4 id="history_8">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-14</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_spiketest_wrapper" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_spiketest_wrapper(dat, acc, N, L, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for the Spike Test (SPKETST). Extracts scalar test
+parameters and calls dataqc_spiketest.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>acc</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Measurement accuracy; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>N</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Range multiplier; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>L</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Window length; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Passed to dataqc_spiketest. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>Output of dataqc_spiketest. -99 for every point if a parameter is
+missing or holds the -9999 fill value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>dataqc_spiketest : Core algorithm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_spiketest_wrapper(dat, acc, N, L, strict_validation=False):
+    """
+    OOI wrapper for the Spike Test (SPKETST). Extracts scalar test
+    parameters and calls dataqc_spiketest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    acc : array_like
+        Measurement accuracy; the last element is used.
+    N : array_like
+        Range multiplier; the last element is used.
+    L : array_like
+        Window length; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_spiketest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_spiketest. -99 for every point if a parameter is
+        missing or holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_spiketest : Core algorithm.
+    """
+    if is_none(acc) or is_fill(acc) or is_none(N) or is_fill(N) or is_none(L) or is_fill(L):
+        out = np.empty(dat.shape, dtype=np.int8)
+        out.fill(-99)
+        return out
+    return dataqc_spiketest(dat, np.atleast_1d(acc)[-1], np.atleast_1d(N)[-1], np.atleast_1d(L)[-1], strict_validation=strict_validation)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_9">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-05</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_polytrendtest_wrapper" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_polytrendtest_wrapper(dat, t, ord_n, nstd, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for the Trend Test (TRNDTST). Extracts scalar test
+parameters and calls dataqc_polytrendtest.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>t</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Time associated with dat.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ord_n</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Polynomial order; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>nstd</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Threshold factor; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Passed to dataqc_polytrendtest. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>Output of dataqc_polytrendtest. -99 for every point if a parameter
+is missing or ord_n holds the -9999 fill value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>dataqc_polytrendtest : Core algorithm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_polytrendtest_wrapper(dat, t, ord_n, nstd, strict_validation=False):
+    """
+    OOI wrapper for the Trend Test (TRNDTST). Extracts scalar test
+    parameters and calls dataqc_polytrendtest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    t : ndarray
+        Time associated with dat.
+    ord_n : array_like
+        Polynomial order; the last element is used.
+    nstd : array_like
+        Threshold factor; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_polytrendtest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_polytrendtest. -99 for every point if a parameter
+        is missing or ord_n holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_polytrendtest : Core algorithm.
+    """
+    if is_none(ord_n) or is_fill(ord_n) or is_none(nstd) or is_fill(ord_n):
+        out = np.empty(dat.shape, dtype=np.int8)
+        out.fill(-99)
+        return out
+    return dataqc_polytrendtest(dat, t, np.atleast_1d(ord_n)[-1], np.atleast_1d(nstd)[-1], strict_validation=strict_validation)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_5">Additional Notes</h4>
+<p>The fill-value check tests <code>ord_n</code> twice and never tests <code>nstd</code>, so a -9999 fill value in <code>nstd</code> is not detected.</p>
+<h4 id="history_10">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-06</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_stuckvaluetest_wrapper" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_stuckvaluetest_wrapper(x, reso, num, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for the Stuck Value Test (STUCKVL). Extracts scalar test
+parameters and calls dataqc_stuckvaluetest.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>x</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input time series.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>reso</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Resolution; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>num</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Minimum number of repeats; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Passed to dataqc_stuckvaluetest. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>Output of dataqc_stuckvaluetest. -99 for every point if a parameter
+is missing or holds the -9999 fill value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>dataqc_stuckvaluetest : Core algorithm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_stuckvaluetest_wrapper(x, reso, num, strict_validation=False):
+    """
+    OOI wrapper for the Stuck Value Test (STUCKVL). Extracts scalar test
+    parameters and calls dataqc_stuckvaluetest.
+
+    Parameters
+    ----------
+    x : ndarray
+        Input time series.
+    reso : array_like
+        Resolution; the last element is used.
+    num : array_like
+        Minimum number of repeats; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_stuckvaluetest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_stuckvaluetest. -99 for every point if a parameter
+        is missing or holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_stuckvaluetest : Core algorithm.
+    """
+    if is_none(reso) or is_fill(reso) or is_none(num) or is_fill(num):
+        out = np.empty(x.shape, np.int8)
+        out.fill(-99)
+        return out
+    return  dataqc_stuckvaluetest(x, np.atleast_1d(reso)[-1], np.atleast_1d(num)[-1], strict_validation=strict_validation)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_11">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-05</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_gradienttest_wrapper" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_gradienttest_wrapper(dat, x, ddatdx, mindx, startdat, toldat, strict_validation=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for the Gradient Test (GRADTST). Builds the symmetric valid
+range [-ddatdx, ddatdx] from a single gradient limit and calls
+dataqc_gradienttest.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dat</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Input data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>x</code></b>
+                  (<code>ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Coordinate of each value in dat.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ddatdx</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Maximum absolute change in dat per unit x; the last element is
+used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mindx</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Minimum separation in x; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>startdat</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Start value presumed good; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>toldat</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Tolerance for returning to good data; the last element is used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Passed to dataqc_gradienttest. Default False.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>qcflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>Output of dataqc_gradienttest. -99 for every point if a parameter
+is missing or holds the -9999 fill value.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>dataqc_gradienttest : Core algorithm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_gradienttest_wrapper(dat, x, ddatdx, mindx, startdat, toldat, strict_validation=False):
+    """
+    OOI wrapper for the Gradient Test (GRADTST). Builds the symmetric valid
+    range [-ddatdx, ddatdx] from a single gradient limit and calls
+    dataqc_gradienttest.
+
+    Parameters
+    ----------
+    dat : ndarray
+        Input data.
+    x : ndarray
+        Coordinate of each value in dat.
+    ddatdx : array_like
+        Maximum absolute change in dat per unit x; the last element is
+        used.
+    mindx : array_like
+        Minimum separation in x; the last element is used.
+    startdat : array_like
+        Start value presumed good; the last element is used.
+    toldat : array_like
+        Tolerance for returning to good data; the last element is used.
+    strict_validation : bool, optional
+        Passed to dataqc_gradienttest. Default False.
+
+    Returns
+    -------
+    qcflag : ndarray of int8
+        Output of dataqc_gradienttest. -99 for every point if a parameter
+        is missing or holds the -9999 fill value.
+
+    See Also
+    --------
+    dataqc_gradienttest : Core algorithm.
+    """
+    if is_none(ddatdx) or is_fill(ddatdx) or is_none(mindx) or is_fill(mindx) or is_none(startdat) or is_fill(startdat) or is_none(toldat) or is_fill(toldat):
+        out = np.empty(dat.shape, dtype=np.int8)
+        out.fill(-99)
+        return out
+    outqc = dataqc_gradienttest(dat, x, [-np.atleast_1d(ddatdx)[-1], np.atleast_1d(ddatdx)[-1]], np.atleast_1d(mindx)[-1], np.atleast_1d(startdat)[-1], np.atleast_1d(toldat)[-1], strict_validation=strict_validation)
+    return outqc</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_12">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-05</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_propagateflags_wrapper" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_propagateflags_wrapper(strict_validation=False, *args)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper for Combined QC Flags (CMBNFLG). Stacks a variable number of
+flag vectors and calls dataqc_propagateflags.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>strict_validation</code></b>
+                  (<code><span title="bool">bool</span></code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Passed to dataqc_propagateflags. Default False.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>*args</code></b>
+                  (<code>ndarray</code>, default:
+                      <code>()</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Flag vectors of the same length.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>outflag</code></b>(                  <code>ndarray of int8</code>
+)              –
+              <div class="doc-md-description">
+                <p>1 where all inputs are 1, 0 elsewhere.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If the vectors differ in length (checked only when
+strict_validation is False).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>dataqc_propagateflags : Core algorithm.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dataqc_propagateflags_wrapper(strict_validation=False, *args):
+    """
+    OOI wrapper for Combined QC Flags (CMBNFLG). Stacks a variable number of
+    flag vectors and calls dataqc_propagateflags.
+
+    Parameters
+    ----------
+    strict_validation : bool, optional
+        Passed to dataqc_propagateflags. Default False.
+    *args : ndarray
+        Flag vectors of the same length.
+
+    Returns
+    -------
+    outflag : ndarray of int8
+        1 where all inputs are 1, 0 elsewhere.
+
+    Raises
+    ------
+    ValueError
+        If the vectors differ in length (checked only when
+        strict_validation is False).
+
+    See Also
+    --------
+    dataqc_propagateflags : Core algorithm.
+    """
+
+    if not strict_validation:
+
+        shapes = np.array([i.shape[0] for i in args])
+        if not (shapes == shapes[0]).all():
+            raise ValueError('Input vectors are not the same shape')
+
+    return dataqc_propagateflags(np.array(args), strict_validation=strict_validation)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_6">Additional Notes</h4>
+<p>The check that the flag vectors have equal lengths runs only when <code>strict_validation</code> is False.</p>
+<p>The OOI stream engine passes only keyword arguments and has no lookup table for this test, so this wrapper is not run
+in the OOI data system.</p>
+<h4 id="history_13">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-04</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.is_fill" class="doc doc-heading">
+            <code class="highlight language-python">is_fill(arr)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Tests whether a QC parameter holds the -9999 fill value.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>arr</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>QC parameter value(s) from the QC lookup table. Only the last
+element is tested.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>out</code></b>(                  <code><span title="bool">bool</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>True if the last element equals -9999.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>-9999 is the fill value used in the QC parameter tables; it is not the
+system fill value used for integer data products.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def is_fill(arr):
+    """
+    Tests whether a QC parameter holds the -9999 fill value.
+
+    Parameters
+    ----------
+    arr : array_like
+        QC parameter value(s) from the QC lookup table. Only the last
+        element is tested.
+
+    Returns
+    -------
+    out : bool
+        True if the last element equals -9999.
+
+    Notes
+    -----
+    -9999 is the fill value used in the QC parameter tables; it is not the
+    system fill value used for integer data products.
+    """
+    return np.atleast_1d(arr)[-1] == -9999. # Not the normal fill value, it's hardcoded to the QC params</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_14">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-05</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.is_none" class="doc doc-heading">
+            <code class="highlight language-python">is_none(arr)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Tests whether a QC parameter is missing.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>arr</code></b>
+                  (<code>array_like or None</code>)
+              –
+              <div class="doc-md-description">
+                <p>QC parameter value(s) from the QC lookup table. Only the last
+element is tested.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>out</code></b>(                  <code><span title="bool">bool</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>True if arr is None or its last element is None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def is_none(arr):
+    """
+    Tests whether a QC parameter is missing.
+
+    Parameters
+    ----------
+    arr : array_like or None
+        QC parameter value(s) from the QC lookup table. Only the last
+        element is tested.
+
+    Returns
+    -------
+    out : bool
+        True if arr is None or its last element is None.
+    """
+    return arr is None or (np.atleast_1d(arr).flatten()[-1] == None)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_15">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-05</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="deprecated-functions">Deprecated Functions</h2>
+<div class="admonition note">
+<p class="admonition-title">Deprecated</p>
+<p><code>dataqc_solarelevation</code> and <code>dataqc_condcompress</code> were never used in the OOI data system and are deprecated.</p>
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_solarelevation" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_solarelevation(lon, lat, dt)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Solar Elevation (SOLAREL): computes the solar elevation and the solar
+radiation in the absence of an atmosphere for a given location and
+time.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>lon</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Longitude [decimal degrees]; east is positive.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude [decimal degrees]; north is positive.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dt</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Time stamp [seconds since 1970-01-01 UTC].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>z</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Solar elevation (altitude) [degrees].</p>
+              </div>
+            </li>
+            <li>
+<b><code>sorad</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Solar radiation with no atmosphere [W m^-2]; 0 when the sun is
+below the horizon.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Python implementation of soradna1.m from the Air-Sea Toolbox, using
+reduced-accuracy expressions valid for the years 1800-2100.
+Deprecated: never used in the OOI data system.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def dataqc_solarelevation(lon, lat, dt):
+    """
+    Solar Elevation (SOLAREL): computes the solar elevation and the solar
+    radiation in the absence of an atmosphere for a given location and
+    time.
+
+    Parameters
+    ----------
+    lon : array_like
+        Longitude [decimal degrees]; east is positive.
+    lat : array_like
+        Latitude [decimal degrees]; north is positive.
+    dt : array_like
+        Time stamp [seconds since 1970-01-01 UTC].
+
+    Returns
+    -------
+    z : ndarray
+        Solar elevation (altitude) [degrees].
+    sorad : ndarray
+        Solar radiation with no atmosphere [W m^-2]; 0 when the sun is
+        below the horizon.
+
+    Notes
+    -----
+    Python implementation of soradna1.m from the Air-Sea Toolbox, using
+    reduced-accuracy expressions valid for the years 1800-2100.
+    Deprecated: never used in the OOI data system.
+    """
+    # Test lengths and types of inputs. Latitude and longitude must be the same
+    # size and can either be a scalar or a vecotr. The date and time stamp
+    # can also be either a scalar or a vector. If all three inputs are vectors,
+    # they must be of the same length.
+    if len(lon) != len(lat):
+        raise ValueError('\'lon\' and \'lat\' must be the same size')
+
+    if utils.isvector(lon) and utils.isvector(lat) and utils.isvector(dt):
+        # test their lengths
+        if not len(lon) == len(lat) == len(dt):
+            raise ValueError('If all inputs are vectors, these must all '
+                             'be of the same length')
+
+    # set constants (using values from as_consts.m)
+    # ------ short-wave flux calculations
+    #   the solar constant [W m^-2] represents a mean of satellite measurements
+    #   made over the last sunspot cycle (1979-1995), taken from Coffey et al.
+    #   (1995), Earth System Monitor, 6, 6-10.
+    solar_const = 1368.0
+
+    # Create a time tuple in UTC from the Epoch time input, and then create
+    # scalars or numpy arrays of time elements for subsequent calculations.
+    ldt = len(dt)
+    yy = np.zeros(ldt, dtype=int)
+    mn = np.zeros(ldt, dtype=int)
+    dd = np.zeros(ldt, dtype=int)
+    hh = np.zeros(ldt, dtype=int)
+    mm = np.zeros(ldt, dtype=int)
+    ss = np.zeros(ldt, dtype=int)
+    for i in range(ldt):
+        # create time tuple in UTC
+        gtime = time.gmtime(dt[i])
+        # create scalar elements
+        yy[i] = gtime[0]
+        mn[i] = gtime[1]
+        dd[i] = gtime[2]
+        hh[i] = gtime[3]
+        mm[i] = gtime[4]
+        ss[i] = gtime[5]
+
+    #constants used in function
+    deg2rad = np.pi / 180.0
+    rad2deg = 1 / deg2rad
+
+    # compute Universal Time in hours
+    utime = hh + (mm + ss / 60.0) / 60.0
+
+    # compute Julian ephemeris date in days (Day 1 is 1 Jan 4713 B.C. which
+    # equals -4712 Jan 1)
+    jed = (367.0 * yy - np.fix(7.0*(yy+np.fix((mn+9)/12.0))/4.0)
+           + np.fix(275.0*mn/9.0) + dd + 1721013 + utime / 24.0)
+
+    # compute interval in Julian centuries since 1900
+    jc_int = (jed - 2415020.0) / 36525.0
+
+    # compute mean anomaly of the sun
+    ma_sun = 358.475833 + 35999.049750 * jc_int - 0.000150 * jc_int**2
+    ma_sun = (ma_sun - np.fix(ma_sun/360.0) * 360.0) * deg2rad
+
+    # compute mean longitude of sun
+    ml_sun = 279.696678 + 36000.768920 * jc_int + 0.000303 * jc_int**2
+    ml_sun = (ml_sun - np.fix(ml_sun/360.0) * 360.0) * deg2rad
+
+    # compute mean anomaly of Jupiter
+    ma_jup = 225.444651 + 2880.0 * jc_int + 154.906654 * jc_int
+    ma_jup = (ma_jup - np.fix(ma_jup/360.0) * 360.0) * deg2rad
+
+    # compute longitude of the ascending node of the moon's orbit
+    an_moon = (259.183275 - 1800 * jc_int - 134.142008 * jc_int
+               + 0.002078 * jc_int**2)
+    an_moon = (an_moon - np.fix(an_moon/360.0) * 360.0 + 360.0) * deg2rad
+
+    # compute mean anomaly of Venus
+    ma_ven = (212.603219 + 58320 * jc_int + 197.803875 * jc_int
+              + 0.001286 * jc_int**2)
+    ma_ven = (ma_ven - np.fix(ma_ven/360.0) * 360.0) * deg2rad
+
+    # compute sun theta
+    theta = (0.397930 * np.sin(ml_sun) + 0.009999 * np.sin(ma_sun-ml_sun)
+             + 0.003334 * np.sin(ma_sun+ml_sun) - 0.000208 * jc_int
+             * np.sin(ml_sun) + 0.000042 * np.sin(2*ma_sun+ml_sun) - 0.000040
+             * np.cos(ml_sun) - 0.000039 * np.sin(an_moon-ml_sun) - 0.000030
+             * jc_int * np.sin(ma_sun-ml_sun) - 0.000014
+             * np.sin(2*ma_sun-ml_sun) - 0.000010
+             * np.cos(ma_sun-ml_sun-ma_jup) - 0.000010 * jc_int
+             * np.sin(ma_sun+ml_sun))
+
+    # compute sun rho
+    rho = (1.000421 - 0.033503 * np.cos(ma_sun) - 0.000140 * np.cos(2*ma_sun)
+           + 0.000084 * jc_int * np.cos(ma_sun) - 0.000033
+           * np.sin(ma_sun-ma_jup) + 0.000027 * np.sin(2.*ma_sun-2.*ma_ven))
+
+    # compute declination
+    decln = np.arcsin(theta/np.sqrt(rho))
+
+    # compute equation of time (in seconds of time)
+    l = 276.697 + 0.98564734 * (jed-2415020.0)
+    l = (l - 360.0 * np.fix(l/360.0)) * deg2rad
+    eqt = (-97.8 * np.sin(l) - 431.3 * np.cos(l) + 596.6 * np.sin(2*l)
+           - 1.9 * np.cos(2*l) + 4.0 * np.sin(3*l) + 19.3 * np.cos(3*l)
+           - 12.7 * np.sin(4*l))
+    eqt = eqt / 60.0
+
+    # compute local hour angle from global hour angle
+    gha = 15.0 * (utime-12) + 15.0 * eqt / 60.0
+    lha = gha - lon
+
+    # compute radius vector
+    rv = np.sqrt(rho)
+
+    # compute solar altitude
+    sz = (np.sin(deg2rad*lat) * np.sin(decln) + np.cos(deg2rad*lat)
+          * np.cos(decln) * np.cos(deg2rad*lha))
+    z = rad2deg * np.arcsin(sz)
+
+    # compute solar radiation outside atmosphere (defaults to 0 when solar
+    # altitude is below the horizon)
+    sorad = (solar_const / rv**2) * np.sin(deg2rad * z)
+    sorad[z &lt; 0] = 0
+
+    return (z, sorad)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_7">Additional Notes</h4>
+<p>Adapted from <code>soradna1.m</code> in the Air-Sea Toolbox, which takes its expressions from Appendix E of the 1978 Almanac for
+Computers (U.S. Naval Observatory) and its solar constant (1368 W m<span class="arithmatex">\(^{-2}\)</span>) from Coffey et al. (1995). The inputs must
+be array-like: <code>lon</code>, <code>lat</code>, and <code>dt</code> are measured with <code>len()</code>, so scalar inputs raise a <code>TypeError</code>.</p>
+<h4 id="history_16">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-07</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation; decorated with <code>@deprecated</code> (never used)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.qc.qc_functions.dataqc_condcompress" class="doc doc-heading">
+            <code class="highlight language-python">dataqc_condcompress(p_orig, p_new, c_orig, cpcor=-9.57e-08)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Conductivity Compressibility Compensation (CONDCMP): rescales
+conductivity computed with one pressure to a corrected pressure.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>p_orig</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pressure used to compute the original conductivity, typically L1a
+PRESWAT [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>p_new</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Updated pressure, typically L1b PRESWAT [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>c_orig</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Original conductivity, typically L1a CONDWAT [S m^-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cpcor</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>-9.57e-08</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Pressure correction coefficient used to compute c_orig. Default
+-9.57e-8.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>c_new</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>Conductivity corrected to p_new [S m^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Deprecated: never used in the OOI data system.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/qc/qc_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def dataqc_condcompress(p_orig, p_new, c_orig, cpcor=-9.57e-8):
+    """
+    Conductivity Compressibility Compensation (CONDCMP): rescales
+    conductivity computed with one pressure to a corrected pressure.
+
+    Parameters
+    ----------
+    p_orig : array_like
+        Pressure used to compute the original conductivity, typically L1a
+        PRESWAT [dbar].
+    p_new : array_like
+        Updated pressure, typically L1b PRESWAT [dbar].
+    c_orig : array_like
+        Original conductivity, typically L1a CONDWAT [S m^-1].
+    cpcor : float, optional
+        Pressure correction coefficient used to compute c_orig. Default
+        -9.57e-8.
+
+    Returns
+    -------
+    c_new : array_like
+        Conductivity corrected to p_new [S m^-1].
+
+    Notes
+    -----
+    Deprecated: never used in the OOI data system.
+    """
+    c_new = c_orig * (1 + cpcor * p_orig) / (1 + cpcor * p_new)
+    return c_new</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_8">Additional Notes</h4>
+<p>Implements the compressibility compensation from Sea-Bird Application Note 10, as given in DPS 1341-10030:</p>
+<div class="arithmatex">\[c_{new} = c_{orig} \times \frac{1 + CPcor \times p_{orig}}{1 + CPcor \times p_{new}}\]</div>
+<h4 id="history_17">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-07</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation; decorated with <code>@deprecated</code> (never used)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+<p>Coffey et al. (1995). Earth System Monitor, 6, 6-10.</p>
+<p>OOI. <a href="https://oceanobservatories.org/knowledgebase/interpreting-qc-variables-and-results/">Interpreting QC Variables and Results.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10001_Data_Product_SPEC_MODULUS_OOI.pdf">OOI (2012). Data Product Specification for Modulus (MODULUS). Document Control Number 1341-10001.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10002_Data_Product_SPEC_INTERP1_OOI.pdf">OOI (2012). Data Product Specification for 1-D Interpolation (INTERP1). Document Control Number 1341-10002.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10003_Data_Product_SPEC_POLYVAL_OOI.pdf">OOI (2012). Data Product Specification for Evaluate Polynomial (POLYVAL). Document Control Number 1341-10003.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10004_Data_Product_SPEC_GLBLRNG_OOI.pdf">OOI (2012). Data Product Specification for Global Range Test. Document Control Number 1341-10004.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10005_Data_Product_SPEC_LOCLRNG_OOI.pdf">OOI (2012). Data Product Specification for Local Range Test. Document Control Number 1341-10005.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10006_Data_Product_SPEC_SPKETST_OOI.pdf">OOI (2012). Data Product Specification for Spike Test. Document Control Number 1341-10006.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10007_Data_Product_SPEC_TRNDTST_OOI.pdf">OOI (2012). Data Product Specification for Trend Test. Document Control Number 1341-10007.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10008_Data_Product_SPEC_STUCKVL_OOI.pdf">OOI (2012). Data Product Specification for Stuck Value Test. Document Control Number 1341-10008.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10010_Data_Product_SPEC_GRADTST_OOI.pdf">OOI (2012). Data Product Specification for Gradient Test. Document Control Number 1341-10010.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10011_Data_Product_SPEC_SOLAREL_OOI.pdf">OOI (2012). Data Product Specification for Solar Elevation. Document Control Number 1341-10011.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10012_Data_Product_SPEC_CMBNFLG_OOI.pdf">OOI (2012). Data Product Specification for Combined QC Flags. Document Control Number 1341-10012.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-10030_Data_Product_SPEC_CONDCMP_OOI.pdf">OOI (2012). Data Product Specification for Conductivity Compressibility Compensation. Document Control Number 1341-10030.</a></p>
+<p>Sea-Bird Scientific. <em>Compressibility Compensation of Sea-Bird Conductivity Sensors</em>. Application Note 10.
+Bellevue, WA: Sea-Bird Scientific.</p>
+<p>U.S. Naval Observatory, Nautical Almanac Office (1978). Almanac for Computers.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../generic_functions/" class="btn btn-neutral float-left" title="Generic Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../hyd_functions/" class="btn btn-neutral float-right" title="HYD Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../generic_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../hyd_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

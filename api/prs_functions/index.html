@@ -1,0 +1,5124 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/prs_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>PRS Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "PRS Functions";
+        var mkdocs_page_input_path = "api/prs_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/prs_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">PRS Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#botpres_l1-nano-resolution-bottom-pressure">BOTPRES_L1 -- Nano-resolution Bottom Pressure</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#bottilt-seafloor-high-resolution-tilt">BOTTILT -- Seafloor High-Resolution Tilt</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#botsflu-seafloor-uplift-and-subsidence">BOTSFLU -- Seafloor Uplift and Subsidence</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#deprecated-functions">Deprecated Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">PRS Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="prs-functions">PRS Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Seafloor Pressure (PRS) family covers the Bottom Pressure and Tilt
+(BOTPT) instrument class deployed by OOI on the Regional Cabled Array
+(RCA) at Axial Seamount. The BOTPT instrument integrates three sensor
+subsystems on a single seafloor frame: a Paroscientific Digiquartz
+nano-resolution pressure transducer (Model 42.4K-265) paired with a
+Paroscientific Intelligent Interface Board, an Applied Geomechanics LILY
+Self-Leveling Borehole Tiltmeter, and two engineering-grade tiltmeters
+(IRIS low-resolution and ADXL327 coarse-resolution). All PRS processing
+functions are implemented in <code>prs_functions.py</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BOTPT</td>
+<td>Paroscientific 42.4K-265 + LILY tiltmeter</td>
+<td>Seafloor (RCA)</td>
+<td>Bottom pressure and tilt</td>
+</tr>
+</tbody>
+</table>
+<p>TMAG and TDIR apply to any two-axis tiltmeter. The CCMP correction is specific to the deployed LILY sensors: the
+lookup tables in <code>prs_functions_ccmp.py</code> are selected by sensor serial number and include the 17-degree magnetic
+declination at Axial Seamount. The BOTSFLU products are specific to Axial Seamount: the predicted tides are for the
+caldera center, and the pressure-to-depth factor is fixed.</p>
+<p>Within the OOI data system, PRS data products fall under the Seafloor/Crust <a href="https://oceanobservatories.org/data-products/">sampling
+regime</a> (see the <a href="https://oceanobservatories.org/data-products/data-products-complete-list/">complete list of OOI data
+products</a>).</p>
+<p>No factory calibration coefficients are passed to these functions. BOTPRES is computed onboard the instrument; the
+CCMP lookup table is selected by the LILY serial number reported in the data stream.</p>
+<p>For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see <a href="../../calibrations/">Calibration Coefficients</a> and <a href="../../using-ooi-data/">Using These Functions
+with OOI Data</a>.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00060</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00060_Data_Product_Spec_BOTTILT_OOI.pdf">OOI (2013). Data Product Specification for Seafloor High-Resolution Tilt.</a></td>
+</tr>
+<tr>
+<td>1341-00070</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00070_Data_Product_SPEC_BOTPRES_OOI.pdf">OOI (2013). Data Product Specification for Nano-resolution Bottom Pressure.</a></td>
+</tr>
+<tr>
+<td>1341-00080</td>
+<td>OOI (2015). Data Product Specification for Seafloor Uplift and Subsidence (BOTSFLU) from the BOTPT Instrument. Document Control Number 1341-00080. (Not released.)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="botpres_l1-nano-resolution-bottom-pressure">BOTPRES_L1 -- Nano-resolution Bottom Pressure</h3>
+<p>BOTPRES_L1 is the nano-resolution bottom pressure (psi) at the seafloor,
+produced by the Paroscientific Digiquartz Pressure Transducer (Model
+42.4K-265) integrated in the BOTPT instrument. As specified in DPS
+1341-00070, the L1 product is computed entirely onboard by the paired
+pressure transducer and Intelligent Interface Board using
+temperature-compensated frequency-to-pressure conversion; no
+off-instrument computation is required. The instrument transmits the
+result directly as the L1 BOTPRES data product in psi (as absolute pressure,
+seawater and atmospheric pressure) at 40 Hz. ion-functions is not invoked 
+for this product.</p>
+<hr />
+<h3 id="bottilt-seafloor-high-resolution-tilt">BOTTILT -- Seafloor High-Resolution Tilt</h3>
+<p>BOTTILT_L1 is the seafloor high-resolution tilt data product (L1) derived
+from the Applied Geomechanics LILY Self-Leveling Borehole Tiltmeter
+integrated in the BOTPT instrument. The LILY sensor outputs X-tilt and
+Y-tilt components (BOTTILT-XTLT_L0, BOTTILT-YTLT_L0, microradians) and an
+uncorrected sensor compass direction (BOTTILT-SCMP_L0, degrees) at 1 Hz.
+Three L1 sub-products are computed from these L0 inputs as specified in
+DPS 1341-00060.</p>
+<p><strong>BOTTILT-CCMP_L1</strong> (Corrected Compass Direction, integer degrees CW from
+north) is derived by applying a sensor-specific lookup table to the rounded
+L0 compass reading. The lookup table, stored in <code>prs_functions_ccmp.py</code>,
+corrects for calibration offsets and for the 17-degree east magnetic
+declination at Axial Seamount. The L0 sensor compass direction is the
+heading of the negative Y-tilt axis measured CCW from north; the lookup
+table converts it to the azimuth of the positive Y-tilt axis measured CW
+from north.</p>
+<p><strong>BOTTILT-TMAG_L1</strong> (Tilt Magnitude, microradians) is the resultant tilt
+magnitude computed from the X- and Y-tilt L0 components:</p>
+<div class="arithmatex">\[TMAG = \sqrt{XTLT^2 + YTLT^2}\]</div>
+<p><strong>BOTTILT-TDIR_L1</strong> (Tilt Direction, integer degrees CW from north) is
+the azimuth of the resultant downward tilt vector. The algorithm, specified
+in DPS 1341-00060, uses <code>arctan2</code> to compute the angle between the tilt
+vector and the corrected compass reference:</p>
+<div class="arithmatex">\[TDIR = (450 - \arctan2(YTLT,\ XTLT)_{deg} + CCMP) \bmod 360\]</div>
+<p>where the 450-degree addend ensures a positive result before the modulo
+operation. The output is rounded to the nearest integer degree.</p>
+<hr />
+<h3 id="botsflu-seafloor-uplift-and-subsidence">BOTSFLU -- Seafloor Uplift and Subsidence</h3>
+<p>The BOTSFLU data products characterize seafloor vertical displacement and
+its rate of change at Axial Seamount, derived from the BOTPRES_L1 pressure
+time series after de-tiding. All BOTSFLU products are computed in two
+binning stages: 20 Hz raw pressure data are first binned into 15-second
+mean values, and those 15-second records are then processed into daily mean
+depths and multi-week rate estimates.</p>
+<p><strong>Tide prediction.</strong> Predicted tides at Axial Seamount caldera center
+(lat = 45.95547, lon = -130.00957) are stored in a precomputed lookup
+table (<code>prs_functions_tides_2014_thru_2019.mat</code>) at 15-second resolution
+from 2014-01-01 through 2020-01-01. Tide values were computed using the
+Tide Model Driver software with the TPXO7.2 global tidal model. All three
+BOTPT sites at Axial Seamount are sufficiently close together that a single
+caldera-center location is used for all. Tide values are stored as signed
+4-byte integers in units of 0.001 mm and scaled to meters on read.
+In the OOI data system, predicted tides are now supplied by a separate predicted-tide data stream
+(<code>instrument_predicted_tide</code>) rather than by <code>prs_botsflu_predtide</code>. Instrument-specific predicted tide tables for
+each of the four BOTPT instruments (ASHES, Central Caldera, Eastern Caldera, and International District) were provided
+by the RCA team and ingested as recovered data; they extend well beyond the present (OOINet does not display predicted
+tide values later than the current time). The lookup table used by <code>prs_botsflu_predtide</code> covers 2014-01-01 through
+2019-12-31 only; the function cannot be used for later data.</p>
+<p>To compute the BOTSFLU products outside the OOI system, pass the predicted tide from the <code>instrument_predicted_tide</code>
+stream as the <code>predtide</code> argument of <code>prs_botsflu_meandepth</code>, <code>prs_botsflu_5minrate</code>, and <code>prs_botsflu_10minrate</code>.
+These functions add <code>predtide</code> element by element to the 15-second binned depths, so it must be on the same time base:
+one value for each non-empty 15-second bin returned by <code>prs_botsflu_time15s</code>, in the same order. If the predicted tide
+record is at a different time step or has gaps, interpolate it to the <code>prs_botsflu_time15s</code> timestamps first.</p>
+<p><strong>15-second binning.</strong> Raw pressure data are binned into 15-second
+time-centered means anchored at the quarter-minute (0, 15, 30, 45 seconds
+past each minute). Bins are identified by floored elapsed time in units of
+15 seconds using <code>numpy.bincount</code>. NaN values and non-physical readings
+(pressure &lt;= 0) are discarded before binning. Empty bins are not
+represented; the boolean mask <code>mask_nonzero</code> records the positions of
+non-empty bins within the full time span for use by downstream products.</p>
+<p><strong>Depth conversion and de-tiding.</strong> Binned mean pressure (MEANPRES_L2,
+psi) is converted to depth and de-tided to produce MEANDEPTH_L2 (m). 
+Atmospheric pressure is not subtracted from the L1 pressure data despite 
+its units of psi. The conversion factor is -0.67 m/psi, and depth follows
+a negative convention, so the predicted tide (m) is added to de-tide the 
+record:</p>
+<div class="arithmatex">\[MEANDEPTH = (MEANPRES \times -0.67) + PREDTIDE\]</div>
+<p>MEANDEPTH and DAYDEPTH are derived from the measured pressure. Because atmospheric pressure is
+not removed and a fixed conversion factor is used, they are intended for tracking relative vertical change (uplift and
+subsidence), not as absolute depths.</p>
+<p><strong>Daily binning.</strong> The 15-second MEANDEPTH record is binned into 24-hour
+noon-to-noon bins anchored at midnight to produce DAYDEPTH_L2 (m). A
+fractional coverage threshold (default 0.90) controls quality: bins with
+fewer than 90% of the maximum possible 5760 values per day are assigned
+NaN. All days in the record span are represented, including data-gap days.</p>
+<p><strong>Rate products.</strong> Short-term rates are computed directly from the
+15-second MEANDEPTH record; long-term rates use backwards-looking linear
+regression on the daily DAYDEPTH record.</p>
+<ul>
+<li><strong>5MINRATE_L2</strong> (cm/min): instantaneous rate using a 20-interval
+  (5-minute) backward difference of MEANDEPTH.</li>
+<li><strong>10MINRATE_L2</strong> (cm/hr): mean uplift rate using a 40-interval
+  (10-minute) sliding window mean of MEANDEPTH, differenced over 40
+  intervals.</li>
+<li><strong>4WKRATE_L2</strong> (cm/yr): mean rate from a 29-day backwards-looking linear
+  regression on DAYDEPTH; slope converted from m/day to cm/yr by
+  multiplying by 36500.</li>
+<li><strong>8WKRATE_L2</strong> (cm/yr): mean rate from a 57-day backwards-looking linear
+  regression on DAYDEPTH; converted identically.</li>
+</ul>
+<p>The regression algorithm (used for 4WKRATE and 8WKRATE) applies the
+normal linear regression equations from Press et al. (1986) in a
+backwards-looking sliding window. Windows with fewer non-NaN values than
+specified by a fractional coverage threshold (default 0.75) are assigned
+NaN. The data vector is front-padded with NaN so that windows near the
+start of the record that satisfy the coverage criterion produce non-NaN
+values.</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_bottilt_ccmp" class="doc doc-heading">
+            <code class="highlight language-python">prs_bottilt_ccmp(scmp, sn)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the corrected compass direction BOTTILT-CCMP_L1 [degrees].</p>
+<p>Applies a sensor-specific lookup table to correct the L0 compass
+reading for calibration offsets and magnetic declination at Axial
+Seamount, as specified in DPS 1341-00060.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>scmp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected sensor compass direction (BOTTILT-SCMP_L0) [degrees].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sn</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>LILY tiltmeter serial number for each sample [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>ccmp</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Corrected compass direction (BOTTILT-CCMP_L1) [integer degrees
+CW from north].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The lookup table is stored in prs_functions_ccmp.py as cmp_lookup,
+keyed on (serial_number, rounded_scmp) pairs. The L0 compass value
+is rounded to the nearest integer before lookup, as specified in
+the DPS.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_bottilt_ccmp(scmp, sn):
+    """
+    Compute the corrected compass direction BOTTILT-CCMP_L1 [degrees].
+
+    Applies a sensor-specific lookup table to correct the L0 compass
+    reading for calibration offsets and magnetic declination at Axial
+    Seamount, as specified in DPS 1341-00060.
+
+    Parameters
+    ----------
+    scmp : array_like
+        Uncorrected sensor compass direction (BOTTILT-SCMP_L0) [degrees].
+    sn : array_like
+        LILY tiltmeter serial number for each sample [unitless].
+
+    Returns
+    -------
+    ccmp : ndarray
+        Corrected compass direction (BOTTILT-CCMP_L1) [integer degrees
+        CW from north].
+
+    Notes
+    -----
+    The lookup table is stored in prs_functions_ccmp.py as cmp_lookup,
+    keyed on (serial_number, rounded_scmp) pairs. The L0 compass value
+    is rounded to the nearest integer before lookup, as specified in
+    the DPS.
+    """
+    """
+        Currently, there are two coded algorithms:
+            (1) the straightforward original, which uses a two-element keyed
+                dictionary;
+            (2) a faster version, which uses serial number keys to the
+                dictionary.
+
+        Since each algorithm uses its own dictionary, the corresponding
+        import statements are TEMPORARILY placed at the beginning of their
+        respective code sections instead of at module top.
+    """
+    ###  Original coding, using a dictionary constructed with 2-element keys.
+
+    # load the corrected compass directions table [(sn, scmp) keys]
+    from ion_functions.data.prs_functions_ccmp import cmp_lookup
+
+    # use the lookup table to get the ccmp
+    ccmp = np.zeros(len(scmp))
+
+    for i in range(len(scmp)):
+        sn_key = sn[i].decode('utf-8') if isinstance(sn[i], bytes) else sn[i]
+        ccmp[i] = cmp_lookup[(sn_key, int(round(scmp[i])))]
+    return ccmp</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-10</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-03-20</td>
+<td>Russell Desiderio</td>
+<td>Alternate code: faster, but less direct</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_bottilt_tmag" class="doc doc-heading">
+            <code class="highlight language-python">prs_bottilt_tmag(x_tilt, y_tilt)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the resultant tilt magnitude BOTTILT-TMAG_L1 [microradians].</p>
+<p>Computes the vector magnitude of the X- and Y-tilt L0 components as
+specified in DPS 1341-00060.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>x_tilt</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Sensor X-tilt (BOTTILT-XTLT_L0) [microradians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>y_tilt</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Sensor Y-tilt (BOTTILT-YTLT_L0) [microradians].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>tmag</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Resultant tilt magnitude (BOTTILT-TMAG_L1) [microradians].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_bottilt_tmag(x_tilt, y_tilt):
+    """
+    Compute the resultant tilt magnitude BOTTILT-TMAG_L1 [microradians].
+
+    Computes the vector magnitude of the X- and Y-tilt L0 components as
+    specified in DPS 1341-00060.
+
+    Parameters
+    ----------
+    x_tilt : array_like
+        Sensor X-tilt (BOTTILT-XTLT_L0) [microradians].
+    y_tilt : array_like
+        Sensor Y-tilt (BOTTILT-YTLT_L0) [microradians].
+
+    Returns
+    -------
+    tmag : ndarray
+        Resultant tilt magnitude (BOTTILT-TMAG_L1) [microradians].
+    """
+    tmag = np.sqrt(x_tilt**2 + y_tilt**2)
+    return tmag</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-10</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_bottilt_tdir" class="doc doc-heading">
+            <code class="highlight language-python">prs_bottilt_tdir(x_tilt, y_tilt, ccmp)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the resultant tilt direction BOTTILT-TDIR_L1 [degrees].</p>
+<p>Computes the azimuth of the downward tilt vector using arctan2 and
+the corrected compass direction, as specified in DPS 1341-00060.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>x_tilt</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Sensor X-tilt (BOTTILT-XTLT_L0) [microradians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>y_tilt</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Sensor Y-tilt (BOTTILT-YTLT_L0) [microradians].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ccmp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Corrected compass direction (BOTTILT-CCMP_L1) [degrees].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>tdir</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Resultant tilt direction (BOTTILT-TDIR_L1) [integer degrees
+CW from north].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The addend of 450 (= 90 + 360) ensures a positive argument to the
+modulo operation before rounding to integer degrees.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_bottilt_tdir(x_tilt, y_tilt, ccmp):
+    """
+    Compute the resultant tilt direction BOTTILT-TDIR_L1 [degrees].
+
+    Computes the azimuth of the downward tilt vector using arctan2 and
+    the corrected compass direction, as specified in DPS 1341-00060.
+
+    Parameters
+    ----------
+    x_tilt : array_like
+        Sensor X-tilt (BOTTILT-XTLT_L0) [microradians].
+    y_tilt : array_like
+        Sensor Y-tilt (BOTTILT-YTLT_L0) [microradians].
+    ccmp : array_like
+        Corrected compass direction (BOTTILT-CCMP_L1) [degrees].
+
+    Returns
+    -------
+    tdir : ndarray
+        Resultant tilt direction (BOTTILT-TDIR_L1) [integer degrees
+        CW from north].
+
+    Notes
+    -----
+    The addend of 450 (= 90 + 360) ensures a positive argument to the
+    modulo operation before rounding to integer degrees.
+    """
+    # The calculation is faster and simpler if the arctan2 function is used.
+    # Use 450=90+360 as the addend in the first argument to the mod(x,360)
+    # function to make sure the result is positive.
+    return np.round(np.mod(450 - np.degrees(np.arctan2(y_tilt, x_tilt)) + ccmp, 360))</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-06-10</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-03-20</td>
+<td>Russell Desiderio</td>
+<td>Replaced initial code with arctan2 implementation</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_time15s" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_time15s(timestamp, botpres)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the auxiliary BOTSFLU timestamp product TIME15S-AUX.</p>
+<p>Returns timestamps anchored at multiples of 15 seconds past the
+minute, corresponding to the time base for the BOTSFLU data products
+binned on 15-second intervals.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia]. Used to discard timestamps
+associated with bad (NaN or non-positive) raw pressure values.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>time15s</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>15-second-anchored timestamps (TIME15S-AUX) [sec since
+1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The BOTSFLU data products on this time base are: MEANPRES, PREDTIDE,
+MEANDEPTH, 5MINRATE, and 10MINRATE.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_time15s(timestamp, botpres):
+    """
+    Compute the auxiliary BOTSFLU timestamp product TIME15S-AUX.
+
+    Returns timestamps anchored at multiples of 15 seconds past the
+    minute, corresponding to the time base for the BOTSFLU data products
+    binned on 15-second intervals.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia]. Used to discard timestamps
+        associated with bad (NaN or non-positive) raw pressure values.
+
+    Returns
+    -------
+    time15s : ndarray
+        15-second-anchored timestamps (TIME15S-AUX) [sec since
+        1900-01-01].
+
+    Notes
+    -----
+    The BOTSFLU data products on this time base are: MEANPRES, PREDTIDE,
+    MEANDEPTH, 5MINRATE, and 10MINRATE.
+    """
+    # botpres is required to eliminate timestamps of bad input values
+    time15s, _, _ = anchor_bin_raw_data_to_15s(timestamp, botpres)
+
+    return time15s</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-13</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2017-05-15</td>
+<td>Russell Desiderio</td>
+<td>Included botpres as input argument to delete timestamps of bad raw values</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_meanpres" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_meanpres(timestamp, botpres)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the BOTSFLU mean pressure product BOTSFLU-MEANPRES_L2 [psi].</p>
+<p>Bins raw 20 Hz bottom pressure data into 15-second mean values.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>meanpres</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>15-second mean bottom pressure (BOTSFLU-MEANPRES_L2) [psi].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME15S-AUX.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_meanpres(timestamp, botpres):
+    """
+    Compute the BOTSFLU mean pressure product BOTSFLU-MEANPRES_L2 [psi].
+
+    Bins raw 20 Hz bottom pressure data into 15-second mean values.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+
+    Returns
+    -------
+    meanpres : ndarray
+        15-second mean bottom pressure (BOTSFLU-MEANPRES_L2) [psi].
+
+    Notes
+    -----
+    The associated time base data product is TIME15S-AUX.
+    """
+    _, meanpres, _ = anchor_bin_raw_data_to_15s(timestamp, botpres)
+
+    return meanpres</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-13</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_predtide" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_predtide(time)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the BOTSFLU predicted tide product BOTSFLU-PREDTIDE_L2 [m].</p>
+<p>Assigns predicted tide heights for the three BOTPT instrument sites
+at Axial Seamount by positional indexing into a precomputed lookup
+table.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>time</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>BOTSFLU 15-second timestamps (TIME15S-AUX) [sec since
+1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>tide</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Predicted tide height (BOTSFLU-PREDTIDE_L2) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The lookup table is stored in
+prs_functions_tides_2014_thru_2019.mat and contains tide values
+every 15 seconds from 2014-01-01 to 2020-01-01 at lat = 45.95547,
+lon = -130.00957 (Axial Seamount caldera center). Tide values were
+computed using the Tide Model Driver software with the TPXO7.2
+global tidal model. The three BOTPT sites are sufficiently close
+together that a single location is used for all. Tide values are
+stored as signed 4-byte integers in units of 0.001 mm and scaled to
+meters on read.</p>
+<p>A separate unit-test table covering February-April 2011 is loaded
+automatically when the input timestamps predate 2014-01-01.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_predtide(time):
+    """
+    Compute the BOTSFLU predicted tide product BOTSFLU-PREDTIDE_L2 [m].
+
+    Assigns predicted tide heights for the three BOTPT instrument sites
+    at Axial Seamount by positional indexing into a precomputed lookup
+    table.
+
+    Parameters
+    ----------
+    time : array_like
+        BOTSFLU 15-second timestamps (TIME15S-AUX) [sec since
+        1900-01-01].
+
+    Returns
+    -------
+    tide : ndarray
+        Predicted tide height (BOTSFLU-PREDTIDE_L2) [m].
+
+    Notes
+    -----
+    The lookup table is stored in
+    prs_functions_tides_2014_thru_2019.mat and contains tide values
+    every 15 seconds from 2014-01-01 to 2020-01-01 at lat = 45.95547,
+    lon = -130.00957 (Axial Seamount caldera center). Tide values were
+    computed using the Tide Model Driver software with the TPXO7.2
+    global tidal model. The three BOTPT sites are sufficiently close
+    together that a single location is used for all. Tide values are
+    stored as signed 4-byte integers in units of 0.001 mm and scaled to
+    meters on read.
+
+    A separate unit-test table covering February-April 2011 is loaded
+    automatically when the input timestamps predate 2014-01-01.
+    """
+    time0 = 3597523200.0  # midnight, 2014-01-01
+    time_interval = 15.0  # seconds
+
+    # for unit test data, only, feb-apr 2011
+    if time[0] &lt; time0:
+        time0 = 3502828800.0  # midnight, 2011-01-01
+        matpath = 'data/matlab_scripts/botpt/tides_15sec_2011_for_unit_tests.mat'
+    else:
+        # else, OOI data from 2014 onwards
+        matpath = 'data/prs_functions_tides_2014_thru_2019.mat'
+
+    with resources.files('ion_functions').joinpath(matpath).open('rb') as matstream:
+        dict_tides = spio.loadmat(matstream)
+    # tide values are signed 4 byte integers, units [0.001mm]
+    tidevector = 0.000001 * dict_tides['tides_mat']
+    tidevector = tidevector.reshape((-1))
+    # calculate tide vector index as a function of timestamp
+    idx = np.around((time - time0) / time_interval)
+    tide = tidevector[idx.astype(int)]
+
+    return tide</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-13</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_meandepth" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_meandepth(timestamp, botpres, predtide)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the BOTSFLU de-tided depth product BOTSFLU-MEANDEPTH_L2 [m].</p>
+<p>Converts 15-second mean pressure to depth and removes the predicted
+tidal signal.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>predtide</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Predicted tide (BOTSFLU-PREDTIDE_L2) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>meandepth</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>De-tided bottom depth (BOTSFLU-MEANDEPTH_L2) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME15S-AUX.</p>
+<p>Atmospheric pressure is not subtracted from the L1 pressure data
+even though its units are psia, as specified in DPS 1341-00080.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_meandepth(timestamp, botpres, predtide):
+    """
+    Compute the BOTSFLU de-tided depth product BOTSFLU-MEANDEPTH_L2 [m].
+
+    Converts 15-second mean pressure to depth and removes the predicted
+    tidal signal.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+
+    Returns
+    -------
+    meandepth : ndarray
+        De-tided bottom depth (BOTSFLU-MEANDEPTH_L2) [m].
+
+    Notes
+    -----
+    The associated time base data product is TIME15S-AUX.
+
+    Atmospheric pressure is not subtracted from the L1 pressure data
+    even though its units are psia, as specified in DPS 1341-00080.
+    """
+    _, meandepth, _ = calc_meandepth_plus(timestamp, botpres, predtide)
+
+    return meandepth</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_5minrate" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_5minrate(timestamp, botpres, predtide)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the BOTSFLU 5-minute rate product BOTSFLU-5MINRATE_L2
+[cm/min].</p>
+<p>Computes the instantaneous rate of depth change using a 5-minute
+backwards-looking difference of the de-tided depth record.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>predtide</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Predicted tide (BOTSFLU-PREDTIDE_L2) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>botsflu_5minrate</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>5-minute instantaneous depth change rate
+(BOTSFLU-5MINRATE_L2) [cm/min].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME15S-AUX.</p>
+<p>For 15-second binned data, 5 minutes corresponds to a lag of 20
+intervals. The conversion from m/5min to cm/min is a factor of 20.
+NaN values arising from data gaps are propagated through the
+difference but are then removed at data dropout positions to maintain
+1:1 correspondence with the TIME15S time base.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_5minrate(timestamp, botpres, predtide):
+    """
+    Compute the BOTSFLU 5-minute rate product BOTSFLU-5MINRATE_L2
+    [cm/min].
+
+    Computes the instantaneous rate of depth change using a 5-minute
+    backwards-looking difference of the de-tided depth record.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+
+    Returns
+    -------
+    botsflu_5minrate : ndarray
+        5-minute instantaneous depth change rate
+        (BOTSFLU-5MINRATE_L2) [cm/min].
+
+    Notes
+    -----
+    The associated time base data product is TIME15S-AUX.
+
+    For 15-second binned data, 5 minutes corresponds to a lag of 20
+    intervals. The conversion from m/5min to cm/min is a factor of 20.
+    NaN values arising from data gaps are propagated through the
+    difference but are then removed at data dropout positions to maintain
+    1:1 correspondence with the TIME15S time base.
+    """
+    # calculate de-tided depth and the positions of non-zero bins in the original data.
+    _, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres, predtide)
+
+    # initialize data product including elements representing data gap positions
+    botsflu_5minrate = np.zeros(mask_nonzero.size) + np.nan
+
+    # re-constitute the original data, with data gaps represented by nans.
+    data_w_gaps = np.copy(botsflu_5minrate)
+    data_w_gaps[mask_nonzero] = meandepth
+
+    # for 15s binned data, 5 minutes comes out to (5 minutes)/(0.25 min) = 20 intervals
+    shift = 20
+    # units of the subtraction are meter/5min; to convert to cm/min,
+    # multiply by 100cm/m and divide by 5 = 20.
+    botsflu_5minrate[shift:] = 20.0 * (data_w_gaps[shift:] - data_w_gaps[:-shift])
+
+    # this rate product now has potentially two sources of nans;
+    # definitely those at the start of the data record, and any that might
+    # have been propagated into the calculation because of the presence of
+    # data gaps. remove those only at the data dropout positions (if present)
+    # so that this data product will have a 1:1 correspondence with
+    # its associated timestamp variable (TIME15S).
+    botsflu_5minrate = botsflu_5minrate[mask_nonzero]
+
+    return botsflu_5minrate</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_10minrate" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_10minrate(timestamp, botpres, predtide)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the BOTSFLU 10-minute rate product BOTSFLU-10MINRATE_L2
+[cm/hr].</p>
+<p>Computes the mean seafloor uplift rate using a 10-minute
+backwards-looking sliding mean of the de-tided depth record,
+differenced over 10 minutes.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>predtide</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Predicted tide (BOTSFLU-PREDTIDE_L2) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>botsflu_10minrate</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>10-minute mean depth change rate (BOTSFLU-10MINRATE_L2) [cm/hr].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME15S-AUX.</p>
+<p>For 15-second binned data, 10 minutes corresponds to a window of 40
+intervals. Sliding means are computed by digital convolution. The
+conversion from m/10min to cm/hr is a factor of 600.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_10minrate(timestamp, botpres, predtide):
+    """
+    Compute the BOTSFLU 10-minute rate product BOTSFLU-10MINRATE_L2
+    [cm/hr].
+
+    Computes the mean seafloor uplift rate using a 10-minute
+    backwards-looking sliding mean of the de-tided depth record,
+    differenced over 10 minutes.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+
+    Returns
+    -------
+    botsflu_10minrate : ndarray
+        10-minute mean depth change rate (BOTSFLU-10MINRATE_L2) [cm/hr].
+
+    Notes
+    -----
+    The associated time base data product is TIME15S-AUX.
+
+    For 15-second binned data, 10 minutes corresponds to a window of 40
+    intervals. Sliding means are computed by digital convolution. The
+    conversion from m/10min to cm/hr is a factor of 600.
+    """
+    # calculate de-tided depth and the positions of non-zero bins in the original data.
+    _, meandepth, mask_nonzero = calc_meandepth_plus(timestamp, botpres, predtide)
+
+    # initialize data product including elements representing data gap positions
+    botsflu_10minrate = np.zeros(mask_nonzero.size) + np.nan
+
+    # re-constitute the original data, with data gaps represented by nans.
+    data_w_gaps = np.copy(botsflu_10minrate)
+    data_w_gaps[mask_nonzero] = meandepth
+
+    # now calculate sliding 10 minute means.
+    # the mean of the 1st 40 values will be located at timestamp position 20
+    # (python index 19).
+    window_size = 40  # 10min averages on 0.25min binned data
+    means = calculate_sliding_means(data_w_gaps, window_size)
+
+    # as above, 10 minutes = 40 intervals for 15sec binned data.
+    shift = 40
+    # units of the subtraction are meter/10min; to convert to cm/hr,
+    # multiply by 100cm/m and multiply by 6 = 600.
+    botsflu_10minrate[shift:] = 600.0 * (means[shift:] - means[:-shift])
+
+    # this rate product now has potentially two sources of nans;
+    # definitely those at the start of the data record, and any that might
+    # have been propagated into the calculation because of the presence of
+    # data gaps. remove those only at the data dropout positions (if present)
+    # so that this data product will have a 1:1 correspondence with
+    # its associated timestamp variable (TIME15S).
+    botsflu_10minrate = botsflu_10minrate[mask_nonzero]
+
+    return botsflu_10minrate</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_8">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_time24h" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_time24h(time15s)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the auxiliary BOTSFLU timestamp product TIME24H-AUX.</p>
+<p>Returns timestamps anchored at midnight, corresponding to the time
+base for BOTSFLU data products binned on 24-hour (noon-to-noon)
+intervals.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>time15s</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>15-second-anchored timestamps (TIME15S-AUX) [sec since
+1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>time24h</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Midnight-anchored daily timestamps (TIME24H-AUX) [sec since
+1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The BOTSFLU data products on this time base are: DAYDEPTH, 4WKRATE,
+and 8WKRATE. The time base spans the entire dataset including data
+gaps.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_time24h(time15s):
+    """
+    Compute the auxiliary BOTSFLU timestamp product TIME24H-AUX.
+
+    Returns timestamps anchored at midnight, corresponding to the time
+    base for BOTSFLU data products binned on 24-hour (noon-to-noon)
+    intervals.
+
+    Parameters
+    ----------
+    time15s : array_like
+        15-second-anchored timestamps (TIME15S-AUX) [sec since
+        1900-01-01].
+
+    Returns
+    -------
+    time24h : ndarray
+        Midnight-anchored daily timestamps (TIME24H-AUX) [sec since
+        1900-01-01].
+
+    Notes
+    -----
+    The BOTSFLU data products on this time base are: DAYDEPTH, 4WKRATE,
+    and 8WKRATE. The time base spans the entire dataset including data
+    gaps.
+    """
+    # the second and third calling arguments are placeholders
+    time24h, _, _ = anchor_bin_detided_data_to_24h(time15s, None, None)
+
+    return time24h</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_9">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2017-05-05</td>
+<td>Russell Desiderio</td>
+<td>Changed time24h time base to span entire dataset including data gaps</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_daydepth" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage=0.9)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the BOTSFLU daily depth product BOTSFLU-DAYDEPTH_L2 [m].</p>
+<p>Bins 15-second de-tided depth data into 24-hour (noon-to-noon) mean
+values anchored at midnight.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>predtide</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Predicted tide (BOTSFLU-PREDTIDE_L2) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dday_coverage</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.9</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Fractional coverage threshold. Daily bins with fewer than this
+fraction of the maximum 5760 possible 15-second values are set
+to NaN. Default is 0.90.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>daydepth</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME24H-AUX. All days in
+the record span are represented, including data-gap days.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage=0.90):
+    """
+    Compute the BOTSFLU daily depth product BOTSFLU-DAYDEPTH_L2 [m].
+
+    Bins 15-second de-tided depth data into 24-hour (noon-to-noon) mean
+    values anchored at midnight.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+    dday_coverage : float, optional
+        Fractional coverage threshold. Daily bins with fewer than this
+        fraction of the maximum 5760 possible 15-second values are set
+        to NaN. Default is 0.90.
+
+    Returns
+    -------
+    daydepth : ndarray
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
+
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. All days in
+    the record span are represented, including data-gap days.
+    """
+    # calculate 15sec bin timestamps and de-tided depth.
+    time15s, meandepth, _ = calc_meandepth_plus(timestamp, botpres, predtide)
+
+    # downstream data products no longer require the mask_nonzero variable
+    return prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_10">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2017-05-05</td>
+<td>Russell Desiderio</td>
+<td>Changed time24h time base to span entire dataset including data gaps</td>
+</tr>
+<tr>
+<td>2017-05-11</td>
+<td>Russell Desiderio</td>
+<td>Incorporated daydepth coverage threshold</td>
+</tr>
+<tr>
+<td>2020-06-01</td>
+<td>Mark Steiner</td>
+<td>Required predtide as argument; refactored daydepth calculation to expand API</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_4wkrate" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_4wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the BOTSFLU 4-week rate product BOTSFLU-4WKRATE_L2 [cm/yr].</p>
+<p>Computes the mean rate of seafloor depth change using 4-week
+backwards-looking linear regressions on the daily depth record.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>predtide</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Predicted tide (BOTSFLU-PREDTIDE_L2) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dday_coverage</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.9</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Fractional coverage threshold for daily depth bins. Default is
+0.9.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rate_coverage</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.75</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Fractional window fill threshold for rate calculation. Windows
+below this fraction are set to NaN. Default is 0.75.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>botsflu_4wkrate</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>4-week mean seafloor depth change rate (BOTSFLU-4WKRATE_L2)
+[cm/yr].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME24H-AUX. Regression
+slopes in m/day are converted to cm/yr by multiplying by 36500.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_4wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75):
+    """
+    Compute the BOTSFLU 4-week rate product BOTSFLU-4WKRATE_L2 [cm/yr].
+
+    Computes the mean rate of seafloor depth change using 4-week
+    backwards-looking linear regressions on the daily depth record.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+    dday_coverage : float, optional
+        Fractional coverage threshold for daily depth bins. Default is
+        0.9.
+    rate_coverage : float, optional
+        Fractional window fill threshold for rate calculation. Windows
+        below this fraction are set to NaN. Default is 0.75.
+
+    Returns
+    -------
+    botsflu_4wkrate : ndarray
+        4-week mean seafloor depth change rate (BOTSFLU-4WKRATE_L2)
+        [cm/yr].
+
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. Regression
+    slopes in m/day are converted to cm/yr by multiplying by 36500.
+    """
+    # calculate daydepth
+    daydepth = prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage)
+
+    return prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_11">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2017-05-05</td>
+<td>Russell Desiderio</td>
+<td>Changed time24h time base to span entire dataset including data gaps</td>
+</tr>
+<tr>
+<td>2017-05-12</td>
+<td>Russell Desiderio</td>
+<td>Incorporated daydepth and rate coverage thresholds</td>
+</tr>
+<tr>
+<td>2020-06-01</td>
+<td>Mark Steiner</td>
+<td>Required predtide as argument; refactored rate calculation to expand API</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_8wkrate" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_8wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the BOTSFLU 8-week rate product BOTSFLU-8WKRATE_L2 [cm/yr].</p>
+<p>Computes the mean rate of seafloor depth change using 8-week
+backwards-looking linear regressions on the daily depth record.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>predtide</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Predicted tide (BOTSFLU-PREDTIDE_L2) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dday_coverage</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.9</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Fractional coverage threshold for daily depth bins. Default is
+0.9.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rate_coverage</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.75</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Fractional window fill threshold for rate calculation. Windows
+below this fraction are set to NaN. Default is 0.75.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>botsflu_8wkrate</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>8-week mean seafloor depth change rate (BOTSFLU-8WKRATE_L2)
+[cm/yr].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME24H-AUX. Regression
+slopes in m/day are converted to cm/yr by multiplying by 36500.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_8wkrate(timestamp, botpres, predtide, dday_coverage=0.9, rate_coverage=0.75):
+    """
+    Compute the BOTSFLU 8-week rate product BOTSFLU-8WKRATE_L2 [cm/yr].
+
+    Computes the mean rate of seafloor depth change using 8-week
+    backwards-looking linear regressions on the daily depth record.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+    dday_coverage : float, optional
+        Fractional coverage threshold for daily depth bins. Default is
+        0.9.
+    rate_coverage : float, optional
+        Fractional window fill threshold for rate calculation. Windows
+        below this fraction are set to NaN. Default is 0.75.
+
+    Returns
+    -------
+    botsflu_8wkrate : ndarray
+        8-week mean seafloor depth change rate (BOTSFLU-8WKRATE_L2)
+        [cm/yr].
+
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. Regression
+    slopes in m/day are converted to cm/yr by multiplying by 36500.
+    """
+    # calculate daydepth
+    daydepth = prs_botsflu_daydepth(timestamp, botpres, predtide, dday_coverage)
+
+    return prs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_12">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2017-05-05</td>
+<td>Russell Desiderio</td>
+<td>Changed time24h time base to span entire dataset including data gaps</td>
+</tr>
+<tr>
+<td>2017-05-12</td>
+<td>Russell Desiderio</td>
+<td>Incorporated daydepth and rate coverage thresholds</td>
+</tr>
+<tr>
+<td>2020-06-01</td>
+<td>Mark Steiner</td>
+<td>Required predtide as argument; refactored rate calculation to expand API</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_daydepth_from_15s_meandepth" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage=0.9)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute BOTSFLU-DAYDEPTH_L2 [m] from 15-second binned meandepth.</p>
+<p>Bins the 15-second de-tided depth record into 24-hour mean values
+anchored at midnight. Exposed as a public entry point to allow
+computation of DAYDEPTH directly from pre-computed MEANDEPTH.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>time15s</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>15-second-anchored timestamps (TIME15S-AUX) [sec since
+1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>meandepth</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>De-tided 15-second mean depth (BOTSFLU-MEANDEPTH_L2) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dday_coverage</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.9</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Fractional coverage threshold. Daily bins with fewer than this
+fraction of the maximum 5760 possible values are set to NaN.
+Default is 0.90.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>daydepth</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME24H-AUX.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_daydepth_from_15s_meandepth(time15s, meandepth, dday_coverage=0.90):
+    """
+    Compute BOTSFLU-DAYDEPTH_L2 [m] from 15-second binned meandepth.
+
+    Bins the 15-second de-tided depth record into 24-hour mean values
+    anchored at midnight. Exposed as a public entry point to allow
+    computation of DAYDEPTH directly from pre-computed MEANDEPTH.
+
+    Parameters
+    ----------
+    time15s : array_like
+        15-second-anchored timestamps (TIME15S-AUX) [sec since
+        1900-01-01].
+    meandepth : array_like
+        De-tided 15-second mean depth (BOTSFLU-MEANDEPTH_L2) [m].
+    dday_coverage : float, optional
+        Fractional coverage threshold. Daily bins with fewer than this
+        fraction of the maximum 5760 possible values are set to NaN.
+        Default is 0.90.
+
+    Returns
+    -------
+    daydepth : ndarray
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
+
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX.
+    """
+    # bin the 15sec data into 24 hour bins so that the timestamps are at midnight.
+    # to calculate daydepth, don't need the time24h timestamps.
+    _, daydepth, _ = anchor_bin_detided_data_to_24h(time15s, meandepth, dday_coverage)
+
+    return daydepth</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_13">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2020-06-01</td>
+<td>Mark Steiner</td>
+<td>Extracted from prs_botsflu_daydepth to expand API</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_4wkrate_from_daydepth" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage=0.75)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute BOTSFLU-4WKRATE_L2 [cm/yr] from daily depth.</p>
+<p>Applies 4-week backwards-looking linear regression to the daily
+depth record. Exposed as a public entry point to allow computation
+of 4WKRATE directly from pre-computed DAYDEPTH.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>daydepth</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rate_coverage</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.75</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Fractional window fill threshold. Windows below this fraction
+are set to NaN. Default is 0.75.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>botsflu_4wkrate</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>4-week mean seafloor depth change rate (BOTSFLU-4WKRATE_L2)
+[cm/yr].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME24H-AUX. The window
+size of 29 days is used. Regression slopes in m/day are converted
+to cm/yr by multiplying by 36500.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_4wkrate_from_daydepth(daydepth, rate_coverage=0.75):
+    """
+    Compute BOTSFLU-4WKRATE_L2 [cm/yr] from daily depth.
+
+    Applies 4-week backwards-looking linear regression to the daily
+    depth record. Exposed as a public entry point to allow computation
+    of 4WKRATE directly from pre-computed DAYDEPTH.
+
+    Parameters
+    ----------
+    daydepth : array_like
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
+    rate_coverage : float, optional
+        Fractional window fill threshold. Windows below this fraction
+        are set to NaN. Default is 0.75.
+
+    Returns
+    -------
+    botsflu_4wkrate : ndarray
+        4-week mean seafloor depth change rate (BOTSFLU-4WKRATE_L2)
+        [cm/yr].
+
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. The window
+    size of 29 days is used. Regression slopes in m/day are converted
+    to cm/yr by multiplying by 36500.
+    """
+    # 4 weeks of data
+    window_size = 29
+    botsflu_4wkrate = calculate_sliding_slopes(daydepth, window_size, rate_coverage)
+    #  convert units:
+    #    the units of the slopes are [y]/[x] = meters/day;
+    #    to get units of cm/yr, multiply by 100cm/m * 365 days/yr
+    botsflu_4wkrate = 100.0 * 365.0 * botsflu_4wkrate
+
+    return botsflu_4wkrate</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_14">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2020-06-01</td>
+<td>Mark Steiner</td>
+<td>Extracted from prs_botsflu_4wkrate to expand API</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_botsflu_8wkrate_from_daydepth" class="doc doc-heading">
+            <code class="highlight language-python">prs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage=0.75)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute BOTSFLU-8WKRATE_L2 [cm/yr] from daily depth.</p>
+<p>Applies 8-week backwards-looking linear regression to the daily
+depth record. Exposed as a public entry point to allow computation
+of 8WKRATE directly from pre-computed DAYDEPTH.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>daydepth</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>rate_coverage</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.75</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Fractional window fill threshold. Windows below this fraction
+are set to NaN. Default is 0.75.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>botsflu_8wkrate</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>8-week mean seafloor depth change rate (BOTSFLU-8WKRATE_L2)
+[cm/yr].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The associated time base data product is TIME24H-AUX. The window
+size of 57 days is used. Regression slopes in m/day are converted
+to cm/yr by multiplying by 36500.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def prs_botsflu_8wkrate_from_daydepth(daydepth, rate_coverage=0.75):
+    """
+    Compute BOTSFLU-8WKRATE_L2 [cm/yr] from daily depth.
+
+    Applies 8-week backwards-looking linear regression to the daily
+    depth record. Exposed as a public entry point to allow computation
+    of 8WKRATE directly from pre-computed DAYDEPTH.
+
+    Parameters
+    ----------
+    daydepth : array_like
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
+    rate_coverage : float, optional
+        Fractional window fill threshold. Windows below this fraction
+        are set to NaN. Default is 0.75.
+
+    Returns
+    -------
+    botsflu_8wkrate : ndarray
+        8-week mean seafloor depth change rate (BOTSFLU-8WKRATE_L2)
+        [cm/yr].
+
+    Notes
+    -----
+    The associated time base data product is TIME24H-AUX. The window
+    size of 57 days is used. Regression slopes in m/day are converted
+    to cm/yr by multiplying by 36500.
+    """
+    # 8 weeks of data
+    window_size = 57
+    botsflu_8wkrate = calculate_sliding_slopes(daydepth, window_size, rate_coverage)
+    #  convert units:
+    #    the units of the slopes are [y]/[x] = meters/day;
+    #    to get units of cm/yr, multiply by 100cm/m * 365 days/yr
+    botsflu_8wkrate = 100.0 * 365.0 * botsflu_8wkrate
+
+    return botsflu_8wkrate</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_15">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2020-06-01</td>
+<td>Mark Steiner</td>
+<td>Extracted from prs_botsflu_8wkrate to expand API</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.anchor_bin_raw_data_to_15s" class="doc doc-heading">
+            <code class="highlight language-python">anchor_bin_raw_data_to_15s(time, data)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Bin raw 20 Hz BOTPT pressure data into 15-second anchored means.</p>
+<p>Calculates anchored bin timestamps and mean-binned data using
+numpy.bincount. Discards NaN values and non-physical (&lt;=0) pressure
+readings before binning. Empty bins are not represented in the
+output; the boolean mask records the positions of non-empty bins
+within the full time span.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>time</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>data</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of data values to be binned (BOTPRES_L1 [psia]).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>bin_timestamps</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>1D array of centered timestamps for non-empty bins [sec since
+1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+<b><code>binned_data</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>1D array of mean-binned data; no empty bins are represented.</p>
+              </div>
+            </li>
+            <li>
+<b><code>mask_nonzero</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Boolean array where True values indicate non-empty bin positions
+within the full time span (in 15-second units).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Bin duration is hard-coded to 15 seconds. Timestamps are anchored
+at the quarter-minute (0, 15, 30, 45 seconds past the minute); each
+bin encompasses data 7.5 seconds on either side of the center.</p>
+<p>The binning follows the numpy.bincount accumarray pattern: elapsed
+time is floored in units of bin duration to assign each sample to a
+bin index, then bincount sums the weighted values.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def anchor_bin_raw_data_to_15s(time, data):
+    """
+    Bin raw 20 Hz BOTPT pressure data into 15-second anchored means.
+
+    Calculates anchored bin timestamps and mean-binned data using
+    numpy.bincount. Discards NaN values and non-physical (&lt;=0) pressure
+    readings before binning. Empty bins are not represented in the
+    output; the boolean mask records the positions of non-empty bins
+    within the full time span.
+
+    Parameters
+    ----------
+    time : array_like
+        1D array of system timestamps [sec since 1900-01-01].
+    data : array_like
+        1D array of data values to be binned (BOTPRES_L1 [psia]).
+
+    Returns
+    -------
+    bin_timestamps : ndarray
+        1D array of centered timestamps for non-empty bins [sec since
+        1900-01-01].
+    binned_data : ndarray
+        1D array of mean-binned data; no empty bins are represented.
+    mask_nonzero : ndarray
+        Boolean array where True values indicate non-empty bin positions
+        within the full time span (in 15-second units).
+
+    Notes
+    -----
+    Bin duration is hard-coded to 15 seconds. Timestamps are anchored
+    at the quarter-minute (0, 15, 30, 45 seconds past the minute); each
+    bin encompasses data 7.5 seconds on either side of the center.
+
+    The binning follows the numpy.bincount accumarray pattern: elapsed
+    time is floored in units of bin duration to assign each sample to a
+    bin index, then bincount sums the weighted values.
+    """
+    bin_duration = 15.0  # seconds
+    half_bin = bin_duration/2.0
+
+    # one nan value in a bin will nan out the sum of the values of that bin.
+    # throw out nan values and their associated timestamps.
+    # also throw out non-physical data values &lt;= 0.
+    data[np.isnan(data)] = -999.0  # use any negative value
+    mask = (data &gt; 0.0)
+    time = time[mask]
+
+    # anchor time-centered bins by determining the start time to be half a bin
+    # before the first 'anchor timestamp', which will be an integral number of
+    # bin_durations after midnight.
+    start_time = np.floor((time[0] - half_bin)/bin_duration) * bin_duration + half_bin
+    # calculate elapsed time from start in units of bin_duration.
+    elapsed_time = time
+    elapsed_time -= start_time
+    elapsed_time /= bin_duration
+    # assign each timestamp a bin number index based on its elapsed time.
+    bin_number = np.floor(elapsed_time).astype(int)
+    # the number of elements in each bin is given by
+    bin_count = np.bincount(bin_number).astype(float)
+    # create a logical mask of non-zero bin_count values
+    mask_nonzero = (bin_count != 0)
+
+    # directly calculate bin timestamp, units of [sec]:
+    # the midpoint of the data interval is used.
+    bin_timestamps = start_time + half_bin + bin_duration * np.arange(bin_count.size)
+    # keep only the bins with values
+    bin_timestamps = bin_timestamps[mask_nonzero]
+
+    data = data[mask]
+    # sum the values in each time bin, and put into the variable binned_data
+    binned_data = np.bincount(bin_number, data)
+    # divide the values in non-empty bins by the number of values in each bin
+    binned_data = binned_data[mask_nonzero]/bin_count[mask_nonzero]
+
+    return bin_timestamps, binned_data, mask_nonzero</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_16">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2017-05-05</td>
+<td>Russell Desiderio</td>
+<td>Initial code from modifying anchor_bin; added nan and bad-value trapping</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.anchor_bin_detided_data_to_24h" class="doc doc-heading">
+            <code class="highlight language-python">anchor_bin_detided_data_to_24h(time, data, dday_coverage)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Bin 15-second BOTSFLU depth data into 24-hour anchored means.</p>
+<p>Calculates midnight-anchored bin timestamps and mean-binned data
+using numpy.bincount. All days in the record span are represented,
+including days below the coverage threshold (which receive NaN).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>time</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of 15-second timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>data</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of de-tided depth values to be binned (MEANDEPTH [m]).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dday_coverage</code></b>
+                  (<code><span title="float">float</span> or None</code>)
+              –
+              <div class="doc-md-description">
+                <p>Fractional coverage threshold. Bins with fewer than this
+fraction of the maximum 5760 possible values are set to NaN.
+Pass None to skip threshold masking (used when computing
+timestamps only).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>bin_timestamps</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>1D array of midnight-anchored daily timestamps [sec since
+1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+<b><code>daydepth</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>1D array of daily mean depth values (BOTSFLU-DAYDEPTH_L2) [m].
+Bins below the coverage threshold contain NaN.</p>
+              </div>
+            </li>
+            <li>
+<b><code>raw_bincount</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>1D array of the raw count of values in each bin (used as a
+diagnostic in unit tests).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Bin duration is hard-coded to 86400 seconds (one day). Each bin
+spans noon-to-noon, anchored at midnight. The maximum possible bin
+count for 15-second data within a 24-hour bin is 5760.</p>
+<p>The binning follows the numpy.bincount accumarray pattern.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def anchor_bin_detided_data_to_24h(time, data, dday_coverage):
+    """
+    Bin 15-second BOTSFLU depth data into 24-hour anchored means.
+
+    Calculates midnight-anchored bin timestamps and mean-binned data
+    using numpy.bincount. All days in the record span are represented,
+    including days below the coverage threshold (which receive NaN).
+
+    Parameters
+    ----------
+    time : array_like
+        1D array of 15-second timestamps [sec since 1900-01-01].
+    data : array_like
+        1D array of de-tided depth values to be binned (MEANDEPTH [m]).
+    dday_coverage : float or None
+        Fractional coverage threshold. Bins with fewer than this
+        fraction of the maximum 5760 possible values are set to NaN.
+        Pass None to skip threshold masking (used when computing
+        timestamps only).
+
+    Returns
+    -------
+    bin_timestamps : ndarray
+        1D array of midnight-anchored daily timestamps [sec since
+        1900-01-01].
+    daydepth : ndarray
+        1D array of daily mean depth values (BOTSFLU-DAYDEPTH_L2) [m].
+        Bins below the coverage threshold contain NaN.
+    raw_bincount : ndarray
+        1D array of the raw count of values in each bin (used as a
+        diagnostic in unit tests).
+
+    Notes
+    -----
+    Bin duration is hard-coded to 86400 seconds (one day). Each bin
+    spans noon-to-noon, anchored at midnight. The maximum possible bin
+    count for 15-second data within a 24-hour bin is 5760.
+
+    The binning follows the numpy.bincount accumarray pattern.
+    """
+    bin_duration = 86400.0  # number of seconds in a day
+    half_bin = bin_duration/2.0
+    max_count = bin_duration/15.0  # maximum number of values in a day's bin
+
+    # anchor time-centered bins by determining the start time to be half a bin
+    # before the first 'anchor timestamp', which will an integral number of
+    # bin_durations after midnight.
+    start_time = np.floor((time[0] - half_bin)/bin_duration) * bin_duration + half_bin
+    # calculate elapsed time from start in units of bin_duration.
+    time_elapsed = (time - start_time)/bin_duration
+    # assign each timestamp a bin number index based on its elapsed time.
+    bin_number = np.floor(time_elapsed).astype(int)
+    # the number of elements in each bin is given by
+    bin_count = np.bincount(bin_number).astype(float)
+    raw_bincount = np.copy(bin_count)  # for unit test
+
+    # bin_count is used as a divisor to calculate mean values at each bin
+    #    bins with bincounts below the threshold value will have a nan value.
+    #    bins with bincounts equal to or above the threshold value are non_Nan.
+    bin_mean = bin_count//max_count
+    if np.isscalar(dday_coverage):
+        bin_count[bin_mean &lt; dday_coverage] = np.nan
+    #    use nans to prevent dividing by zero in case dday_coverage=0
+    bin_count[bin_count == 0] = np.nan
+
+    # directly calculate bin timestamp, units of [sec]:
+    # the midpoint of the data interval is used.
+    bin_timestamps = start_time + half_bin + bin_duration * np.arange(bin_count.size)
+
+    # sum the values in each time bin, and put into the variable binned_data
+    binned_data = np.bincount(bin_number, data)
+    # divide the values in each bin by the number of values in each bin
+    daydepth = binned_data/bin_count
+
+    return bin_timestamps, daydepth, raw_bincount</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_17">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2017-05-05</td>
+<td>Russell Desiderio</td>
+<td>Initial code from modifying anchor_bin</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.calc_meandepth_plus" class="doc doc-heading">
+            <code class="highlight language-python">calc_meandepth_plus(timestamp, botpres, predtide)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute BOTSFLU-MEANDEPTH_L2 [m] plus auxiliary binning outputs.</p>
+<p>Bins raw pressure data to 15-second means, converts to de-tided
+depth, and returns intermediate variables needed by downstream
+BOTSFLU data product functions.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>predtide</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Predicted tide (BOTSFLU-PREDTIDE_L2) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>time15s</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>15-second-anchored timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+<b><code>meandepth</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>De-tided 15-second mean bottom depth
+(BOTSFLU-MEANDEPTH_L2) [m].</p>
+              </div>
+            </li>
+            <li>
+<b><code>mask_nonzero</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Boolean array marking positions of non-empty 15-second bins
+within the full time span.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Atmospheric pressure is not subtracted from the L1 pressure data
+even though its units are psia, as specified in DPS 1341-00080.
+The conversion factor from psi to depth is -0.67 m/psi. The
+negative sign reflects the convention that depths are negative,
+so the predicted tide (positive) is added to de-tide the record.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def calc_meandepth_plus(timestamp, botpres, predtide):
+    """
+    Compute BOTSFLU-MEANDEPTH_L2 [m] plus auxiliary binning outputs.
+
+    Bins raw pressure data to 15-second means, converts to de-tided
+    depth, and returns intermediate variables needed by downstream
+    BOTSFLU data product functions.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide (BOTSFLU-PREDTIDE_L2) [m].
+
+    Returns
+    -------
+    time15s : ndarray
+        15-second-anchored timestamps [sec since 1900-01-01].
+    meandepth : ndarray
+        De-tided 15-second mean bottom depth
+        (BOTSFLU-MEANDEPTH_L2) [m].
+    mask_nonzero : ndarray
+        Boolean array marking positions of non-empty 15-second bins
+        within the full time span.
+
+    Notes
+    -----
+    Atmospheric pressure is not subtracted from the L1 pressure data
+    even though its units are psia, as specified in DPS 1341-00080.
+    The conversion factor from psi to depth is -0.67 m/psi. The
+    negative sign reflects the convention that depths are negative,
+    so the predicted tide (positive) is added to de-tide the record.
+    """
+    # The pressure values do have units of psia. However, historically at these sites
+    # atmospheric pressure has *not* been subtracted when converting the pressure data
+    # to depth. Therefore the DPS authors do not want atmospheric pressure subtracted
+    # in the DPA. To emphasize this, I have created the variable atm_press_psi and set
+    # it to 0.
+    atm_press_psi = 0.0
+    psi_2_depth = -0.67  # psi to depth in meters
+    bin_duration = 15.0  # seconds
+
+    time15s, meanpres, mask_nonzero = anchor_bin_raw_data_to_15s(timestamp, botpres)
+
+    # de-tide
+    meandepth = ((meanpres - atm_press_psi) * psi_2_depth) + predtide
+
+    # downstream data products require the time15s and mask_nonzero variables,
+    # so pass these as output arguments so that they won't have to be recalculated.
+    return time15s, meandepth, mask_nonzero</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_18">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.calculate_sliding_means" class="doc doc-heading">
+            <code class="highlight language-python">calculate_sliding_means(data, window_size)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute time-centered sliding means by digital convolution.</p>
+<p>Used internally for the BOTSFLU 10MINRATE data product.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>data</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of input data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>window_size</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Number of samples in the sliding window.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>means</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>1D array of sliding window means; boundary elements are set to
+NaN.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>For even window sizes, the result is rolled by one sample to match
+the behavior of MATLAB's convolution, which was used to generate the
+unit test reference values.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def calculate_sliding_means(data, window_size):
+    """
+    Compute time-centered sliding means by digital convolution.
+
+    Used internally for the BOTSFLU 10MINRATE data product.
+
+    Parameters
+    ----------
+    data : array_like
+        1D array of input data.
+    window_size : int
+        Number of samples in the sliding window.
+
+    Returns
+    -------
+    means : ndarray
+        1D array of sliding window means; boundary elements are set to
+        NaN.
+
+    Notes
+    -----
+    For even window sizes, the result is rolled by one sample to match
+    the behavior of MATLAB's convolution, which was used to generate the
+    unit test reference values.
+    """
+    kk = np.ones(window_size) / window_size
+    means = np.convolve(data, kk, 'same')
+    # nan out data with boundary effects at edges.
+    # integer arithmetic will 'truncate' 5/2 to 2 and -5/2 to -3.
+    means[:window_size//2] = np.nan
+    means[-((window_size-1)//2):] = np.nan
+
+    # matlab and numpy behave differently for even window sizes, so roll the python
+    # result to mimic matlab
+    means = np.roll(means, -np.mod(window_size+1, 2))  # roll only if window_size is even
+
+    return means</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_19">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-13</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2017-05-06</td>
+<td>Russell Desiderio</td>
+<td>Updated to work with odd window sizes</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.calculate_sliding_slopes" class="doc doc-heading">
+            <code class="highlight language-python">calculate_sliding_slopes(data, window_size, coverage_threshold=0.0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute backwards-looking sliding linear regression slopes.</p>
+<p>Used internally for the BOTSFLU 4WKRATE and 8WKRATE data products.
+NaN values within a window are excluded from the regression; windows
+with insufficient valid data are set to NaN.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>data</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of input data (typically daily depth values [m]).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>window_size</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Nominal window size in samples. If even, incremented by one to
+enforce an odd window.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>coverage_threshold</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Minimum fraction of non-NaN values required within a window to
+compute a slope. Default is 0.0 (no threshold).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>slopes</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>1D array of backwards-looking regression slopes in units of
+[data units]/[sample]. Length equals len(data).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The regression equations are from Press et al. (1986), equations
+14.2.15-14.2.17. The data vector is front-padded with NaN so that
+windows near the start of the record that satisfy the coverage
+criterion produce non-NaN values. Coverage is assessed by
+calculate_sliding_means on a binary good/bad mask, then shifted to
+align with the backwards-looking window.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def calculate_sliding_slopes(data, window_size, coverage_threshold=0.0):
+    """
+    Compute backwards-looking sliding linear regression slopes.
+
+    Used internally for the BOTSFLU 4WKRATE and 8WKRATE data products.
+    NaN values within a window are excluded from the regression; windows
+    with insufficient valid data are set to NaN.
+
+    Parameters
+    ----------
+    data : array_like
+        1D array of input data (typically daily depth values [m]).
+    window_size : int
+        Nominal window size in samples. If even, incremented by one to
+        enforce an odd window.
+    coverage_threshold : float, optional
+        Minimum fraction of non-NaN values required within a window to
+        compute a slope. Default is 0.0 (no threshold).
+
+    Returns
+    -------
+    slopes : ndarray
+        1D array of backwards-looking regression slopes in units of
+        [data units]/[sample]. Length equals len(data).
+
+    Notes
+    -----
+    The regression equations are from Press et al. (1986), equations
+    14.2.15-14.2.17. The data vector is front-padded with NaN so that
+    windows near the start of the record that satisfy the coverage
+    criterion produce non-NaN values. Coverage is assessed by
+    calculate_sliding_means on a binary good/bad mask, then shifted to
+    align with the backwards-looking window.
+    """
+    # ODD WINDOW SIZES are expected; if even, increment by one
+    window_size = window_size + 1 - np.mod(window_size, 2)
+    half_window = window_size // 2  # this will 'floor' when window_size is odd as desired
+
+    # pad front end of data with Nans (because data product and 'for loop' are backwards-looking)
+    npts = 2 * half_window + data.size
+    padded_data = np.zeros(npts) + np.nan
+    padded_data[window_size-1:] = data
+
+    # first calculate coverage and compare it to threshold so that only windows containing the
+    # prescribed number of 'good' data points will have slope values calculated in the for loop.
+
+    y = np.copy(padded_data)
+    # determine the fraction of good values per window (vectorized):
+    # first change non-nan values to 1, then nan values to 0, and take the average
+    y[~np.isnan(y)] = 1.0
+    y[np.isnan(y)] = 0.0
+    fraction_good = calculate_sliding_means(y, window_size)  # centered windows
+    # convert to backwards-looking
+    fraction_good = np.roll(fraction_good, half_window)
+
+    # deal with round-off error and boundary considerations at threshold values
+    machine_epsilon = np.finfo(float).eps
+    eps_x_100 = machine_epsilon * 100
+
+    # rather than deleting padding, keep it for index registration with padded data;
+    # the data padding will be deleted at the end of the routine anyway.
+    # set nans to no coverage (avoids warning message in conditional statements)
+    fraction_good[np.isnan(fraction_good)] = -1.0
+    # indices with fraction_good near 0 are to be disregarded
+    fraction_good[fraction_good &lt;= eps_x_100] = -1.0
+
+    # there can be issues involving roundoff error when considering 100% coverage, so:
+    fraction_good = fraction_good + eps_x_100
+    # find indices that satisfy coverage criterion,
+    # which is the first element of the 'np.where' tuple
+    indices = np.where(fraction_good &gt;= coverage_threshold)[0]
+
+    # actual slope calculation
+
+    slopes = np.zeros(npts) + np.nan            # initialize
+    abscissa = np.arange(npts).astype('float')  # unity spacing
+    for ii in indices:
+        x = abscissa[(ii-2*half_window):(ii+1)]
+        y = padded_data[(ii-2*half_window):(ii+1)]
+        x = x[~np.isnan(y)]
+        y = y[~np.isnan(y)]
+        if x.size &lt; 2:
+            continue  # trap out windows with only 0 or 1 valid datapoint
+        tti = x - x.mean(axis=0)
+        stt = np.sum(tti * tti)
+        slopes[ii] = np.sum(tti * y) / stt
+    # get rid of padding
+    slopes = slopes[2*half_window:]
+
+    return slopes</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_20">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2017-05-03</td>
+<td>Russell Desiderio</td>
+<td>Initial code; replaced Moore-Penrose method to support nan-masking</td>
+</tr>
+<tr>
+<td>2017-05-08</td>
+<td>Russell Desiderio</td>
+<td>Added fractional coverage criterion</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="deprecated-functions">Deprecated Functions</h2>
+<div class="admonition note">
+<p class="admonition-title">Deprecated</p>
+<p>The functions in this section are retained for reference only and
+should not be used in new code. They have been superseded by the
+functions listed above.</p>
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_tsunami_detection" class="doc doc-heading">
+            <code class="highlight language-python">prs_tsunami_detection(botsflu_5minrate, tsunami_detection_threshold=1.0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper returning True if a tsunami event is detected.</p>
+<p>Deprecated. This function was coded from pseudocode in DPS
+1341-00080, which was never publicly released. Its robustness has
+not been verified with actual data.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>botsflu_5minrate</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>5-minute instantaneous depth change rate
+(BOTSFLU-5MINRATE_L2) [cm/min].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tsunami_detection_threshold</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>1.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Detection threshold [cm/min]. Default is 1.0.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>boolean_tsunami_detection</code></b>(                  <code><span title="bool">bool</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>True if any value of botsflu_5minrate meets or exceeds the
+threshold in absolute value; False otherwise.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def prs_tsunami_detection(botsflu_5minrate, tsunami_detection_threshold=1.0):
+    """
+    OOI wrapper returning True if a tsunami event is detected.
+
+    Deprecated. This function was coded from pseudocode in DPS
+    1341-00080, which was never publicly released. Its robustness has
+    not been verified with actual data.
+
+    Parameters
+    ----------
+    botsflu_5minrate : array_like
+        5-minute instantaneous depth change rate
+        (BOTSFLU-5MINRATE_L2) [cm/min].
+    tsunami_detection_threshold : float, optional
+        Detection threshold [cm/min]. Default is 1.0.
+
+    Returns
+    -------
+    boolean_tsunami_detection : bool
+        True if any value of botsflu_5minrate meets or exceeds the
+        threshold in absolute value; False otherwise.
+    """
+    # units of variable and threshold are [cm/min]
+    boolean_tsunami_detection = False
+    # get rid of runtime warnings if nans are present
+    botsflu_5minrate[np.isnan(botsflu_5minrate)] = 0.0
+    if np.any(np.abs(botsflu_5minrate) &gt;= tsunami_detection_threshold):
+        boolean_tsunami_detection = True
+    return boolean_tsunami_detection</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>The DPS document for BOTSFLU (1341-00080) was never publicly released.
+This function was coded from pseudocode in that DPS. Its robustness has
+not been verified with actual data.</p>
+<h4 id="history_21">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_eruption_imminent" class="doc doc-heading">
+            <code class="highlight language-python">prs_eruption_imminent(botsflu_10minrate, eruption_imminent_threshold=5.0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper returning True if a volcanic eruption is imminent.</p>
+<p>Deprecated. This function was coded from pseudocode in DPS
+1341-00080, which was never publicly released. Its robustness has
+not been verified with actual data.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>botsflu_10minrate</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>10-minute mean depth change rate (BOTSFLU-10MINRATE_L2) [cm/hr].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eruption_imminent_threshold</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>5.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Detection threshold [cm/hr]. Default is 5.0.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>boolean_eruption_imminent</code></b>(                  <code><span title="bool">bool</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>True if any value of botsflu_10minrate meets or exceeds the
+threshold; False otherwise.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def prs_eruption_imminent(botsflu_10minrate, eruption_imminent_threshold=5.0):
+    """
+    OOI wrapper returning True if a volcanic eruption is imminent.
+
+    Deprecated. This function was coded from pseudocode in DPS
+    1341-00080, which was never publicly released. Its robustness has
+    not been verified with actual data.
+
+    Parameters
+    ----------
+    botsflu_10minrate : array_like
+        10-minute mean depth change rate (BOTSFLU-10MINRATE_L2) [cm/hr].
+    eruption_imminent_threshold : float, optional
+        Detection threshold [cm/hr]. Default is 5.0.
+
+    Returns
+    -------
+    boolean_eruption_imminent : bool
+        True if any value of botsflu_10minrate meets or exceeds the
+        threshold; False otherwise.
+    """
+    # units of variable and threshold are [cm/hr]
+    boolean_eruption_imminent = False
+    # get rid of runtime warnings if nans are present
+    botsflu_10minrate[np.isnan(botsflu_10minrate)] = 0.0
+    if np.any(botsflu_10minrate &gt;= eruption_imminent_threshold):
+        boolean_eruption_imminent = True
+    return boolean_eruption_imminent</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_1">Additional Notes</h4>
+<p>The DPS document for BOTSFLU (1341-00080) was never publicly released.
+This function was coded from pseudocode in that DPS. Its robustness has
+not been verified with actual data.</p>
+<h4 id="history_22">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.prs_eruption_occurred" class="doc doc-heading">
+            <code class="highlight language-python">prs_eruption_occurred(botsflu_10minrate, eruption_occurred_threshold=-5.0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI wrapper returning True if a volcanic eruption has occurred.</p>
+<p>Deprecated. This function was coded from pseudocode in DPS
+1341-00080, which was never publicly released. Its robustness has
+not been verified with actual data.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>botsflu_10minrate</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>10-minute mean depth change rate (BOTSFLU-10MINRATE_L2) [cm/hr].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eruption_occurred_threshold</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>-5.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Detection threshold [cm/hr]. Default is -5.0.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>boolean_eruption_occurred</code></b>(                  <code><span title="bool">bool</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>True if any value of botsflu_10minrate is at or below the
+threshold; False otherwise.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def prs_eruption_occurred(botsflu_10minrate, eruption_occurred_threshold=-5.0):
+    """
+    OOI wrapper returning True if a volcanic eruption has occurred.
+
+    Deprecated. This function was coded from pseudocode in DPS
+    1341-00080, which was never publicly released. Its robustness has
+    not been verified with actual data.
+
+    Parameters
+    ----------
+    botsflu_10minrate : array_like
+        10-minute mean depth change rate (BOTSFLU-10MINRATE_L2) [cm/hr].
+    eruption_occurred_threshold : float, optional
+        Detection threshold [cm/hr]. Default is -5.0.
+
+    Returns
+    -------
+    boolean_eruption_occurred : bool
+        True if any value of botsflu_10minrate is at or below the
+        threshold; False otherwise.
+    """
+    # units of variable and threshold are [cm/hr]
+    boolean_eruption_occurred = False
+    # get rid of runtime warnings if nans are present
+    botsflu_10minrate[np.isnan(botsflu_10minrate)] = 0.0
+    if np.any(botsflu_10minrate &lt;= eruption_occurred_threshold):
+        boolean_eruption_occurred = True
+    return boolean_eruption_occurred</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_2">Additional Notes</h4>
+<p>The DPS document for BOTSFLU (1341-00080) was never publicly released.
+This function was coded from pseudocode in that DPS. Its robustness has
+not been verified with actual data.</p>
+<h4 id="history_23">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.anchor_bin" class="doc doc-heading">
+            <code class="highlight language-python">anchor_bin(time, data, bin_duration, mode)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Bin BOTPT data into anchored time bins (general-purpose).</p>
+<p>Deprecated May 2017. Superseded by anchor_bin_raw_data_to_15s and
+anchor_bin_detided_data_to_24h, which handle the raw-data bad-value
+check and extended 24-hour timestamp records respectively.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>time</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>data</code></b>
+                  (<code>array_like or None</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of data to be binned, or None when mode is 'time'.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>bin_duration</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Bin size [s].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mode</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Output mode. One of 'time' (timestamps only), 'data' (binned
+data and mask only), or 'both' (timestamps, binned data, and
+mask).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>Depends on mode:</code>
+              –
+              <div class="doc-md-description">
+                
+              </div>
+            </li>
+            <li>
+                  <code>&#39;time&#39;  : bin_timestamps</code>
+              –
+              <div class="doc-md-description">
+                
+              </div>
+            </li>
+            <li>
+                  <code>&#39;data&#39;  : binned_data, mask_nonzero</code>
+              –
+              <div class="doc-md-description">
+                
+              </div>
+            </li>
+            <li>
+                  <code>&#39;both&#39;  : bin_timestamps, binned_data, mask_nonzero</code>
+              –
+              <div class="doc-md-description">
+                
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Timestamps are anchored so that bin centers fall at integral
+multiples of bin_duration after midnight (e.g., at 0, 15, 30, 45
+seconds past the minute for bin_duration = 15 s). Statements are
+executed conditionally on mode because, for multiple years of
+20 Hz data, each np.bincount call can take tens of seconds.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def anchor_bin(time, data, bin_duration, mode):
+    """
+    Bin BOTPT data into anchored time bins (general-purpose).
+
+    Deprecated May 2017. Superseded by anchor_bin_raw_data_to_15s and
+    anchor_bin_detided_data_to_24h, which handle the raw-data bad-value
+    check and extended 24-hour timestamp records respectively.
+
+    Parameters
+    ----------
+    time : array_like
+        1D array of timestamps [sec since 1900-01-01].
+    data : array_like or None
+        1D array of data to be binned, or None when mode is 'time'.
+    bin_duration : float
+        Bin size [s].
+    mode : str
+        Output mode. One of 'time' (timestamps only), 'data' (binned
+        data and mask only), or 'both' (timestamps, binned data, and
+        mask).
+
+    Returns
+    -------
+    Depends on mode:
+    'time'  : bin_timestamps
+    'data'  : binned_data, mask_nonzero
+    'both'  : bin_timestamps, binned_data, mask_nonzero
+
+    Notes
+    -----
+    Timestamps are anchored so that bin centers fall at integral
+    multiples of bin_duration after midnight (e.g., at 0, 15, 30, 45
+    seconds past the minute for bin_duration = 15 s). Statements are
+    executed conditionally on mode because, for multiple years of
+    20 Hz data, each np.bincount call can take tens of seconds.
+    """
+    half_bin = bin_duration/2.0
+    # anchor time-centered bins by determining the start time to be half a bin
+    # before the first 'anchor timestamp', which will an integral number of
+    # bin_durations after midnight.
+    start_time = np.floor((time[0] - half_bin)/bin_duration) * bin_duration + half_bin
+    # calculate elapsed time from start in units of bin_duration.
+    time_elapsed = (time - start_time)/bin_duration
+    # assign each timestamp a bin number index based on its elapsed time.
+    bin_number = np.floor(time_elapsed).astype(int)
+    # the number of elements in each bin is given by
+    bin_count = np.bincount(bin_number).astype(float)
+    # create a logical mask of non-zero bin_count values
+    mask_nonzero = (bin_count != 0)
+
+    # to calculate timestamps and to get tides, without also binning data.
+    # mask_nonzero is not needed.
+    if mode == 'time':
+        # directly calculate bin timestamp, units of [sec]:
+        # the midpoint of the data interval is used.
+        bin_timestamps = start_time + half_bin + bin_duration * np.arange(bin_count.size)
+        # keep only the bins with values
+        bin_timestamps = bin_timestamps[mask_nonzero]
+        return bin_timestamps
+
+    # for binning data when the resultant timestamps are not explicitly required.
+    # daydepth_plus also requires mask_nonzero for downstream products 4wkrate and 8wkrate.
+    elif mode == 'data':
+        # sum the values in each time bin, and put into the variable binned_data
+        binned_data = np.bincount(bin_number, data)
+        # divide the values in non-empty bins by the number of values in each bin
+        binned_data = binned_data[mask_nonzero]/bin_count[mask_nonzero]
+        return binned_data, mask_nonzero
+
+    # for when both timestamps and binned data are required.
+    elif mode == 'both':
+        bin_timestamps = start_time + half_bin + bin_duration * np.arange(bin_count.size)
+        bin_timestamps = bin_timestamps[mask_nonzero]
+        binned_data = np.bincount(bin_number, data)
+        binned_data = binned_data[mask_nonzero]/bin_count[mask_nonzero]
+        return bin_timestamps, binned_data, mask_nonzero</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_3">Additional Notes</h4>
+<p>Deprecated May 2017. Superseded by <code>anchor_bin_raw_data_to_15s</code> and
+<code>anchor_bin_detided_data_to_24h</code>, which handle the raw-data bad-value
+check and extended 24-hour timestamp records respectively.</p>
+<h4 id="history_24">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-13</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Changed output arguments; added conditionals for efficiency</td>
+</tr>
+<tr>
+<td>2017-05-05</td>
+<td>Russell Desiderio</td>
+<td>Deprecated</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.calc_daydepth_plus" class="doc doc-heading">
+            <code class="highlight language-python">calc_daydepth_plus(timestamp, botpres, predtide)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute BOTSFLU-DAYDEPTH_L2 [m] plus a non-empty bin mask.</p>
+<p>Deprecated May 2017. Superseded by calc_meandepth_plus and
+prs_botsflu_daydepth.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>OOI system timestamps [sec since 1900-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>botpres</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Bottom pressure (BOTPRES_L1) [psia].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>predtide</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Predicted tide [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>daydepth</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def calc_daydepth_plus(timestamp, botpres, predtide):
+    """
+    Compute BOTSFLU-DAYDEPTH_L2 [m] plus a non-empty bin mask.
+
+    Deprecated May 2017. Superseded by calc_meandepth_plus and
+    prs_botsflu_daydepth.
+
+    Parameters
+    ----------
+    timestamp : array_like
+        OOI system timestamps [sec since 1900-01-01].
+    botpres : array_like
+        Bottom pressure (BOTPRES_L1) [psia].
+    predtide : array_like
+        Predicted tide [m].
+
+    Returns
+    -------
+    daydepth : ndarray
+        Daily mean de-tided bottom depth (BOTSFLU-DAYDEPTH_L2) [m].
+    """
+    # calculate 15sec bin timestamps and de-tided depth.
+    time15s, meandepth, _ = calc_meandepth_plus(timestamp, botpres, predtide)
+
+    # bin the 15sec data into 24 hour bins so that the timestamps are at midnight.
+    # to calculate daydepth, don't need the time24h timestamps.
+
+    _, daydepth = anchor_bin(time15s, meandepth)
+
+    # downstream data products no longer require the mask_nonzero variable
+    return daydepth</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_4">Additional Notes</h4>
+<p>Deprecated May 2017. Superseded by <code>calc_meandepth_plus</code> and
+<code>prs_botsflu_daydepth</code>.</p>
+<h4 id="history_25">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-01-14</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2017-05-05</td>
+<td>Russell Desiderio</td>
+<td>Deprecated</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.calculate_all_sliding_slopes_then_Nan" class="doc doc-heading">
+            <code class="highlight language-python">calculate_all_sliding_slopes_then_Nan(data, window_size, coverage_threshold)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute backwards-looking sliding slopes, then NaN below coverage.</p>
+<p>Deprecated May 2017. Superseded by calculate_sliding_slopes, which
+pre-filters windows by fractional coverage before computing slopes
+rather than computing all slopes first and then applying NaN masking.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>data</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of input data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>window_size</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Nominal window size in samples. If even, incremented by one.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>coverage_threshold</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Minimum fraction of non-NaN values required within a window.
+Windows below this threshold are set to NaN after computation.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>slopes</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>1D array of backwards-looking regression slopes. Length equals
+len(data).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The regression equations are from Press et al. (1986), equations
+14.2.15-14.2.17.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def calculate_all_sliding_slopes_then_Nan(data, window_size, coverage_threshold):
+    """
+    Compute backwards-looking sliding slopes, then NaN below coverage.
+
+    Deprecated May 2017. Superseded by calculate_sliding_slopes, which
+    pre-filters windows by fractional coverage before computing slopes
+    rather than computing all slopes first and then applying NaN masking.
+
+    Parameters
+    ----------
+    data : array_like
+        1D array of input data.
+    window_size : int
+        Nominal window size in samples. If even, incremented by one.
+    coverage_threshold : float
+        Minimum fraction of non-NaN values required within a window.
+        Windows below this threshold are set to NaN after computation.
+
+    Returns
+    -------
+    slopes : ndarray
+        1D array of backwards-looking regression slopes. Length equals
+        len(data).
+
+    Notes
+    -----
+    The regression equations are from Press et al. (1986), equations
+    14.2.15-14.2.17.
+    """
+    # ODD WINDOW SIZES are expected; if even, increment by one
+    window_size = window_size + 1 - np.mod(window_size, 2)
+    half_window = window_size / 2  # this will 'floor' when window_size is odd as desired
+
+    # pad front end of data with Nans (because 'for loop' is backwards-looking)
+    npts = 2 * half_window + data.size
+    padded_data = np.zeros(npts) + np.nan
+    padded_data[window_size-1:] = data
+
+    # first calculate values for all sliding windows
+    slopes = np.zeros(npts) + np.nan
+    abscissa = np.arange(npts).astype('float')
+    for ii in range(window_size-1, npts):
+        x = abscissa[(ii-2*half_window):(ii+1)]  # rather than np.arange-ing in each iteration
+        y = padded_data[(ii-2*half_window):(ii+1)]
+        x = x[~np.isnan(y)]
+        y = y[~np.isnan(y)]
+        if x.size &lt; 2:
+            continue  # trap out windows with only 0 or 1 valid datapoint
+        tti = x - x.mean(axis=0)
+        stt = np.sum(tti * tti)
+        slopes[ii] = np.sum(tti * y) / stt
+    # get rid of padding
+    slopes = slopes[2*half_window:]
+
+    # now determine the fraction of good values per window (vectorized):
+    # first change non-nan values to 1, then nan values to 0, and take the average
+    padded_data[~np.isnan(padded_data)] = 1.0
+    padded_data[np.isnan(padded_data)] = 0.0
+    fraction_good = calculate_sliding_means(padded_data, window_size)  # centered windows
+    # convert to backwards-looking
+    fraction_good = np.roll(fraction_good, half_window)
+    # get rid of padding
+    fraction_good = fraction_good[2*half_window:]
+
+    # nan out fractional values (means) less than coverage threshold
+    # there can be issues involving roundoff error when considering 100% coverage, so:
+    machine_epsilon = np.finfo(float).eps
+    fraction_good = fraction_good + 100 * machine_epsilon
+    # avoid a python warning message by trapping out nans in the conditional
+    fraction_good[np.isnan(fraction_good)] = -999.0  # any negative number will work as intended
+    slopes[fraction_good &lt; coverage_threshold] = np.nan
+
+    return slopes</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_5">Additional Notes</h4>
+<p>Deprecated May 2017. Superseded by <code>calculate_sliding_slopes</code>, which
+pre-filters windows by fractional coverage before computing slopes rather
+than computing all slopes and then applying NaN masking.</p>
+<h4 id="history_26">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2017-05-03</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2017-05-08</td>
+<td>Russell Desiderio</td>
+<td>Added coverage criterion</td>
+</tr>
+<tr>
+<td>2017-05-08</td>
+<td>Russell Desiderio</td>
+<td>Deprecated</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.prs_functions.calculate_sliding_slopes__MoorePenrose" class="doc doc-heading">
+            <code class="highlight language-python">calculate_sliding_slopes__MoorePenrose(data, window_size)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute backwards-looking sliding slopes via Moore-Penrose pseudoinverse.</p>
+<p>Deprecated May 2017. Superseded by calculate_sliding_slopes. The
+Moore-Penrose pseudoinverse method cannot accommodate NaN values in
+the data window.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>data</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>1D array of input data.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>window_size</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Number of samples in the sliding window.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>slopes</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>1D array of backwards-looking regression slopes. The first
+window_size - 1 elements are NaN.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Algorithm from John D'Errico's response on Matlab Central (thread
+49181). The first non-NaN value occurs at index window_size - 1 and
+is the slope of the regression of the first window_size points. If
+time-centered slopes are needed, circularly shift the result by half
+a window.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/prs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def calculate_sliding_slopes__MoorePenrose(data, window_size):
+    # DEPRECATED because nan-masking cannot be implemented with this algorithm #
+    """
+    Compute backwards-looking sliding slopes via Moore-Penrose pseudoinverse.
+
+    Deprecated May 2017. Superseded by calculate_sliding_slopes. The
+    Moore-Penrose pseudoinverse method cannot accommodate NaN values in
+    the data window.
+
+    Parameters
+    ----------
+    data : array_like
+        1D array of input data.
+    window_size : int
+        Number of samples in the sliding window.
+
+    Returns
+    -------
+    slopes : ndarray
+        1D array of backwards-looking regression slopes. The first
+        window_size - 1 elements are NaN.
+
+    Notes
+    -----
+    Algorithm from John D'Errico's response on Matlab Central (thread
+    49181). The first non-NaN value occurs at index window_size - 1 and
+    is the slope of the regression of the first window_size points. If
+    time-centered slopes are needed, circularly shift the result by half
+    a window.
+    """
+    column1 = np.ones((window_size, 1))
+    column2 = -np.arange(float(window_size)).reshape(-1, 1)
+    X = np.hstack((column1, column2))
+    filtercoef = np.linalg.pinv(X)
+    slopes = signal.lfilter(filtercoef[1, :], 1, data)
+    slopes[0:window_size-1] = np.nan
+
+    # if time-centered slopes are desired, circularly shift this by half a window.
+
+    return slopes</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes_6">Additional Notes</h4>
+<p>Deprecated May 2017. Superseded by <code>calculate_sliding_slopes</code>. The
+Moore-Penrose pseudoinverse method cannot accommodate NaN values in the
+data window.</p>
+<h4 id="history_27">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unknown</td>
+<td>John D'Errico</td>
+<td>Original MATLAB algorithm (MATLAB Central Answers thread 49181; <code>movingslope.m</code>, File Exchange 16997)</td>
+</tr>
+<tr>
+<td>2015-01-13</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2017-05-03</td>
+<td>Russell Desiderio</td>
+<td>Deprecated; nan-masking cannot be implemented with this algorithm</td>
+</tr>
+<tr>
+<td>2026-06-10</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00060_Data_Product_Spec_BOTTILT_OOI.pdf">OOI (2013). Data Product Specification for Seafloor High-Resolution
+Tilt. Document Control Number
+1341-00060.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00070_Data_Product_SPEC_BOTPRES_OOI.pdf">OOI (2013). Data Product Specification for Nano-resolution Bottom
+Pressure. Document Control Number
+1341-00070.</a></p>
+<p>OOI (2015). Data Product Specification for Seafloor Uplift and
+Subsidence (BOTSFLU) from the BOTPT Instrument. Document Control Number
+1341-00080. (Not released.)</p>
+<p>Polster, A., Fabian, M., and Villinger, H. (2009). Effective resolution
+and drift of Paroscientific pressure sensors derived from long-term
+seafloor measurements. <em>Geochemistry, Geophysics, Geosystems</em>, 10,
+Q08009. doi:10.1029/2009GC002532.</p>
+<p>Press, W.H., Flannery, B.P., Teukolsky, S.A., and Vetterling, W.T.
+(1986). <em>Numerical Recipes</em>. Cambridge University Press. p. 507.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../opt_functions/" class="btn btn-neutral float-left" title="OPT Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../sfl_functions/" class="btn btn-neutral float-right" title="SFL Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../opt_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../sfl_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,4479 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/ctd_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>CTD Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "CTD Functions";
+        var mkdocs_page_input_path = "api/ctd_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/ctd_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">CTD Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#condwat_l1-seawater-conductivity">CONDWAT_L1 -- Seawater Conductivity</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#tempwat_l1-seawater-temperature">TEMPWAT_L1 -- Seawater Temperature</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#preswat_l1-seawater-pressure">PRESWAT_L1 -- Seawater Pressure</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pracsal_l2-seawater-practical-salinity">PRACSAL_L2 -- Seawater Practical Salinity</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#density_l2-in-situ-density">DENSITY_L2 -- In-situ Density</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">CTD Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="ctd-functions">CTD Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys the Sea-Bird Electronics
+conductivity-temperature-depth (CTD) family of instruments across its moored,
+profiling, and mobile platforms. The table below lists the OOI instrument
+classes covered by this module.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CTDBP</td>
+<td>SBE 16Plus V2</td>
+<td>Moored (fixed depth)</td>
+<td>CTD, Bottom Pumped</td>
+</tr>
+<tr>
+<td>CTDMO</td>
+<td>SBE 37IM</td>
+<td>Moored (fixed depth)</td>
+<td>CTD, Modem (Inductive)</td>
+</tr>
+<tr>
+<td>CTDPF-A/B</td>
+<td>SBE 16Plus V2</td>
+<td>RCA cabled shallow profilers and platforms</td>
+<td>CTD, Profiler</td>
+</tr>
+<tr>
+<td>CTDPF-J</td>
+<td>SBE FastCAT 49</td>
+<td>Coastal surface-piercing profilers (CSPP)</td>
+<td>CTD, Profiler</td>
+</tr>
+<tr>
+<td>CTDPF-K/L</td>
+<td>SBE 52MP</td>
+<td>Wire-following profilers</td>
+<td>CTD, Profiler</td>
+</tr>
+<tr>
+<td>CTDGV</td>
+<td>SBE GPCTD (Seabird Payload CTD)</td>
+<td>Gliders</td>
+<td>CTD, Glider Vehicle</td>
+</tr>
+<tr>
+<td>PHSEN-G/H</td>
+<td>SBE Deep SeapHOx V2 (<a href="../../seaphox/">instrument notes</a>)</td>
+<td>Moored (fixed depth)</td>
+<td>pH Sensor</td>
+</tr>
+</tbody>
+</table>
+<p><code>ctd_functions.py</code> converts raw Sea-Bird Electronics CTD data into calibrated 
+L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) and computes the L2 
+derived products Practical Salinity (PRACSAL) and in-situ Density (DENSITY) 
+using the <a href="https://teos-10.github.io/GSW-Python/">TEOS-10 GSW library</a>.</p>
+<p>Within the OOI data system, CTD data products fall under the Water Column <a href="https://oceanobservatories.org/data-products/">sampling
+regime</a> (see the <a href="https://oceanobservatories.org/data-products/data-products-complete-list/">complete list of OOI data
+products</a>).</p>
+<p>The L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) may be reported directly
+by the instrument (computed onboard the sensor using vendor firmware) or they 
+may be reported as L0 values in raw units (counts, frequency, or linearly scaled 
+integers). Depending on the instrument, telemetered data may be reported directly 
+in L1 units while the recovered instrument data is reported in L0 units 
+requiring the conversions below. The SBE FastCAT 49 (CTDPF-J) reports its data in engineering units, so
+the L1 conversions below are not applied to it.</p>
+<p>All calibration coefficients are from factory calibration values supplied with individual instruments.</p>
+<p>For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI
+data file map to these functions' arguments, see <a href="../../calibrations/">Calibration Coefficients</a> and
+<a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00010</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf">OOI (2013). Data Product Specification for Water Temperature.</a></td>
+</tr>
+<tr>
+<td>1341-00020</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf">OOI (2013). Data Product Specification for Pressure (Depth).</a></td>
+</tr>
+<tr>
+<td>1341-00030</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf">OOI (2013). Data Product Specification for Conductivity.</a></td>
+</tr>
+<tr>
+<td>1341-00040</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf">OOI (2013). Data Product Specification for Salinity.</a></td>
+</tr>
+<tr>
+<td>1341-00050</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf">OOI (2012). Data Product Specification for Density.</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="condwat_l1-seawater-conductivity">CONDWAT_L1 -- Seawater Conductivity</h3>
+<p>The raw seawater conductivity (CONDWAT_L0, <span class="arithmatex">\(c_0\)</span>), is reported in either 
+counts or scaled L1 units. The converted seawater conductivity, 
+CONDWAT_L1, is reported in S m<span class="arithmatex">\(^{-1}\)</span>. As with temperature, conversions from 
+L0 to L1 depend on the instrument class and/or data delivery method.</p>
+<h4 id="calibration-coefficients">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>g</code></td>
+<td><code>CC_g</code></td>
+<td>Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered)</td>
+</tr>
+<tr>
+<td><code>h</code></td>
+<td><code>CC_h</code></td>
+<td>Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered)</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td><code>CC_i</code></td>
+<td>Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered)</td>
+</tr>
+<tr>
+<td><code>j</code></td>
+<td><code>CC_j</code></td>
+<td>Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered)</td>
+</tr>
+<tr>
+<td><code>g</code></td>
+<td><code>CC_cg</code></td>
+<td>Factory calibration sheet (Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>h</code></td>
+<td><code>CC_ch</code></td>
+<td>Factory calibration sheet (Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td><code>CC_ci</code></td>
+<td>Factory calibration sheet (Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>j</code></td>
+<td><code>CC_cj</code></td>
+<td>Factory calibration sheet (Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ctcor</code></td>
+<td><code>CC_ctcor</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>cpcor</code></td>
+<td><code>CC_cpcor</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>wbotc</code></td>
+<td><code>CC_wbotc</code></td>
+<td>Factory calibration sheet (SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="condwat_l1-algorithm">CONDWAT_L1 Algorithm</h4>
+<p><strong>SBE 16Plus</strong> (CTDBP, CTDPF-A/B): The raw count is converted to a frequency
+<span class="arithmatex">\(f\)</span> in kHz, then evaluated with a polynomial corrected for temperature and
+pressure:</p>
+<div class="arithmatex">\[f = \frac{c_0 \div  256}{1000}\]</div>
+<div class="arithmatex">\[C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor}\times T + \text{CPcor}\times P}\]</div>
+<p>where <span class="arithmatex">\(T\)</span> is TEMPWAT_L1 (<span class="arithmatex">\(^\circ\text{C}\)</span>), <span class="arithmatex">\(P\)</span> is PRESWAT_L1 (dbar), and <span class="arithmatex">\(g\)</span>, <span class="arithmatex">\(h\)</span>, <span class="arithmatex">\(i\)</span>, <span class="arithmatex">\(j\)</span>, CTcor, CPcor (<code>g</code>, <code>h</code>,
+<code>i</code>, <code>j</code>, <code>ctcor</code>, <code>cpcor</code>) are from the factory calibration sheet.</p>
+<p><strong>SBE 37IM instrument-recovered</strong> (CTDMO): Same polynomial as the SBE 16Plus
+path, but includes an additional wbotc correction (<code>wbotc</code>, from the factory calibration sheet) to the frequency:</p>
+<div class="arithmatex">\[f = \frac{c_0 \div  256}{1000} \times \sqrt{1 + \text{wbotc}\times T}\]</div>
+<p><strong>SBE 37IM telemetered and recovered_host</strong> (CTDMO):</p>
+<div class="arithmatex">\[C_{L1} = c_0 \div 100000 - 0.5\]</div>
+<p><strong>SBE 37 Deep SeapHOx V2 streamed and recovered_instrument</strong> (PHSEN):
+Uses the same wbotc polynomial as the SBE 37IM instrument-recovered path.
+Unlike the standalone SBE 37IM path, the raw A/D counts <span class="arithmatex">\(c_0\)</span> are used
+directly as the frequency input (no <span class="arithmatex">\(\div 256\)</span> scaling step):</p>
+<div class="arithmatex">\[f = c_0 \times \sqrt{1 + \text{wbotc} \times T}\ /\ 1000\]</div>
+<div class="arithmatex">\[C_{L1} = \frac{g + h f^2 + i f^3 + j f^4}{1 + \text{CTcor} \times T
++ \text{CPcor} \times P}\]</div>
+<p>where <span class="arithmatex">\(T\)</span> is TEMPWAT_L1 (<span class="arithmatex">\(^\circ\)</span>C), <span class="arithmatex">\(P\)</span> is PRESWAT_L1 (dbar), and <span class="arithmatex">\(g\)</span>, <span class="arithmatex">\(h\)</span>, <span class="arithmatex">\(i\)</span>, <span class="arithmatex">\(j\)</span>, wbotc, CTcor, CPcor (<code>g</code>, <code>h</code>,
+<code>i</code>, <code>j</code>, <code>wbotc</code>, <code>ctcor</code>, <code>cpcor</code>) are from the factory calibration sheet.
+See <a href="../../seaphox/">Deep SeapHOx V2</a> for instrument architecture context.</p>
+<p><strong>SBE 52MP</strong> (CTDPF-K/L): Linear scaling with a unit conversion from
+mS cm<span class="arithmatex">\(^{-1}\)</span> to S m<span class="arithmatex">\(^{-1}\)</span>:</p>
+<div class="arithmatex">\[C_{L1} = (c_0 \div 10000 - 0.5) \times 0.1\]</div>
+<p><strong>CTDGV (glider)</strong>: The SBE GPCTD computes conductivity onboard the vehicle
+using vendor software and transmits the result already in S m<span class="arithmatex">\(^{-1}\)</span>;
+<code>ion-functions</code> is not invoked for those deployments.</p>
+<p>Output accuracy: SBE 16Plus V2 <span class="arithmatex">\(\pm 0.0005\)</span> S m<span class="arithmatex">\(^{-1}\)</span>; SBE 37IM
+<span class="arithmatex">\(\pm 0.0003\)</span> S m<span class="arithmatex">\(^{-1}\)</span>.</p>
+<hr />
+<h3 id="tempwat_l1-seawater-temperature">TEMPWAT_L1 -- Seawater Temperature</h3>
+<p>The raw seawater temperature (TEMPWAT_L0, <span class="arithmatex">\(t_0\)</span>), is reported in either 
+counts or in L1 units (<span class="arithmatex">\(^\circ\)</span>C), but scaled to an integer to compress the 
+data for internal storage or transmission. The converted seawater temperature, 
+TEMPWAT_L1, is reported in <span class="arithmatex">\(^\circ\)</span>C. Conversions from L0 to L1 depend on the 
+instrument class and/or data delivery method.</p>
+<h4 id="calibration-coefficients_1">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>a0</code></td>
+<td><code>CC_a0</code></td>
+<td>Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered)</td>
+</tr>
+<tr>
+<td><code>a1</code></td>
+<td><code>CC_a1</code></td>
+<td>Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered)</td>
+</tr>
+<tr>
+<td><code>a2</code></td>
+<td><code>CC_a2</code></td>
+<td>Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered)</td>
+</tr>
+<tr>
+<td><code>a3</code></td>
+<td><code>CC_a3</code></td>
+<td>Factory calibration sheet (SBE 16Plus, SBE 37IM instrument-recovered)</td>
+</tr>
+<tr>
+<td><code>a0</code></td>
+<td><code>CC_ta0</code></td>
+<td>Factory calibration sheet (Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>a1</code></td>
+<td><code>CC_ta1</code></td>
+<td>Factory calibration sheet (Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>a2</code></td>
+<td><code>CC_ta2</code></td>
+<td>Factory calibration sheet (Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>a3</code></td>
+<td><code>CC_ta3</code></td>
+<td>Factory calibration sheet (Deep SeapHOx V2)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="tempwat_l1-algorithm">TEMPWAT_L1 Algorithm</h4>
+<p><strong>SBE 16Plus</strong> (CTDBP, CTDPF-A/B): Raw counts <span class="arithmatex">\(t_0\)</span> are converted to seawater
+temperature (<span class="arithmatex">\(^\circ\)</span>C) via an intermediate resistance quantity <span class="arithmatex">\(R\)</span>:</p>
+<div class="arithmatex">\[MV = \frac{t_0 - 524288}{1.6 \times 10^7}\]</div>
+<div class="arithmatex">\[R = \frac{MV \times 2.9 \times 10^9 + 1.024 \times 10^8}{2.048 \times 10^4 - MV \times 2.0 \times 10^5}\]</div>
+<div class="arithmatex">\[T_{L1} = \frac{1}{a_0 + a_1 \ln R + a_2 \ln^2 R + a_3 \ln^3 R} - 273.15\]</div>
+<p>where <span class="arithmatex">\(a_0\)</span>, <span class="arithmatex">\(a_1\)</span>, <span class="arithmatex">\(a_2\)</span>, <span class="arithmatex">\(a_3\)</span> (<code>a0</code>-<code>a3</code>) are from the factory calibration sheet.</p>
+<p><strong>SBE 37IM telemetered and recovered_host</strong> (CTDMO): The instrument outputs
+engineering units scaled to an integer. The L1 conversion is:</p>
+<div class="arithmatex">\[T_{L1} = t_0 / 10000 - 10\]</div>
+<p><strong>SBE 37IM instrument-recovered</strong> (CTDMO): Raw decimal counts <span class="arithmatex">\(t_0\)</span> are
+retained in the instrument-stored file and require the calibration-coefficient equation, with <span class="arithmatex">\(a_0\)</span>-<span class="arithmatex">\(a_3\)</span> (<code>a0</code>-<code>a3</code>)
+from the factory calibration sheet:</p>
+<div class="arithmatex">\[T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15\]</div>
+<p><strong>SBE 37 Deep SeapHOx V2 streamed and recovered_instrument</strong> (PHSEN):
+Raw temperature counts <span class="arithmatex">\(t_0\)</span> are converted using the same log polynomial as
+the SBE 37IM instrument-recovered path, with the raw A/D counts used directly
+(no scaling step before the logarithm):</p>
+<div class="arithmatex">\[T_{L1} = \frac{1}{a_0 + a_1 \ln t_0 + a_2 \ln^2 t_0 + a_3 \ln^3 t_0} - 273.15\]</div>
+<p>where <span class="arithmatex">\(a_0\)</span>, <span class="arithmatex">\(a_1\)</span>, <span class="arithmatex">\(a_2\)</span>, <span class="arithmatex">\(a_3\)</span> (<code>a0</code>-<code>a3</code>) are from the factory calibration sheet.</p>
+<p><strong>SBE 52MP</strong> (CTDPF-K/L): The instrument outputs engineering units scaled
+to an integer. The L1 conversion is:</p>
+<div class="arithmatex">\[T_{L1} = t_0 / 10000 - 5\]</div>
+<p><strong>CTDGV (glider)</strong>: The SBE GPCTD computes temperature onboard the vehicle
+using vendor software and transmits the result already in <span class="arithmatex">\(^\circ\)</span>C;
+<code>ion-functions</code> is not invoked for those deployments.</p>
+<p>Output accuracy: SBE 16Plus V2 <span class="arithmatex">\(\pm 0.005\ ^\circ\)</span>C; SBE 37IM
+<span class="arithmatex">\(\pm 0.002\ ^\circ\)</span>C.</p>
+<hr />
+<h3 id="preswat_l1-seawater-pressure">PRESWAT_L1 -- Seawater Pressure</h3>
+<p>The raw seawater pressure (PRESWAT_L0, <span class="arithmatex">\(p_0\)</span>), is reported in either 
+counts, frequency or in scaled L1 units (dbar). The converted seawater 
+pressure, PRESWAT_L1, is reported in dbar relative to one standard atmosphere
+(10.1325 dbar). As with temperature, conversions from L0 to L1 depend on the 
+instrument class and/or data delivery method.</p>
+<h4 id="calibration-coefficients_2">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pa0</code></td>
+<td><code>CC_pa0</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>pa1</code></td>
+<td><code>CC_pa1</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>pa2</code></td>
+<td><code>CC_pa2</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ptca0</code></td>
+<td><code>CC_ptca0</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ptca1</code></td>
+<td><code>CC_ptca1</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ptca2</code></td>
+<td><code>CC_ptca2</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ptcb0</code></td>
+<td><code>CC_ptcb0</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ptcb1</code></td>
+<td><code>CC_ptcb1</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ptcb2</code></td>
+<td><code>CC_ptcb2</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ptempa0</code></td>
+<td><code>CC_ptempa0</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ptempa1</code></td>
+<td><code>CC_ptempa1</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>ptempa2</code></td>
+<td><code>CC_ptempa2</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge, SBE 37IM instrument-recovered, Deep SeapHOx V2)</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td><code>CC_offset</code></td>
+<td>Factory calibration sheet (SBE 16Plus strain gauge)</td>
+</tr>
+<tr>
+<td><code>C1</code></td>
+<td><code>CC_C1</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>C2</code></td>
+<td><code>CC_C2</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>C3</code></td>
+<td><code>CC_C3</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>D1</code></td>
+<td><code>CC_D1</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>D2</code></td>
+<td><code>CC_D2</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>T1</code></td>
+<td><code>CC_T1</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>T2</code></td>
+<td><code>CC_T2</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>T3</code></td>
+<td><code>CC_T3</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>T4</code></td>
+<td><code>CC_T4</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>T5</code></td>
+<td><code>CC_T5</code></td>
+<td>Factory calibration sheet (SBE 16Plus Digiquartz)</td>
+</tr>
+<tr>
+<td><code>p_range_psia</code></td>
+<td><code>CC_p_range</code></td>
+<td>Factory calibration sheet (SBE 37IM telemetered and recovered_host)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="preswat_l1-algorithm">PRESWAT_L1 Algorithm</h4>
+<p><strong>SBE 16Plus -- strain-gauge pressure sensor</strong> (CTDBP except N/O, CTDPF-A/B):</p>
+<div class="arithmatex">\[t_v = pt_0 \div  13107\]</div>
+<div class="arithmatex">\[t = \text{PTEMPA0} + \text{PTEMPA1} \times t_v + \text{PTEMPA2} \times t_v^2\]</div>
+<div class="arithmatex">\[x = p_0 - \text{PTCA0} - \text{PTCA1 }\times t - \text{PTCA2} \times t^2\]</div>
+<div class="arithmatex">\[n = \frac{x \times \text{PTCB0}}{\text{PTCB0} + \text{PTCB1} \times t + \text{PTCB2} \times t^2}\]</div>
+<div class="arithmatex">\[p_{\text{psi}} = \text{PA0} + \text{PA1} \times n + \text{PA2} \times n^2\]</div>
+<div class="arithmatex">\[P_{L1}\ = p_{\text{psi}} \times 0.689475729 - 10.1325 + \delta\]</div>
+<p>where <span class="arithmatex">\(pt_0\)</span> is the pressure sensor thermistor in counts, <span class="arithmatex">\(\delta\)</span> is the Druck sensor offset correction (<code>offset</code>,
+dbar; default 0), and PTEMPA0-PTEMPA2, PTCA0-PTCA2, PTCB0-PTCB2, and PA0-PA2 (<code>ptempa0</code>-<code>ptempa2</code>, <code>ptca0</code>-<code>ptca2</code>,
+<code>ptcb0</code>-<code>ptcb2</code>, <code>pa0</code>-<code>pa2</code>) are all from the factory calibration sheet.</p>
+<p><strong>SBE 16Plus -- digiquartz pressure sensor</strong> (CTDBP-N and CTDBP-O only):</p>
+<div class="arithmatex">\[p_f = p_0 \div  256\]</div>
+<div class="arithmatex">\[t_v = t_0 \div  13107\]</div>
+<div class="arithmatex">\[U = 23.7(t_v + 9.7917) - 273.15\]</div>
+<div class="arithmatex">\[C = C_1 + C_2 U + C_3 U^2\]</div>
+<div class="arithmatex">\[D = D_1 + D_2 U\]</div>
+<div class="arithmatex">\[T_0 = T_1 + T_2 U + T_3 U^2 + T_4 U^3 + T_5 U^4\]</div>
+<div class="arithmatex">\[\tau = (1\div p_f) \times 10^6\]</div>
+<div class="arithmatex">\[p_{\text{psi}} = C\left(1 - \frac{T_0^2}{\tau^2}\right)\left(1 - D\left(1 - \frac{T_0^2}{\tau^2}\right)\right)\]</div>
+<div class="arithmatex">\[P_{L1} = p_{\text{psi}} \times 0.689475729 - 10.1325\]</div>
+<p>where <span class="arithmatex">\(C_1\)</span>-<span class="arithmatex">\(C_3\)</span>, <span class="arithmatex">\(D_1\)</span>-<span class="arithmatex">\(D_2\)</span>, and <span class="arithmatex">\(T_1\)</span>-<span class="arithmatex">\(T_5\)</span> (<code>C1</code>-<code>C3</code>, <code>D1</code>-<code>D2</code>, <code>T1</code>-<code>T5</code>) are from the factory calibration
+sheet.</p>
+<p><strong>SBE 37IM telemetered and recovered_host</strong> (CTDMO): Raw pressure is a scaled 
+integer relative to the full-scale pressure range <span class="arithmatex">\(P_{rng}\)</span> (<code>p_range_psia</code>, psi, from the factory calibration
+sheet):</p>
+<div class="arithmatex">\[P_{rng,dbar} = (P_{rng,psi} - 14.7) \times 0.6894757\]</div>
+<div class="arithmatex">\[P_{L1} = \frac{p_0 \times P_{rng,dbar}}{0.85 \times 65536} - 0.05 \times P_{rng,dbar}\]</div>
+<p><strong>SBE 37IM instrument-recovered</strong> (CTDMO): Uses the same strain-gauge
+polynomial as the SBE 16Plus strain-gauge path, but with the raw thermistor
+count <span class="arithmatex">\(pt_0\)</span> used directly in the polynomial rather than being first
+converted to voltage.</p>
+<p><strong>SBE 37 Deep SeapHOx V2 streamed and recovered_instrument</strong> (PHSEN):
+Uses the same strain-gauge polynomial as the SBE 16Plus strain-gauge path.
+The pressure temperature compensation voltage <span class="arithmatex">\(t_v\)</span> is first converted from
+counts via <span class="arithmatex">\(t_v = pt_0 \div 13107\)</span>, then:</p>
+<div class="arithmatex">\[t = \text{PTEMPA0} + \text{PTEMPA1} \times t_v + \text{PTEMPA2} \times t_v^2\]</div>
+<div class="arithmatex">\[x = p_0 - \text{PTCA0} - \text{PTCA1} \times t - \text{PTCA2} \times t^2\]</div>
+<div class="arithmatex">\[n = \frac{x \times \text{PTCB0}}{\text{PTCB0} + \text{PTCB1} \times t + \text{PTCB2} \times t^2}\]</div>
+<div class="arithmatex">\[p_{\text{psi}} = \text{PA0} + \text{PA1} \times n + \text{PA2} \times n^2\]</div>
+<div class="arithmatex">\[P_{L1} = (p_{\text{psi}} - 14.7) \times 0.689475729\]</div>
+<p>where <span class="arithmatex">\(p_0\)</span> is the raw pressure count and all calibration coefficients are from the factory calibration sheet.</p>
+<p><strong>SBE 52MP</strong> (CTDPF-K/L):</p>
+<div class="arithmatex">\[P_{L1} = p_0 \div 100 - 10\]</div>
+<p><strong>CTDGV (glider)</strong>: The SBE GPCTD reports pressure in bar; <code>ion-functions</code>
+converts to dbar:</p>
+<div class="arithmatex">\[P_{L1}\ [\text{dbar}] = p_{\text{bar}} \times 10\]</div>
+<p>Output accuracy: SBE 16Plus V2 and SBE 37IM 0.1 % of full-scale range.</p>
+<hr />
+<h3 id="pracsal_l2-seawater-practical-salinity">PRACSAL_L2 -- Seawater Practical Salinity</h3>
+<p>Seawater practical salinity is computed from L1 conductivity, temperature, and
+pressure using the TEOS-10 GSW library function <code>gsw.SP_from_C</code>, which
+implements the Practical Salinity Scale 1978 (PSS-78) algorithm.
+Conductivity must be converted from S m<span class="arithmatex">\(^{-1}\)</span> to mS cm<span class="arithmatex">\(^{-1}\)</span> (multiply by 10) 
+before calling the GSW function.</p>
+<p>Seawater practical salinity is dimensionless and reported without units on 
+the PSS-78 scale.</p>
+<div class="arithmatex">\[PS_{L2} =\text{gsw.SP_from_C}(C_{L1} * 10, T_{L1}, P_{L1})\]</div>
+<hr />
+<h3 id="density_l2-in-situ-density">DENSITY_L2 -- In-situ Density</h3>
+<p>In-situ seawater density is computed via a three-step chain using the TEOS-10
+GSW library:</p>
+<p><strong>Step 1 -- Absolute Salinity:</strong></p>
+<div class="arithmatex">\[S_A = \text{gsw.SA_from_SP}(PS_{L2}, P_{L1}, \text{lon}, \text{lat})\]</div>
+<p>Absolute Salinity <span class="arithmatex">\(S_A\)</span> (g kg<span class="arithmatex">\(^{-1}\)</span>) is derived from Practical Salinity
+using a lookup table of the Absolute Salinity Anomaly (SAAR) as a function of
+location and pressure. For moored instruments, latitude and longitude are the
+mooring position metadata; for gliders, they are the vehicle position at each
+sample.</p>
+<p><strong>Step 2 -- Conservative Temperature:</strong></p>
+<div class="arithmatex">\[\Theta = \text{gsw.CT_from_t}(S_A, T_{L1}, P_{L1})\]</div>
+<p><strong>Step 3 -- In-situ density:</strong></p>
+<div class="arithmatex">\[\rho = \text{gsw.rho}(S_A, \Theta, p)\]</div>
+<p>Density is computed using the computationally-efficient 48-term expression
+described in McDougall et al. (2011).</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe16plus_tempwat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe16plus_tempwat(t0, a0, a1, a2, a3)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute TEMPWAT_L1 from SBE 16Plus raw temperature counts.</p>
+<p>Applies the Sea-Bird ITS-90 thermistor conversion for the SBE 16Plus
+V2 (OutputFormat 0). Covers all CTDBP instrument series and CTDPF
+series A and B.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>t0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw temperature counts (TEMPWAT_L0) [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Temperature calibration coefficient a0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Temperature calibration coefficient a1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Temperature calibration coefficient a2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a3</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Temperature calibration coefficient a3.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>t</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater temperature (TEMPWAT_L1) [degC, ITS-90].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Algorithm converts the 6-character hex integer t0 (already decoded
+to decimal counts by the CTD driver) to ITS-90 temperature via:</p>
+<pre><code>MV = (t0 - 524288) / 1.6e7
+R  = (MV * 2.9e9 + 1.024e8) / (2.048e4 - MV * 2.0e5)
+T  = 1 / (a0 + a1*ln(R) + a2*ln(R)^2 + a3*ln(R)^3) - 273.15
+</code></pre>
+<p>Calibration coefficients a0-a3 are from factory calibration sheets.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe16plus_tempwat(t0, a0, a1, a2, a3):
+    """
+    Compute TEMPWAT_L1 from SBE 16Plus raw temperature counts.
+
+    Applies the Sea-Bird ITS-90 thermistor conversion for the SBE 16Plus
+    V2 (OutputFormat 0). Covers all CTDBP instrument series and CTDPF
+    series A and B.
+
+    Parameters
+    ----------
+    t0 : array_like
+        Raw temperature counts (TEMPWAT_L0) [counts].
+    a0 : float
+        Temperature calibration coefficient a0.
+    a1 : float
+        Temperature calibration coefficient a1.
+    a2 : float
+        Temperature calibration coefficient a2.
+    a3 : float
+        Temperature calibration coefficient a3.
+
+    Returns
+    -------
+    t : ndarray
+        Seawater temperature (TEMPWAT_L1) [degC, ITS-90].
+
+    Notes
+    -----
+    Algorithm converts the 6-character hex integer t0 (already decoded
+    to decimal counts by the CTD driver) to ITS-90 temperature via:
+
+        MV = (t0 - 524288) / 1.6e7
+        R  = (MV * 2.9e9 + 1.024e8) / (2.048e4 - MV * 2.0e5)
+        T  = 1 / (a0 + a1*ln(R) + a2*ln(R)^2 + a3*ln(R)^3) - 273.15
+
+    Calibration coefficients a0-a3 are from factory calibration sheets.
+    """
+    mv = (t0 - 524288) / 1.6e7
+    r = (mv * 2.9e9 + 1.024e8) / (2.048e4 - mv * 2.0e5)
+    t = 1 / (a0 + a1 * np.log(r) + a2 * np.log(r)**2 + a3 * np.log(r)**3) - 273.15
+    return t</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-12</td>
+<td>Luke Campbell</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-04-12</td>
+<td>Christopher Wingard</td>
+<td>Minor edits</td>
+</tr>
+<tr>
+<td>2013-05-10</td>
+<td>Christopher Wingard</td>
+<td>Minor edits to comments</td>
+</tr>
+<tr>
+<td>2014-01-31</td>
+<td>Russell Desiderio</td>
+<td>Standardized comment format</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe37im_tempwat_instrument_recovered" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe37im_tempwat_instrument_recovered(t0, a0, a1, a2, a3)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute TEMPWAT_L1 from SBE 37IM instrument-recovered counts.</p>
+<p>Applies the Sea-Bird ITS-90 thermistor conversion for data recovered
+directly from an SBE 37IM instrument (all series), where the raw
+value is stored as a decimal count rather than scaled engineering
+units.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>t0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw temperature counts (TEMPWAT_L0) recovered directly from
+the CTD instrument [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Temperature calibration coefficient a0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Temperature calibration coefficient a1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Temperature calibration coefficient a2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a3</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Temperature calibration coefficient a3.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>t</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater temperature (TEMPWAT_L1) [degC, ITS-90].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Unlike telemetered and recovered_host data (see
+ctd_sbe37im_tempwat), instrument-recovered data retains the raw
+count t0, which is used directly in the temperature equation:</p>
+<pre><code>T = 1 / (a0 + a1*ln(t0) + a2*ln(t0)^2 + a3*ln(t0)^3) - 273.15
+</code></pre>
+<p>As of June 2016 this processing path was not included in the
+TEMPWAT DPS (DCN 1341-00010). Calibration coefficients a0--a3 are
+from factory calibration sheets.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe37im_tempwat_instrument_recovered(t0, a0, a1, a2, a3):
+    """
+    Compute TEMPWAT_L1 from SBE 37IM instrument-recovered counts.
+
+    Applies the Sea-Bird ITS-90 thermistor conversion for data recovered
+    directly from an SBE 37IM instrument (all series), where the raw
+    value is stored as a decimal count rather than scaled engineering
+    units.
+
+    Parameters
+    ----------
+    t0 : array_like
+        Raw temperature counts (TEMPWAT_L0) recovered directly from
+        the CTD instrument [counts].
+    a0 : float
+        Temperature calibration coefficient a0.
+    a1 : float
+        Temperature calibration coefficient a1.
+    a2 : float
+        Temperature calibration coefficient a2.
+    a3 : float
+        Temperature calibration coefficient a3.
+
+    Returns
+    -------
+    t : ndarray
+        Seawater temperature (TEMPWAT_L1) [degC, ITS-90].
+
+    Notes
+    -----
+    Unlike telemetered and recovered_host data (see
+    ctd_sbe37im_tempwat), instrument-recovered data retains the raw
+    count t0, which is used directly in the temperature equation:
+
+        T = 1 / (a0 + a1*ln(t0) + a2*ln(t0)^2 + a3*ln(t0)^3) - 273.15
+
+    As of June 2016 this processing path was not included in the
+    TEMPWAT DPS (DCN 1341-00010). Calibration coefficients a0--a3 are
+    from factory calibration sheets.
+    """
+    t = 1 / (a0 + a1 * np.log(t0) + a2 * np.log(t0)**2 + a3 * np.log(t0)**3) - 273.15
+    return t</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2016-06-16</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe37im_tempwat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe37im_tempwat(t0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute TEMPWAT_L1 from SBE 37IM telemetered/recovered_host counts.</p>
+<p>Applies the linear scaling for SBE 37IM (all series) telemetered
+and recovered_host data streams (CTDMO instrument class). The
+instrument pre-scales raw counts to engineering units before
+transmission; no calibration coefficients are required.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>t0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw temperature counts (TEMPWAT_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>t</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater temperature (TEMPWAT_L1) [degC, ITS-90].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The SBE 37IM encodes temperature as engineering units in
+hexadecimal (OutputFormat 0). The conversion is:</p>
+<pre><code>T = t0 / 10000 - 10
+</code></pre>
+<p>This function does not apply to instrument-recovered data; use
+ctd_sbe37im_tempwat_instrument_recovered for that stream.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe37im_tempwat(t0):
+    """
+    Compute TEMPWAT_L1 from SBE 37IM telemetered/recovered_host counts.
+
+    Applies the linear scaling for SBE 37IM (all series) telemetered
+    and recovered_host data streams (CTDMO instrument class). The
+    instrument pre-scales raw counts to engineering units before
+    transmission; no calibration coefficients are required.
+
+    Parameters
+    ----------
+    t0 : array_like
+        Raw temperature counts (TEMPWAT_L0) [counts].
+
+    Returns
+    -------
+    t : ndarray
+        Seawater temperature (TEMPWAT_L1) [degC, ITS-90].
+
+    Notes
+    -----
+    The SBE 37IM encodes temperature as engineering units in
+    hexadecimal (OutputFormat 0). The conversion is:
+
+        T = t0 / 10000 - 10
+
+    This function does not apply to instrument-recovered data; use
+    ctd_sbe37im_tempwat_instrument_recovered for that stream.
+    """
+    t = t0 / 10000.0 - 10.0
+    return t</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-02-05</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe52mp_tempwat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe52mp_tempwat(t0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute TEMPWAT_L1 from SBE 52MP raw temperature counts.</p>
+<p>Applies the linear scaling for SBE 52MP instruments (CTDPF series
+C, K, and L).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>t0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw temperature counts (TEMPWAT_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>t</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater temperature (TEMPWAT_L1) [degC, ITS-90].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The conversion is:</p>
+<pre><code>T = t0 / 10000 - 5
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe52mp_tempwat(t0):
+    """
+    Compute TEMPWAT_L1 from SBE 52MP raw temperature counts.
+
+    Applies the linear scaling for SBE 52MP instruments (CTDPF series
+    C, K, and L).
+
+    Parameters
+    ----------
+    t0 : array_like
+        Raw temperature counts (TEMPWAT_L0) [counts].
+
+    Returns
+    -------
+    t : ndarray
+        Seawater temperature (TEMPWAT_L1) [degC, ITS-90].
+
+    Notes
+    -----
+    The conversion is:
+
+        T = t0 / 10000 - 5
+    """
+    t = t0 / 10000.0 - 5.0
+    return t</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-02-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe16plus_preswat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe16plus_preswat(p0, t0, ptempa0, ptempa1, ptempa2, ptca0, ptca1, ptca2, ptcb0, ptcb1, ptcb2, pa0, pa1, pa2, offset=0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute PRESWAT_L1 from SBE 16Plus strain-gauge pressure counts.</p>
+<p>Applies the Sea-Bird strain-gauge pressure conversion for SBE 16Plus
+instruments equipped with an internal strain-gauge pressure sensor
+(PType=1). Covers most CTDBP instrument series (exceptions: N and O)
+and CTDPF series A and B.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>p0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw pressure counts (PRESWAT_L0) [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>t0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw temperature counts from the pressure-sensor thermistor
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptempa0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTEMPA0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptempa1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTEMPA1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptempa2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTEMPA2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptca0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCA0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptca1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCA1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptca2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCA2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptcb0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCB0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptcb1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCB1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptcb2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCB2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pa0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PA0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pa1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PA1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pa2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PA2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>offset</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Druck sensor offset correction [dbar]. Default is 0.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>p</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Algorithm (from OOI DPS DCN 1341-00020, PType=1):</p>
+<pre><code>t_v = t0 / 13107
+t   = PTEMPA0 + PTEMPA1*t_v + PTEMPA2*t_v^2
+x   = p0 - PTCA0 - PTCA1*t - PTCA2*t^2
+n   = x * PTCB0 / (PTCB0 + PTCB1*t + PTCB2*t^2)
+p_psi = PA0 + PA1*n + PA2*n^2
+P_L1  = p_psi * 0.689475729 - 10.1325 + offset
+</code></pre>
+<p>All calibration coefficients are from factory calibration sheets.
+The optional offset corrects a known Druck sensor bias.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe16plus_preswat(p0, t0, ptempa0, ptempa1, ptempa2,
+                          ptca0, ptca1, ptca2, ptcb0, ptcb1, ptcb2,
+                          pa0, pa1, pa2, offset=0):
+    """
+    Compute PRESWAT_L1 from SBE 16Plus strain-gauge pressure counts.
+
+    Applies the Sea-Bird strain-gauge pressure conversion for SBE 16Plus
+    instruments equipped with an internal strain-gauge pressure sensor
+    (PType=1). Covers most CTDBP instrument series (exceptions: N and O)
+    and CTDPF series A and B.
+
+    Parameters
+    ----------
+    p0 : array_like
+        Raw pressure counts (PRESWAT_L0) [counts].
+    t0 : array_like
+        Raw temperature counts from the pressure-sensor thermistor
+        [counts].
+    ptempa0 : float
+        Strain-gauge pressure calibration coefficient PTEMPA0.
+    ptempa1 : float
+        Strain-gauge pressure calibration coefficient PTEMPA1.
+    ptempa2 : float
+        Strain-gauge pressure calibration coefficient PTEMPA2.
+    ptca0 : float
+        Strain-gauge pressure calibration coefficient PTCA0.
+    ptca1 : float
+        Strain-gauge pressure calibration coefficient PTCA1.
+    ptca2 : float
+        Strain-gauge pressure calibration coefficient PTCA2.
+    ptcb0 : float
+        Strain-gauge pressure calibration coefficient PTCB0.
+    ptcb1 : float
+        Strain-gauge pressure calibration coefficient PTCB1.
+    ptcb2 : float
+        Strain-gauge pressure calibration coefficient PTCB2.
+    pa0 : float
+        Strain-gauge pressure calibration coefficient PA0.
+    pa1 : float
+        Strain-gauge pressure calibration coefficient PA1.
+    pa2 : float
+        Strain-gauge pressure calibration coefficient PA2.
+    offset : float, optional
+        Druck sensor offset correction [dbar]. Default is 0.
+
+    Returns
+    -------
+    p : ndarray
+        Seawater pressure (PRESWAT_L1) [dbar].
+
+    Notes
+    -----
+    Algorithm (from OOI DPS DCN 1341-00020, PType=1):
+
+        t_v = t0 / 13107
+        t   = PTEMPA0 + PTEMPA1*t_v + PTEMPA2*t_v^2
+        x   = p0 - PTCA0 - PTCA1*t - PTCA2*t^2
+        n   = x * PTCB0 / (PTCB0 + PTCB1*t + PTCB2*t^2)
+        p_psi = PA0 + PA1*n + PA2*n^2
+        P_L1  = p_psi * 0.689475729 - 10.1325 + offset
+
+    All calibration coefficients are from factory calibration sheets.
+    The optional offset corrects a known Druck sensor bias.
+    """
+    # compute calibration parameters
+    tv = t0 / 13107.0
+    t = ptempa0 + ptempa1 * tv + ptempa2 * tv**2
+    x = p0 - ptca0 - ptca1 * t - ptca2 * t**2
+    n = x * ptcb0 / (ptcb0 + ptcb1 * t + ptcb2 * t**2)
+
+    # compute pressure in psi, rescale and compute in dbar and return
+    p_psi = pa0 + pa1 * n + pa2 * n**2
+    p_dbar = (p_psi * 0.689475729) - 10.1325
+    return p_dbar + offset</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-12</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-05-10</td>
+<td>Christopher Wingard</td>
+<td>Minor edits to comments</td>
+</tr>
+<tr>
+<td>2014-01-31</td>
+<td>Russell Desiderio</td>
+<td>Standardized comment format</td>
+</tr>
+<tr>
+<td>2017-03-31</td>
+<td>Dan Mergens</td>
+<td>Added Druck offset correction</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe16digi_preswat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe16digi_preswat(p0, t0, C1, C2, C3, D1, D2, T1, T2, T3, T4, T5)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute PRESWAT_L1 from SBE 16Plus digiquartz pressure counts.</p>
+<p>Applies the Sea-Bird digiquartz pressure conversion for SBE 16Plus
+instruments equipped with a digiquartz pressure sensor (PType=3).
+Applies exclusively to CTDBP-N and CTDBP-O instruments.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>p0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw pressure counts (PRESWAT_L0) [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>t0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw temperature counts from the pressure-sensor thermistor
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>C1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient C1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>C2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient C2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>C3</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient C3.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>D1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient D1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>D2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient D2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient T1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient T2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T3</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient T3.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T4</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient T4.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>T5</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Digiquartz pressure calibration coefficient T5.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>p</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Algorithm (from OOI DPS DCN 1341-00020, PType=3):</p>
+<pre><code>pf  = p0 / 256          (pressure frequency in Hz)
+t_v = t0 / 13107        (thermistor voltage)
+U   = 23.7*(t_v + 9.7917) - 273.15
+C   = C1 + C2*U + C3*U^2
+D   = D1 + D2*U
+T0  = T1 + T2*U + T3*U^2 + T4*U^3 + T5*U^4
+T   = (1/pf) * 1e6      (pressure period in microseconds)
+p_psi = C*(1 - T0^2/T^2)*(1 - D*(1 - T0^2/T^2))
+P_L1  = p_psi * 0.689475729 - 10.1325
+</code></pre>
+<p>All calibration coefficients are from factory calibration sheets.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe16digi_preswat(p0, t0, C1, C2, C3, D1, D2, T1, T2, T3, T4, T5):
+    """
+    Compute PRESWAT_L1 from SBE 16Plus digiquartz pressure counts.
+
+    Applies the Sea-Bird digiquartz pressure conversion for SBE 16Plus
+    instruments equipped with a digiquartz pressure sensor (PType=3).
+    Applies exclusively to CTDBP-N and CTDBP-O instruments.
+
+    Parameters
+    ----------
+    p0 : array_like
+        Raw pressure counts (PRESWAT_L0) [counts].
+    t0 : array_like
+        Raw temperature counts from the pressure-sensor thermistor
+        [counts].
+    C1 : float
+        Digiquartz pressure calibration coefficient C1.
+    C2 : float
+        Digiquartz pressure calibration coefficient C2.
+    C3 : float
+        Digiquartz pressure calibration coefficient C3.
+    D1 : float
+        Digiquartz pressure calibration coefficient D1.
+    D2 : float
+        Digiquartz pressure calibration coefficient D2.
+    T1 : float
+        Digiquartz pressure calibration coefficient T1.
+    T2 : float
+        Digiquartz pressure calibration coefficient T2.
+    T3 : float
+        Digiquartz pressure calibration coefficient T3.
+    T4 : float
+        Digiquartz pressure calibration coefficient T4.
+    T5 : float
+        Digiquartz pressure calibration coefficient T5.
+
+    Returns
+    -------
+    p : ndarray
+        Seawater pressure (PRESWAT_L1) [dbar].
+
+    Notes
+    -----
+    Algorithm (from OOI DPS DCN 1341-00020, PType=3):
+
+        pf  = p0 / 256          (pressure frequency in Hz)
+        t_v = t0 / 13107        (thermistor voltage)
+        U   = 23.7*(t_v + 9.7917) - 273.15
+        C   = C1 + C2*U + C3*U^2
+        D   = D1 + D2*U
+        T0  = T1 + T2*U + T3*U^2 + T4*U^3 + T5*U^4
+        T   = (1/pf) * 1e6      (pressure period in microseconds)
+        p_psi = C*(1 - T0^2/T^2)*(1 - D*(1 - T0^2/T^2))
+        P_L1  = p_psi * 0.689475729 - 10.1325
+
+    All calibration coefficients are from factory calibration sheets.
+    """
+    # Convert raw pressure input to frequency [Hz]
+    pf = p0 / 256.0
+
+    # Convert raw temperature input to voltage
+    tv = t0 / 13107.0
+
+    # Calculate U (thermistor temp):
+    U = (23.7 * (tv + 9.7917)) - 273.15
+
+    # Calculate calibration parameters
+    C = C1 + C2 * U + C3 * U**2
+    D = D1 + D2 * U
+    T0 = T1 + T2 * U + T3 * U**2 + T4 * U**3 + T5 * U**4
+
+    # Calculate T (pressure period, in microseconds):
+    T = (1.0 / pf) * 1.0e6
+
+    # compute pressure in psi, rescale and compute in dbar and return
+    p_psi = C * (1.0 - T0**2 / T**2) * (1.0 - D * (1.0 - T0**2 / T**2))
+    p_dbar = (p_psi * 0.689475729) - 10.1325
+    return p_dbar</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>Per the SBE 16Plus V2 User Manual, the raw pressure input <code>p0</code> is in units
+of Hz (counts divided by 256), not raw A/D counts; the code implements this
+correctly.</p>
+<h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-05-10</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-01-31</td>
+<td>Russell Desiderio</td>
+<td>Standardized comment format; corrected pressure period calculation to use Hz input</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe37im_preswat_instrument_recovered" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe37im_preswat_instrument_recovered(p0, pt0, ptempa0, ptempa1, ptempa2, ptca0, ptca1, ptca2, ptcb0, ptcb1, ptcb2, pa0, pa1, pa2)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute PRESWAT_L1 from SBE 37IM instrument-recovered pressure counts.</p>
+<p>Applies the Sea-Bird strain-gauge pressure conversion for data
+recovered directly from an SBE 37IM instrument (all series).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>p0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw pressure counts (PRESWAT_L0) recovered directly from the
+CTD instrument [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pt0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw temperature counts from the pressure-sensor thermistor
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptempa0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTEMPA0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptempa1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTEMPA1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptempa2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTEMPA2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptca0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCA0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptca1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCA1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptca2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCA2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptcb0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCB0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptcb1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCB1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptcb2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PTCB2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pa0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PA0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pa1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PA1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pa2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Strain-gauge pressure calibration coefficient PA2.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>p</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Unlike telemetered and recovered_host data (see ctd_sbe37im_preswat),
+instrument-recovered data retains raw strain-gauge counts. The
+algorithm matches the SBE 16Plus strain-gauge path but uses pt0
+directly (not scaled to voltage):</p>
+<pre><code>t   = PTEMPA0 + PTEMPA1*pt0 + PTEMPA2*pt0^2
+x   = p0 - PTCA0 - PTCA1*t - PTCA2*t^2
+n   = x * PTCB0 / (PTCB0 + PTCB1*t + PTCB2*t^2)
+p_psi = PA0 + PA1*n + PA2*n^2
+P_L1  = p_psi * 0.689475729 - 10.1325
+</code></pre>
+<p>As of June 2016 this processing path was not included in the
+PRESWAT DPS (DCN 1341-00020). Calibration coefficients are from
+factory calibration sheets.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe37im_preswat_instrument_recovered(p0, pt0, ptempa0, ptempa1, ptempa2,
+                                             ptca0, ptca1, ptca2, ptcb0, ptcb1, ptcb2,
+                                             pa0, pa1, pa2):
+    """
+    Compute PRESWAT_L1 from SBE 37IM instrument-recovered pressure counts.
+
+    Applies the Sea-Bird strain-gauge pressure conversion for data
+    recovered directly from an SBE 37IM instrument (all series).
+
+    Parameters
+    ----------
+    p0 : array_like
+        Raw pressure counts (PRESWAT_L0) recovered directly from the
+        CTD instrument [counts].
+    pt0 : array_like
+        Raw temperature counts from the pressure-sensor thermistor
+        [counts].
+    ptempa0 : float
+        Strain-gauge pressure calibration coefficient PTEMPA0.
+    ptempa1 : float
+        Strain-gauge pressure calibration coefficient PTEMPA1.
+    ptempa2 : float
+        Strain-gauge pressure calibration coefficient PTEMPA2.
+    ptca0 : float
+        Strain-gauge pressure calibration coefficient PTCA0.
+    ptca1 : float
+        Strain-gauge pressure calibration coefficient PTCA1.
+    ptca2 : float
+        Strain-gauge pressure calibration coefficient PTCA2.
+    ptcb0 : float
+        Strain-gauge pressure calibration coefficient PTCB0.
+    ptcb1 : float
+        Strain-gauge pressure calibration coefficient PTCB1.
+    ptcb2 : float
+        Strain-gauge pressure calibration coefficient PTCB2.
+    pa0 : float
+        Strain-gauge pressure calibration coefficient PA0.
+    pa1 : float
+        Strain-gauge pressure calibration coefficient PA1.
+    pa2 : float
+        Strain-gauge pressure calibration coefficient PA2.
+
+    Returns
+    -------
+    p : ndarray
+        Seawater pressure (PRESWAT_L1) [dbar].
+
+    Notes
+    -----
+    Unlike telemetered and recovered_host data (see ctd_sbe37im_preswat),
+    instrument-recovered data retains raw strain-gauge counts. The
+    algorithm matches the SBE 16Plus strain-gauge path but uses pt0
+    directly (not scaled to voltage):
+
+        t   = PTEMPA0 + PTEMPA1*pt0 + PTEMPA2*pt0^2
+        x   = p0 - PTCA0 - PTCA1*t - PTCA2*t^2
+        n   = x * PTCB0 / (PTCB0 + PTCB1*t + PTCB2*t^2)
+        p_psi = PA0 + PA1*n + PA2*n^2
+        P_L1  = p_psi * 0.689475729 - 10.1325
+
+    As of June 2016 this processing path was not included in the
+    PRESWAT DPS (DCN 1341-00020). Calibration coefficients are from
+    factory calibration sheets.
+    """
+    # compute calibration parameters
+    t = ptempa0 + ptempa1 * pt0 + ptempa2 * pt0**2
+    x = p0 - ptca0 - ptca1 * t - ptca2 * t**2
+    n = x * ptcb0 / (ptcb0 + ptcb1 * t + ptcb2 * t**2)
+
+    # compute pressure in psi, rescale and compute in dbar and return
+    p_psi = pa0 + pa1 * n + pa2 * n**2
+    p_dbar = (p_psi * 0.689475729) - 10.1325
+    return p_dbar</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2016-06-16</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe37im_preswat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe37im_preswat(p0, p_range_psia)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute PRESWAT_L1 from SBE 37IM telemetered/recovered_host counts.</p>
+<p>Applies the linear pressure scaling for SBE 37IM (all series)
+telemetered and recovered_host data streams (CTDMO instrument class).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>p0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw pressure counts (PRESWAT_L0) [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>p_range_psia</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Pressure range calibration coefficient [psia], a factory-set
+value stored in the instrument metadata.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>p</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Algorithm (from OOI DPS DCN 1341-00020, SBE 37IM):</p>
+<pre><code>P_range_dbar = (p_range_psia - 14.7) * 0.6894757
+P_L1 = p0 * P_range_dbar / (0.85 * 65536) - 0.05 * P_range_dbar
+</code></pre>
+<p>The pressure range is a factory-set calibration coefficient.
+This function does not apply to instrument-recovered data; use
+ctd_sbe37im_preswat_instrument_recovered for that stream.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe37im_preswat(p0, p_range_psia):
+    """
+    Compute PRESWAT_L1 from SBE 37IM telemetered/recovered_host counts.
+
+    Applies the linear pressure scaling for SBE 37IM (all series)
+    telemetered and recovered_host data streams (CTDMO instrument class).
+
+    Parameters
+    ----------
+    p0 : array_like
+        Raw pressure counts (PRESWAT_L0) [counts].
+    p_range_psia : float
+        Pressure range calibration coefficient [psia], a factory-set
+        value stored in the instrument metadata.
+
+    Returns
+    -------
+    p : ndarray
+        Seawater pressure (PRESWAT_L1) [dbar].
+
+    Notes
+    -----
+    Algorithm (from OOI DPS DCN 1341-00020, SBE 37IM):
+
+        P_range_dbar = (p_range_psia - 14.7) * 0.6894757
+        P_L1 = p0 * P_range_dbar / (0.85 * 65536) - 0.05 * P_range_dbar
+
+    The pressure range is a factory-set calibration coefficient.
+    This function does not apply to instrument-recovered data; use
+    ctd_sbe37im_preswat_instrument_recovered for that stream.
+    """
+    # compute pressure range in units of dbar
+    p_range_dbar = (p_range_psia - 14.7) * 0.6894757
+
+    # compute pressure in dbar and return
+    p_dbar = p0 * p_range_dbar / (0.85 * 65536.0) - 0.05 * p_range_dbar
+    return p_dbar</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-02-05</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_glider_preswat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_glider_preswat(pr_bar)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute PRESWAT_L1 from glider CTD pressure in bar.</p>
+<p>Converts pressure reported by a Seabird CTD installed on a glider
+(CTDGV instrument class) from bar to dbar.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>pr_bar</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater pressure from glider (PRESWAT_L0) [bar].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>pr_dbar</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Conversion:</p>
+<pre><code>P_L1 [dbar] = pr_bar * 10
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_glider_preswat(pr_bar):
+    """
+    Compute PRESWAT_L1 from glider CTD pressure in bar.
+
+    Converts pressure reported by a Seabird CTD installed on a glider
+    (CTDGV instrument class) from bar to dbar.
+
+    Parameters
+    ----------
+    pr_bar : array_like
+        Seawater pressure from glider (PRESWAT_L0) [bar].
+
+    Returns
+    -------
+    pr_dbar : ndarray
+        Seawater pressure (PRESWAT_L1) [dbar].
+
+    Notes
+    -----
+    Conversion:
+
+        P_L1 [dbar] = pr_bar * 10
+    """
+    pr_dbar = pr_bar * 10.0
+    return pr_dbar</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_8">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-10-28</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe52mp_preswat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe52mp_preswat(p0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute PRESWAT_L1 from SBE 52MP raw pressure counts.</p>
+<p>Applies the linear pressure scaling for SBE 52MP instruments
+(CTDPF series C, K, and L).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>p0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw pressure counts (PRESWAT_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>p</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Conversion:</p>
+<pre><code>P_L1 = p0 / 100 - 10
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe52mp_preswat(p0):
+    """
+    Compute PRESWAT_L1 from SBE 52MP raw pressure counts.
+
+    Applies the linear pressure scaling for SBE 52MP instruments
+    (CTDPF series C, K, and L).
+
+    Parameters
+    ----------
+    p0 : array_like
+        Raw pressure counts (PRESWAT_L0) [counts].
+
+    Returns
+    -------
+    p : ndarray
+        Seawater pressure (PRESWAT_L1) [dbar].
+
+    Notes
+    -----
+    Conversion:
+
+        P_L1 = p0 / 100 - 10
+    """
+    p_dbar = p0 / 100.0 - 10.0
+    return p_dbar</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_9">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-02-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe16plus_condwat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe16plus_condwat(c0, t1, p1, g, h, i, j, cpcor, ctcor)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute CONDWAT_L1 from SBE 16Plus raw conductivity counts.</p>
+<p>Applies the Sea-Bird conductivity frequency conversion for SBE
+16Plus instruments. Covers all CTDBP instrument series and CTDPF
+series A and B.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>c0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw conductivity counts (CONDWAT_L0) [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>t1</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater temperature (TEMPWAT_L1) [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>p1</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>g</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient g.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>h</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient h.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>i</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient i.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>j</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient j.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cpcor</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient CPcor.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ctcor</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient CTcor.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>c</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater conductivity (CONDWAT_L1) [S m^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Algorithm (from OOI DPS DCN 1341-00030, SBE 16Plus):</p>
+<pre><code>f    = (c0 / 256) / 1000    (conductivity frequency in kHz)
+C_L1 = (g + h*f^2 + i*f^3 + j*f^4) / (1 + CTcor*T + CPcor*P)
+</code></pre>
+<p>where T is TEMPWAT_L1 (degC) and P is PRESWAT_L1 (dbar).
+All calibration coefficients are from factory calibration sheets.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe16plus_condwat(c0, t1, p1, g, h, i, j, cpcor, ctcor):
+    """
+    Compute CONDWAT_L1 from SBE 16Plus raw conductivity counts.
+
+    Applies the Sea-Bird conductivity frequency conversion for SBE
+    16Plus instruments. Covers all CTDBP instrument series and CTDPF
+    series A and B.
+
+    Parameters
+    ----------
+    c0 : array_like
+        Raw conductivity counts (CONDWAT_L0) [counts].
+    t1 : array_like
+        Seawater temperature (TEMPWAT_L1) [degC].
+    p1 : array_like
+        Seawater pressure (PRESWAT_L1) [dbar].
+    g : float
+        Conductivity calibration coefficient g.
+    h : float
+        Conductivity calibration coefficient h.
+    i : float
+        Conductivity calibration coefficient i.
+    j : float
+        Conductivity calibration coefficient j.
+    cpcor : float
+        Conductivity calibration coefficient CPcor.
+    ctcor : float
+        Conductivity calibration coefficient CTcor.
+
+    Returns
+    -------
+    c : ndarray
+        Seawater conductivity (CONDWAT_L1) [S m^-1].
+
+    Notes
+    -----
+    Algorithm (from OOI DPS DCN 1341-00030, SBE 16Plus):
+
+        f    = (c0 / 256) / 1000    (conductivity frequency in kHz)
+        C_L1 = (g + h*f^2 + i*f^3 + j*f^4) / (1 + CTcor*T + CPcor*P)
+
+    where T is TEMPWAT_L1 (degC) and P is PRESWAT_L1 (dbar).
+    All calibration coefficients are from factory calibration sheets.
+    """
+    # convert raw conductivity measurement to frequency
+    f = (c0 / 256.0) / 1000.0
+
+    # calculate conductivity [S m-1]
+    c = (g + h * f**2 + i * f**3 + j * f**4) / (1 + ctcor * t1 + cpcor * p1)
+    return c</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_10">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-12</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-05-10</td>
+<td>Christopher Wingard</td>
+<td>Minor edits to comments</td>
+</tr>
+<tr>
+<td>2014-01-31</td>
+<td>Russell Desiderio</td>
+<td>Standardized comment format</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe37im_condwat_instrument_recovered" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe37im_condwat_instrument_recovered(c0, t1, p1, g, h, i, j, cpcor, ctcor, wbotc)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute CONDWAT_L1 from SBE 37IM instrument-recovered counts.</p>
+<p>Applies the Sea-Bird conductivity frequency conversion for data
+recovered directly from an SBE 37IM instrument (all series).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>c0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw conductivity counts (CONDWAT_L0) recovered directly from
+the CTD instrument [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>t1</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater temperature (TEMPWAT_L1) [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>p1</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>g</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient g.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>h</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient h.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>i</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient i.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>j</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient j.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cpcor</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient CPcor.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ctcor</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient CTcor.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wbotc</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Conductivity calibration coefficient wbotc.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>c</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater conductivity (CONDWAT_L1) [S m^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Algorithm applies a wbotc correction to the frequency before the
+standard polynomial evaluation:</p>
+<pre><code>f    = (c0/256)/1000 * sqrt(1 + wbotc*T)
+C_L1 = (g + h*f^2 + i*f^3 + j*f^4) / (1 + CTcor*T + CPcor*P)
+</code></pre>
+<p>where T is TEMPWAT_L1 (degC) and P is PRESWAT_L1 (dbar).
+As of June 2016 this processing path was not included in the
+CONDWAT DPS (DCN 1341-00030). Calibration coefficients are from
+factory calibration sheets.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe37im_condwat_instrument_recovered(c0, t1, p1, g, h, i, j, cpcor, ctcor, wbotc):
+    """
+    Compute CONDWAT_L1 from SBE 37IM instrument-recovered counts.
+
+    Applies the Sea-Bird conductivity frequency conversion for data
+    recovered directly from an SBE 37IM instrument (all series).
+
+    Parameters
+    ----------
+    c0 : array_like
+        Raw conductivity counts (CONDWAT_L0) recovered directly from
+        the CTD instrument [counts].
+    t1 : array_like
+        Seawater temperature (TEMPWAT_L1) [degC].
+    p1 : array_like
+        Seawater pressure (PRESWAT_L1) [dbar].
+    g : float
+        Conductivity calibration coefficient g.
+    h : float
+        Conductivity calibration coefficient h.
+    i : float
+        Conductivity calibration coefficient i.
+    j : float
+        Conductivity calibration coefficient j.
+    cpcor : float
+        Conductivity calibration coefficient CPcor.
+    ctcor : float
+        Conductivity calibration coefficient CTcor.
+    wbotc : float
+        Conductivity calibration coefficient wbotc.
+
+    Returns
+    -------
+    c : ndarray
+        Seawater conductivity (CONDWAT_L1) [S m^-1].
+
+    Notes
+    -----
+    Algorithm applies a wbotc correction to the frequency before the
+    standard polynomial evaluation:
+
+        f    = (c0/256)/1000 * sqrt(1 + wbotc*T)
+        C_L1 = (g + h*f^2 + i*f^3 + j*f^4) / (1 + CTcor*T + CPcor*P)
+
+    where T is TEMPWAT_L1 (degC) and P is PRESWAT_L1 (dbar).
+    As of June 2016 this processing path was not included in the
+    CONDWAT DPS (DCN 1341-00030). Calibration coefficients are from
+    factory calibration sheets.
+    """
+    # convert raw conductivity measurement to frequency
+    f = (c0 / 256.0) / 1000.0 * np.sqrt(1.0 + wbotc * t1)
+
+    # calculate conductivity [S m-1]
+    c = (g + h * f**2 + i * f**3 + j * f**4) / (1 + ctcor * t1 + cpcor * p1)
+    return c</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_11">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2016-06-16</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe37im_condwat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe37im_condwat(c0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute CONDWAT_L1 from SBE 37IM telemetered/recovered_host counts.</p>
+<p>Applies the linear conductivity scaling for SBE 37IM (all series)
+telemetered and recovered_host data streams (CTDMO instrument class).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>c0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw conductivity counts (CONDWAT_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>c</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater conductivity (CONDWAT_L1) [S m^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The SBE 37IM encodes conductivity as engineering units in
+hexadecimal (OutputFormat 0). The conversion is:</p>
+<pre><code>C_L1 = c0 / 100000 - 0.5
+</code></pre>
+<p>This function does not apply to instrument-recovered data; use
+ctd_sbe37im_condwat_instrument_recovered for that stream.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe37im_condwat(c0):
+    """
+    Compute CONDWAT_L1 from SBE 37IM telemetered/recovered_host counts.
+
+    Applies the linear conductivity scaling for SBE 37IM (all series)
+    telemetered and recovered_host data streams (CTDMO instrument class).
+
+    Parameters
+    ----------
+    c0 : array_like
+        Raw conductivity counts (CONDWAT_L0) [counts].
+
+    Returns
+    -------
+    c : ndarray
+        Seawater conductivity (CONDWAT_L1) [S m^-1].
+
+    Notes
+    -----
+    The SBE 37IM encodes conductivity as engineering units in
+    hexadecimal (OutputFormat 0). The conversion is:
+
+        C_L1 = c0 / 100000 - 0.5
+
+    This function does not apply to instrument-recovered data; use
+    ctd_sbe37im_condwat_instrument_recovered for that stream.
+    """
+    c = c0 / 100000.0 - 0.5
+    return c</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_12">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-02-05</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_sbe52mp_condwat" class="doc doc-heading">
+            <code class="highlight language-python">ctd_sbe52mp_condwat(c0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute CONDWAT_L1 from SBE 52MP raw conductivity counts.</p>
+<p>Applies the linear conductivity scaling for SBE 52MP instruments
+(CTDPF series C, K, and L).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>c0</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw conductivity counts (CONDWAT_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>c</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater conductivity (CONDWAT_L1) [S m^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Two-step conversion:</p>
+<pre><code>C [mmho/cm] = c0 / 10000 - 0.5
+C [S m^-1]  = C [mmho/cm] * 0.1
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_sbe52mp_condwat(c0):
+    """
+    Compute CONDWAT_L1 from SBE 52MP raw conductivity counts.
+
+    Applies the linear conductivity scaling for SBE 52MP instruments
+    (CTDPF series C, K, and L).
+
+    Parameters
+    ----------
+    c0 : array_like
+        Raw conductivity counts (CONDWAT_L0) [counts].
+
+    Returns
+    -------
+    c : ndarray
+        Seawater conductivity (CONDWAT_L1) [S m^-1].
+
+    Notes
+    -----
+    Two-step conversion:
+
+        C [mmho/cm] = c0 / 10000 - 0.5
+        C [S m^-1]  = C [mmho/cm] * 0.1
+    """
+    c_mmho_cm = c0 / 10000.0 - 0.5
+    c_S_m = 0.1 * c_mmho_cm
+    return c_S_m</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_13">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-02-17</td>
+<td>Russell Desiderio</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.temperature_raw_conversion" class="doc doc-heading">
+            <code class="highlight language-python">temperature_raw_conversion(temp_counts, a0, a1, a2, a3)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw SBE 37 temperature A/D counts to degrees C (ITS-90).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>temp_counts</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw temperature A/D counts from the SBE 37 MicroCAT [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1 for the temperature sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2 for the temperature sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3 for the temperature sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a3</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4 for the temperature sensor [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>temperature</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Water temperature (ITS-90) [deg_C].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Calibration coefficients a0 through a3 are from factory calibration
+sheets supplied by Sea-Bird Scientific.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def temperature_raw_conversion(temp_counts, a0, a1, a2, a3):
+    """
+    Convert raw SBE 37 temperature A/D counts to degrees C (ITS-90).
+
+    Parameters
+    ----------
+    temp_counts : array_like
+        Raw temperature A/D counts from the SBE 37 MicroCAT [counts].
+    a0 : float
+        Calibration coefficient 1 for the temperature sensor [unitless].
+    a1 : float
+        Calibration coefficient 2 for the temperature sensor [unitless].
+    a2 : float
+        Calibration coefficient 3 for the temperature sensor [unitless].
+    a3 : float
+        Calibration coefficient 4 for the temperature sensor [unitless].
+
+    Returns
+    -------
+    temperature : ndarray
+        Water temperature (ITS-90) [deg_C].
+
+    Notes
+    -----
+    Calibration coefficients a0 through a3 are from factory calibration
+    sheets supplied by Sea-Bird Scientific.
+    """
+    temperature_counts = temp_counts
+
+    log_t = np.log(temperature_counts)
+    temperature = (
+        1 / (a0 + a1 * log_t + a2 * log_t ** 2 + a3 * log_t ** 3)
+    ) - KELVIN_OFFSET_0C
+
+    return temperature</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_14">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Initial NumPy docstring; added to CTD family documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.pressure_raw_conversion" class="doc doc-heading">
+            <code class="highlight language-python">pressure_raw_conversion(pres_counts, compensation_voltage, ptempa0, ptempa1, ptempa2, ptca0, ptca1, ptca2, ptcb0, ptcb1, ptcb2, pa0, pa1, pa2)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw SBE 37 pressure A/D counts to pressure in dbar.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>pres_counts</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw pressure A/D counts from the SBE 37 MicroCAT [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>compensation_voltage</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pressure temperature compensation voltage. Units are counts or
+volts depending on the instrument configuration [counts or V].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptempa0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1 for the pressure temperature
+compensation [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptempa1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2 for the pressure temperature
+compensation [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptempa2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3 for the pressure temperature
+compensation [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptca0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4 for the pressure sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptca1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 5 for the pressure sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptca2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 6 for the pressure sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptcb0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 7 for the pressure sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptcb1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 8 for the pressure sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ptcb2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 9 for the pressure sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pa0</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 10 for the pressure sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pa1</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 11 for the pressure sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pa2</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 12 for the pressure sensor [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>pressure</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Sea pressure relative to one standard atmosphere (14.7 psia)
+[dbar].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Sea-level pressure (14.7 psia) is subtracted before unit conversion
+so the result is gauge pressure. Calibration coefficients are from
+factory calibration sheets supplied by Sea-Bird Scientific.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def pressure_raw_conversion(pres_counts, compensation_voltage,
+                            ptempa0, ptempa1, ptempa2,
+                            ptca0, ptca1, ptca2,
+                            ptcb0, ptcb1, ptcb2,
+                            pa0, pa1, pa2):
+    """
+    Convert raw SBE 37 pressure A/D counts to pressure in dbar.
+
+    Parameters
+    ----------
+    pres_counts : array_like
+        Raw pressure A/D counts from the SBE 37 MicroCAT [counts].
+    compensation_voltage : array_like
+        Pressure temperature compensation voltage. Units are counts or
+        volts depending on the instrument configuration [counts or V].
+    ptempa0 : float
+        Calibration coefficient 1 for the pressure temperature
+        compensation [unitless].
+    ptempa1 : float
+        Calibration coefficient 2 for the pressure temperature
+        compensation [unitless].
+    ptempa2 : float
+        Calibration coefficient 3 for the pressure temperature
+        compensation [unitless].
+    ptca0 : float
+        Calibration coefficient 4 for the pressure sensor [unitless].
+    ptca1 : float
+        Calibration coefficient 5 for the pressure sensor [unitless].
+    ptca2 : float
+        Calibration coefficient 6 for the pressure sensor [unitless].
+    ptcb0 : float
+        Calibration coefficient 7 for the pressure sensor [unitless].
+    ptcb1 : float
+        Calibration coefficient 8 for the pressure sensor [unitless].
+    ptcb2 : float
+        Calibration coefficient 9 for the pressure sensor [unitless].
+    pa0 : float
+        Calibration coefficient 10 for the pressure sensor [unitless].
+    pa1 : float
+        Calibration coefficient 11 for the pressure sensor [unitless].
+    pa2 : float
+        Calibration coefficient 12 for the pressure sensor [unitless].
+
+    Returns
+    -------
+    pressure : ndarray
+        Sea pressure relative to one standard atmosphere (14.7 psia)
+        [dbar].
+
+    Notes
+    -----
+    Sea-level pressure (14.7 psia) is subtracted before unit conversion
+    so the result is gauge pressure. Calibration coefficients are from
+    factory calibration sheets supplied by Sea-Bird Scientific.
+    """
+    sea_level_pressure = 14.7
+
+    t = (
+        ptempa0
+        + ptempa1 * compensation_voltage
+        + ptempa2 * compensation_voltage ** 2
+    )
+    x = pres_counts - ptca0 - ptca1 * t - ptca2 * t ** 2
+    n = x * ptcb0 / (ptcb0 + ptcb1 * t + ptcb2 * t ** 2)
+    pressure = pa0 + pa1 * n + pa2 * n ** 2
+
+    pressure -= sea_level_pressure
+    pressure *= PSI_TO_DBAR
+
+    return pressure</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_15">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Initial NumPy docstring; added to CTD family documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.conductivity_raw_conversion" class="doc doc-heading">
+            <code class="highlight language-python">conductivity_raw_conversion(cond_counts, temperature, pressure, wbotc, g, h, i, j, ctcor, cpcor)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw SBE 37 conductivity A/D counts to conductivity in S/m.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>cond_counts</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw conductivity A/D counts from the SBE 37 MicroCAT [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>temperature</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Reference temperature from the SBE 37 MicroCAT [deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pressure</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Reference pressure from the SBE 37 MicroCAT [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wbotc</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1 for the conductivity sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>g</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2 for the conductivity sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>h</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3 for the conductivity sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>i</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4 for the conductivity sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>j</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 5 for the conductivity sensor
+[unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ctcor</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 6. Temperature correction factor for
+the conductivity sensor [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cpcor</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 7. Pressure correction factor for the
+conductivity sensor [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>conductivity</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Conductivity [S/m].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Calibration coefficients are from factory calibration sheets
+supplied by Sea-Bird Scientific.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def conductivity_raw_conversion(cond_counts, temperature, pressure,
+                                wbotc, g, h, i, j, ctcor, cpcor):
+    """
+    Convert raw SBE 37 conductivity A/D counts to conductivity in S/m.
+
+    Parameters
+    ----------
+    cond_counts : array_like
+        Raw conductivity A/D counts from the SBE 37 MicroCAT [counts].
+    temperature : array_like
+        Reference temperature from the SBE 37 MicroCAT [deg_C].
+    pressure : array_like
+        Reference pressure from the SBE 37 MicroCAT [dbar].
+    wbotc : float
+        Calibration coefficient 1 for the conductivity sensor
+        [unitless].
+    g : float
+        Calibration coefficient 2 for the conductivity sensor
+        [unitless].
+    h : float
+        Calibration coefficient 3 for the conductivity sensor
+        [unitless].
+    i : float
+        Calibration coefficient 4 for the conductivity sensor
+        [unitless].
+    j : float
+        Calibration coefficient 5 for the conductivity sensor
+        [unitless].
+    ctcor : float
+        Calibration coefficient 6. Temperature correction factor for
+        the conductivity sensor [unitless].
+    cpcor : float
+        Calibration coefficient 7. Pressure correction factor for the
+        conductivity sensor [unitless].
+
+    Returns
+    -------
+    conductivity : ndarray
+        Conductivity [S/m].
+
+    Notes
+    -----
+    Calibration coefficients are from factory calibration sheets
+    supplied by Sea-Bird Scientific.
+    """
+    f = cond_counts * np.sqrt(1 + wbotc * temperature) / 1000.0
+    numerator = g + h * f ** 2 + i * f ** 3 + j * f ** 4
+    denominator = 1 + ctcor * temperature + cpcor * pressure
+
+    return numerator / denominator</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_16">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Initial NumPy docstring; added to CTD family documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_pracsal" class="doc doc-heading">
+            <code class="highlight language-python">ctd_pracsal(c, t, p)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute PRACSAL_L2 from L1 conductivity, temperature, and pressure.</p>
+<p>Calculates Practical Salinity on the PSS-78 scale using the TEOS-10
+GSW library function gsw.SP_from_C, which implements the UNESCO 1983
+PSS-78 algorithm with the Hill et al. (1986) extension for SP &lt; 2.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>c</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater conductivity (CONDWAT_L1) [S m^-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>t</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater temperature (TEMPWAT_L1) [degC, ITS-90].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>p</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>SP</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Practical salinity (PRACSAL_L2) [PSS-78, unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Conductivity is converted from S m^-1 to mS cm^-1 (multiply by 10)
+before passing to gsw.SP_from_C(C, t, p), which expects mS cm^-1.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_pracsal(c, t, p):
+    """
+    Compute PRACSAL_L2 from L1 conductivity, temperature, and pressure.
+
+    Calculates Practical Salinity on the PSS-78 scale using the TEOS-10
+    GSW library function gsw.SP_from_C, which implements the UNESCO 1983
+    PSS-78 algorithm with the Hill et al. (1986) extension for SP &lt; 2.
+
+    Parameters
+    ----------
+    c : array_like
+        Seawater conductivity (CONDWAT_L1) [S m^-1].
+    t : array_like
+        Seawater temperature (TEMPWAT_L1) [degC, ITS-90].
+    p : array_like
+        Seawater pressure (PRESWAT_L1) [dbar].
+
+    Returns
+    -------
+    SP : ndarray
+        Practical salinity (PRACSAL_L2) [PSS-78, unitless].
+
+    Notes
+    -----
+    Conductivity is converted from S m^-1 to mS cm^-1 (multiply by 10)
+    before passing to gsw.SP_from_C(C, t, p), which expects mS cm^-1.
+    """
+    # Convert L1 Conductivity from S/m to mS/cm
+    C10 = c * 10.0
+
+    # Calculate the Practical Salinity (PSS-78) [unitless]
+    SP = gsw.SP_from_C(C10, t, p)
+    return SP</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_17">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-03-13</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-05-10</td>
+<td>Christopher Wingard</td>
+<td>Minor edits to comments</td>
+</tr>
+<tr>
+<td>2014-01-31</td>
+<td>Russell Desiderio</td>
+<td>Standardized comment format</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Replaced incompatible pygsw with GSW library</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ctd_functions.ctd_density" class="doc doc-heading">
+            <code class="highlight language-python">ctd_density(SP, t, p, lat, lon)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute DENSITY_L2 from practical salinity, temperature, pressure,
+and position using TEOS-10.</p>
+<p>Calculates in-situ seawater density using the TEOS-10 GSW library
+via a three-step chain: Practical Salinity to Absolute Salinity,
+in-situ temperature to Conservative Temperature, then density from
+the computationally-efficient 48-term expression.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>SP</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity (PRACSAL_L2) [PSS-78, unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>t</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater temperature (TEMPWAT_L1) [degC, ITS-90].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>p</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater pressure (PRESWAT_L1) [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lat</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of observation [decimal degrees north].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Longitude of observation [decimal degrees east].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>rho</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>In-situ seawater density (DENSITY_L2) [kg m^-3].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>TEOS-10 processing chain:</p>
+<pre><code>SA  = gsw.SA_from_SP(SP, p, lon, lat)   (Absolute Salinity)
+CT  = gsw.CT_from_t(SA, t, p)           (Conservative Temp)
+rho = gsw.rho(SA, CT, p)                (density, 48-term)
+</code></pre>
+<p>For moored instruments, latitude (lat) and longitude (lon)
+are from the mooring position metadata; for gliders, they are
+the vehicle's position at the time of each measurement.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ctd_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ctd_density(SP, t, p, lat, lon):
+    """
+    Compute DENSITY_L2 from practical salinity, temperature, pressure,
+    and position using TEOS-10.
+
+    Calculates in-situ seawater density using the TEOS-10 GSW library
+    via a three-step chain: Practical Salinity to Absolute Salinity,
+    in-situ temperature to Conservative Temperature, then density from
+    the computationally-efficient 48-term expression.
+
+    Parameters
+    ----------
+    SP : array_like
+        Practical salinity (PRACSAL_L2) [PSS-78, unitless].
+    t : array_like
+        Seawater temperature (TEMPWAT_L1) [degC, ITS-90].
+    p : array_like
+        Seawater pressure (PRESWAT_L1) [dbar].
+    lat : array_like
+        Latitude of observation [decimal degrees north].
+    lon : array_like
+        Longitude of observation [decimal degrees east].
+
+    Returns
+    -------
+    rho : ndarray
+        In-situ seawater density (DENSITY_L2) [kg m^-3].
+
+    Notes
+    -----
+    TEOS-10 processing chain:
+
+        SA  = gsw.SA_from_SP(SP, p, lon, lat)   (Absolute Salinity)
+        CT  = gsw.CT_from_t(SA, t, p)           (Conservative Temp)
+        rho = gsw.rho(SA, CT, p)                (density, 48-term)
+
+    For moored instruments, latitude (lat) and longitude (lon)
+    are from the mooring position metadata; for gliders, they are
+    the vehicle's position at the time of each measurement.
+    """
+    # Calculate the density [kg m-3]
+    sa = gsw.SA_from_SP(SP, p, lon, lat)  # absolute salinity
+    ct = gsw.CT_from_t(sa, t, p)  # conservative temperature
+    rho = gsw.rho(sa, ct, p)  # density
+    return rho</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_18">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-03-11</td>
+<td>Christopher Mueller</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2013-03-13</td>
+<td>Christopher Wingard</td>
+<td>Added commenting; moved to ctd_functions</td>
+</tr>
+<tr>
+<td>2013-05-10</td>
+<td>Christopher Wingard</td>
+<td>Minor edits to comments</td>
+</tr>
+<tr>
+<td>2014-01-31</td>
+<td>Russell Desiderio</td>
+<td>Standardized comment format</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Replaced incompatible pygsw with GSW library</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Feistel, R. (2008). A Gibbs function for seawater thermodynamics for -6 to
+80 degrees C and salinity up to 120 g/kg. Deep Sea Research I, 55,
+1639-1671.</p>
+<p>Fofonoff, N. P. and Millard, R. C. (1983). Algorithms for computation of
+fundamental properties of seawater. UNESCO Technical Papers in Marine
+Science, 44, 1-53.</p>
+<p>Hill, K. D., Dauphinee, T. M., and Woods, D. J. (1986). The extension of the
+Practical Salinity Scale 1978 to low salinities. IEEE Journal of Oceanic
+Engineering, OE-11(1), 109-112.</p>
+<p>IOC, SCOR and IAPSO (2010). The international thermodynamic equation of
+seawater - 2010: Calculation and use of thermodynamic properties.
+Intergovernmental Oceanographic Commission, Manuals and Guides No. 56,
+UNESCO, 196 pp.</p>
+<p>McDougall, T. J., Barker, P. M., Feistel, R., and Jackett, D. R. (2011). A
+computationally efficient 48-term expression for the density of seawater in
+terms of Conservative Temperature, and related properties of seawater.
+Journal of Atmospheric and Oceanic Technology, 28, 1464-1477.</p>
+<p>McDougall, T. J., Jackett, D. R., and Millero, F. J. (2010). An algorithm
+for estimating Absolute Salinity in the global ocean. Ocean Science
+Discussions, 6, 215-242.</p>
+<p>Millero, F. J., et al. (2008). The composition of Standard Seawater and the
+definition of the Reference-Composition Salinity Scale. Deep Sea Research I,
+55, 50-72.</p>
+<p>Pawlowicz, R. (2010). What every oceanographer needs to know about TEOS-10
+(The TEOS-10 Primer). Thermodynamic Equation Of Seawater - 2010 (TEOS-10)
+website: http://www.teos-10.org/.</p>
+<p>Sea-Bird Electronics (2008). Application Note 10. Compressibility
+Compensation of Sea-Bird Conductivity Sensors. Revision March 2008. Sea-Bird
+Electronics, Inc.</p>
+<p>Sea-Bird Electronics (2009). SBE 16plus V2 SEACAT User's Manual. Manual
+Version 005. Sea-Bird Electronics, Inc.</p>
+<p>Sea-Bird Electronics (2010). Application Note 42. ITS-90 Temperature Scale.
+Revision February 2010. Sea-Bird Electronics, Inc.</p>
+<p>Sea-Bird Electronics (2011). SBE 37-IM MicroCAT User's Manual. Manual
+Version 027. Sea-Bird Electronics, Inc.</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00010_Data_Product_SPEC_TEMPWAT_OOI.pdf">OOI (2013). Data Product Specification for Water Temperature. Document
+Control Number 1341-00010.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00020_Data_Product_SPEC_PRESWAT_OOI.pdf">OOI (2013). Data Product Specification for Pressure (Depth). Document
+Control Number 1341-00020.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00030_Data_Product_SPEC_CONDWAT_OOI.pdf">OOI (2013). Data Product Specification for Conductivity. Document Control
+Number 1341-00030.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00040_Data_Product_SPEC_PRACSAL_OOI.pdf">OOI (2013). Data Product Specification for Salinity. Document Control
+Number 1341-00040.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00050_Data_Product_SPEC_DENSITY_OOI.pdf">OOI (2012). Data Product Specification for Density. Document Control Number
+1341-00050.</a></p>
+<p>Sea-Bird Scientific. <em>Deep SeapHOx V2 Ocean CT(D)-pH-DO Sensor</em>. Data
+sheet DS.53.May25. Bellevue, WA: Sea-Bird Scientific.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../ph_functions/" class="btn btn-neutral float-left" title="pH Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../do2_functions/" class="btn btn-neutral float-right" title="DO2 Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../ph_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../do2_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

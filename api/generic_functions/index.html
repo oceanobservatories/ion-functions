@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/generic_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Generic Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Generic Functions";
+        var mkdocs_page_input_path = "api/generic_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/generic_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Generic Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#deprecated-functions">Deprecated Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">Generic Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="generic-functions">Generic Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Generic Functions module has no dedicated instrument family or Data Product
+Specification. Rather, this module holds functions needed by more than one
+instrument family's module -- fill-value handling, magnetic declination and
+velocity correction, array utilities, and small comparison helpers used by
+several data products across the codebase.</p>
+<p>Of particular importance are the magnetic correction algorithms. Magnetic declination is computed from the
+International Geomagnetic Reference Field (IGRF), 14th generation, via the <code>ppigrf</code> Python package.
+<code>magnetic_declination</code> is the array entry point used throughout the codebase. Because <code>ppigrf</code> evaluates every
+combination of the dates and positions it is given, the function first rounds the samples (time to the day, evaluated
+at mid-day; position to four decimal places, about 10 m), removes duplicates, and evaluates the IGRF once on the grid of
+unique days by unique positions, in chunks to bound memory, before mapping results back to the original samples. The
+rounding adds at most about 0.0003 degrees of error, far below the uncertainty of the IGRF itself. <code>igrf_declination</code>
+computes the exact, unrounded declination for a single location and date and serves as the reference implementation;
+it rejects array inputs.</p>
+<p><code>magnetic_correction</code> rotates horizontal velocity components from magnetic to true Earth coordinates using one
+declination value per sample. Velocities may be one value per sample (e.g. VELPTMN, WINDAVG) or a profile per sample.
+<code>adcp_functions.magnetic_correction</code> and <code>wav_functions.magnetic_correction_einsum</code> implement the same rotation
+separately; both obtain declination from <code>magnetic_declination</code>.</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.magnetic_declination" class="doc doc-heading">
+            <code class="highlight language-python">magnetic_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes magnetic declination from the IGRF for 1 to N samples.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>lat</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees]. North is
+positive, South negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Longitude of the instrument [decimal degrees]. East is
+positive, West negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Time stamp from a data particle, either NTP [secs since
+1900-01-01] or Unix [secs since 1970-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>z</code></b>
+                  (<code>array_like</code>, default:
+                      <code>0.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Depth or height of the instrument relative to sea level
+[meters]. Positive values only. Default 0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>zflag</code></b>
+                  (<code>array_like</code>, default:
+                      <code>-1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>-1 to treat z as a depth (i.e. -z), 1 to treat z as a height
+(i.e. +z). Default -1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ntp</code></b>
+                  (<code>array_like</code>, default:
+                      <code>1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>1 if timestamp is NTP time, 0 if Unix time. Default 1.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>mag_dec</code></b>(                  <code><span title="numpy.ndarray">ndarray</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Magnetic declination (magnetic variation) [degrees from N],
+with the broadcast shape of the inputs. Positive values are
+eastward, negative westward of North. NaN where any input is
+non-finite.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Time is binned to the day and position rounded to 4 decimals
+before the IGRF is evaluated; the resulting error (&lt;= ~0.0003 deg)
+is far below the IGRF's own uncertainty.</p>
+</details>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>igrf_declination : Single, scalar reference.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def magnetic_declination(lat: npt.ArrayLike, lon: npt.ArrayLike, timestamp: npt.ArrayLike,
+                         z: npt.ArrayLike = 0.0, zflag: npt.ArrayLike = -1,
+                         ntp: npt.ArrayLike = 1) -&gt; np.ndarray:
+    """
+    Computes magnetic declination from the IGRF for 1 to N samples.
+
+    Parameters
+    ----------
+    lat : array_like
+        Latitude of the instrument [decimal degrees]. North is
+        positive, South negative.
+    lon : array_like
+        Longitude of the instrument [decimal degrees]. East is
+        positive, West negative.
+    timestamp : array_like
+        Time stamp from a data particle, either NTP [secs since
+        1900-01-01] or Unix [secs since 1970-01-01].
+    z : array_like, optional
+        Depth or height of the instrument relative to sea level
+        [meters]. Positive values only. Default 0.
+    zflag : array_like, optional
+        -1 to treat z as a depth (i.e. -z), 1 to treat z as a height
+        (i.e. +z). Default -1.
+    ntp : array_like, optional
+        1 if timestamp is NTP time, 0 if Unix time. Default 1.
+
+    Returns
+    -------
+    mag_dec : np.ndarray
+        Magnetic declination (magnetic variation) [degrees from N],
+        with the broadcast shape of the inputs. Positive values are
+        eastward, negative westward of North. NaN where any input is
+        non-finite.
+
+    Notes
+    -----
+    Time is binned to the day and position rounded to 4 decimals
+    before the IGRF is evaluated; the resulting error (&lt;= ~0.0003 deg)
+    is far below the IGRF's own uncertainty.
+
+    See Also
+    --------
+    igrf_declination : Single, scalar reference.
+    """
+    arrays = np.broadcast_arrays(lat, lon, timestamp, z, zflag, ntp)
+    shape = arrays[0].shape
+    lat, lon, timestamp, z, zflag, ntp = (np.ravel(a).astype(float) for a in arrays)
+
+    unix = np.where(ntp == 1, timestamp - _NTP_UNIX_OFFSET, timestamp)
+    h = np.where((z &gt; 0) &amp; (zflag == -1), -z, z) / 1000.0   # m -&gt; km, negative below sea level
+
+    mag_dec = np.full(lat.size, np.nan)
+    valid = np.isfinite(lat) &amp; np.isfinite(lon) &amp; np.isfinite(unix) &amp; np.isfinite(h)
+    if not valid.any():
+        return mag_dec.reshape(shape)
+
+    # quantize and deduplicate days and positions independently
+    udays, it = np.unique(np.floor(unix[valid] / _SECONDS_PER_DAY), return_inverse=True)
+    pos = np.round(np.column_stack((lat[valid], lon[valid], h[valid])), _POS_DECIMALS)
+    upos, ip = np.unique(pos, axis=0, return_inverse=True)
+    it, ip = it.ravel(), ip.ravel()
+
+    # unique (day, position) pairs, sorted by day
+    n_pos = len(upos)
+    upairs, ipair = np.unique(it * n_pos + ip, return_inverse=True)
+    pair_t, pair_p = np.divmod(upairs, n_pos)
+    pair_dec = np.empty(upairs.size)
+
+    # evaluate the IGRF on (day chunk x positions used in that chunk) grids
+    step = max(1, _MAX_GRID // n_pos)
+    for t0 in range(0, len(udays), step):
+        sel = (pair_t &gt;= t0) &amp; (pair_t &lt; t0 + step)
+        cp, local_p = np.unique(pair_p[sel], return_inverse=True)
+        dates = pd.to_datetime((udays[t0:t0 + step] + 0.5) * _SECONDS_PER_DAY, unit='s')
+        be, bn, _ = ppigrf.igrf(upos[cp, 1], upos[cp, 0], upos[cp, 2], dates)
+        grid = np.degrees(np.arctan2(be, bn))   # (n_days, n_positions), full +/-180 deg range
+        pair_dec[sel] = grid[pair_t[sel] - t0, local_p.ravel()]
+
+    mag_dec[valid] = pair_dec[ipair.ravel()]
+    return mag_dec.reshape(shape)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation.</td>
+</tr>
+<tr>
+<td>2026-10-16</td>
+<td>Christopher Wingard</td>
+<td>Replaced <code>np.vectorize</code> over <code>igrf_declination</code> with rounded, de-duplicated grid evaluation of the IGRF.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.magnetic_correction" class="doc doc-heading">
+            <code class="highlight language-python">magnetic_correction(theta, u, v)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Corrects velocity vectors for magnetic declination (variation) at
+the measurement location. Used by several data products (e.g.
+VELPROF, WINDAVG) across multiple instrument classes.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>theta</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Magnetic declination based on location and date [degrees].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>u</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected eastward velocity in Earth coordinates.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>v</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Uncorrected northward velocity in Earth coordinates.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>u_cor</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>Eastward velocity, in Earth coordinates, corrected for
+magnetic declination.</p>
+              </div>
+            </li>
+            <li>
+<b><code>v_cor</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>Northward velocity, in Earth coordinates, corrected for
+magnetic declination.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>magnetic_declination : Array-vectorized entry point.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def magnetic_correction(theta, u, v):
+    """
+    Corrects velocity vectors for magnetic declination (variation) at
+    the measurement location. Used by several data products (e.g.
+    VELPROF, WINDAVG) across multiple instrument classes.
+
+    Parameters
+    ----------
+    theta : array_like
+        Magnetic declination based on location and date [degrees].
+    u : array_like
+        Uncorrected eastward velocity in Earth coordinates.
+    v : array_like
+        Uncorrected northward velocity in Earth coordinates.
+
+    Returns
+    -------
+    u_cor : array_like
+        Eastward velocity, in Earth coordinates, corrected for
+        magnetic declination.
+    v_cor : array_like
+        Northward velocity, in Earth coordinates, corrected for
+        magnetic declination.
+
+    See Also
+    --------
+    magnetic_declination : Array-vectorized entry point.
+    """
+    theta_rad = np.radians(np.atleast_1d(theta))
+    u = np.atleast_1d(u)
+    v = np.atleast_1d(v)
+
+    # align theta with the leading (time) axis of u/v, e.g. (N,) -&gt; (N, 1) for (N, nbins) velocities
+    theta_rad = theta_rad.reshape(theta_rad.shape + (1,) * (u.ndim - theta_rad.ndim))
+    cos_t = np.cos(theta_rad)
+    sin_t = np.sin(theta_rad)
+
+    # rotate from the magnetic to the true Earth frame
+    u_cor = u * cos_t + v * sin_t
+    v_cor = -u * sin_t + v * cos_t
+    return u_cor, v_cor</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation.</td>
+</tr>
+<tr>
+<td>2026-10-16</td>
+<td>Christopher Wingard</td>
+<td>Accepts array inputs directly, one declination per sample.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.igrf_declination" class="doc doc-heading">
+            <code class="highlight language-python">igrf_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Computes magnetic declination (magnetic variation) for a single
+location and date from the International Geomagnetic Reference
+Field (IGRF).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>lat</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Latitude of the instrument [decimal degrees]. North is
+positive, South negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>lon</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Longitude of the instrument [decimal degrees]. East is
+positive, West negative.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>timestamp</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Time stamp from a data particle, either NTP [secs since
+1900-01-01] or Unix [secs since 1970-01-01].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>z</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Depth or height of the instrument relative to sea level
+[meters]. Positive values only. Default 0.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>zflag</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>-1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>-1 to treat z as a depth (i.e. -z), 1 to treat z as a height
+(i.e. +z). Default -1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ntp</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>1 if timestamp is NTP time, 0 if Unix time. Default 1.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>mag_dec</code></b>(                  <code><span title="float">float</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>Magnetic declination (magnetic variation) [degrees from N].
+Positive values are eastward, negative westward of North.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If any input has more than one element. ppigrf evaluates the
+outer product of dates and coordinates, so array inputs would
+silently return the first date's declination at every location.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <pre class="highlight"><code class="language-pycon">&gt;&gt;&gt; igrf_declination(45.0, -128, 3574792037.958, 1000)
+16.45715213214582</code></pre>
+
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>magnetic_declination : Array-vectorized entry point.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def igrf_declination(lat, lon, timestamp, z=0.0, zflag=-1, ntp=1):
+    """
+    Computes magnetic declination (magnetic variation) for a single
+    location and date from the International Geomagnetic Reference
+    Field (IGRF).
+
+    Parameters
+    ----------
+    lat : float
+        Latitude of the instrument [decimal degrees]. North is
+        positive, South negative.
+    lon : float
+        Longitude of the instrument [decimal degrees]. East is
+        positive, West negative.
+    timestamp : float
+        Time stamp from a data particle, either NTP [secs since
+        1900-01-01] or Unix [secs since 1970-01-01].
+    z : float, optional
+        Depth or height of the instrument relative to sea level
+        [meters]. Positive values only. Default 0.
+    zflag : float, optional
+        -1 to treat z as a depth (i.e. -z), 1 to treat z as a height
+        (i.e. +z). Default -1.
+    ntp : float, optional
+        1 if timestamp is NTP time, 0 if Unix time. Default 1.
+
+    Returns
+    -------
+    mag_dec : float
+        Magnetic declination (magnetic variation) [degrees from N].
+        Positive values are eastward, negative westward of North.
+
+    Raises
+    ------
+    ValueError
+        If any input has more than one element. ppigrf evaluates the
+        outer product of dates and coordinates, so array inputs would
+        silently return the first date's declination at every location.
+
+    Examples
+    --------
+    &gt;&gt;&gt; igrf_declination(45.0, -128, 3574792037.958, 1000)
+    16.45715213214582
+
+    See Also
+    --------
+    magnetic_declination : Array-vectorized entry point.
+    """
+    if any(np.size(arg) &gt; 1 for arg in (lat, lon, timestamp, z, zflag, ntp)):
+        raise ValueError('igrf_declination accepts single-valued inputs only; '
+                         'use magnetic_declination for array inputs.')
+
+    if ntp == 1:
+        timestamp = timestamp - 2208988800.
+
+    date = pd.to_datetime(timestamp, unit='s')
+
+    # set the depth to negative for below sealevel (if needed) and convert from
+    # meters to kilometers.
+    z = z / 1000.  # m -&gt; km
+    if z &gt; 0 and zflag == -1:   # check that depth is a positive number first
+        z = zflag * z    # convert z to indicate depth
+
+    # calculate the magnetic declination
+    be, bn, _ = ppigrf.igrf(lon, lat, z, date)
+    mag_dec = np.degrees(np.arctan2(be, bn))   # full +/-180 deg range
+    return mag_dec[0]</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; migrated from pyIGRF to ppigrf (IGRF-14 model); fixed z/zflag sign-check bug; corrected docstring Example, which had <code>z</code> and <code>timestamp</code> swapped in the call.</td>
+</tr>
+<tr>
+<td>2026-10-16</td>
+<td>Christopher Wingard</td>
+<td>Restricted to single-valued inputs; raises <code>ValueError</code> for arrays.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.replace_fill_with_nan" class="doc doc-heading">
+            <code class="highlight language-python">replace_fill_with_nan(instrument_fillvalue, *args)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Converts integer data types to float and replaces both system and
+instrument integer fill values with nan.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>instrument_fillvalue</code></b>
+                  (<code>int, list, or ndarray</code>)
+              –
+              <div class="doc-md-description">
+                <p>Instrument-specific integer fill value(s). Use None, an empty
+list, or an empty array if there are none.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>*args</code></b>
+                  (<code>array_like</code>, default:
+                      <code>()</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>One or more variables to check for fill values. Integer arrays
+are converted to float with fill values replaced by nan; float
+arrays are passed through unchanged.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>out</code></b>(                  <code>array_like or list of array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>The input variable(s) with fill values replaced by nan. A
+single array if only one variable was passed, otherwise a
+list of arrays.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Float fill values are np.nan, but integer types cannot hold nan;
+integers are stored as signed 32-bit values with a single system
+fill value (SYSTEM_FILLVALUE). Instrument fill values vary by
+instrument and are passed in via instrument_fillvalue. The
+'beams' variable in vel3dk is used as a dictionary key and should
+not be processed with this function.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def replace_fill_with_nan(instrument_fillvalue, *args):
+    """
+    Converts integer data types to float and replaces both system and
+    instrument integer fill values with nan.
+
+    Parameters
+    ----------
+    instrument_fillvalue : int, list, or ndarray, optional
+        Instrument-specific integer fill value(s). Use None, an empty
+        list, or an empty array if there are none.
+    *args : array_like
+        One or more variables to check for fill values. Integer arrays
+        are converted to float with fill values replaced by nan; float
+        arrays are passed through unchanged.
+
+    Returns
+    -------
+    out : array_like or list of array_like
+        The input variable(s) with fill values replaced by nan. A
+        single array if only one variable was passed, otherwise a
+        list of arrays.
+
+    Notes
+    -----
+    Float fill values are np.nan, but integer types cannot hold nan;
+    integers are stored as signed 32-bit values with a single system
+    fill value (SYSTEM_FILLVALUE). Instrument fill values vary by
+    instrument and are passed in via instrument_fillvalue. The
+    'beams' variable in vel3dk is used as a dictionary key and should
+    not be processed with this function.
+    """
+    # while all input arguments presented to the DPA functions by CI will be np.ndarrays of
+    # at least one dimension, many of the unit tests were written before this policy was
+    # established. as a result many use core python scalars to represent single-valued
+    # parameters ( for example: lat = 45.0 instead of lat = np.array([45.0]) ). because of
+    # this, for compatibility input arguments that are core python scalars will be supported.
+    args = np.atleast_1d(*args)
+    # the output of this last statement is a list, UNLESS there is only one element,
+    # in which case instead of a list of one element the element itself is returned.
+
+    # if args consists of a single element make it into a list so that when it is indexed,
+    # the index refers to the element itself instead of the element's subelements.
+    if not isinstance(args, list):
+        args = [args]
+
+    # the first fill value to be checked will be the system fillvalue
+    all_fillvalues = np.array([SYSTEM_FILLVALUE])
+    # in case instrument_fillvalue is passed as an ndarray, turn it into a flattened list;
+    # testing a list for whether it is empty (F) or not (T) is more straightforward than
+    # dealing with ndarrays of sizes from empty to multiple elements - some of my tests
+    # with these revealed non-intuitive results when subjected to boolean testing.
+    if isinstance(instrument_fillvalue, np.ndarray):
+        instrument_fillvalue = list(instrument_fillvalue.flatten())
+    if instrument_fillvalue is not None:
+        all_fillvalues = np.hstack((all_fillvalues, instrument_fillvalue))
+
+    # more pythonic, perhaps faster
+    for ii, val in enumerate(args):
+        # check to see if the first element is an integer datatype
+        if isinstance(val.flatten()[0], Integral):
+            mask = np.zeros_like(val, dtype=bool)
+            for jj, fil in enumerate(all_fillvalues):
+                mask = np.logical_or(mask, val == fil)
+            val = val.astype('float')
+            val[mask] = np.nan
+            args[ii] = val
+
+    # if args has only one element, unit tests fail if it is passed out as a list.
+    if len(args) == 1:
+        args = args[0]
+    return args</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.extract_parameter" class="doc doc-heading">
+            <code class="highlight language-python">extract_parameter(in_array, index)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Extracts a single value from an array. Used, for example, to
+extract the L0 PH434SI value from the array holding the 24 sets
+of 4 light measurements made by the Sunburst SAMI-II pH
+instrument (PHSEN).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>in_array</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>The input array holding the value.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>index</code></b>
+                  (<code><span title="int">int</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>0-based index into in_array.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>out_value</code></b>(                  <code><span title="object">object</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>The extracted value at index.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def extract_parameter(in_array, index):
+    """
+    Extracts a single value from an array. Used, for example, to
+    extract the L0 PH434SI value from the array holding the 24 sets
+    of 4 light measurements made by the Sunburst SAMI-II pH
+    instrument (PHSEN).
+
+    Parameters
+    ----------
+    in_array : array_like
+        The input array holding the value.
+    index : int
+        0-based index into in_array.
+
+    Returns
+    -------
+    out_value : object
+        The extracted value at index.
+    """
+    out_value = in_array[index]
+    return out_value</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.select_non_zero_arg" class="doc doc-heading">
+            <code class="highlight language-python">select_non_zero_arg(a1, a2=None, a1_scale_factor=None, a2_scale_factor=None)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Tests a1 and a2 for non-zero values and returns the non-zero
+array, scaled if a scale factor is supplied.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>a1</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>An input array to test for non-zero elements.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a2</code></b>
+                  (<code>array_like</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>An input array to test for non-zero elements.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a1_scale_factor</code></b>
+                  (<code>array_like</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Scale factor to apply to a1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a2_scale_factor</code></b>
+                  (<code>array_like</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Scale factor to apply to a2.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>out</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>The scaled array containing at least one non-zero element.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def select_non_zero_arg(a1, a2=None, a1_scale_factor=None, a2_scale_factor=None):
+    """
+    Tests a1 and a2 for non-zero values and returns the non-zero
+    array, scaled if a scale factor is supplied.
+
+    Parameters
+    ----------
+    a1 : array_like
+        An input array to test for non-zero elements.
+    a2 : array_like, optional
+        An input array to test for non-zero elements.
+    a1_scale_factor : array_like, optional
+        Scale factor to apply to a1.
+    a2_scale_factor : array_like, optional
+        Scale factor to apply to a2.
+
+    Returns
+    -------
+    out : array_like
+        The scaled array containing at least one non-zero element.
+    """
+    if np.any(a1):
+        return a1 * a1_scale_factor if np.any(a1_scale_factor) else a1
+    if np.any(a2):
+        return a2 * a2_scale_factor if np.any(a2_scale_factor) else a2
+    return a1</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.select_arg_within_tolerance_of_std" class="doc doc-heading">
+            <code class="highlight language-python">select_arg_within_tolerance_of_std(a1, a2=None, std=None, tol=0.25, a1_scale_factor=1, a2_scale_factor=1, std_scale_factor=1)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Tests a1 and a2 for non-zero values and returns the non-zero
+array whose average is within tolerance of the standard, scaling
+inputs as needed for comparability.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>a1</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>An input array to test for non-zero elements and tolerance.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a2</code></b>
+                  (<code>array_like</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>An input array to test for non-zero elements and tolerance.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>std</code></b>
+                  (<code>array_like</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The standard that a1 and a2 are compared against.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tol</code></b>
+                  (<code>array_like</code>, default:
+                      <code>0.25</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Relative tolerance the returned array's average must be
+within, compared to the standard. Default 0.25.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a1_scale_factor</code></b>
+                  (<code>array_like</code>, default:
+                      <code>1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Scale factor to apply to a1. Default 1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>a2_scale_factor</code></b>
+                  (<code>array_like</code>, default:
+                      <code>1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Scale factor to apply to a2. Default 1.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>std_scale_factor</code></b>
+                  (<code>array_like</code>, default:
+                      <code>1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Scale factor to apply to std. Default 1.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>out</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>The scaled array containing at least one non-zero element
+with an average within tolerance of the standard.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>error : Relative-error helper used internally.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def select_arg_within_tolerance_of_std(a1, a2=None, std=None, tol=0.25,
+                                       a1_scale_factor=1, a2_scale_factor=1,
+                                       std_scale_factor=1):
+    """
+    Tests a1 and a2 for non-zero values and returns the non-zero
+    array whose average is within tolerance of the standard, scaling
+    inputs as needed for comparability.
+
+    Parameters
+    ----------
+    a1 : array_like
+        An input array to test for non-zero elements and tolerance.
+    a2 : array_like, optional
+        An input array to test for non-zero elements and tolerance.
+    std : array_like, optional
+        The standard that a1 and a2 are compared against.
+    tol : array_like, optional
+        Relative tolerance the returned array's average must be
+        within, compared to the standard. Default 0.25.
+    a1_scale_factor : array_like, optional
+        Scale factor to apply to a1. Default 1.
+    a2_scale_factor : array_like, optional
+        Scale factor to apply to a2. Default 1.
+    std_scale_factor : array_like, optional
+        Scale factor to apply to std. Default 1.
+
+    Returns
+    -------
+    out : array_like
+        The scaled array containing at least one non-zero element
+        with an average within tolerance of the standard.
+
+    See Also
+    --------
+    error : Relative-error helper used internally.
+    """
+    a1s = a1 * a1_scale_factor if np.any(a1) and np.any(a1_scale_factor) else a1
+    a2s = a2 * a2_scale_factor if np.any(a2) and np.any(a2_scale_factor) else a2
+
+    if not np.any(a2s) or not np.any(std) or not np.any(tol):
+        return a1s
+    if not np.any(a1s):
+        return a2s
+
+    stds = std * std_scale_factor if np.any(std_scale_factor) else std
+    avg_tol = np.average(tol)
+
+    if np.average(error(a1s, stds)) &lt; avg_tol:
+        return a1s
+    if np.average(error(a2s, stds)) &lt; avg_tol:
+        return a2s
+    return a1s</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.error" class="doc doc-heading">
+            <code class="highlight language-python">error(x, y)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Relative error of x with respect to y.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>x</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Value(s) to compare.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>y</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Reference value(s).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>out</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>abs(x - y) / abs(y).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Internal helper used only by select_arg_within_tolerance_of_std.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def error(x, y):
+    """
+    Relative error of x with respect to y.
+
+    Parameters
+    ----------
+    x : array_like
+        Value(s) to compare.
+    y : array_like
+        Reference value(s).
+
+    Returns
+    -------
+    out : array_like
+        abs(x - y) / abs(y).
+
+    Notes
+    -----
+    Internal helper used only by select_arg_within_tolerance_of_std.
+    """
+    return np.abs(x - y) / np.abs(y)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; added a docstring (previously undocumented).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.bilinear_interpolation" class="doc doc-heading">
+            <code class="highlight language-python">bilinear_interpolation(x, y, points)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Interpolates the value at (x, y) from four points forming a
+rectangle.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>x</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>x-coordinate to interpolate at.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>y</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>y-coordinate to interpolate at.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>points</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Four (x, y, value) triplets, in any order, forming the
+corners of a rectangle.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>value</code></b>(                  <code><span title="float">float</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>The bilinearly interpolated value at (x, y).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <pre class="highlight"><code class="language-pycon">&gt;&gt;&gt; bilinear_interpolation(12, 5.5,
+...                        [(10, 4, 100),
+...                         (20, 4, 200),
+...                         (10, 6, 150),
+...                         (20, 6, 300)])
+165.0</code></pre>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>See https://en.wikipedia.org/wiki/Bilinear_interpolation for the
+formula.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def bilinear_interpolation(x, y, points):
+    """
+    Interpolates the value at (x, y) from four points forming a
+    rectangle.
+
+    Parameters
+    ----------
+    x : float
+        x-coordinate to interpolate at.
+    y : float
+        y-coordinate to interpolate at.
+    points : array_like
+        Four (x, y, value) triplets, in any order, forming the
+        corners of a rectangle.
+
+    Returns
+    -------
+    value : float
+        The bilinearly interpolated value at (x, y).
+
+    Examples
+    --------
+    &gt;&gt;&gt; bilinear_interpolation(12, 5.5,
+    ...                        [(10, 4, 100),
+    ...                         (20, 4, 200),
+    ...                         (10, 6, 150),
+    ...                         (20, 6, 300)])
+    165.0
+
+    Notes
+    -----
+    See https://en.wikipedia.org/wiki/Bilinear_interpolation for the
+    formula.
+    """
+    # order points by x, then by y
+    pts = np.sort(points.view('f8,f8,f8'), order=['f0', 'f1'])
+    (x1, y1, q11), (_x1, y2, q12), (x2, _y1, q21), (_x2, _y2, q22) = points
+
+    if x1 != _x1 or x2 != _x2 or y1 != _y1 or y2 != _y2:
+        raise ValueError('points do not form a rectangle')
+    if not x1 &lt;= x &lt;= x2 or not y1 &lt;= y &lt;= y2:
+        raise ValueError('(x, y) not within the rectangle')
+
+    return (q11 * (x2 - x) * (y2 - y) +
+            q21 * (x - x1) * (y2 - y) +
+            q12 * (x2 - x) * (y - y1) +
+            q22 * (x - x1) * (y - y1)) / ((x2 - x1) * (y2 - y1) + 0.0)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_8">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="deprecated-functions">Deprecated Functions</h2>
+<div class="admonition note">
+<p class="admonition-title">Deprecated</p>
+<p><code>ntp_to_unix_time</code> is deprecated. Use the fixed offset of 2208988800
+seconds between the NTP and Unix epochs directly instead of calling
+this function.</p>
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.generic_functions.ntp_to_unix_time" class="doc doc-heading">
+            <code class="highlight language-python">ntp_to_unix_time(ntp_timestamp)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Converts an NTP time stamp (epoch 1900-01-01) to a Unix time
+stamp (epoch 1970-01-01).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ntp_timestamp</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>NTP timestamp(s) [seconds since 1900-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>unix_timestamp</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>Unix timestamp(s) [seconds since 1970-01-01].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Deprecated: use the fixed offset of 2208988800 seconds between
+the NTP and Unix epochs directly instead of calling this
+function.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/generic_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def ntp_to_unix_time(ntp_timestamp):
+    """
+    Converts an NTP time stamp (epoch 1900-01-01) to a Unix time
+    stamp (epoch 1970-01-01).
+
+    Parameters
+    ----------
+    ntp_timestamp : array_like
+        NTP timestamp(s) [seconds since 1900-01-01].
+
+    Returns
+    -------
+    unix_timestamp : array_like
+        Unix timestamp(s) [seconds since 1970-01-01].
+
+    Notes
+    -----
+    Deprecated: use the fixed offset of 2208988800 seconds between
+    the NTP and Unix epochs directly instead of calling this
+    function.
+    """
+    SYSTEM_EPOCH = datetime.date(*time.gmtime(0)[0:3])
+    NTP_EPOCH = datetime.date(1900, 1, 1)
+    NTP_DELTA = (SYSTEM_EPOCH - NTP_EPOCH).total_seconds()
+
+    unix_timestamp = ne.evaluate('ntp_timestamp - NTP_DELTA')
+    return unix_timestamp</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_9">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; decorated with <code>@deprecated</code> and added to <code>DEPRECATIONS.md</code> (previously marked deprecated in docstring prose only).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Beggan, C.D., et al. (2026). International Geomagnetic Reference Field: the fourteenth
+generation. <em>Earth Planets Space</em>, 78, 127. <a href="https://doi.org/10.1186/s40623-025-02360-0">https://doi.org/10.1186/s40623-025-02360-0</a></p>
+<p>International Association of Geomagnetism and Aeronomy (2024). <a href="https://doi.org/10.5281/zenodo.14012302">IGRF-14.
+Zenodo.</a></p>
+<p>OOI (2020). <a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00750_Data_Product_SPEC_VELPROF_ECHOINT_OOI.pdf">Data Product Specification for Velocity Profile and Echo
+Intensity. Document Control Number
+1341-00750.</a></p>
+<p>OOI (2013). <a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00760_Data_Product_SPEC_VELTURB_ECHOINT_OOI.pdf">Data Product Specification for Turbulent Velocity Profile and
+Echo Intensity. Document Control Number
+1341-00760.</a></p>
+<p>Strom, K.M., and Reistad, H. (2024). <a href="https://github.com/IAGA-VMOD/ppigrf">ppigrf: Python package for computing
+the International Geomagnetic Reference Field
+(IGRF).</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../wav_functions/" class="btn btn-neutral float-left" title="WAV Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../qc_functions/" class="btn btn-neutral float-right" title="QC Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../wav_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../qc_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

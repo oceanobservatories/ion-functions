@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/CONTRIBUTING/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Contributing - ion-functions</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/print-site.css" rel="stylesheet" />
+        <link href="../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Contributing";
+        var mkdocs_page_input_path = "CONTRIBUTING.md";
+        var mkdocs_page_url = "/ion-functions/CONTRIBUTING/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="..">
+          <img src="../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Contributing</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of contents</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#code-of-conduct">Code of conduct</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#reporting-bugs">Reporting bugs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#proposing-changes">Proposing changes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#development-workflow">Development workflow</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#code-style">Code style</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#function-conventions">Function conventions</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#docstrings">Docstrings</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#c-extension-tests">C extension tests</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#commit-messages">Commit messages</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pull-requests">Pull requests</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Contributing</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="contributing-to-ion-functions">Contributing to ion-functions</h1>
+<p>Thank you for your interest in contributing to ion-functions. This document
+covers how to report bugs, propose changes, and submit pull requests.</p>
+<h2 id="table-of-contents">Table of contents</h2>
+<ul>
+<li><a href="#code-of-conduct">Code of conduct</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#reporting-bugs">Reporting bugs</a></li>
+<li><a href="#proposing-changes">Proposing changes</a></li>
+<li><a href="#development-workflow">Development workflow</a></li>
+<li><a href="#code-style">Code style</a></li>
+<li><a href="#docstrings">Docstrings</a></li>
+<li><a href="#tests">Tests</a></li>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#commit-messages">Commit messages</a></li>
+<li><a href="#pull-requests">Pull requests</a></li>
+</ul>
+<hr />
+<h2 id="code-of-conduct">Code of conduct</h2>
+<p>This project follows the
+<a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/">Contributor Covenant</a>
+code of conduct. By participating, you agree to uphold a welcoming and
+respectful environment for everyone.</p>
+<hr />
+<h2 id="getting-started">Getting started</h2>
+<ol>
+<li>Fork the repository on GitHub.</li>
+<li>Clone your fork and add the main repository as the <code>upstream</code> remote:</li>
+</ol>
+<p><code>bash
+   git clone https://github.com/&lt;your-username&gt;/ion-functions.git
+   cd ion-functions
+   git remote add upstream https://github.com/oceanobservatories/ion-functions.git</code></p>
+<ol>
+<li>
+<p>Create the environment and install the package as described in <a href="../installation/">Installation</a>.</p>
+</li>
+<li>
+<p>Verify the setup:</p>
+</li>
+</ol>
+<p><code>bash
+   pytest</code></p>
+<hr />
+<h2 id="reporting-bugs">Reporting bugs</h2>
+<p>Before filing a bug report, search the
+<a href="https://github.com/oceanobservatories/ion-functions/issues">issue tracker</a>
+to see if the problem has already been reported.</p>
+<p>When opening a new issue, include:</p>
+<ul>
+<li>A clear, descriptive title.</li>
+<li>The Python version and operating system you are using.</li>
+<li>A minimal, self-contained code example that reproduces the problem.</li>
+<li>The actual output or error you observed and what you expected instead.</li>
+</ul>
+<hr />
+<h2 id="proposing-changes">Proposing changes</h2>
+<p>For small, focused fixes (typos, documentation corrections, minor bug fixes)
+you can open a pull request directly. For larger changes -- new instrument
+families, algorithm updates, or structural refactors -- open an issue first to
+discuss the approach before investing time in implementation.</p>
+<hr />
+<h2 id="development-workflow">Development workflow</h2>
+<p>Work on a feature branch off <code>master</code>:</p>
+<pre><code class="language-bash">git checkout master
+git pull upstream master
+git checkout -b my-feature-branch
+</code></pre>
+<p>Keep your branch focused on a single logical change. Open separate pull
+requests for unrelated fixes rather than bundling them together.</p>
+<hr />
+<h2 id="code-style">Code style</h2>
+<ul>
+<li><strong>Python version:</strong> 3.12, as pinned in <code>conda_env.yml</code>.</li>
+<li><strong>Line length:</strong> wrap code and comments at 120 characters.</li>
+<li><strong>Formatting:</strong> follow <a href="https://peps.python.org/pep-0008/">PEP 8</a>. Use
+  <code>black</code> or <code>ruff</code> if you prefer an automated formatter, but do not reformat
+  code outside the scope of your change.</li>
+<li><strong>Types:</strong> type annotations are welcome but not required.</li>
+<li><strong>Imports:</strong> standard library first, then third-party, then local -- each
+  group separated by a blank line.</li>
+<li><strong>No magic numbers:</strong> use named constants or document the source of a
+  numerical value in a comment.</li>
+</ul>
+<h3 id="function-conventions">Function conventions</h3>
+<ul>
+<li>All functions in <code>ion_functions/data/</code> accept and return NumPy arrays.</li>
+<li>Functions must be stateless (no class-level or module-level mutable state).</li>
+<li>Missing values use <code>NaN</code> for floats. Integer data use the system fill value <code>-999999999</code>
+  (<code>SYSTEM_FILLVALUE</code> in <code>generic_functions.py</code>); instrument-specific integer fill values are converted to <code>NaN</code>
+  with <code>replace_fill_with_nan</code>.</li>
+<li>Do not alter the signature or logic of existing functions without discussion;
+  OOI data processing pipelines depend on stable interfaces.</li>
+</ul>
+<hr />
+<h2 id="docstrings">Docstrings</h2>
+<p>All public functions use <strong>NumPy-style docstrings</strong>. Wrap docstrings at
+79 characters.</p>
+<p>Minimum required sections for a data-processing function:</p>
+<pre><code class="language-python">def my_function(arg1, arg2):
+    &quot;&quot;&quot;
+    One-line summary of what this function computes.
+
+    Parameters
+    ----------
+    arg1 : ndarray
+        Description, including OOI variable name and units [units].
+    arg2 : float
+        Description.
+
+    Returns
+    -------
+    result : ndarray
+        Description, including OOI data product code and level [units].
+
+    Notes
+    -----
+    Brief notes (2-5 lines). Extended content belongs in the docs site.
+    &quot;&quot;&quot;
+</code></pre>
+<p>Use plain ASCII in docstrings -- no Unicode, Greek letters, or special
+symbols. Write units as plain text (e.g., <code>degC</code>, <code>m s^-1</code>, <code>umol/kg</code>).</p>
+<p>Do not add a <code>References</code> section to individual docstrings; citations belong
+in the corresponding documentation page under <code>docs/api/</code>.</p>
+<p>Each function also appears on its instrument family page in <code>docs/api/</code> through a <code>:::</code> directive followed by a
+History table. When you change a function, add a History row (date, author, change) to that table.</p>
+<hr />
+<h2 id="tests">Tests</h2>
+<p>Every function in <code>ion_functions/data/</code> should have a corresponding test in
+<code>ion_functions/data/test/</code>. Tests use <code>unittest</code> and follow the existing
+conventions in that directory.</p>
+<ul>
+<li>Test against known-good values derived from the OOI Data Product
+  Specification (DPS) worked examples or from independent reference
+  implementations where available.</li>
+<li>Include at least one test for a representative input array and one for
+  scalar or edge-case inputs.</li>
+<li>Do not introduce test dependencies beyond those already in the <code>test</code> extra in <code>pyproject.toml</code>.</li>
+</ul>
+<p>Run the full test suite before opening a pull request:</p>
+<pre><code class="language-bash">pytest
+</code></pre>
+<h3 id="c-extension-tests">C extension tests</h3>
+<p>The QC extension (<code>ion_functions/qc/qc_extensions.pyx</code>) and the polynomial calibration extension
+(<code>ion_functions/data/polycals.pyx</code>) wrap C code in <code>extensions/</code>. When changing that C code, also run the C test
+harness, which requires <code>make</code> and gcc (on Windows, use WSL):</p>
+<pre><code class="language-bash">make
+extensions/test
+make clean
+</code></pre>
+<hr />
+<h2 id="documentation">Documentation</h2>
+<p>The documentation site is built with
+<a href="https://www.mkdocs.org/">MkDocs</a> and
+<a href="https://mkdocstrings.github.io/">mkdocstrings</a>. Sources live under <code>docs/</code>.</p>
+<p>Install the test and documentation tools (the <code>dev</code> extra in <code>pyproject.toml</code>), then build and preview locally:</p>
+<pre><code class="language-bash">pip install --no-build-isolation -e &quot;.[dev]&quot;
+mkdocs serve
+</code></pre>
+<p>Then open <code>http://127.0.0.1:8000</code> in your browser. The site rebuilds
+automatically as you edit files.</p>
+<p>To build a single PDF of the whole site (written to <code>site/ion-functions.pdf</code>), run once
+<code>playwright install chromium</code>, then:</p>
+<pre><code class="language-bash">mkdocs build --strict
+python tools/build_pdf.py
+</code></pre>
+<p>If you add a new instrument family module, add a corresponding page under
+<code>docs/api/</code> and add it to the <code>nav</code> section of <code>mkdocs.yml</code>.</p>
+<hr />
+<h2 id="commit-messages">Commit messages</h2>
+<p>Use short, imperative-mood subject lines (50 characters or fewer):</p>
+<pre><code>Fix sign error in co2_functions t_coeff correction
+Add NumPy docstrings for nit_functions
+Update conda_env.yml to require gsw &gt;= 3.6
+</code></pre>
+<p>For non-trivial changes, add a body paragraph separated from the subject
+by a blank line that explains <em>why</em> the change was made, not just what.</p>
+<hr />
+<h2 id="pull-requests">Pull requests</h2>
+<p>Before submitting:</p>
+<ul>
+<li>[ ] All existing tests pass (<code>pytest</code>).</li>
+<li>[ ] New or modified functions have NumPy docstrings.</li>
+<li>[ ] New functions have tests.</li>
+<li>[ ] If you changed the public API, the relevant <code>docs/api/</code> page is updated.</li>
+<li>[ ] Your branch is up to date with <code>master</code>.</li>
+</ul>
+<p>In the pull request description:</p>
+<ul>
+<li>Summarize what changed and why.</li>
+<li>Reference any related issues (e.g., <code>Closes #123</code>).</li>
+<li>Note any algorithm decisions that reviewers should be aware of, especially
+  if the implementation differs from the DPS or a cited source.</li>
+</ul>
+<p>A maintainer will review your pull request and may request changes before
+merging. Please respond to review comments promptly and keep the discussion
+focused on the code.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../installation/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../data_products/" class="btn btn-neutral float-right" title="Data Product Levels">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../data_products/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/print-site.js"></script>
+      <script src="../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

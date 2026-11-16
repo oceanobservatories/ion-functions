@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/ph_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>pH Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "pH Functions";
+        var mkdocs_page_input_path = "api/ph_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/ph_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">pH Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sami-ph-phsen-adef">SAMI-pH -- PHSEN-A/D/E/F</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#deep-seaphox-v2-phsen-gh">Deep SeapHOx V2 -- PHSEN-G/H</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sami-ph-functions-phsen-adef">SAMI-pH Functions (PHSEN-A/D/E/F)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#deep-seaphox-v2-functions-phsen-gh">Deep SeapHOx V2 Functions (PHSEN-G/H)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#core-functions_1">Core Functions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#helper-functions_1">Helper Functions</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">pH Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="ph-functions">pH Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys two families of pH instruments
+across its moored platforms. The table below lists the OOI instrument classes
+covered by this module.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PHSEN-A/D/E/F</td>
+<td><a href="#sami-ph-functions-phsen-adef">Sunburst SAMI-pH</a></td>
+<td>Moored (fixed depth)</td>
+<td>pH Sensor</td>
+</tr>
+<tr>
+<td>PHSEN-G/H</td>
+<td><a href="#deep-seaphox-v2-functions-phsen-gh">Sea-Bird Scientific Deep SeapHOx V2</a> (<a href="../../seaphox/">instrument notes</a>)</td>
+<td>Moored (fixed depth)</td>
+<td>pH Sensor</td>
+</tr>
+</tbody>
+</table>
+<p><code>ph_functions.py</code> processes data from the <a href="https://www.sunburstsensors.com/products/oceanographic-ph-sensor.html">Sunburst Sensors SAMI-pH</a>
+(PHSEN-A/D/E/F) and computes the L2 pH of seawater data product 
+(PHWATER_L2). <code>phsen_h_functions.py</code> processes data from the <a href="https://www.seabird.com/products/deep-seaphox-v2-ph-sensor">Sea-Bird 
+Scientific Deep SeapHOx V2</a> 
+(PHSEN-G and PHSEN-H) and computes the same PHWATER_L2 data product. Both 
+instruments measure pH on the total hydrogen ion scale (<span class="arithmatex">\(\text{pH}_T\)</span>) and produce PHWATER_L2 directly from their raw
+L0 data; there is no intermediate L1 product.</p>
+<p>Within the OOI data system, pH data products fall under the Water Column <a href="https://oceanobservatories.org/data-products/">sampling
+regime</a> (see the <a href="https://oceanobservatories.org/data-products/data-products-complete-list/">complete list of OOI data
+products</a>).</p>
+<p>Calibration coefficients are from the factory calibration sheets supplied with individual instruments, except where
+noted in the Calibration Coefficients tables below.</p>
+<p>This page documents the algorithms used to compute the pH data products. For general guidance on working with OOI
+biogeochemical sensor data, see the <a href="https://doi.org/10.25607/OBP-1865.2">OOI Biogeochemical Sensor Data Best Practices and User
+Guide</a>; for locating calibration coefficients and raw inputs, see <a href="../../calibrations/">Calibration
+Coefficients</a> and <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00510</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_Spec_PHWATER_OOI.pdf">OOI (2012). Data Product Specification for pH of Seawater.</a></td>
+</tr>
+<tr>
+<td>AN99</td>
+<td><a href="https://242648281.fs1.hubspotusercontent-na2.net/hubfs/242648281/Resources/Application%20Notes/AN99-CalculatepH.pdf">Calculating pH from ISFET pH Sensors. SeaFET V2, Shallow SeapHOx V2, Deep SeapHOx V2, Floats</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="sami-ph-phsen-adef">SAMI-pH -- PHSEN-A/D/E/F</h3>
+<p>The SAMI-pH measures pH using a colorimetric reaction with the pH indicator
+meta-Cresol Purple (mCP). A seawater sample is pumped through a flow cell and
+injected with a pulse of indicator solution. Two LEDs illuminate the
+indicator-sample mixture at 434 nm and 578 nm -- the peak absorbance wavelengths
+of the protonated (<span class="arithmatex">\(\text{HI}^-\)</span>) and deprotonated (<span class="arithmatex">\(\text{I}^{2-}\)</span>) forms of
+mCP, respectively. The ratio of the absorbances at these two wavelengths is used
+to compute pH on the total scale.</p>
+<h4 id="calibration-coefficients">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ea434</code></td>
+<td><code>CC_ea434</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>eb434</code></td>
+<td><code>CC_eb434</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>ea578</code></td>
+<td><code>CC_ea578</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>eb578</code></td>
+<td><code>CC_eb578</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>ind_slp</code></td>
+<td><code>CC_ind_slp</code></td>
+<td>Set to 1 (no correction)</td>
+</tr>
+<tr>
+<td><code>ind_off</code></td>
+<td><code>CC_ind_off</code></td>
+<td>Set to 0 (no correction)</td>
+</tr>
+<tr>
+<td><code>sami_bits</code></td>
+<td><code>CC_sami_bits</code></td>
+<td>Instrument configuration (12- or 14-bit ADC)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="phwater_l2-ph-of-seawater-from-sami-ph">PHWATER_L2 -- pH of Seawater from SAMI-pH</h4>
+<p><strong>L0 Inputs</strong></p>
+<p>Each SAMI-II data record contains two types of raw light measurements:</p>
+<ul>
+<li><strong>Blank measurements</strong> -- 4 sets of 4 interleaved readings
+  <span class="arithmatex">\([\text{ref}_{434},\ \text{sig}_{434},\ \text{ref}_{578},\ \text{sig}_{578}]\)</span>
+  collected while pumping pure seawater (16 values total).</li>
+<li><strong>Sample measurements</strong> -- 23 sets of 4 interleaved readings in the same
+  arrangement, collected while pumping the seawater-indicator mixture
+  (92 values total).</li>
+</ul>
+<p>Raw signal intensities range from 0 to 4096 counts.</p>
+<p><strong>Thermistor Temperature</strong></p>
+<p>The raw thermistor count is converted to temperature in <span class="arithmatex">\(^\circ\)</span>C. The conversion depends on the SAMI hardware
+generation (12-bit or 14-bit ADC), set by <code>sami_bits</code> from the instrument configuration. For 12-bit hardware (full-scale
+count <span class="arithmatex">\(= 4096\)</span>):</p>
+<div class="arithmatex">\[r_t = \ln\left(\frac{\text{Therm}}{4096 - \text{Therm}} \times 17400\right)\]</div>
+<p>For 14-bit hardware (full-scale count <span class="arithmatex">\(= 16384\)</span>):</p>
+<div class="arithmatex">\[r_t = \ln\left(\frac{\text{Therm}}{16384 - \text{Therm}} \times 17400\right)\]</div>
+<p>In both cases temperature is then:</p>
+<div class="arithmatex">\[T_C = \frac{1}{0.0010183 + 0.000241 \times r_t + 1.5 \times 10^{-7} \times {r_t}^3} - 273.15\]</div>
+<p>The 14-bit ADC is a post-DPS hardware change not described in DPS 1341-00510.</p>
+<p><strong>Blank Normalization</strong></p>
+<p>The blank signal intensity ratio at each wavelength is computed from the 4
+blank measurement sets and averaged:</p>
+<div class="arithmatex">\[B_{434} = \frac{1}{4}\sum_{k=1}^{4} \frac{\text{sig}_{434,k}}{\text{ref}_{434,k}}\]</div>
+<div class="arithmatex">\[B_{578} = \frac{1}{4}\sum_{k=1}^{4} \frac{\text{sig}_{578,k}}{\text{ref}_{578,k}}\]</div>
+<p><strong>Absorbance</strong></p>
+<p>The blank-corrected absorbances at each wavelength are computed using
+Beer's Law:</p>
+<div class="arithmatex">\[A_{434} = -\log_{10}\left(\frac{\text{sig}_{434}}{\text{ref}_{434}}\right) - \left(-\log_{10} B_{434}\right)\]</div>
+<div class="arithmatex">\[A_{578} = -\log_{10}\left(\frac{\text{sig}_{578}}{\text{ref}_{578}}\right) - \left(-\log_{10} B_{578}\right)\]</div>
+<p>The absorbance ratio is:</p>
+<div class="arithmatex">\[R = \frac{A_{578}}{A_{434}}\]</div>
+<p><strong>Temperature-Dependent Molar Absorptivities</strong></p>
+<p>The molar absorptivities of the two indicator forms are adjusted for
+temperature using the reference molar absorptivities <span class="arithmatex">\(e_{a434}\)</span>, <span class="arithmatex">\(e_{b434}\)</span>, <span class="arithmatex">\(e_{a578}\)</span>, <span class="arithmatex">\(e_{b578}\)</span> (<code>ea434</code>, <code>eb434</code>,
+<code>ea578</code>, <code>eb578</code>, from the factory calibration sheet) at a reference temperature of 24.788 <span class="arithmatex">\(^\circ\)</span>C:</p>
+<div class="arithmatex">\[E_{a434} = e_{a434} - 26 \times (T_C - 24.788)\]</div>
+<div class="arithmatex">\[E_{a578} = e_{a578} + (T_C - 24.788)\]</div>
+<div class="arithmatex">\[E_{b434} = e_{b434} + 12 \times (T_C - 24.788)\]</div>
+<div class="arithmatex">\[E_{b578} = e_{b578} - 71 \times (T_C - 24.788)\]</div>
+<p>The absorptivity ratios used in the pH equation are:</p>
+<div class="arithmatex">\[e_1 = E_{a578} / E_{a434}, e_2 = E_{b578} / E_{a434}, e_3 = E_{b434} / E_{a434}\]</div>
+<p><strong>pKa</strong></p>
+<p>The apparent dissociation constant of mCP is computed from temperature and
+salinity (Clayton and Byrne, 1993):</p>
+<div class="arithmatex">\[pK'_a = \frac{1245.69}{T_C + 273.15} + 3.8275 + 0.0021 \times (35 - S)\]</div>
+<p>where <span class="arithmatex">\(S\)</span> is the seawater practical salinity from a co-located CTD (default 
+35.0 if no CTD data are available).</p>
+<p><strong>PHWATER_L2 Calculation</strong></p>
+<p>Point-by-point pH values are computed for each of the 23 sample measurement
+sets:</p>
+<div class="arithmatex">\[\text{pH}_\text{point} = pK'_a + \log_{10}\left(\frac{R - e_1}{e_2 - R \times e_3}\right)\]</div>
+<p>Indicator concentrations for the protonated and deprotonated forms are:</p>
+<div class="arithmatex">\[[\text{HI}^-] = \frac{A_{434} \times E_{b578} - A_{578} \times E_{b434}}{E_{a434} \times E_{b578} - E_{b434} \times E_{a578}}\]</div>
+<div class="arithmatex">\[[\text{I}^{2-}] = \frac{A_{578} \times E_{a434} - A_{434} \times E_{a578}}{E_{a434} \times E_{b578} - E_{b434} \times E_{a578}}\]</div>
+<div class="arithmatex">\[C_\text{ind} = [\text{HI}^-] + [\text{I}^{2-}]\]</div>
+<p>The first 5 of the 23 measurement sets are discarded. From the remaining 18,
+the 8 consecutive points with the highest linear <span class="arithmatex">\(R^2\)</span> between <span class="arithmatex">\(C_\text{ind}\)</span>
+and <span class="arithmatex">\(\text{pH}_\text{point}\)</span> are selected. The final PHWATER_L2 value is
+the y-intercept of a linear regression of <span class="arithmatex">\(\text{pH}_\text{point}\)</span> on
+<span class="arithmatex">\(C_\text{ind}\)</span> through those 8 points -- i.e., the pH extrapolated to zero
+indicator concentration.</p>
+<p>An impurity correction is applied when the extrapolated pH exceeds 8.2:</p>
+<div class="arithmatex">\[\text{pH}_\text{final} = \text{pH} \times \text{ind_slp} + \text{ind_off}\]</div>
+<p>where <code>ind_slp</code> and <code>ind_off</code> are the indicator impurity slope and offset correction factors, currently set to 1 and
+0 (no correction). This correction is not described in DPS 1341-00510.</p>
+<p>Output accuracy: <span class="arithmatex">\(\pm 0.01\)</span> pH units; precision <span class="arithmatex">\(\pm 0.005\)</span> pH units
+(DPS 1341-00510, Section 4.4). Algorithm results are valid between 0 and 35
+<span class="arithmatex">\(^\circ\)</span>C and at salinities of <span class="arithmatex">\(35 \pm 1\)</span>; salinity corrections
+from a co-located CTD extend the valid salinity range (DPS 1341-00510,
+Section 3.3).</p>
+<hr />
+<h3 id="deep-seaphox-v2-phsen-gh">Deep SeapHOx V2 -- PHSEN-G/H</h3>
+<p>The Deep SeapHOx V2 (see the <a href="../../seaphox/">Deep SeapHOx V2 instrument notes</a>) combines the Deep SeaFET V2 ISFET pH sensor with the
+Sea-Bird Electronics SBE 37-SMP-ODO MicroCAT CTD+DO sensor. PHSEN-G and
+PHSEN-H differ only in the pressure rating of their strain-gauge pressure
+sensor (Sea-Bird Scientific Deep SeapHOx V2 data sheet, DS53, May 2025).</p>
+<p>The ISFET external electrochemical cell exhibits a Nernstian response to pH
+and is sensitive to chloride activity. The raw ISFET voltage is digitized
+by a 23-bit ADC with a 2.5 V reference and unity gain and converted to
+volts before the pH calculation (Sea-Bird Scientific Application Note 99).</p>
+<h4 id="calibration-coefficients_1">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>k0</code></td>
+<td><code>CC_k0</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>k2</code></td>
+<td><code>CC_k2</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>f</code></td>
+<td><code>CC_f</code></td>
+<td>Factory calibration sheet (<span class="arithmatex">\(f_1\)</span>-<span class="arithmatex">\(f_6\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="phwater_l2-ph-of-seawater-from-deep-seaphox-v2">PHWATER_L2 -- pH of Seawater from Deep SeapHOx V2</h4>
+<p><strong>PHWATER_L2 Calculation</strong></p>
+<p>The Nernst factor is computed from temperature and fundamental constants
+(Application Note 99):</p>
+<div class="arithmatex">\[S_\text{nernst} = \frac{R \times T \times \ln(10)}{F}\]</div>
+<p>where <span class="arithmatex">\(R = 8.3144621\ \text{J} \times (\text{mol} \times \text{K})^{-1}\)</span>,
+<span class="arithmatex">\(T\)</span> is temperature in K, and <span class="arithmatex">\(F = 96485.365\ \text{C} \times \text{mol}^{-1}\)</span>.</p>
+<p>The pressure response of the sensor is modeled by a 6th-order polynomial
+in pressure <span class="arithmatex">\(P\)</span> (dbar) using the coefficients <span class="arithmatex">\(f_1\)</span> through <span class="arithmatex">\(f_6\)</span> (<code>f</code>, from the factory calibration sheet)
+(Application Note 99):</p>
+<div class="arithmatex">\[f(P) = f_1 P + f_2 P^2 + f_3 P^3 + f_4 P^4 + f_5 P^5 + f_6 P^6\]</div>
+<p>The coefficient <span class="arithmatex">\(f_0\)</span> is captured in <span class="arithmatex">\(k_0\)</span> and is not used separately.</p>
+<p>Total pH on the total hydrogen ion scale is then (Application Note 99,
+Johnson et al. 2016, Johnson et al. 2017):</p>
+<div class="arithmatex">\[\begin{align}
+pH_T &amp;= \frac{V_\text{FET/REF} - k_0 - k_2 \times t - f(P)}{S_\text{nernst}} \\
+&amp;\quad + \log_{10}(Cl_T) + 2 \times \log_{10}(\gamma_{\pm\text{HCl}})_{T\&amp;P} \\
+&amp;\quad - \log_{10}\left(1 + \frac{S_T}{K_{S,T\&amp;P}}\right) \\
+&amp;\quad - \log_{10}\left(\frac{1000 - 1.005 \times S}{1000}\right)
+\end{align}\]</div>
+<p>where <span class="arithmatex">\(V_\text{FET/REF}\)</span> is the ISFET voltage, <span class="arithmatex">\(k_0\)</span> (<code>k0</code>) is the sensor offset and <span class="arithmatex">\(k_2\)</span> (<code>k2</code>) the temperature slope,
+both from the factory calibration sheet, <span class="arithmatex">\(t\)</span> is temperature in <span class="arithmatex">\(^\circ\)</span>C, <span class="arithmatex">\(S\)</span> is practical salinity, <span class="arithmatex">\(Cl_T\)</span> is total
+chloride, <span class="arithmatex">\((\gamma_{\pm\text{HCl}})_{T\&amp;P}\)</span> is the HCl activity coefficient at in situ temperature and pressure, <span class="arithmatex">\(S_T\)</span>
+is total sulfate, and <span class="arithmatex">\(K_{S,T\&amp;P}\)</span> is the acid dissociation constant of <span class="arithmatex">\(\text{HSO}_4^-\)</span> at in situ temperature and
+pressure (Sea-Bird Scientific AN99). <span class="arithmatex">\(K_{S,T\&amp;P}\)</span> is obtained by applying a pressure correction (Millero 1982) to <span class="arithmatex">\(K_S\)</span>
+(Dickson et al. 2007), which is already a function of salinity and temperature.</p>
+<p>The intermediate quantities are computed as follows (Application Note 99):</p>
+<p><strong>Total chloride</strong> (Dickson et al. 2007):</p>
+<div class="arithmatex">\[Cl_T = \frac{0.99889}{35.453} \times \frac{S}{1.80655} \times \frac{1000}{1000 - 1.005 \times S}\]</div>
+<p><strong>Sample ionic strength</strong> (Dickson et al. 2007):</p>
+<div class="arithmatex">\[I = \frac{19.924 \times S}{1000 - 1.005 \times S}\]</div>
+<p><strong>Debye-H&uuml;ckel constant</strong> (Khoo et al. 1977):</p>
+<div class="arithmatex">\[A_{DH} = 3.4286 \times 10^{-6} \times t^2 + 6.7503 \times 10^{-4} \times t + 0.49172143\]</div>
+<p><strong>HCl activity coefficient -- temperature only</strong> (Khoo et al. 1977):</p>
+<div class="arithmatex">\[\log(\gamma_{\pm\text{HCl}})_T = \frac{-A_{DH} \times \sqrt{I}}{1 + 1.394 \times \sqrt{I}} + (0.08885 - 0.000111 \times t) \times I\]</div>
+<p><strong>Partial molal volume of HCl</strong> (Millero 1983):</p>
+<div class="arithmatex">\[\bar{V}_\text{HCl} = 17.85 + 0.1044 \times t - 0.0001316 \times t^2\]</div>
+<p><strong>HCl activity coefficient -- temperature and pressure</strong> (Johnson et al. 2017):</p>
+<div class="arithmatex">\[\log(\gamma_{\pm\text{HCl}})_{T\&amp;P} = \log(\gamma_{\pm\text{HCl}})_T + \frac{\bar{V}_\text{HCl} \times p}{2 \times \ln(10) \times R \times T \times 10}\]</div>
+<p>where <span class="arithmatex">\(p\)</span> is pressure in bar.</p>
+<p><strong>Total sulfate</strong> (Dickson et al. 2007):</p>
+<div class="arithmatex">\[S_T = \frac{0.1400}{96.062} \times \frac{S}{1.80655}\]</div>
+<p><strong>Acid dissociation constant of HSO<span class="arithmatex">\(_4\)</span><span class="arithmatex">\(^-\)</span> at <span class="arithmatex">\(T\)</span></strong> (Dickson et al. 2007):</p>
+<div class="arithmatex">\[K_S = (1 - 0.001005 \times S) \times \exp(adc)\]</div>
+<p>where <span class="arithmatex">\(adc\)</span> is:</p>
+<div class="arithmatex">\[\begin{align}
+adc &amp;= (\frac{-4276.1}{T} + 141.328 - 23.093 \times \ln(T) \\
+&amp;\quad + \left(\frac{-13856}{T} + 324.57 - 47.986\ln(T)\right) \\
+&amp;\quad \times \sqrt{I} + \left(\frac{35474}{T} - 771.54 + 114.723 \times \ln(T)\right) \\
+&amp;\quad \times I - \frac{2698}{T} \times I^{1.5} + \frac{1776}{T} \times I^2
+\end{align}\]</div>
+<p><strong>Partial molal volume of <span class="arithmatex">\(\text{HSO}_4^-\)</span></strong> (Millero 1983):</p>
+<div class="arithmatex">\[\bar{V}_S = -18.03 + 0.0466 \times t + 0.000316 \times t^2\]</div>
+<p><strong>Compressibility of <span class="arithmatex">\(\text{HSO}_4^-\)</span></strong> (Millero 1983):</p>
+<div class="arithmatex">\[\bar{K}_S = \frac{-4.53 + 0.09 \times t}{1000}\]</div>
+<p><strong>Acid dissociation constant of <span class="arithmatex">\(\text{HSO}_4^-\)</span> at in situ temperature and pressure</strong> (pressure correction of <span class="arithmatex">\(K_S\)</span>;
+Millero 1982):</p>
+<div class="arithmatex">\[K_{S,T\&amp;P} = K_S \times \exp\left(\frac{-\bar{V}_S \times p + 0.5 \times \bar{K}_S \times p^2}{R \times T \times 10}\right)\]</div>
+<p>Output accuracy: <span class="arithmatex">\(\pm 0.05\)</span> pH units; resolution 0.004 pH units; typical
+stability 0.003 pH units per month (Sea-Bird Scientific Deep SeapHOx V2
+data sheet, DS53, May 2025).</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="sami-ph-functions-phsen-adef">SAMI-pH Functions (PHSEN-A/D/E/F)</h2>
+<h3 id="core-functions">Core Functions</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_calc_phwater" class="doc doc-heading">
+            <code class="highlight language-python">ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578, ind_slp, ind_off, psal=35.0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sunburst
+SAMI-II pH instrument (PHSEN).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ref</code></b>
+                  (<code>(array_like, shape(nRec, 16))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw blank reference and signal measurements from the PHSEN blank
+cycle. Contains 4 sets of 4 interleaved measurements:
+ref434, sig434, ref578, sig578 [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>light</code></b>
+                  (<code>(array_like, shape(nRec, 92))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw reference and signal measurements from the PHSEN measurement
+cycle. Contains 23 sets of 4 interleaved measurements:
+ref434, sig434, ref578, sig578 [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>therm</code></b>
+                  (<code>(array_like, shape(nRec))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Thermistor temperature at the end of the measurement cycle,
+converted to degrees C via ph_thermistor (ABSTHRM_L0) [deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ea434</code></b>
+                  (<code>(array_like, shape(nRec))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1. Molar absorptivity of the acidic
+indicator form at 434 nm at the reference temperature [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eb434</code></b>
+                  (<code>(array_like, shape(nRer))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2. Molar absorptivity of the basic
+indicator form at 434 nm at the reference temperature [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ea578</code></b>
+                  (<code>(array_like, shape(nRec))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 3. Molar absorptivity of the acidic
+indicator form at 578 nm at the reference temperature [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eb578</code></b>
+                  (<code>(array_like, shape(nRec))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 4. Molar absorptivity of the basic
+indicator form at 578 nm at the reference temperature [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ind_slp</code></b>
+                  (<code>(<span title="float">float</span> or array_like, shape(nRec))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Indicator impurity slope correction factor applied to pH values
+greater than 8.2 [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ind_off</code></b>
+                  (<code>(<span title="float">float</span> or array_like, shape(nRec))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Indicator impurity offset correction factor applied to pH values
+greater than 8.2 [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psal</code></b>
+                  (<code>(<span title="float">float</span> or array_like, shape(nRec))</code>, default:
+                      <code>35.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from a co-located CTD. Default is 35.0 if
+CTD data are unavailable [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>ph</code></b>(                  <code>(ndarray, shape(nRec))</code>
+)              –
+              <div class="doc-md-description">
+                <p>pH of seawater on the total hydrogen ion scale (PHWATER_L2)
+[unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The algorithm selects the 8 most linearly consistent measurement
+points from 23 collected during each cycle (skipping the first 5)
+by finding the window of 8 consecutive points with the highest
+linear correlation coefficient (R^2) between indicator concentration
+and point pH. The final pH is extrapolated to zero indicator
+concentration from this best-fit region.</p>
+<p>An impurity correction (ind_slp, ind_off) is applied when the
+calculated pH exceeds 8.2. This correction is not described in DPS
+1341-00510 and was added post-publication.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ph_calc_phwater(ref, light, therm, ea434, eb434, ea578, eb578,
+                    ind_slp, ind_off, psal=35.0):
+    """
+    Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sunburst
+    SAMI-II pH instrument (PHSEN).
+
+    Parameters
+    ----------
+    ref : array_like, shape (nRec, 16)
+        Raw blank reference and signal measurements from the PHSEN blank
+        cycle. Contains 4 sets of 4 interleaved measurements:
+        ref434, sig434, ref578, sig578 [counts].
+    light : array_like, shape (nRec, 92)
+        Raw reference and signal measurements from the PHSEN measurement
+        cycle. Contains 23 sets of 4 interleaved measurements:
+        ref434, sig434, ref578, sig578 [counts].
+    therm : array_like, shape (nRec)
+        Thermistor temperature at the end of the measurement cycle,
+        converted to degrees C via ph_thermistor (ABSTHRM_L0) [deg_C].
+    ea434 : array_like, shape (nRec)
+        Calibration coefficient 1. Molar absorptivity of the acidic
+        indicator form at 434 nm at the reference temperature [unitless].
+    eb434 : array_like, shape (nRer)
+        Calibration coefficient 2. Molar absorptivity of the basic
+        indicator form at 434 nm at the reference temperature [unitless].
+    ea578 : array_like, shape (nRec)
+        Calibration coefficient 3. Molar absorptivity of the acidic
+        indicator form at 578 nm at the reference temperature [unitless].
+    eb578 : array_like, shape (nRec)
+        Calibration coefficient 4. Molar absorptivity of the basic
+        indicator form at 578 nm at the reference temperature [unitless].
+    ind_slp : float or array_like, shape (nRec)
+        Indicator impurity slope correction factor applied to pH values
+        greater than 8.2 [unitless].
+    ind_off : float or array_like, shape (nRec)
+        Indicator impurity offset correction factor applied to pH values
+        greater than 8.2 [unitless].
+    psal : float or array_like, shape (nRec), optional
+        Practical salinity from a co-located CTD. Default is 35.0 if
+        CTD data are unavailable [unitless].
+
+    Returns
+    -------
+    ph : ndarray, shape (nRec,)
+        pH of seawater on the total hydrogen ion scale (PHWATER_L2)
+        [unitless].
+
+    Notes
+    -----
+    The algorithm selects the 8 most linearly consistent measurement
+    points from 23 collected during each cycle (skipping the first 5)
+    by finding the window of 8 consecutive points with the highest
+    linear correlation coefficient (R^2) between indicator concentration
+    and point pH. The final pH is extrapolated to zero indicator
+    concentration from this best-fit region.
+
+    An impurity correction (ind_slp, ind_off) is applied when the
+    calculated pH exceeds 8.2. This correction is not described in DPS
+    1341-00510 and was added post-publication.
+    """
+    ref = (np.atleast_2d(ref)).astype(float)
+    nRec = ref.shape[0]
+
+    light = np.atleast_3d(light).astype(float)
+    light = np.reshape(light, (nRec, 23, 4))
+
+    therm = np.reshape(therm, (nRec, 1)).astype(float)
+
+    ea434 = np.reshape(ea434, (nRec, 1)).astype(float)
+    eb434 = np.reshape(eb434, (nRec, 1)).astype(float)
+    ea578 = np.reshape(ea578, (nRec, 1)).astype(float)
+    eb578 = np.reshape(eb578, (nRec, 1)).astype(float)
+
+    if np.isscalar(ind_slp) is True:
+        ind_slp = np.tile(ind_slp, (nRec)).astype(float)
+    else:
+        ind_slp = np.reshape(ind_slp, (nRec)).astype(float)
+
+    if np.isscalar(ind_off) is True:
+        ind_off = np.tile(ind_off, (nRec)).astype(float)
+    else:
+        ind_off = np.reshape(ind_off, (nRec)).astype(float)
+
+    if np.isscalar(psal) is True:
+        psal = np.tile(psal, (nRec, 1)).astype(float)
+    else:
+        psal = np.reshape(psal, (nRec, 1)).astype(float)
+
+    # Calculate blanks from the 16 sets of reference light measurements
+    arr434 = np.array([
+        (ref[:, 1] / ref[:, 0]),
+        (ref[:, 5] / ref[:, 4]),
+        (ref[:, 9] / ref[:, 8]),
+        (ref[:, 13] / ref[:, 12]),
+    ])
+    blank434 = np.reshape(np.mean(arr434, axis=0), (nRec, 1))
+
+    arr578 = np.array([
+        (ref[:, 3] / ref[:, 2]),
+        (ref[:, 7] / ref[:, 6]),
+        (ref[:, 11] / ref[:, 10]),
+        (ref[:, 15] / ref[:, 14]),
+    ])
+    blank578 = np.reshape(np.mean(arr578, axis=0), (nRec, 1))
+
+    # Extract 23 sets of 4 light measurements into arrays corresponding
+    # to the raw reference and signal measurements at 434 and 578 nm.
+    ref434 = light[:, :, 0]   # reference signal, 434 nm
+    int434 = light[:, :, 1]   # signal intensity, 434 nm (PH434SI_L0)
+    ref578 = light[:, :, 2]   # reference signal, 578 nm
+    int578 = light[:, :, 3]   # signal intensity, 578 nm (PH578SI_L0)
+
+    # Absorbance
+    A434 = -sp.log10(int434 / ref434)
+    A434blank = -sp.log10(blank434)
+    abs434 = A434 - A434blank
+
+    A578 = -sp.log10(int578 / ref578)
+    A578blank = -sp.log10(blank578)
+    abs578 = A578 - A578blank
+
+    R = abs578 / abs434
+
+    # pKa from Clayton and Byrne, 1993
+    pKa = (1245.69 / (therm + 273.15)) + 3.8275 + (0.0021 * (35. - psal))
+    pKa = np.reshape(pKa, (-1, 1))
+
+    # Molar absorptivities
+    Ea434 = ea434 - (26. * (therm - 24.788))
+    Ea578 = ea578 + (therm - 24.788)
+    Eb434 = eb434 + (12. * (therm - 24.788))
+    Eb578 = eb578 - (71. * (therm - 24.788))
+    e1 = Ea578 / Ea434
+    e2 = Eb578 / Ea434
+    e3 = Eb434 / Ea434
+
+    V1 = R - e1
+    V2 = e2 - R * e3
+
+    # indicator concentration calculations
+    HI = (abs434 * Eb578 - abs578 * Eb434) / (Ea434 * Eb578 - Eb434 * Ea578)
+    I = (abs578 * Ea434 - abs434 * Ea578) / (Ea434 * Eb578 - Eb434 * Ea578)
+    IndConc = HI + I
+    pointph = np.real(pKa + sp.log10(V1 / V2))
+
+    # determine the most linear region of points for pH of seawater
+    # calculation, skipping the first 5 points.
+    IndConca = IndConc[:, 5:]
+    Y = pointph[:, 5:]
+    X = np.linspace(1, 18, 18)
+
+    # create arrays for vectorized computations used in sum of squares.
+    step = 7  # number of points to use
+    count = step + 1
+    nPts = np.size(X) - step
+    x = np.zeros((nPts, count))
+    y = np.zeros((nRec, nPts, count))
+    for i in range(nPts):
+        x[i, :] = X[i:i+count]
+        for j in range(nRec):
+            y[j, i, :] = Y[j, i:i+count]
+
+    # compute correlation coefficient for each window of 8 points
+    sumx = np.sum(x, axis=1)
+    sumy = np.sum(y, axis=2)
+    sumxy = np.sum(x * y, axis=2)
+    sumx2 = np.sum(x**2, axis=1)
+    sumy2 = np.sum(y**2, axis=2)
+    sumxx = sumx * sumx
+    sumyy = sumy * sumy
+    ssxy = sumxy - (sumx * sumy) / count
+    ssx = sumx2 - (sumxx / count)
+    ssy = sumy2 - (sumyy / count)
+    r2 = ssxy**2 / (ssx * ssy)
+
+    # Range of seawater points to use
+    cutoff1 = np.argmax(r2, axis=1)  # Find the first, best R-squared value
+    cutoff2 = cutoff1 + count
+
+    # Indicator and pH range limited to best points
+    IndConcS = np.zeros((nRec, count))
+    pointphS = np.zeros((nRec, count))
+    for i in range(nRec):
+        IndConcS[i, :] = IndConca[i, cutoff1[i]:cutoff2[i]]
+        pointphS[i, :] = Y[i, cutoff1[i]:cutoff2[i]]
+
+    # Final pH calculation: extrapolate to zero indicator concentration
+    sumx = np.sum(IndConcS, axis=1)
+    sumy = np.sum(pointphS, axis=1)
+    sumxy = np.sum(pointphS * IndConcS, axis=1)
+    sumx2 = np.sum(IndConcS**2, axis=1)
+    sumy2 = np.sum(pointphS**2, axis=1)
+    xbar = np.mean(IndConcS, axis=1)
+    ybar = np.mean(pointphS, axis=1)
+    sumxx = sumx * sumx
+    sumyy = sumy * sumy
+    ssxy = sumxy - (sumx * sumy) / count
+    ssx = sumx2 - (sumxx / count)
+    ssy = sumy2 - (sumyy / count)
+    slope = ssxy / ssx
+    ph = ybar - slope * xbar
+
+    # pH corrections due to indicator impurity if the calculated pH is
+    # greater than 8.2.
+    phFlag = ph &gt;= 8.2
+    ph[phFlag] = ph[phFlag] * ind_slp[phFlag] + ind_off[phFlag]
+
+    return ph</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-19</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="helper-functions">Helper Functions</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_434_intensity" class="doc doc-heading">
+            <code class="highlight language-python">ph_434_intensity(light)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Extract the L0 signal intensity at 434 nm (PH434SI_L0) from the PHSEN
+light measurement array.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>light</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw light measurement array from the PHSEN instrument. May be a
+single record or an array of records. The array is reshaped
+internally to (-1, 23, 4) where the second index selects the
+measurement set and the third index selects the channel [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>si434</code></b>(                  <code>(ndarray, shape(nRec, 23))</code>
+)              –
+              <div class="doc-md-description">
+                <p>Signal intensity at 434 nm (PH434SI_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Each PHSEN data record contains 23 sets of 4 light measurements
+interleaved as [ref434, sig434, ref578, sig578]. Column index 1
+(0-based) of each set is the 434 nm signal intensity.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ph_434_intensity(light):
+    """
+    Extract the L0 signal intensity at 434 nm (PH434SI_L0) from the PHSEN
+    light measurement array.
+
+    Parameters
+    ----------
+    light : array_like
+        Raw light measurement array from the PHSEN instrument. May be a
+        single record or an array of records. The array is reshaped
+        internally to (-1, 23, 4) where the second index selects the
+        measurement set and the third index selects the channel [counts].
+
+    Returns
+    -------
+    si434 : ndarray, shape (nRec, 23)
+        Signal intensity at 434 nm (PH434SI_L0) [counts].
+
+    Notes
+    -----
+    Each PHSEN data record contains 23 sets of 4 light measurements
+    interleaved as [ref434, sig434, ref578, sig578]. Column index 1
+    (0-based) of each set is the 434 nm signal intensity.
+    """
+    light = np.atleast_3d(light).astype(float)
+    new = np.reshape(light, (-1, 23, 4))
+    si434 = new[:, :, 1]
+    return si434  # signal intensity, 434 nm (PH434SI_L0)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-19</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_578_intensity" class="doc doc-heading">
+            <code class="highlight language-python">ph_578_intensity(light)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Extract the L0 signal intensity at 578 nm (PH578SI_L0) from the PHSEN
+light measurement array.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>light</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw light measurement array from the PHSEN instrument. May be a
+single record or an array of records. The array is reshaped
+internally to (-1, 23, 4) where the second index selects the
+measurement set and the third index selects the channel [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>si578</code></b>(                  <code>(ndarray, shape(nRec, 23))</code>
+)              –
+              <div class="doc-md-description">
+                <p>Signal intensity at 578 nm (PH578SI_L0) [counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Each PHSEN data record contains 23 sets of 4 light measurements
+interleaved as [ref434, sig434, ref578, sig578]. Column index 3
+(0-based) of each set is the 578 nm signal intensity.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ph_578_intensity(light):
+    """
+    Extract the L0 signal intensity at 578 nm (PH578SI_L0) from the PHSEN
+    light measurement array.
+
+    Parameters
+    ----------
+    light : array_like
+        Raw light measurement array from the PHSEN instrument. May be a
+        single record or an array of records. The array is reshaped
+        internally to (-1, 23, 4) where the second index selects the
+        measurement set and the third index selects the channel [counts].
+
+    Returns
+    -------
+    si578 : ndarray, shape (nRec, 23)
+        Signal intensity at 578 nm (PH578SI_L0) [counts].
+
+    Notes
+    -----
+    Each PHSEN data record contains 23 sets of 4 light measurements
+    interleaved as [ref434, sig434, ref578, sig578]. Column index 3
+    (0-based) of each set is the 578 nm signal intensity.
+    """
+    light = np.atleast_3d(light).astype(float)
+    new = np.reshape(light, (-1, 23, 4))
+    si578 = new[:, :, 3]
+    return si578  # signal intensity, 578 nm (PH578SI_L0)</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-19</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_thermistor" class="doc doc-heading">
+            <code class="highlight language-python">ph_thermistor(traw, sami_bits=12)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert the PHSEN thermistor counts (ABSTHRM_L0) to temperature in
+degrees C.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>traw</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw thermistor counts from the PHSEN instrument (ABSTHRM_L0)
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sami_bits</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>12</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>ADC resolution of the SAMI hardware generation. Use 12 for
+original SAMI-II hardware (full-scale 4096 counts) and 14 for
+newer hardware (full-scale 16384 counts). Default is 12.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>therm</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Thermistor temperature [deg_C].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The conversion uses a three-term polynomial in the natural log of the
+thermistor resistance. The full-scale count differs between SAMI
+hardware generations: 4096 for 12-bit hardware and 16384 for 14-bit
+hardware. The reference resistance is 17400 ohms in both cases.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ph_thermistor(traw, sami_bits=12):
+    """
+    Convert the PHSEN thermistor counts (ABSTHRM_L0) to temperature in
+    degrees C.
+
+    Parameters
+    ----------
+    traw : array_like
+        Raw thermistor counts from the PHSEN instrument (ABSTHRM_L0)
+        [counts].
+    sami_bits : int, optional
+        ADC resolution of the SAMI hardware generation. Use 12 for
+        original SAMI-II hardware (full-scale 4096 counts) and 14 for
+        newer hardware (full-scale 16384 counts). Default is 12.
+
+    Returns
+    -------
+    therm : ndarray
+        Thermistor temperature [deg_C].
+
+    Notes
+    -----
+    The conversion uses a three-term polynomial in the natural log of the
+    thermistor resistance. The full-scale count differs between SAMI
+    hardware generations: 4096 for 12-bit hardware and 16384 for 14-bit
+    hardware. The reference resistance is 17400 ohms in both cases.
+    """
+    traw = np.atleast_1d(traw)
+    sami_bits = np.atleast_1d(sami_bits)
+
+    if sami_bits[0] == 14:
+        rt = np.log((traw / (16384.0 - traw)) * 17400.0)
+    else:
+        rt = np.log((traw / (4096.0 - traw)) * 17400.0)
+    inv = 0.0010183 + 0.000241 * rt + 0.00000015 * rt**3
+    therm = (1.0 / inv) - 273.15
+
+    return therm</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-01</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr; added default for sami_bits</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.ph_functions.ph_battery" class="doc doc-heading">
+            <code class="highlight language-python">ph_battery(braw, sami_bits=12)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert the PHSEN battery counts to battery voltage in Volts.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>braw</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw battery counts from the PHSEN instrument [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sami_bits</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>12</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>ADC resolution of the SAMI hardware generation. Use 12 for
+original SAMI-II hardware (full-scale 4096 counts) and 14 for
+newer hardware (full-scale 16384 counts). Default is 12.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>volts</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Battery voltage [Volts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The full-scale voltage and count differ between SAMI hardware
+generations. For 12-bit hardware the full-scale is 15 V at 4096
+counts; for 14-bit hardware the full-scale is 3 V at 4000 counts.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/ph_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ph_battery(braw, sami_bits=12):
+    """
+    Convert the PHSEN battery counts to battery voltage in Volts.
+
+    Parameters
+    ----------
+    braw : array_like
+        Raw battery counts from the PHSEN instrument [counts].
+    sami_bits : int, optional
+        ADC resolution of the SAMI hardware generation. Use 12 for
+        original SAMI-II hardware (full-scale 4096 counts) and 14 for
+        newer hardware (full-scale 16384 counts). Default is 12.
+
+    Returns
+    -------
+    volts : ndarray
+        Battery voltage [Volts].
+
+    Notes
+    -----
+    The full-scale voltage and count differ between SAMI hardware
+    generations. For 12-bit hardware the full-scale is 15 V at 4096
+    counts; for 14-bit hardware the full-scale is 3 V at 4000 counts.
+    """
+    braw = np.atleast_1d(braw)
+    sami_bits = np.atleast_1d(sami_bits)
+
+    if sami_bits[0] == 14:
+        volts = braw * 3. / 4000.
+    else:
+        volts = braw * 15. / 4096.
+    return volts</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-04-19</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Added 14-bit hardware support</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="deep-seaphox-v2-functions-phsen-gh">Deep SeapHOx V2 Functions (PHSEN-G/H)</h2>
+<h3 id="core-functions_1">Core Functions</h3>
+<p>See the <a href="../../seaphox/">Deep SeapHOx V2 instrument notes</a> for how the pH, CTD, and DO subsystems and their data streams fit together.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.ph_total" class="doc doc-heading">
+            <code class="highlight language-python">ph_total(vrs_ext, degc, psu, dbar, k0, k2, f)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sea-Bird
+Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>vrs_ext</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>External ISFET reference voltage (V_FET/REF) [Volts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>degc</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In-situ temperature from the co-located CTD [deg_C].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psu</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from the co-located CTD [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dbar</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Pressure from the co-located CTD [dbar].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>k0</code></b>
+                  (<code><span title="float">float</span> or array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 1. Cell standard potential offset
+for the external reference [Volts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>k2</code></b>
+                  (<code><span title="float">float</span> or array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficient 2. Temperature slope coefficient for
+the external reference [Volts deg_C^-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>f</code></b>
+                  (<code>(array_like, shape(..., 6))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration coefficients 3-8. Coefficients f1 through f6 of
+the 6th-order pressure response polynomial f(P). Coefficient
+f0 is captured in k0 and is not used here [unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>p_h</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>pH of seawater on the total hydrogen ion scale (PHWATER_L2)
+[unitless].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The algorithm follows Sea-Bird Scientific Application Note 99
+(Johnson et al. 2016; Johnson et al. 2017). The ISFET external
+cell exhibits a Nernstian response to pH and is sensitive to
+chloride activity. The total pH is computed as:</p>
+<pre><code>pH = (V_FET/REF - k0 - k2*t - f(P)) / S_nernst
+     + log10(Cl_T) + 2*log10(gamma_HCl)_T&amp;P
+     - log10(1 + S_T/K_S,T&amp;P)
+     - log10((1000 - 1.005*S) / 1000)
+</code></pre>
+<p>where S_nernst = R<em>T</em>ln(10)/F, Cl_T is total chloride, gamma_HCl
+is the HCl activity coefficient at in situ temperature and
+pressure, S_T is total sulfate, and K_S,T&amp;P is the acid
+dissociation constant of HSO4- at in situ temperature and
+pressure, obtained by applying a pressure correction (Millero
+1982) to K_S (Dickson et al. 2007). Equations and citations follow
+Sea-Bird Scientific AN99. All intermediate quantities are computed from salinity,
+temperature, and pressure following Dickson et al. (2007),
+Khoo et al. (1977), Millero (1982, 1983), and Johnson et al.
+(2017).</p>
+<p>Calibration coefficients k0, k2, and f are from factory
+calibration sheets supplied by Sea-Bird Scientific.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ph_total(vrs_ext, degc, psu, dbar, k0, k2, f):
+    """
+    Compute the OOI L2 pH of seawater (PHWATER_L2) from the Sea-Bird
+    Scientific Deep SeapHOx V2 (PHSEN-G and PHSEN-H).
+
+    Parameters
+    ----------
+    vrs_ext : array_like
+        External ISFET reference voltage (V_FET/REF) [Volts].
+    degc : array_like
+        In-situ temperature from the co-located CTD [deg_C].
+    psu : array_like
+        Practical salinity from the co-located CTD [unitless].
+    dbar : array_like
+        Pressure from the co-located CTD [dbar].
+    k0 : float or array_like
+        Calibration coefficient 1. Cell standard potential offset
+        for the external reference [Volts].
+    k2 : float or array_like
+        Calibration coefficient 2. Temperature slope coefficient for
+        the external reference [Volts deg_C^-1].
+    f : array_like, shape (..., 6)
+        Calibration coefficients 3-8. Coefficients f1 through f6 of
+        the 6th-order pressure response polynomial f(P). Coefficient
+        f0 is captured in k0 and is not used here [unitless].
+
+    Returns
+    -------
+    p_h : ndarray
+        pH of seawater on the total hydrogen ion scale (PHWATER_L2)
+        [unitless].
+
+    Notes
+    -----
+    The algorithm follows Sea-Bird Scientific Application Note 99
+    (Johnson et al. 2016; Johnson et al. 2017). The ISFET external
+    cell exhibits a Nernstian response to pH and is sensitive to
+    chloride activity. The total pH is computed as:
+
+        pH = (V_FET/REF - k0 - k2*t - f(P)) / S_nernst
+             + log10(Cl_T) + 2*log10(gamma_HCl)_T&amp;P
+             - log10(1 + S_T/K_S,T&amp;P)
+             - log10((1000 - 1.005*S) / 1000)
+
+    where S_nernst = R*T*ln(10)/F, Cl_T is total chloride, gamma_HCl
+    is the HCl activity coefficient at in situ temperature and
+    pressure, S_T is total sulfate, and K_S,T&amp;P is the acid
+    dissociation constant of HSO4- at in situ temperature and
+    pressure, obtained by applying a pressure correction (Millero
+    1982) to K_S (Dickson et al. 2007). Equations and citations follow
+    Sea-Bird Scientific AN99. All intermediate quantities are computed from salinity,
+    temperature, and pressure following Dickson et al. (2007),
+    Khoo et al. (1977), Millero (1982, 1983), and Johnson et al.
+    (2017).
+
+    Calibration coefficients k0, k2, and f are from factory
+    calibration sheets supplied by Sea-Bird Scientific.
+    """
+    f = np.atleast_2d(f)
+
+    fp = (f[:, 0] * dbar + f[:, 1] * dbar ** 2 + f[:, 2] * dbar ** 3
+          + f[:, 3] * dbar ** 4 + f[:, 4] * dbar ** 5 + f[:, 5] * dbar ** 6)
+
+    bar = dbar * 0.10  # convert pressure from dbar to bar
+
+    # Nernstian response of the pH electrode (slope of the response)
+    r = 8.3144621  # J/(mol K) universal gas constant
+    t = degc + 273.15  # temperature in Kelvin
+    f = 9.6485365e4  # C/mol Faraday constant
+    snerst = r * t * np.log(10) / f
+
+    # total chloride in seawater (Dickson et al. 2007)
+    cl_total = (0.99889 / 35.453) * (psu / 1.80655) * (1000 / (1000 - 1.005 * psu))
+
+    # partial Molal volume of HCl (Millero 1983)
+    vhcl = 17.85 + 0.1044 * degc - 0.0001316 * degc ** 2
+
+    # Sample ionic strength (Dickson et al. 2007)
+    i = (19.924 * psu) / (1000 - 1.005 * psu)
+
+    # Debye-Huckel constant for activity of HCl (Khoo et al. 1977)
+    adh = 0.0000034286 * degc ** 2 + 0.00067503 * degc + 0.49172143
+
+    # log of HCl activity coefficient as a function of temperature
+    # (Khoo et al. 1977)
+    loghclt = ((-adh * np.sqrt(i)) / (1 + 1.394 * np.sqrt(i))) + (0.08885 - 0.000111 * degc) * i
+
+    # log10 of HCl activity coefficient as a function of temperature
+    # and pressure (Johnson et al. 2017)
+    loghcltp = loghclt + (((vhcl * bar) / (np.log(10) * r * t * 10)) / 2)
+
+    # total sulfate in seawater (Dickson et al. 2007)
+    so4_total = (0.1400 / 96.062) * (psu / 1.80655)
+
+    # acid dissociation constant of HSO4- (Dickson et al. 2007)
+    ks = (1 - 0.001005 * psu) * np.exp(
+        (-4276.1 / t) + 141.328 - 23.093 * np.log(t)
+        + ((-13856 / t) + 324.57 - 47.986 * np.log(t)) * np.sqrt(i)
+        + ((35474 / t) - 771.54 + 114.723 * np.log(t)) * i
+        - (2698 / t) * i ** 1.5 + (1776 / t) * i ** 2)
+
+    # partial Molal volume of HSO4- (Millero 1983)
+    v_hso4 = -18.03 + 0.0466 * degc + 0.000316 * degc ** 2
+
+    # compressibility of HSO4- (Millero 1983)
+    kbar_s = (-4.53 + 0.09 * degc) / 1000
+
+    # acid dissociation constant of HSO4- at in situ temperature and
+    # pressure, K_S,T&amp;P: pressure correction of ks (Millero 1982)
+    kstp = ks * np.exp((-v_hso4 * bar + 0.5 * kbar_s * bar ** 2) / (r * t * 10))
+
+    # calculate total pH adjusted for pressure, temperature, and salinity
+    p_h = (((vrs_ext - k0 - k2 * degc - fp) / snerst)
+           + np.log10(cl_total) + 2 * loghcltp
+           - np.log10(1 + (so4_total / kstp))
+           - np.log10((1000 - 1.005 * psu) / 1000))
+
+    return p_h</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-01-21</td>
+<td>Samuel Dahlberg</td>
+<td>Initial code, adapted from Christopher Wingard's ph_total in cgsn-processing</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="helper-functions_1">Helper Functions</h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.phsen_h_functions.convert_ph_voltage_counts" class="doc doc-heading">
+            <code class="highlight language-python">convert_ph_voltage_counts(ph_counts)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Convert raw ISFET pH voltage counts to volts for the Deep SeapHOx V2.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ph_counts</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw ISFET pH voltage counts from the Deep SeapHOx V2 instrument
+[counts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>ph_volts</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>ISFET external reference voltage (V_FET/REF) [Volts].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The conversion uses a 23-bit ADC with a 2.5 V reference and unity
+gain. The full-scale count is 8388608 (2^23).</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/phsen_h_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def convert_ph_voltage_counts(ph_counts):
+    """
+    Convert raw ISFET pH voltage counts to volts for the Deep SeapHOx V2.
+
+    Parameters
+    ----------
+    ph_counts : array_like
+        Raw ISFET pH voltage counts from the Deep SeapHOx V2 instrument
+        [counts].
+
+    Returns
+    -------
+    ph_volts : ndarray
+        ISFET external reference voltage (V_FET/REF) [Volts].
+
+    Notes
+    -----
+    The conversion uses a 23-bit ADC with a 2.5 V reference and unity
+    gain. The full-scale count is 8388608 (2^23).
+    """
+    adc_vref = 2.5
+    gain = 1
+    adc_23bit = 8388608.0
+    ph_volts = adc_vref / gain * (ph_counts / adc_23bit - 1)
+    return ph_volts</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-01-21</td>
+<td>Samuel Dahlberg</td>
+<td>Initial code, adapted from Sea-Bird Scientific processing library</td>
+</tr>
+<tr>
+<td>2026-04-20</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Byrne, R. H., Robertbaldo, G., Thompson, S. W. and Chen, C. T. A. (1988).
+Seawater pH measurements -- an at-sea comparison of spectrophotometric and
+potentiometric methods. Deep-Sea Research Part A, 35(8): 1405-1410.</p>
+<p>Clayton, T. D. and Byrne, R. H. (1993). Spectrophotometric seawater pH
+measurements -- total hydrogen-ion concentration scale calibration of
+m-Cresol Purple and at-sea results. Deep-Sea Research Part I, 40(10):
+2115-2129.</p>
+<p>Dickson, A. G., Sabine, C. L., and Christian, J. R. (2007). Guide to Best
+Practices for Ocean CO2 Measurements. PICES Special Publication 3, IOCCP
+Report No. 8.</p>
+<p>Johnson, K. S., Jannasch, H. W., Coletti, L. J., Elrod, V. A., Martz, T. R.,
+Takeshita, Y., Carlson, R. J., and Connery, J. G. (2016). Deep-Sea DuraFET:
+A pressure tolerant pH sensor designed for global sensor networks. Analytical
+Chemistry, 88: 3249-3256.</p>
+<p>Johnson, K. S., Plant, J. N., and Maurer, T. L. (2017). Processing BGC-Argo
+pH data at the DAC level. BGC-Argo document.</p>
+<p>Khoo, K. H., Ramette, R. W., Culberson, C. H., and Bates, R. G. (1977).
+Determination of hydrogen ion concentrations in seawater from 5 C to 40 C:
+standard potentials at salinities 20 to 45%. Analytical Chemistry, 49:
+29-34.</p>
+<p>Liu, X., Patsavas, M. C., and Byrne, R. H. (2011). Purification and
+characterization of meta-cresol purple for spectrophotometric seawater pH
+measurements. Environmental Science and Technology, 45: 4862-4868.</p>
+<p>Martz, T. R., Connery, J. G., and Johnson, K. S. (2010). Testing the
+Honeywell Durafet for seawater pH applications. Limnology and Oceanography:
+Methods, 8: 172-184.</p>
+<p>Martz, T. R., Carr, J. J., French, C. R., and DeGrandpre, M. D. (2003). A
+submersible autonomous sensor for spectrophotometric pH measurements of
+natural waters. Analytical Chemistry, 75: 1844-1850.</p>
+<p>Millero, F. J. (1982). The effect of pressure on the solubility of minerals
+in water and seawater. Geochimica et Cosmochimica Acta, 46: 11-22.</p>
+<p>Millero, F. J. (1983). In Chemical Oceanography; Riley, J. P., Chester, R.,
+Eds.; Academic Press: London, Vol. 8, pp 1-88.</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00510_Data_Product_Spec_PHWATER_OOI.pdf">OOI (2012). Data Product Specification for pH of Seawater. Document Control
+Number 1341-00510.</a></p>
+<p>Sea-Bird Scientific (2025). Deep SeapHOx V2 Data Sheet. Document DS53,
+May 2025.</p>
+<p><a href="https://242648281.fs1.hubspotusercontent-na2.net/hubfs/242648281/Resources/Application%20Notes/AN99-CalculatepH.pdf">Sea-Bird Scientific. Application Note 99: Calculating pH from ISFET pH
+Sensors. SeaFET V2, Shallow SeapHOx V2, Deep SeapHOx V2, Floats.</a></p>
+<p>Seidel, M. P., DeGrandpre, M. D., and Dickson, A. G. (2008). A sensor for
+in situ indicator-based measurements of seawater pH. Marine Chemistry,
+109: 18-28.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../co2_functions/" class="btn btn-neutral float-left" title="CO2 Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../ctd_functions/" class="btn btn-neutral float-right" title="CTD Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../co2_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../ctd_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

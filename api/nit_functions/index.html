@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/nit_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>NIT Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "NIT Functions";
+        var mkdocs_page_input_path = "api/nit_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/nit_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">NIT Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#nitrtsc_l2-temperature-and-salinity-corrected-dissolved-nitrate">NITRTSC_L2 -- Temperature and Salinity Corrected Dissolved Nitrate</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">NIT Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="nit-functions">NIT Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys the Sea-Bird Scientific SUNA V2
+(Submersible Ultraviolet Nitrate Analyzer) as its nitrate sensor. The SUNA V2
+is an optical, chemical-free sensor derived from the ISUS (In Situ Ultraviolet
+Spectroscopy) technology developed at MBARI. Prior to 2017, OOI deployed the ISUS
+sensor on fixed depth platforms in the uncabled arrays. These were all converted
+to the SUNA V2. The OOI instrument class NUTNR (Nutrient Sensor) covers both the 
+original ISUS instruments and the SUNA V2.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NUTNR-A</td>
+<td>Sea-Bird Scientific (formerly Satlantic) Deep SUNA</td>
+<td>RCA cabled shallow profilers (CE04OSPS, RS01SBPS, RS03AXPS)</td>
+<td>Nutrient, Nitrate</td>
+</tr>
+<tr>
+<td>NUTNR-B</td>
+<td>Sea-Bird Scientific (formerly Satlantic) ISUS, replaced by the SUNA V2 by 2017</td>
+<td>Surface moorings: near-surface instrument frame (Endurance, Pioneer, Global) and surface buoy (Global)</td>
+<td>Nutrient, Nitrate</td>
+</tr>
+<tr>
+<td>NUTNR-J</td>
+<td>Sea-Bird Scientific (formerly Satlantic) SUNA V2</td>
+<td>Coastal surface-piercing profilers (CSPP)</td>
+<td>Nutrient, Nitrate</td>
+</tr>
+<tr>
+<td>NUTNR-M</td>
+<td>Sea-Bird Scientific (formerly Satlantic) SUNA V2</td>
+<td>Global profiling gliders</td>
+<td>Nutrient, Nitrate</td>
+</tr>
+<tr>
+<td>NUTNR-N</td>
+<td>Sea-Bird Scientific (formerly Satlantic) Deep SUNA</td>
+<td>Pioneer coastal AUVs</td>
+<td>Nutrient, Nitrate</td>
+</tr>
+</tbody>
+</table>
+<p><code>nit_functions.py</code> computes a single L2 data product, NITRTSC_L2, from raw
+UV absorption spectra produced by NUTNR instruments.</p>
+<p>Within the OOI data system, NIT data products fall under the Water Column <a href="https://oceanobservatories.org/data-products/">sampling
+regime</a> (see the <a href="https://oceanobservatories.org/data-products/data-products-complete-list/">complete list of OOI data
+products</a>).</p>
+<p>All calibration coefficients are from the factory calibration file supplied with each instrument.</p>
+<p>This page documents the algorithms used to compute the NIT data products. For general guidance on working with OOI
+biogeochemical sensor data, see the <a href="https://doi.org/10.25607/OBP-1865.2">OOI Biogeochemical Sensor Data Best Practices and User
+Guide</a>; for locating calibration coefficients and raw inputs, see <a href="../../calibrations/">Calibration
+Coefficients</a> and <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<p>No OOI Data Product Specification exists for the NUTNR data products. The algorithm 
+documented here is derived from the source code, its embedded comments, and the two 
+journal articles cited below.</p>
+<hr />
+<h3 id="nitrtsc_l2-temperature-and-salinity-corrected-dissolved-nitrate">NITRTSC_L2 -- Temperature and Salinity Corrected Dissolved Nitrate</h3>
+<p>NITRTSC_L2 is the dissolved nitrate concentration (<span class="arithmatex">\(\mu\)</span>M) corrected for
+the temperature and salinity dependence of the seawater UV absorption
+spectrum. It is produced by the NUTNR instrument class using the
+Sakamoto et al. (2009) algorithm, with the temperature correction of the
+seawater extinction coefficients updated to Plant et al. (2023).</p>
+<h4 id="l0-data-and-frame-types">L0 Data and Frame Types</h4>
+<p>The SUNA V2 produces two frame types in each measurement cycle:</p>
+<ul>
+<li><strong>Light frames</strong> (frame type <code>SLB</code>) -- UV absorption spectra measured
+  through the seawater sample. These are used to compute NITRTSC_L2.</li>
+<li><strong>Dark frames</strong> (frame type <code>SDB</code>, <code>SDF</code>, or <code>NDF</code>) -- baseline
+  measurements with the UV lamp off. These are not used by OOI; they are 
+  filled with <code>NaN</code> on output.</li>
+</ul>
+<p>Each frame contains a 256-element UV absorption spectrum (NITROPT_L0)
+covering approximately 190-400 nm, sampled at roughly 0.8 nm intervals.
+The instrument also provides a dark current scalar (<code>dark_value</code>) averaged
+from the previous dark frame measurements.</p>
+<h4 id="calibration-coefficients">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>wl</code></td>
+<td><code>CC_wl</code></td>
+<td>Factory calibration file</td>
+</tr>
+<tr>
+<td><code>eno3</code></td>
+<td><code>CC_eno3</code></td>
+<td>Factory calibration file</td>
+</tr>
+<tr>
+<td><code>eswa</code></td>
+<td><code>CC_eswa</code></td>
+<td>Factory calibration file</td>
+</tr>
+<tr>
+<td><code>di</code></td>
+<td><code>CC_di</code></td>
+<td>Factory calibration file</td>
+</tr>
+<tr>
+<td><code>cal_temp</code></td>
+<td><code>CC_cal_temp</code></td>
+<td>Factory calibration file</td>
+</tr>
+<tr>
+<td><code>wllower</code></td>
+<td><code>CC_lower_wavelength_limit_for_spectra_fit</code></td>
+<td>OOI processing setting (217 nm for the 1-cm probe tip, 220 nm for the 4-cm)</td>
+</tr>
+<tr>
+<td><code>wlupper</code></td>
+<td><code>CC_upper_wavelength_limit_for_spectra_fit</code></td>
+<td>OOI processing setting (240 nm for the 1-cm probe tip, 245 nm for the 4-cm)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="nitrtsc_l2-algorithm">NITRTSC_L2 Algorithm</h4>
+<p>The algorithm follows Sakamoto et al. (2009), with the temperature correction in Step 4 from Plant et al. (2023).
+For each light frame <span class="arithmatex">\(i\)</span>, the computation proceeds as follows.</p>
+<p><strong>Step 1 -- Select the spectral fitting window.</strong> Wavelength bins and their
+corresponding calibration arrays are subset to channels where
+<span class="arithmatex">\(\text{wllower} \leq \lambda \leq \text{wlupper}\)</span>:</p>
+<div class="arithmatex">\[\lambda,\ ENO3,\ ESWA,\ DI \gets \text{channels where } \text{wllower} \leq wl \leq \text{wlupper}\]</div>
+<p>where <span class="arithmatex">\(wl\)</span> is the wavelength (nm) of each of the 256 spectral channels; <span class="arithmatex">\(ENO3\)</span> is the nitrate molar absorptivity
+(extinction coefficient) at each wavelength, determined from laboratory nitrate standards; <span class="arithmatex">\(ESWA\)</span> is the seawater
+extinction coefficient at each wavelength, at a reference salinity of 35 and the calibration temperature <span class="arithmatex">\(T_{cal}\)</span>;
+and <span class="arithmatex">\(DI\)</span> is the deionized water reference spectrum measured in the laboratory at the time of calibration. All four
+are 256-element arrays from the instrument's factory calibration file. wllower and wlupper are the limits (nm) of the
+fitting window, set by OOI according to the probe tip pathlength (217-240 nm for the 1-cm tip, 220-245 nm for the
+4-cm tip) and supplied with the instrument's calibration values.</p>
+<p><strong>Step 2 -- Dark-correct the measured spectrum</strong> by subtracting the dark
+current scalar from the raw spectral counts:</p>
+<div class="arithmatex">\[SW_{corr} = SW - dark\_value\]</div>
+<p>where <span class="arithmatex">\(SW\)</span> is the raw spectrum (NITROPT_L0) and <span class="arithmatex">\(dark\_value\)</span> is the dark current scalar, both reported by the
+instrument.</p>
+<p><strong>Step 3 -- Compute absorbance</strong> from the ratio of the deionized water
+reference to the dark-corrected seawater spectrum:</p>
+<div class="arithmatex">\[A = \log_{10}\!\left(\frac{DI}{SW_{corr}}\right)\]</div>
+<p><strong>Step 4 -- Temperature-correct the seawater extinction coefficients.</strong>
+The seawater extinction coefficients, determined at the calibration temperature <span class="arithmatex">\(T_{cal}\)</span>, are corrected to the in
+situ temperature <span class="arithmatex">\(T\)</span> from the co-located CTD following Plant et al. (2023), Equations 6 and 8. The temperature
+response is a fourth-order polynomial in the scaled wavelength <span class="arithmatex">\(\lambda' = \lambda - 210\)</span>:</p>
+<div class="arithmatex">\[\begin{align}
+f(\lambda') &amp;= c_0 + c_1 \times \lambda' + c_2 \times {\lambda'}^2 \\
+&amp;\quad + c_3 \times {\lambda'}^3 + c_4 \times {\lambda'}^4
+\end{align}\]</div>
+<p>with the fixed coefficients from Plant et al. (2023):</p>
+<div class="arithmatex">\[\begin{align}
+c_0 &amp;= 1.46380 \times 10^{-2} \\
+c_1 &amp;= 1.67660 \times 10^{-3} \\
+c_2 &amp;= 2.91898 \times 10^{-5} \\
+c_3 &amp;= -7.56395 \times 10^{-6} \\
+c_4 &amp;= 1.27353 \times 10^{-7}
+\end{align}\]</div>
+<div class="arithmatex">\[ESWA_T = ESWA \times \exp\!\left(f(\lambda') \times (T - T_{cal})\right)\]</div>
+<p>where <span class="arithmatex">\(T_{cal}\)</span> (<span class="arithmatex">\(^\circ\)</span>C) is the calibration temperature (<code>cal_temp</code>) from the factory calibration file and <span class="arithmatex">\(T\)</span>
+(<span class="arithmatex">\(^\circ\)</span>C) is the in situ temperature from the co-located CTD.</p>
+<p>Plant et al. (2023) developed this model to replace the temperature correction of Sakamoto et al. (2009), Equation
+4, which can bias nitrate high by 1-2 <span class="arithmatex">\(\mu\)</span>mol kg<span class="arithmatex">\(^{-1}\)</span> in waters warmer than the calibration temperature; the
+updated model reduces this bias by at least 50%. The pressure correction in Plant et al. (2023), Equation 9, is not
+applied.</p>
+<p><strong>Step 5 -- Subtract the seawater bromide contribution</strong> from the measured
+absorbance. The seawater absorbance is proportional to practical salinity
+<span class="arithmatex">\(S_P\)</span>:</p>
+<div class="arithmatex">\[A_{swa} = S_P \times ESWA_T\]</div>
+<div class="arithmatex">\[A_{comp} = A - A_{swa}\]</div>
+<p>where <span class="arithmatex">\(S_P\)</span> is the practical salinity from the co-located CTD.</p>
+<p><strong>Step 6 -- Solve for nitrate concentration</strong> by linear least squares. The
+model matrix <span class="arithmatex">\(M\)</span> includes the nitrate extinction spectrum, a constant
+baseline offset, and a linear wavelength baseline:</p>
+<div class="arithmatex">\[M = \begin{bmatrix} ENO3 &amp; \mathbf{1}/100 &amp; \lambda/1000 \end{bmatrix}\]</div>
+<p>The solution vector <span class="arithmatex">\(C\)</span> is obtained via the Moore-Penrose pseudoinverse:</p>
+<div class="arithmatex">\[C = M^{+} \times A_{comp}\]</div>
+<p>The first element <span class="arithmatex">\(C[0]\)</span> is NITRTSC_L2, the nitrate concentration in
+<span class="arithmatex">\(\mu\)</span>M. The second and third elements capture a linear baseline that
+accounts for residual spectral interference.</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.nit_functions.ts_corrected_nitrate" class="doc doc-heading">
+            <code class="highlight language-python">ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t, ctd_sp, data_in, frame_type, wllower=217, wlupper=240)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute NITRTSC_L2, dissolved nitrate concentration corrected for
+temperature and salinity.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>cal_temp</code></b>
+                  (<code>(array_like, shape(N))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Calibration water temperature [degC]. Scalar value tiled to length
+N by the OOI data management system.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wl</code></b>
+                  (<code>(array_like, shape(N, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Wavelength bins for each spectral channel [nm].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eno3</code></b>
+                  (<code>(array_like, shape(N, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Nitrate molar absorptivity (extinction coefficients) at each
+wavelength, from factory calibration [1/(M cm)].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>eswa</code></b>
+                  (<code>(array_like, shape(N, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Seawater extinction coefficients at each wavelength at reference
+salinity 35 and calibration temperature cal_temp, from factory
+calibration [1/(M cm)].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>di</code></b>
+                  (<code>(array_like, shape(N, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Deionized water reference spectrum from factory calibration
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dark_value</code></b>
+                  (<code>(array_like, shape(N))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Dark current scalar, averaged from dark frame measurements
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ctd_t</code></b>
+                  (<code>(array_like, shape(N))</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ water temperature from co-located CTD (TEMPWAT_L1)
+[degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>ctd_sp</code></b>
+                  (<code>(array_like, shape(N))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Practical salinity from co-located CTD (PRACSAL_L2) [unitless].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>data_in</code></b>
+                  (<code>(array_like, shape(N, 256))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw UV absorption spectrum from the SUNA V2 (NITROPT_L0)
+[counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>frame_type</code></b>
+                  (<code>(array_like, shape(N))</code>)
+              –
+              <div class="doc-md-description">
+                <p>Frame type string for each data packet. Light frames ('SLB') are
+processed; dark frames ('SDB', 'SDF', 'NDF') are filled with NaN.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wllower</code></b>
+                  (<code>(<span title="float">float</span> or array_like, shape(N))</code>, default:
+                      <code>217</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Lower wavelength limit for spectral fitting window [nm]. Default
+is 217 nm (1-cm pathlength probe tip). Use 220 nm for 4-cm
+pathlength probe tips.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wlupper</code></b>
+                  (<code>(<span title="float">float</span> or array_like, shape(N))</code>, default:
+                      <code>240</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Upper wavelength limit for spectral fitting window [nm]. Default
+is 240 nm (1-cm pathlength probe tip). Use 245 nm for 4-cm
+pathlength probe tips.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>NO3_conc</code></b>(                  <code>(ndarray, shape(N))</code>
+)              –
+              <div class="doc-md-description">
+                <p>Temperature and salinity corrected dissolved nitrate concentration
+(NITRTSC_L2) [uM]. Dark frame records are filled with NaN.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Absorbance is the log ratio of the deionized water reference to the
+dark-corrected spectrum. Sea salt absorbance, from the seawater
+extinction coefficients corrected to in situ temperature (Plant et al.
+2023) and scaled by practical salinity, is subtracted, and nitrate is
+fit by least squares together with a linear baseline in wavelength.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/nit_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def ts_corrected_nitrate(cal_temp, wl, eno3, eswa, di, dark_value, ctd_t,
+                         ctd_sp, data_in, frame_type, wllower=217,
+                         wlupper=240):
+    """
+    Compute NITRTSC_L2, dissolved nitrate concentration corrected for
+    temperature and salinity.
+
+    Parameters
+    ----------
+    cal_temp : array_like, shape (N,)
+        Calibration water temperature [degC]. Scalar value tiled to length
+        N by the OOI data management system.
+    wl : array_like, shape (N, 256)
+        Wavelength bins for each spectral channel [nm].
+    eno3 : array_like, shape (N, 256)
+        Nitrate molar absorptivity (extinction coefficients) at each
+        wavelength, from factory calibration [1/(M cm)].
+    eswa : array_like, shape (N, 256)
+        Seawater extinction coefficients at each wavelength at reference
+        salinity 35 and calibration temperature cal_temp, from factory
+        calibration [1/(M cm)].
+    di : array_like, shape (N, 256)
+        Deionized water reference spectrum from factory calibration
+        [counts].
+    dark_value : array_like, shape (N,)
+        Dark current scalar, averaged from dark frame measurements
+        [counts].
+    ctd_t : array_like, shape (N,)
+        In situ water temperature from co-located CTD (TEMPWAT_L1)
+        [degC].
+    ctd_sp : array_like, shape (N,)
+        Practical salinity from co-located CTD (PRACSAL_L2) [unitless].
+    data_in : array_like, shape (N, 256)
+        Raw UV absorption spectrum from the SUNA V2 (NITROPT_L0)
+        [counts].
+    frame_type : array_like, shape (N,)
+        Frame type string for each data packet. Light frames ('SLB') are
+        processed; dark frames ('SDB', 'SDF', 'NDF') are filled with NaN.
+    wllower : float or array_like, shape (N,), optional
+        Lower wavelength limit for spectral fitting window [nm]. Default
+        is 217 nm (1-cm pathlength probe tip). Use 220 nm for 4-cm
+        pathlength probe tips.
+    wlupper : float or array_like, shape (N,), optional
+        Upper wavelength limit for spectral fitting window [nm]. Default
+        is 240 nm (1-cm pathlength probe tip). Use 245 nm for 4-cm
+        pathlength probe tips.
+
+    Returns
+    -------
+    NO3_conc : ndarray, shape (N,)
+        Temperature and salinity corrected dissolved nitrate concentration
+        (NITRTSC_L2) [uM]. Dark frame records are filled with NaN.
+
+    Notes
+    -----
+    Absorbance is the log ratio of the deionized water reference to the
+    dark-corrected spectrum. Sea salt absorbance, from the seawater
+    extinction coefficients corrected to in situ temperature (Plant et al.
+    2023) and scaled by practical salinity, is subtracted, and nitrate is
+    fit by least squares together with a linear baseline in wavelength.
+    """
+    n_data_packets = data_in.shape[0]
+
+    # make sure that the dimensionalities of wllower and wlupper are consistent
+    # regardless of whether or not they are specified in the argument list.
+    if np.isscalar(wllower):
+        wllower = np.tile(wllower, n_data_packets)
+
+    if np.isscalar(wlupper):
+        wlupper = np.tile(wlupper, n_data_packets)
+
+    # coefficients of the 4th-order polynomial in (wavelength - 210 nm) from
+    # Plant et al. 2023 that describes the temperature dependence of the
+    # absorbance of sea salt
+    Aplant = 1.46380e-02
+    Bplant = 1.67660e-03
+    Cplant = 2.91898e-05
+    Dplant = -7.56395e-06
+    Eplant = 1.27353e-07
+
+    NO3_conc = np.ones(n_data_packets)
+
+    for i in range(0, n_data_packets):
+
+        if frame_type[i] == 'SDB' or frame_type[i] == 'SDF' or frame_type[i] == "NDF":
+
+            # change this to output nans instead.
+            NO3_conc[i] = np.nan
+
+        else:
+
+            # Find wavelength bins that fall between the upper and lower
+            # limits for spectra fit
+            useindex = np.logical_and(wllower[i] &lt;= wl[i, :], wl[i, :] &lt;= wlupper[i])
+
+            # subset data so that we only use wavelengths between wllower &amp; wlupper
+            WL = wl[i, useindex]
+            ENO3 = eno3[i, useindex]
+            ESWA = eswa[i, useindex]
+            DI = np.array(di[i, useindex], dtype='float64')
+            SW = np.array(data_in[i, useindex], dtype='float64')
+
+            # correct each SW intensity for dark current
+            SWcorr = SW - dark_value[i]
+
+            # calculate absorbance
+            Absorbance = np.log10(DI / SWcorr)
+
+            # now estimate molar absorptivity of seasalt at in situ temperature
+            # use Satlantic calibration and correct as in Plant et al. 2023.
+            WLs = WL - 210.0
+            TcorPoly = Aplant + Bplant * WLs + Cplant * WLs**2 + Dplant * WLs**3 + Eplant * WLs**4
+            SWA_Ext_at_T = ESWA * np.exp(TcorPoly * (ctd_t[i] - cal_temp[i]))
+
+            # absorbance due to sea salt
+            A_SWA = ctd_sp[i] * SWA_Ext_at_T
+            # subtract seasalt absorbance from measured absorbance
+            Acomp = np.array(Absorbance - A_SWA, ndmin=2).T
+
+            # ENO3 plus a linear baseline
+            subset_array_size = np.shape(ENO3)
+            # for the constant in the linear baseline
+            Ones = np.ones((subset_array_size[0],), dtype='float64') / 100
+            M = np.vstack((ENO3, Ones, WL / 1000)).T
+
+            # C has NO3, baseline constant, and slope (vs. WL)
+            C = np.dot(np.linalg.pinv(M), Acomp)
+
+            NO3_conc[i] = C[0, 0]
+
+    return NO3_conc</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>Dark frames (frame types <code>SDB</code>, <code>SDF</code>, and <code>NDF</code>) produce <code>NaN</code> on output.
+Light frames (frame type <code>SLB</code>) are processed through the algorithm described in the Background.</p>
+<p>The <code>wllower</code> and <code>wlupper</code> arguments default to 217 nm and 240 nm
+respectively, matching the 1-cm pathlength probe tip specification. For
+4-cm pathlength probe tips, the OOI system supplies 220 nm and 245 nm via
+the time-vectorized calibration coefficient mechanism.</p>
+<p>The calibration arrays are time-vectorized by the OOI data system: each 256-element array is tiled to shape
+<span class="arithmatex">\((N, 256)\)</span>, where <span class="arithmatex">\(N\)</span> is the number of data packets, so that the coefficients can vary across deployments (and
+instruments) within a single input array. The fitting window and coefficients are therefore evaluated for each data
+packet.</p>
+<h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-05-22</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-05-27</td>
+<td>Craig Risien</td>
+<td>Added light vs dark frame filtering</td>
+</tr>
+<tr>
+<td>2015-04-09</td>
+<td>Russell Desiderio</td>
+<td>Revised for time-vectorized calibration coefficient arrays; changed fill value to NaN</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Christopher Wingard</td>
+<td>Replaced the Sakamoto et al. (2009) temperature correction of the seawater extinction coefficients with Plant et al. (2023)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Johnson, K. S. and Coletti, L. J. (2002). In situ ultraviolet
+spectrophotometry for high resolution and long-term monitoring of nitrate,
+bromide and bisulfide in the ocean. Deep-Sea Research I, 49, 1291-1305.</p>
+<p>OOI (2014). Data Product Specification for NUTNR Data Products. Document
+Control Number 1341-00620. (Not released.)</p>
+<p>Plant, J. N., Sakamoto, C. M., Johnson, K. S., Maurer, T. L., and Bif, M. B. (2023). Updated temperature correction
+for computing seawater nitrate with in situ ultraviolet spectrophotometer and submersible ultraviolet nitrate analyzer
+nitrate sensors. Limnology and Oceanography: Methods, 21, 581-593.</p>
+<p>Sakamoto, C. M., Johnson, K. S., and Coletti, L. J. (2009). Improved
+algorithm for the computation of nitrate concentrations in seawater using
+an in situ ultraviolet spectrophotometer. Limnology and Oceanography:
+Methods, 7, 132-143.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../met_functions/" class="btn btn-neutral float-left" title="MET Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../opt_functions/" class="btn btn-neutral float-right" title="OPT Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../met_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../opt_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

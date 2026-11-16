@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/obs_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>OBS Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "OBS Functions";
+        var mkdocs_page_input_path = "api/obs_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/obs_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../flo_functions/">FLO Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">OBS Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#obsbb-broadband-ocean-bottom-seismometer">OBSBB -- Broadband Ocean Bottom Seismometer</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#grndvel_l1-broadband-ground-velocity">GRNDVEL_L1 -- Broadband Ground Velocity</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#grndacc_l1-broadband-ground-acceleration">GRNDACC_L1 -- Broadband Ground Acceleration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#obssp-short-period-ocean-bottom-seismometer">OBSSP -- Short Period Ocean Bottom Seismometer</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sgrdvel_l1-short-period-ground-velocity">SGRDVEL_L1 -- Short Period Ground Velocity</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Inactive Families</li>
+      <li class="breadcrumb-item active">OBS Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="obs-functions">OBS Functions</h1>
+<div class="admonition note">
+<p class="admonition-title">Inactive Module</p>
+<p>These functions were written in anticipation of an OOI data processing
+pipeline that was never implemented. They are retained for reference
+but are not used in OOI data production.</p>
+</div>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys two classes of ocean bottom
+seismometer instruments on the Regional Cabled Array (RCA) to record
+seismic signals at the seafloor: the Broadband Ocean Bottom Seismometer
+(OBSBB) and the Short Period Ocean Bottom Seismometer (OBSSP). Both
+classes are cabled, streaming data in real time to shore and to the
+Incorporated Research Institutions for Seismology (IRIS).</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OBSBB</td>
+<td>Guralp CMG-1T/5T</td>
+<td>RCA cabled seafloor junction boxes</td>
+<td>Ocean Bottom Seismometer, Broadband</td>
+</tr>
+<tr>
+<td>OBSSP</td>
+<td>Guralp CMG-6TF</td>
+<td>RCA cabled seafloor junction boxes</td>
+<td>Ocean Bottom Seismometer, Short Period</td>
+</tr>
+</tbody>
+</table>
+<p><code>obs_functions.py</code> converts raw L0 digital counts from both instrument
+classes into their respective L1 data products: Broadband Ground Velocity
+(GRNDVEL_L1), Broadband Ground Acceleration (GRNDACC_L1), and Short Period
+Ground Velocity (SGRDVEL_L1).</p>
+<p>Within the OOI data system, OBS data products fall under the Seafloor/Crust <a href="https://oceanobservatories.org/data-products/">sampling
+regime</a> (see the <a href="https://oceanobservatories.org/data-products/data-products-complete-list/">complete list of OOI data
+products</a>).</p>
+<p>These functions apply fixed nominal digitizer gain and sensor sensitivity values supplied as function defaults; no
+per-instrument calibration coefficients are used. They are not currently mapped to any data stream in the OOI data
+system; the cabled seismometer data are distributed through IRIS.</p>
+<p>For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+file map to these functions' arguments, see <a href="../../calibrations/">Calibration Coefficients</a> and <a href="../../using-ooi-data/">Using These Functions
+with OOI Data</a>.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00090</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00090_Data_Product_SPEC_GRNDVEL_OOI.pdf">OOI (2013). Data Product Specification for Broadband Ground Velocity.</a></td>
+</tr>
+<tr>
+<td>1341-00100</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00100_Data_Product_SPEC_GRNDACC_OOI.pdf">OOI (2013). Data Product Specification for Broadband Ground Acceleration.</a></td>
+</tr>
+<tr>
+<td>1341-00110</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00110_Data_Product_SPEC_SGRDVEL_OOI.pdf">OOI (2013). Data Product Specification for Short Period Ground Velocity.</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="obsbb-broadband-ocean-bottom-seismometer">OBSBB -- Broadband Ocean Bottom Seismometer</h3>
+<p>OBSBB instruments provide characterization of seismicity and earthquake
+activity along tectonic plate boundaries. The OOI array of broadband
+seismometers is primarily deployed to detect earthquakes along the
+subduction zone of the Oregon margin and at Axial Volcano. Because the
+instruments are cabled and connected directly to shore, they provide
+real-time earthquake detection.</p>
+<p>The OBSBB hardware is the Guralp CMG-1T (360 s to 50 Hz) paired with a
+CMG-5T strong motion accelerometer, a DM24/7-EAM digitizer/interface, and
+a co-located Low Frequency Hydrophone (HTI-90-U). The instrument provides
+an Ethernet (10/100) interface and is synchronized via pulse-per-second
+timing. In sedimented areas (Slope Base, Southern Hydrate Ridge, and the
+base of Axial Seamount), instruments are buried beneath the seafloor in
+60 cm deep by 60 cm diameter caissons filled with silica beads to improve
+seismic coupling. At the summit of Axial Seamount, where sediment is
+absent, the instrument is installed on basement rock and surrounded by
+gravel-filled bags.</p>
+<p>The CMG-1T seismometer measures ground velocity; its analog output is
+digitized by the DM24 ADC at up to 1000 samples per second at 24-bit
+resolution and passed through a cascade of FIR filters to produce output
+data streams at 200, 40, and 1 samples per second. The CMG-5T strong
+motion accelerometer measures ground acceleration and produces output data
+streams at 200 and 1 samples per second.</p>
+<p>The digitized signals are formatted for transmission via SEEDlink protocol
+as SEED blockettes, routed through a US Navy data diversion switch, and
+made available to OOI via an Antelope Orbserver export.</p>
+<hr />
+<h3 id="grndvel_l1-broadband-ground-velocity">GRNDVEL_L1 -- Broadband Ground Velocity</h3>
+<p>GRNDVEL_L1 is the broadband ground velocity (m/s) time-series measured by
+the Guralp CMG-1T seismometer channel of the OBSBB instrument. The L0
+input is the raw digital count output of the Guralp DM24 ADC. The L1
+product is computed by applying the DM24 bit weight (gain) and the CMG-1T
+sensor sensitivity:</p>
+<div class="arithmatex">\[GRNDVEL = raw \times \frac{gain \times 10^{-6}}{2 \times sensitivity}\]</div>
+<p>where <span class="arithmatex">\(raw\)</span> is the L0 count time-series, <span class="arithmatex">\(gain\)</span> is the DM24 fixed bit
+weight (<span class="arithmatex">\(\mu\)</span>V/count, default 3.2), <span class="arithmatex">\(10^{-6}\)</span> converts <span class="arithmatex">\(\mu\)</span>V to V, and
+<span class="arithmatex">\(sensitivity\)</span> is the CMG-1T sensor sensitivity (V/(m/s), default 1500.0).
+The result is the L1 ground velocity time-series in m/s.</p>
+<hr />
+<h3 id="grndacc_l1-broadband-ground-acceleration">GRNDACC_L1 -- Broadband Ground Acceleration</h3>
+<p>GRNDACC_L1 is the broadband ground acceleration (m/s<span class="arithmatex">\(^2\)</span>) time-series
+measured by the Guralp CMG-5T strong motion accelerometer channel of the
+OBSBB instrument. The L0 input is the raw digital count output of the
+Guralp DM24 ADC. The L1 product is computed by applying the DM24 bit
+weight (gain) and the CMG-5T sensor sensitivity:</p>
+<div class="arithmatex">\[GRNDACC = raw \times \frac{gain \times 10^{-6}}{2 \times sensitivity}\]</div>
+<p>where <span class="arithmatex">\(raw\)</span> is the L0 count time-series, <span class="arithmatex">\(gain\)</span> is the DM24 fixed bit
+weight (<span class="arithmatex">\(\mu\)</span>V/count, default 3.2), <span class="arithmatex">\(10^{-6}\)</span> converts <span class="arithmatex">\(\mu\)</span>V to V, and
+<span class="arithmatex">\(sensitivity\)</span> is the CMG-5T sensor sensitivity (V/(m/s<span class="arithmatex">\(^2\)</span>), default
+0.508). The result is the L1 ground acceleration time-series in m/s<span class="arithmatex">\(^2\)</span>.</p>
+<p>The GRNDACC and GRNDVEL signals are digitized at the same rate and with
+the same time-stamp as the co-located HYDAPLF acoustic signal, facilitating
+correlation across data products.</p>
+<hr />
+<h3 id="obssp-short-period-ocean-bottom-seismometer">OBSSP -- Short Period Ocean Bottom Seismometer</h3>
+<p>OBSSP instruments detect vibrations from small, locally generated
+earthquakes in the frequency range 0.1 Hz to 100 Hz. These events arise
+from local phenomena such as melt movement beneath volcanoes and upward
+flow of hydrothermal fluids in conduits feeding hydrothermal vent systems.
+OBSSP instruments enable imaging of seismic energy traveling through the
+seafloor.</p>
+<p>OBSSP instruments are deployed on the RCA at Hydrate Ridge (PN1B, Hydrate
+Summit) and Axial Volcano (PN3B, Axial Caldera). Each deployment includes
+three orthogonal sensors: one oriented vertically and two oriented
+horizontally. All instruments stream data in real time to IRIS.</p>
+<p>The OBSSP digitized signal is formatted for transmission via SEEDlink
+protocol, routed through the same US Navy data diversion switch used by
+the OBSBB instruments, and made available to OOI via an Antelope Orbserver
+export.</p>
+<hr />
+<h3 id="sgrdvel_l1-short-period-ground-velocity">SGRDVEL_L1 -- Short Period Ground Velocity</h3>
+<p>SGRDVEL_L1 is the short period ground velocity (m/s) time-series measured
+by the OBSSP instrument. The L0 input is the raw digital count output of
+the Guralp DM24 ADC. The L1 product is computed using the same formula
+structure as GRNDVEL:</p>
+<div class="arithmatex">\[SGRDVEL = raw \times \frac{gain \times 10^{-6}}{2 \times sensitivity}\]</div>
+<p>where <span class="arithmatex">\(raw\)</span> is the L0 count time-series, <span class="arithmatex">\(gain\)</span> is the DM24 fixed bit
+weight (<span class="arithmatex">\(\mu\)</span>V/count, default 2.84), <span class="arithmatex">\(10^{-6}\)</span> converts <span class="arithmatex">\(\mu\)</span>V to V, and
+<span class="arithmatex">\(sensitivity\)</span> is the sensor sensitivity (V/(m/s), default 1200.0). The
+result is the L1 short period ground velocity time-series in m/s.</p>
+<p>The DM24 ADC digitizes the signal at up to 1000 samples per second at
+24-bit resolution; FIR filters produce output data streams at 200, 40, and
+1 samples per second. Output accuracy is 5% in amplitude and 0.1% in
+precision across the instrument passband; time-stamping accuracy is 100
+microseconds UTC.</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.obs_functions.obs_bb_ground_velocity" class="doc doc-heading">
+            <code class="highlight language-python">obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute broadband ground velocity (GRNDVEL_L1) from raw OBS counts.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>raw</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw time-series digitized in counts [counts] (GRNDVEL_L0).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gain</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>3.2</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Guralp DM24 fixed gain bit weight [uV/count]. Default is 3.2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sensitivity</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>1500.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Guralp CMG-1T sensor sensitivity [V/(m/s)]. Default is 1500.0.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>grndvel</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>Time-series broadband ground velocity [m/s] (GRNDVEL_L1).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Applied to OBSBB instruments deployed on the Regional Cabled Array.
+The gain is converted from uV/count to V/count before applying the
+calibration. Full algorithm details are in DPS DCN 1341-00090.</p>
+</details>
+
+<details class="history" open>
+  <summary>History</summary>
+  <p>2014-07-09: Christopher Wingard. Initial Code
+2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+2025-05-15: Christopher Wingard. Converted to NumPy docstring format;
+    updated documentation.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/obs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def obs_bb_ground_velocity(raw, gain=3.2, sensitivity=1500.):
+    """
+    Compute broadband ground velocity (GRNDVEL_L1) from raw OBS counts.
+
+    Parameters
+    ----------
+    raw : array_like
+        Raw time-series digitized in counts [counts] (GRNDVEL_L0).
+    gain : float, optional
+        Guralp DM24 fixed gain bit weight [uV/count]. Default is 3.2.
+    sensitivity : float, optional
+        Guralp CMG-1T sensor sensitivity [V/(m/s)]. Default is 1500.0.
+
+    Returns
+    -------
+    grndvel : array_like
+        Time-series broadband ground velocity [m/s] (GRNDVEL_L1).
+
+    Notes
+    -----
+    Applied to OBSBB instruments deployed on the Regional Cabled Array.
+    The gain is converted from uV/count to V/count before applying the
+    calibration. Full algorithm details are in DPS DCN 1341-00090.
+
+    History
+    -------
+    2014-07-09: Christopher Wingard. Initial Code
+    2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+    2025-05-15: Christopher Wingard. Converted to NumPy docstring format;
+        updated documentation.
+    """
+    # scale the gain and sensitivity ...
+    gain = gain * 1.0e-6
+    sense = 2. * sensitivity
+
+    # ... and calculate the broadband ground velocity
+    grndvel = raw * (gain / sense)
+    return grndvel</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-07-09</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of Numexpr library</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.obs_functions.obs_bb_ground_acceleration" class="doc doc-heading">
+            <code class="highlight language-python">obs_bb_ground_acceleration(raw, gain=3.2, sensitivity=0.508)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute broadband ground acceleration (GRNDACC_L1) from raw OBS counts.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>raw</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw time-series digitized in counts [counts] (GRNDACC_L0).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gain</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>3.2</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Guralp DM24 fixed gain bit weight [uV/count]. Default is 3.2.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sensitivity</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.508</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Guralp CMG-5T sensor sensitivity [V/(m/s^2)]. Default is 0.508.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>grndacc</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>Time-series broadband ground acceleration [m/s^2] (GRNDACC_L1).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Applied to OBSBB instruments deployed on the Regional Cabled Array.
+The gain is converted from uV/count to V/count before applying the
+calibration. Full algorithm details are in DPS DCN 1341-00100.</p>
+</details>
+
+<details class="history" open>
+  <summary>History</summary>
+  <p>2014-07-09: Christopher Wingard. Initial Code
+2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+2025-05-15: Christopher Wingard. Converted to NumPy docstring format;
+    updated documentation.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/obs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def obs_bb_ground_acceleration(raw, gain=3.2, sensitivity=0.508):
+    """
+    Compute broadband ground acceleration (GRNDACC_L1) from raw OBS counts.
+
+    Parameters
+    ----------
+    raw : array_like
+        Raw time-series digitized in counts [counts] (GRNDACC_L0).
+    gain : float, optional
+        Guralp DM24 fixed gain bit weight [uV/count]. Default is 3.2.
+    sensitivity : float, optional
+        Guralp CMG-5T sensor sensitivity [V/(m/s^2)]. Default is 0.508.
+
+    Returns
+    -------
+    grndacc : array_like
+        Time-series broadband ground acceleration [m/s^2] (GRNDACC_L1).
+
+    Notes
+    -----
+    Applied to OBSBB instruments deployed on the Regional Cabled Array.
+    The gain is converted from uV/count to V/count before applying the
+    calibration. Full algorithm details are in DPS DCN 1341-00100.
+
+    History
+    -------
+    2014-07-09: Christopher Wingard. Initial Code
+    2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+    2025-05-15: Christopher Wingard. Converted to NumPy docstring format;
+        updated documentation.
+    """
+    # scale the gain and sensitivity ...
+    gain = gain * 1.0e-6
+    sense = 2. * sensitivity
+
+    # ... and calculate the broadband ground acceleration
+    grndacc = raw * (gain / sense)
+    return grndacc</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-07-09</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of Numexpr library</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.obs_functions.obs_sp_ground_velocity" class="doc doc-heading">
+            <code class="highlight language-python">obs_sp_ground_velocity(raw, gain=2.84, sensitivity=1200.0)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute short period ground velocity (SGRDVEL_L1) from raw OBS counts.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>raw</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Raw time-series digitized in counts [counts] (SGRDVEL_L0).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>gain</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>2.84</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Guralp DM24 fixed gain bit weight [uV/count]. Default is 2.84.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sensitivity</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>1200.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Guralp CMG-6T sensor sensitivity [V/(m/s)]. Default is 1200.0.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>sgrdvel</code></b>(                  <code>array_like</code>
+)              –
+              <div class="doc-md-description">
+                <p>Time-series short period ground velocity [m/s] (SGRDVEL_L1).</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>Applied to OBSSP instruments deployed on the Regional Cabled Array
+at Hydrate Ridge and Axial Volcano. The gain is converted from
+uV/count to V/count before applying the calibration. Full algorithm
+details are in DPS DCN 1341-00110.</p>
+</details>
+
+<details class="history" open>
+  <summary>History</summary>
+  <p>2014-07-09: Christopher Wingard. Initial Code
+2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+2025-05-15: Christopher Wingard. Converted to NumPy docstring format;
+    updated documentation.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/obs_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">@deprecated
+def obs_sp_ground_velocity(raw, gain=2.84, sensitivity=1200.):
+    """
+    Compute short period ground velocity (SGRDVEL_L1) from raw OBS counts.
+
+    Parameters
+    ----------
+    raw : array_like
+        Raw time-series digitized in counts [counts] (SGRDVEL_L0).
+    gain : float, optional
+        Guralp DM24 fixed gain bit weight [uV/count]. Default is 2.84.
+    sensitivity : float, optional
+        Guralp CMG-6T sensor sensitivity [V/(m/s)]. Default is 1200.0.
+
+    Returns
+    -------
+    sgrdvel : array_like
+        Time-series short period ground velocity [m/s] (SGRDVEL_L1).
+
+    Notes
+    -----
+    Applied to OBSSP instruments deployed on the Regional Cabled Array
+    at Hydrate Ridge and Axial Volcano. The gain is converted from
+    uV/count to V/count before applying the calibration. Full algorithm
+    details are in DPS DCN 1341-00110.
+
+    History
+    -------
+    2014-07-09: Christopher Wingard. Initial Code
+    2023-08-15: Samuel Dahlberg. Removed use of Numexpr library.
+    2025-05-15: Christopher Wingard. Converted to NumPy docstring format;
+        updated documentation.
+    """
+    # scale the gain and sensitivity ...
+    gain = gain * 1.0e-6
+    sense = 2. * sensitivity
+
+    # ... and calculate the short period ground velocity
+    sgrdvel = raw * (gain / sense)
+    return sgrdvel</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-07-09</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of Numexpr library</td>
+</tr>
+<tr>
+<td>2026-05-15</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00090_Data_Product_SPEC_GRNDVEL_OOI.pdf">OOI (2013). Data Product Specification for Broadband Ground Velocity.
+Document Control Number 1341-00090.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00100_Data_Product_SPEC_GRNDACC_OOI.pdf">OOI (2013). Data Product Specification for Broadband Ground Acceleration.
+Document Control Number 1341-00100.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00110_Data_Product_SPEC_SGRDVEL_OOI.pdf">OOI (2013). Data Product Specification for Short Period Ground Velocity.
+Document Control Number 1341-00110.</a></p>
+<p>Scherbaum, F. (2007). <em>Of Poles and Zeros: Fundamentals of Digital
+Seismology</em>, 2nd ed. Springer, Dordrecht.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../msp_functions/" class="btn btn-neutral float-left" title="MSP Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../msp_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

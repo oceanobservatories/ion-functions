@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://oceanobservatories.github.io/ion-functions/api/flo_functions/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>FLO Functions - ion-functions</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/print-site.css" rel="stylesheet" />
+        <link href="../../css/print-site-readthedocs.css" rel="stylesheet" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../assets/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "FLO Functions";
+        var mkdocs_page_input_path = "api/flo_functions.md";
+        var mkdocs_page_url = "/ion-functions/api/flo_functions/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../..">
+          <img src="../../assets/NSF-OOI-RGB.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING/">Contributing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../data_products/">Data Product Levels</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../calibrations/">Calibration Coefficients</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../using-ooi-data/">Using These Functions with OOI Data</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../function_types/">Function Types</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Notes</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../seaphox/">Deep SeapHOx V2</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Instrument Families</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../co2_functions/">CO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ph_functions/">pH Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ctd_functions/">CTD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../do2_functions/">DO2 Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fdc_functions/">FDC Functions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">FLO Functions</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#primary-sources">Primary Sources</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#chlaflo-and-cdomflo-fluorescence-concentrations">CHLAFLO and CDOMFLO -- Fluorescence Concentrations</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#flubsct_l1-total-volume-scattering-function">FLUBSCT_L1: Total Volume Scattering Function</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#flubsct_l2-total-optical-backscatter-coefficient">FLUBSCT_L2: Total Optical Backscatter Coefficient</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#core-functions">Core functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#wrapper-functions">Wrapper Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#references">References</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../met_functions/">MET Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../nit_functions/">NIT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../opt_functions/">OPT Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../prs_functions/">PRS Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sfl_functions/">SFL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../vel_functions/">VEL Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../adcp_functions/">ADCP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../wav_functions/">WAV Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../generic_functions/">Generic Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Quality Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../qc_functions/">QC Functions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Inactive Families</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../hyd_functions/">HYD Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../msp_functions/">MSP Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../obs_functions/">OBS Functions</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">ion-functions</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Instrument Families</li>
+      <li class="breadcrumb-item active">FLO Functions</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="flo-functions">FLO Functions</h1>
+<h2 id="background">Background</h2>
+<p>The Ocean Observatories Initiative deploys the Sea-Bird Scientific (formerly WET Labs) ECO fluorometer
+family across its moored, profiling, and mobile platforms to measure
+fluorescence and optical backscatter. Two instrument classes are covered
+by this module.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Hardware</th>
+<th>Platform</th>
+<th>Designator Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FLORT</td>
+<td>Sea-Bird Scientific (formerly WET Labs) ECO Triplet</td>
+<td>Moored (fixed depth), cabled shallow profilers, profilers, gliders, and AUVs</td>
+<td>Fluorometer, Three Wavelength</td>
+</tr>
+<tr>
+<td>FLORD</td>
+<td>Sea-Bird Scientific (formerly WET Labs) ECO Dual</td>
+<td>Moored (fixed depth), cabled 200 m platforms, wire-following profilers, and gliders</td>
+<td>Fluorometer, Two Wavelength</td>
+</tr>
+</tbody>
+</table>
+<p>Fixed-platform instruments include a wiper to actively limit biofouling.
+Mobile-platform instruments (profilers, gliders, AUVs) use only passive
+mitigation (copper faceplates).</p>
+<p><code>flo_functions.py</code> converts raw L0 count data from these instruments into
+three L1 data products -- fluorometric chlorophyll-a concentration
+(CHLAFLO_L1), fluorometric CDOM concentration (CDOMFLO_L1), and the
+volume scattering function (FLUBSCT_L1) -- and one L2 product, the total
+optical backscatter coefficient (FLUBSCT_L2).</p>
+<p>Within the OOI data system, FLO data products fall under the Water Column <a href="https://oceanobservatories.org/data-products/">sampling
+regime</a> (see the <a href="https://oceanobservatories.org/data-products/data-products-complete-list/">complete list of OOI data
+products</a>).</p>
+<p>Calibration coefficients are from the factory calibration sheets supplied with individual instruments, except where
+noted in the Calibration Coefficients tables below.</p>
+<p>This page documents the algorithms used to compute the FLO data products. For general guidance on working with OOI
+biogeochemical sensor data, see the <a href="https://doi.org/10.25607/OBP-1865.2">OOI Biogeochemical Sensor Data Best Practices and User
+Guide</a>; for locating calibration coefficients and raw inputs, see <a href="../../calibrations/">Calibration
+Coefficients</a> and <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h3 id="primary-sources">Primary Sources</h3>
+<table>
+<thead>
+<tr>
+<th>DCN</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1341-00530</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00530_Data_Product_Specification_CHLAFLO_OOI.pdf">OOI (2012). Data Product Specification for Fluorometric Chlorophyll-a Concentration.</a></td>
+</tr>
+<tr>
+<td>1341-00550</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00550_Data_Product_Specification_CDOMFLO_OOI.pdf">OOI (2012). Data Product Specification for Fluorometric CDOM Concentration.</a></td>
+</tr>
+<tr>
+<td>1341-00540</td>
+<td><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf">OOI (2014). Data Product Specification for Optical Backscatter (Red Wavelengths).</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="chlaflo-and-cdomflo-fluorescence-concentrations">CHLAFLO and CDOMFLO -- Fluorescence Concentrations</h3>
+<p>Raw output from the FLORD/FLORT instrument is in counts, ranging from 0 to approximately 4096.</p>
+<h4 id="calibration-coefficients">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>counts_dark</code></td>
+<td><code>CC_dark_counts_chlorophyll_a</code></td>
+<td>Factory calibration sheet (CHLAFLO)</td>
+</tr>
+<tr>
+<td><code>scale_factor</code></td>
+<td><code>CC_scale_factor_chlorophyll_a</code></td>
+<td>Factory calibration sheet (CHLAFLO)</td>
+</tr>
+<tr>
+<td><code>counts_dark</code></td>
+<td><code>CC_dark_counts_cdom</code></td>
+<td>Factory calibration sheet (CDOMFLO)</td>
+</tr>
+<tr>
+<td><code>scale_factor</code></td>
+<td><code>CC_scale_factor_cdom</code></td>
+<td>Factory calibration sheet (CDOMFLO)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="chlaflo-and-cdomflo-algorithm">CHLAFLO and CDOMFLO Algorithm</h4>
+<p>The L1 fluorescence concentrations are computed
+from a linear scale-and-offset equation using factory-supplied calibration
+coefficients:</p>
+<div class="arithmatex">\[XX = (C_\text{output} - C_\text{dc}) \times \text{SF}\]</div>
+<p>where <span class="arithmatex">\(C_\text{output}\)</span> is the raw count output, <span class="arithmatex">\(C_\text{dc}\)</span> is the dark count (<code>counts_dark</code>) and SF is the scale
+factor (<code>scale_factor</code>), both from the factory calibration sheet. The same equation applies to both
+CHLAFLO and CDOMFLO; only the calibration coefficients and units differ.</p>
+<p>Chlorophyll-a absorbs light in the visible spectrum and re-emits a portion as fluorescence; the intensity of that
+fluorescence is used as a proxy for chlorophyll-a concentration, and therefore for phytoplankton biomass. CDOM is the
+fraction of dissolved organic matter that absorbs ultraviolet light and fluoresces in the visible blue; it is largely
+made up of tannins and lignins from decaying plant material and gives some water masses their tea-like color.</p>
+<p>For <strong>CHLAFLO</strong> (chlorophyll-a), SF has units of <span class="arithmatex">\(\mu g\ L^{-1}\ \text{count}^{-1}\)</span>
+and the output is in <span class="arithmatex">\(\mu g\ L^{-1}\)</span>. The instrument measures at
+excitation/emission wavelengths of 470/695 nm.</p>
+<p>For <strong>CDOMFLO</strong>, SF has units of <span class="arithmatex">\(\text{ppb}\ \text{count}^{-1}\)</span> and
+the output is in parts per billion (ppb). The instrument measures at
+excitation/emission wavelengths of 370/460 nm.</p>
+<p>The dark count is the instrument's signal output in clean water with
+black tape over the detector, measured at the factory. The scale factor
+is calculated at the factory by obtaining a consistent output in a
+solution of known concentration and subtracting the dark count.</p>
+<p><strong>FLORT/FLORD gliders and AUVs</strong>: Fluorescence (CHLAFLO, CDOMFLO) from gliders and AUVs is computed onboard the
+vehicle using vendor software and transmitted already in engineering units; <code>ion-functions</code> is not invoked for those
+products. Glider backscatter is the exception (see <a href="#flubsct_l1-total-volume-scattering-function">FLUBSCT_L1</a> and
+<a href="#flubsct_l2-total-optical-backscatter-coefficient">FLUBSCT_L2</a>).</p>
+<hr />
+<h3 id="flubsct_l1-total-volume-scattering-function">FLUBSCT_L1: Total Volume Scattering Function</h3>
+<p>The L1 optical backscatter product is the total volume scattering function <span class="arithmatex">\(\beta(\theta, \lambda)\)</span>
+(<span class="arithmatex">\(\text{m}^{-1}\ \text{sr}^{-1}\)</span>) at the instrument's effective (centroid) backscatter angle <span class="arithmatex">\(\theta\)</span> and measurement
+wavelength <span class="arithmatex">\(\lambda\)</span>.</p>
+<h4 id="calibration-coefficients_1">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>counts_dark</code></td>
+<td><code>CC_dark_counts_volume_scatter</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>scale_factor</code></td>
+<td><code>CC_scale_factor_volume_scatter</code></td>
+<td>Factory calibration sheet</td>
+</tr>
+<tr>
+<td><code>counts_dark</code></td>
+<td><code>CC_1_</code>, <code>CC_2_</code>, <code>CC_3_dark_counts_volume_scatter</code></td>
+<td>Factory calibration sheet (ECO-BB3, 660/532/470 nm channels)</td>
+</tr>
+<tr>
+<td><code>scale_factor</code></td>
+<td><code>CC_1_</code>, <code>CC_2_</code>, <code>CC_3_scale_factor_volume_scatter</code></td>
+<td>Factory calibration sheet (ECO-BB3, 660/532/470 nm channels)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="flubsct_l1-algorithm">FLUBSCT_L1 Algorithm</h4>
+<p>The product is computed from raw counts using the same
+scale-and-offset equation as the fluorescence products:</p>
+<div class="arithmatex">\[\beta(\theta, \lambda) = (C_\text{output} - C_\text{dc}) \times \text{SF}\]</div>
+<p>where SF has units of <span class="arithmatex">\((\text{m}^{-1}\ \text{sr}^{-1})\ \text{count}^{-1}\)</span>.
+Raw counts range from 0 to approximately 4210. The dark count (<code>counts_dark</code>) and scale factor (<code>scale_factor</code>) are
+from the factory calibration sheet.</p>
+<p>On gliders, the FLORT-M and FLORD-M volume scattering function is computed onboard the vehicle. The ECO-BB3 (FLORT
+series O) on coastal gliders reports raw counts for each of its three channels, which <code>flo_beta</code> converts using the
+<code>CC_1_</code>, <code>CC_2_</code>, and <code>CC_3_</code> coefficients for the 660, 532, and 470 nm channels.</p>
+<p>The centroid angle <span class="arithmatex">\(\theta\)</span> and chi factor <span class="arithmatex">\(\chi\)</span> (used below) are 
+instrument-dependent:</p>
+<table>
+<thead>
+<tr>
+<th>Instrument type</th>
+<th>OOI classes</th>
+<th><span class="arithmatex">\(\theta\)</span></th>
+<th><span class="arithmatex">\(\chi\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ECO 3-channel (FLORT D/J/K/M/N/O, FLORD D)</td>
+<td>FLORT, FLORD</td>
+<td>124 deg</td>
+<td>1.076</td>
+</tr>
+<tr>
+<td>ECO 2-channel (FLORD G/L/M, FLNTU A)</td>
+<td>FLORD, FLNTU</td>
+<td>140 deg</td>
+<td>1.096</td>
+</tr>
+</tbody>
+</table>
+<p>All FLORD and FLORT backscatter channels use a nominal measurement
+wavelength of 700 nm. The ECO-BB3 (FLORT series O) is an exception with
+three backscatter channels at different visible wavelengths.</p>
+<p>The 3-channel values (<span class="arithmatex">\(\theta\)</span> = 124 deg, <span class="arithmatex">\(\chi\)</span> = 1.076) are from Sullivan et al. (2013), Table 6.2b ("ECO-BB");
+older WET Labs documentation lists the centroid angle as 117 deg. The 2-channel values are from M. Twardowski
+(personal communication). The chi factor is thought to be at most weakly dependent on wavelength, so these values
+apply at any visible wavelength. The ECO-BB3 was originally classified as OPTAA series M and is now FLORT series O.</p>
+<p>The chi factor is a scaling factor, not an angular resolution. In the OOI calibration records it is stored as
+<code>CC_angular_resolution</code>, a historical mislabel.</p>
+<p>In this documentation "total" can mean seawater plus particulate scattering, forward plus backward scattering, or
+backscatter integrated over all backward angles, depending on context.</p>
+<h3 id="flubsct_l2-total-optical-backscatter-coefficient">FLUBSCT_L2: Total Optical Backscatter Coefficient</h3>
+<p>The L2 product is the total optical backscatter coefficient <span class="arithmatex">\(b_b\)</span>
+(<span class="arithmatex">\(\text{m}^{-1}\)</span>), computed in four steps. It is computed by <code>ion-functions</code> for all FLORT and FLORD backscatter,
+including gliders, using the co-located (or glider) CTD temperature and practical salinity.</p>
+<h4 id="calibration-coefficients_2">Calibration Coefficients</h4>
+<table>
+<thead>
+<tr>
+<th>Function Argument</th>
+<th>Calibration Coefficient</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>theta</code></td>
+<td><code>CC_scattering_angle</code></td>
+<td>OOI processing setting (centroid angle; see the table in FLUBSCT_L1)</td>
+</tr>
+<tr>
+<td><code>xfactor</code></td>
+<td><code>CC_angular_resolution</code></td>
+<td>OOI processing setting (chi factor; the name is a historical mislabel)</td>
+</tr>
+<tr>
+<td><code>wlngth</code></td>
+<td><code>CC_measurement_wavelength</code></td>
+<td>Instrument specification (nominal 700 nm)</td>
+</tr>
+<tr>
+<td><code>wlngth</code></td>
+<td><code>CC_1_</code>, <code>CC_2_</code>, <code>CC_3_measurement_wavelength</code></td>
+<td>Instrument specification (ECO-BB3 channel wavelengths)</td>
+</tr>
+<tr>
+<td><code>delta</code></td>
+<td><code>CC_depolarization_ratio</code></td>
+<td>OOI processing setting (0.039; Farinato and Roswell, 1976)</td>
+</tr>
+</tbody>
+</table>
+<p>OOI calibration coefficient names are explained in <a href="../../using-ooi-data/">Using These Functions with OOI Data</a>.</p>
+<h4 id="flubsct_l2-algorithm">FLUBSCT_L2 Algorithm</h4>
+<p><strong>Step 1</strong> -- Compute the seawater volume scattering function <span class="arithmatex">\(\beta_\text{sw}\)</span>
+and total seawater scattering coefficient <span class="arithmatex">\(b_\text{sw}\)</span> using the Zhang
+et al. (2009) model with co-located CTD temperature and salinity:</p>
+<div class="arithmatex">\[[\beta_\text{sw}, b_\text{sw}] = \text{flo_zhang_scatter_coeffs}(\text{degC}, \text{psu}, \theta, \lambda)\]</div>
+<p>where <span class="arithmatex">\(\theta\)</span> (<code>theta</code>) is the instrument centroid angle and <span class="arithmatex">\(\lambda\)</span> (<code>wlngth</code>) the measurement wavelength, both
+OOI processing settings from the table in <a href="#flubsct_l1-total-volume-scattering-function">FLUBSCT_L1</a>.</p>
+<p><strong>Step 2</strong> -- Subtract the seawater contribution to obtain the particulate
+volume scattering function:</p>
+<div class="arithmatex">\[\beta_p(\theta, \lambda) = \beta(\theta, \lambda) - \beta_\text{sw}(\theta, \lambda)\]</div>
+<p><strong>Step 3</strong> -- Convert to the particulate backscattering coefficient using the chi factor <span class="arithmatex">\(\chi\)</span> (<code>xfactor</code>, an OOI
+processing setting from the table in <a href="#flubsct_l1-total-volume-scattering-function">FLUBSCT_L1</a>):</p>
+<div class="arithmatex">\[b_{bp} = \chi \times 2\pi \times \beta_p(\theta, \lambda)\]</div>
+<p>The factor of <span class="arithmatex">\(2\pi\)</span> arises from integration over the polar angle. The
+chi factor relates the particulate volume scattering at angle <span class="arithmatex">\(\theta\)</span> to
+the total particulate backscattering coefficient integrated over all
+backward angles.</p>
+<p><strong>Step 4</strong> -- Add the seawater backscattering contribution. Because
+seawater scattering is symmetric in forward and backward directions, the
+backward component is half the total:</p>
+<div class="arithmatex">\[b_b = b_{bp} + \frac{b_\text{sw}}{2}\]</div>
+<h4 id="zhang-et-al-2009-seawater-scattering-model">Zhang et al. (2009) Seawater Scattering Model</h4>
+<p>The seawater scattering model (<code>flo_zhang_scatter_coeffs</code>) computes the
+volume scattering function of pure seawater at a specified angle and the
+total seawater scattering coefficient. The model sums contributions from
+density fluctuations and concentration fluctuations:</p>
+<div class="arithmatex">\[\beta_{90,\text{sw}} = \beta_\text{df} + \beta_\text{cf}\]</div>
+<p>The density fluctuation term <span class="arithmatex">\(\beta_\text{df}\)</span> depends on the isothermal
+compressibility (Lepple and Millero, 1971), absolute temperature, and the
+density derivative of the refractive index (PMH model). The concentration
+fluctuation term <span class="arithmatex">\(\beta_\text{cf}\)</span> depends on the partial derivative of
+the refractive index with respect to salinity (Quan and Fry, 1994) and
+the water activity (Millero and Leung, 1976). The total scattering
+coefficient is obtained by integrating <span class="arithmatex">\(\beta_{90,\text{sw}}\)</span> over all
+angles. The volume scattering function at angle <span class="arithmatex">\(\theta\)</span> is then:</p>
+<div class="arithmatex">\[\beta_\text{sw}(\theta) = \beta_{90,\text{sw}} \left(1 + \frac{1 - \delta}{1 + \delta} \cos^2\theta \right)\]</div>
+<p>where <span class="arithmatex">\(\delta = 0.039\)</span> (<code>delta</code>) is the depolarization ratio (Farinato and Roswell, 1976), an OOI processing
+setting. Seawater density uses the UNESCO (1981) formulation. The
+refractive index of air uses the Ciddor (1996) formula.</p>
+<p>Full algorithm derivations, calibration procedures, and source references
+are listed in the <a href="#references">References</a> section.</p>
+<hr />
+<h2 id="core-functions">Core functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_scale_and_offset" class="doc doc-heading">
+            <code class="highlight language-python">flo_scale_and_offset(counts_output, counts_dark, scale_factor)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Apply scale-and-offset calibration to raw fluorometer counts.</p>
+<p>Converts raw L0 digital counts from WET Labs ECO fluorometers to
+calibrated L1 concentration or volume scattering function values.
+This is the core algorithm shared by flo_chla (CHLAFLO_L1),
+flo_cdom (CDOMFLO_L1), and flo_beta (FLUBSCT_L1).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>counts_output</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Measured sample output [counts].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>counts_dark</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Dark counts: signal output of the fluorometer in clean water
+with black tape over the detector [counts]. From factory
+calibration sheet.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>scale_factor</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Scale factor from factory calibration sheet [units counts^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>value</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Calibrated output in units determined by scale_factor.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_scale_and_offset(counts_output, counts_dark, scale_factor):
+    """
+    Apply scale-and-offset calibration to raw fluorometer counts.
+
+    Converts raw L0 digital counts from WET Labs ECO fluorometers to
+    calibrated L1 concentration or volume scattering function values.
+    This is the core algorithm shared by flo_chla (CHLAFLO_L1),
+    flo_cdom (CDOMFLO_L1), and flo_beta (FLUBSCT_L1).
+
+    Parameters
+    ----------
+    counts_output : array_like
+        Measured sample output [counts].
+    counts_dark : array_like
+        Dark counts: signal output of the fluorometer in clean water
+        with black tape over the detector [counts]. From factory
+        calibration sheet.
+    scale_factor : array_like
+        Scale factor from factory calibration sheet [units counts^-1].
+
+    Returns
+    -------
+    value : ndarray
+        Calibrated output in units determined by scale_factor.
+    """
+    value = (counts_output - counts_dark) * scale_factor
+    return value</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="additional-notes">Additional Notes</h4>
+<p>This is the shared core algorithm for all three L1 FLORT/FLORD data
+products. The named OOI wrappers <code>flo_chla</code>, <code>flo_cdom</code>, and <code>flo_beta</code>
+each call this function with product-specific calibration coefficients.
+External users should call this function directly rather than the wrappers
+when a single computation is needed for multiple products.</p>
+<h4 id="history">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-01-30</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_bback_total" class="doc doc-heading">
+            <code class="highlight language-python">flo_bback_total(beta, degC, psu, theta, wlngth, xfactor)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute total optical backscatter coefficient (FLUBSCT_L2).</p>
+<p>Derives the total (seawater + particulate) optical backscatter
+coefficient from the L1 volume scattering function (FLUBSCT_L1)
+and co-located CTD data. The seawater volume scattering function
+and total scattering coefficient are computed using the Zhang et al.
+(2009) model via flo_zhang_scatter_coeffs.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>beta</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>Volume scattering function (seawater + particulate) at angle
+theta and wavelength wlngth (FLUBSCT_L1) [m^-1 sr^-1].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>degC</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ water temperature from co-located CTD [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psu</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ salinity from co-located CTD [psu].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>theta</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Effective (centroid) backscatter scattering angle [degrees].
+For FLORT D/J/K/M/N/O and FLORD D (ECO 3-channel): 124 deg.
+For FLORD G/L/M and FLNTU A (ECO 2-channel): 140 deg.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wlngth</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Optical backscatter measurement wavelength [nm].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>xfactor</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Chi factor scaling particulate scattering at angle theta to the
+total particulate backscattering coefficient [unitless].
+For FLORT D/J/K/M/N/O and FLORD D (ECO 3-channel): 1.076.
+For FLORD G/L/M and FLNTU A (ECO 2-channel): 1.096.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>bback</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Total optical backscatter coefficient (FLUBSCT_L2) [m^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The chi factor is a function of angle and sensor geometry. It scales
+particulate scattering at the measurement angle to the particulate
+total backscatter coefficient (the integral over all backward angles
+of the volume scattering function due to particles). Values for theta
+and xfactor are instrument-dependent; see the DPS for FLUBSCT (OOI,
+2014, DCN 1341-00540) for details.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_bback_total(beta, degC, psu, theta, wlngth, xfactor):
+    """
+    Compute total optical backscatter coefficient (FLUBSCT_L2).
+
+    Derives the total (seawater + particulate) optical backscatter
+    coefficient from the L1 volume scattering function (FLUBSCT_L1)
+    and co-located CTD data. The seawater volume scattering function
+    and total scattering coefficient are computed using the Zhang et al.
+    (2009) model via flo_zhang_scatter_coeffs.
+
+    Parameters
+    ----------
+    beta : array_like
+        Volume scattering function (seawater + particulate) at angle
+        theta and wavelength wlngth (FLUBSCT_L1) [m^-1 sr^-1].
+    degC : array_like
+        In situ water temperature from co-located CTD [degC].
+    psu : array_like
+        In situ salinity from co-located CTD [psu].
+    theta : float
+        Effective (centroid) backscatter scattering angle [degrees].
+        For FLORT D/J/K/M/N/O and FLORD D (ECO 3-channel): 124 deg.
+        For FLORD G/L/M and FLNTU A (ECO 2-channel): 140 deg.
+    wlngth : float
+        Optical backscatter measurement wavelength [nm].
+    xfactor : float
+        Chi factor scaling particulate scattering at angle theta to the
+        total particulate backscattering coefficient [unitless].
+        For FLORT D/J/K/M/N/O and FLORD D (ECO 3-channel): 1.076.
+        For FLORD G/L/M and FLNTU A (ECO 2-channel): 1.096.
+
+    Returns
+    -------
+    bback : ndarray
+        Total optical backscatter coefficient (FLUBSCT_L2) [m^-1].
+
+    Notes
+    -----
+    The chi factor is a function of angle and sensor geometry. It scales
+    particulate scattering at the measurement angle to the particulate
+    total backscatter coefficient (the integral over all backward angles
+    of the volume scattering function due to particles). Values for theta
+    and xfactor are instrument-dependent; see the DPS for FLUBSCT (OOI,
+    2014, DCN 1341-00540) for details.
+    """
+    # calculate:
+    #    betasw, the theoretical value of the volume scattering function for
+    #        seawater only at the measurement angle theta and wavelength
+    #        wlngth [m-1 sr-1], and,
+    #    bsw, the theoretical value for the total (forward + backward)
+    #        scattering coefficient for seawater at wavelength wlngth [m-1].
+    # Values are computed using the Zhang et al. (2009) model.
+    betasw, bsw = flo_zhang_scatter_coeffs(degC, psu, theta, wlngth)
+
+    # calculate the volume scattering at angle theta of particles only.
+    #     beta = scattering measured at angle theta for seawater + particulates
+    #     betasw = theoretical seawater only value at angle theta
+    betap = beta - betasw
+
+    # calculate the particulate backscatter coefficient bbackp [m-1], the
+    # particulate scattering function integrated over all backwards angles.
+    # The factor of 2*pi arises from integration over the polar angle.
+    pi = np.pi
+    bbackp = xfactor * 2.0 * pi * betap
+
+    # calculate the backscatter coefficient due to seawater from the total
+    # (forward + backward) scattering coefficient bsw. The scattering by
+    # water molecules is symmetric, so the backward portion is bsw / 2.
+    bbsw = bsw / 2
+
+    # calculate the total (particulates + seawater) backscatter coefficient.
+    bback = bbackp + bbsw
+
+    return bback</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_1">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013-07-16</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2014-04-23</td>
+<td>Christopher Wingard</td>
+<td>Revised to address integration issues and meet DPS intent</td>
+</tr>
+<tr>
+<td>2015-10-26</td>
+<td>Russell Desiderio</td>
+<td>Removed default argument values; revised documentation</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="helper-functions">Helper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_zhang_scatter_coeffs" class="doc doc-heading">
+            <code class="highlight language-python">flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta=0.039)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute seawater scattering coefficients using the Zhang et al. (2009)
+model.</p>
+<p>Calculates the volume scattering function of pure seawater at a given
+angle (betasw) and the total seawater scattering coefficient (bsw) at
+a given wavelength. The computation follows the model described in
+Zhang et al. (2009) and implemented in the DPS for FLUBSCT (OOI,
+2014, DCN 1341-00540). This code is derived from MATLAB code provided
+by Dr. Xiaodong Zhang, University of North Dakota.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>degC</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ water temperature from co-located CTD [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psu</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ salinity from co-located CTD [psu].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>theta</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Optical backscatter scattering angle [degrees].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wlngth</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Optical backscatter measurement wavelength [nm].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>delta</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.039</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Depolarization ratio [unitless]. Default is 0.039.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>betasw</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Volume scattering function of pure seawater at angle theta and
+wavelength wlngth [m^-1 sr^-1].</p>
+              </div>
+            </li>
+            <li>
+<b><code>bsw</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Total scattering coefficient of pure seawater [m^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>The model combines scattering contributions from density fluctuations
+and concentration fluctuations. Isothermal compressibility is from
+Lepple and Millero (1971). Seawater density is from UNESCO Technical
+Papers in Marine Science No. 38 (1981). Water activity is from
+Millero and Leung (1976). The refractive index of seawater is from
+Quan and Fry (1994) and the refractive index of air is from Ciddor
+(1996). The PMH model is used for the density derivative of the
+refractive index.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta=0.039):
+    """
+    Compute seawater scattering coefficients using the Zhang et al. (2009)
+    model.
+
+    Calculates the volume scattering function of pure seawater at a given
+    angle (betasw) and the total seawater scattering coefficient (bsw) at
+    a given wavelength. The computation follows the model described in
+    Zhang et al. (2009) and implemented in the DPS for FLUBSCT (OOI,
+    2014, DCN 1341-00540). This code is derived from MATLAB code provided
+    by Dr. Xiaodong Zhang, University of North Dakota.
+
+    Parameters
+    ----------
+    degC : array_like
+        In situ water temperature from co-located CTD [degC].
+    psu : array_like
+        In situ salinity from co-located CTD [psu].
+    theta : float
+        Optical backscatter scattering angle [degrees].
+    wlngth : float
+        Optical backscatter measurement wavelength [nm].
+    delta : float, optional
+        Depolarization ratio [unitless]. Default is 0.039.
+
+    Returns
+    -------
+    betasw : ndarray
+        Volume scattering function of pure seawater at angle theta and
+        wavelength wlngth [m^-1 sr^-1].
+    bsw : ndarray
+        Total scattering coefficient of pure seawater [m^-1].
+
+    Notes
+    -----
+    The model combines scattering contributions from density fluctuations
+    and concentration fluctuations. Isothermal compressibility is from
+    Lepple and Millero (1971). Seawater density is from UNESCO Technical
+    Papers in Marine Science No. 38 (1981). Water activity is from
+    Millero and Leung (1976). The refractive index of seawater is from
+    Quan and Fry (1994) and the refractive index of air is from Ciddor
+    (1996). The PMH model is used for the density derivative of the
+    refractive index.
+    """
+    # values of the constants
+    Na = 6.0221417930e23    # Avogadro's constant
+    Kbz = 1.3806503e-23     # Boltzmann constant
+    degK = degC + 273.15    # Absolute temperature
+    M0 = 0.018              # Molecular weight of water in kg/mol
+    pi = np.pi
+
+    # convert the scattering angle from degrees to radians
+    rad = np.radians(theta)
+
+    # calculate the absolute refractive index of seawater and the partial
+    # derivative of seawater refractive index with regards to salinity.
+    nsw, dnds = flo_refractive_index(wlngth, degC, psu)
+
+    # isothermal compressibility is from Lepple &amp; Millero (1971,Deep
+    # Sea-Research), pages 10-11 The error ~ +/-0.004e-6 bar^-1
+    icomp = flo_isotherm_compress(degC, psu)
+
+    # density of seawater from UNESCO 38 (1981).
+    rho = flo_density_seawater(degC, psu)
+
+    # water activity data of seawater is from Millero and Leung (1976,
+    # American Journal of Science, 276, 1035-1077). Table 19 was reproduced
+    # using Eq.(14,22,23,88,107) that were fitted to polynominal equation.
+    # dlnawds is a partial derivative of the natural logarithm of water
+    # activity with regards to salinity.
+    dlnawds = (-5.58651e-4 + 2.40452e-7 * degC - 3.12165e-9 * degC**2 + 2.40808e-11 * degC**3) + \
+            1.5 * (1.79613e-5 - 9.9422e-8 * degC + 2.08919e-9 * degC**2 - 1.39872e-11 * degC**3) * \
+            psu**0.5 + 2 * (-2.31065e-6 - 1.37674e-9 * degC - 1.93316e-11 * degC**2) * psu
+
+    # density derivative of refractive index from PMH model
+    dfri = (nsw**2 - 1.0) * (1.0 + 2.0/3.0 * (nsw**2 + 2.0) * (nsw/3.0 - 1.0/3.0 / nsw)**2)
+
+    # volume scattering at 90 degrees due to the density fluctuation
+    beta_df = pi**2 / 2.0 * (wlngth*1e-9)**-4 * Kbz * degK * icomp * dfri**2 * (6.0 + 6.0 * delta) / (6.0 - 7.0 * delta)
+
+    # volume scattering at 90 degree due to the concentration fluctuation
+    flu_con = psu * M0 * dnds**2 / rho / -dlnawds / Na
+    beta_cf = 2.0 * pi**2 * (wlngth * 1e-9)**-4 * nsw**2 * flu_con * (6.0 + 6.0 * delta) / (6.0 - 7.0 * delta)
+
+    # total volume scattering at 90 degree
+    beta90sw = beta_df + beta_cf
+
+    # total scattering coefficient of seawater (m-1)
+    bsw = 8.0 * pi / 3.0 * beta90sw * ((2.0 + delta) / (1.0 + delta))
+
+    # total volume scattering coefficient of seawater (m-1 sr-1)
+    betasw = beta90sw * (1.0 + ((1.0 - delta) / (1.0 + delta)) * np.cos(rad)**2)
+
+    return betasw, bsw</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_2">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unknown</td>
+<td>Xiaodong Zhang (University of North Dakota)</td>
+<td>Original Matlab code</td>
+</tr>
+<tr>
+<td>2013-07-15</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_refractive_index" class="doc doc-heading">
+            <code class="highlight language-python">flo_refractive_index(wlngth, degC, psu)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the absolute refractive index of seawater.</p>
+<p>Helper function for flo_zhang_scatter_coeffs. Computes the absolute
+refractive index of seawater (nsw) and its partial derivative with
+respect to salinity (dnds). The refractive index of air uses the
+Ciddor (1996) formula; the refractive index of seawater uses the
+Quan and Fry (1994) formula.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>wlngth</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Backscatter measurement wavelength [nm].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>degC</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ water temperature [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psu</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ practical salinity [psu].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>nsw</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Absolute refractive index of seawater [unitless].</p>
+              </div>
+            </li>
+            <li>
+<b><code>dnds</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Partial derivative of seawater refractive index with respect to
+salinity [unitless psu^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_refractive_index(wlngth, degC, psu):
+    """
+    Compute the absolute refractive index of seawater.
+
+    Helper function for flo_zhang_scatter_coeffs. Computes the absolute
+    refractive index of seawater (nsw) and its partial derivative with
+    respect to salinity (dnds). The refractive index of air uses the
+    Ciddor (1996) formula; the refractive index of seawater uses the
+    Quan and Fry (1994) formula.
+
+    Parameters
+    ----------
+    wlngth : float
+        Backscatter measurement wavelength [nm].
+    degC : array_like
+        In situ water temperature [degC].
+    psu : array_like
+        In situ practical salinity [psu].
+
+    Returns
+    -------
+    nsw : ndarray
+        Absolute refractive index of seawater [unitless].
+    dnds : ndarray
+        Partial derivative of seawater refractive index with respect to
+        salinity [unitless psu^-1].
+    """
+    # refractive index of air is from Ciddor (1996, Applied Optics).
+    n_air = 1.0 + (5792105.0 / (238.0185 - 1 / (wlngth/1e3)**2) + 167917.0 / (57.362 - 1 / (wlngth/1e3)**2)) / 1e8
+
+    # refractive index of seawater is from Quan and Fry (1994, Applied Optics)
+    n0 = 1.31405
+    n1 = 1.779e-4
+    n2 = -1.05e-6
+    n3 = 1.6e-8
+    n4 = -2.02e-6
+    n5 = 15.868
+    n6 = 0.01155
+    n7 = -0.00423
+    n8 = -4382.0
+    n9 = 1.1455e6
+    nsw = n0 + (n1 + n2 * degC + n3 * degC**2) * psu + n4 * degC**2 + (n5 + n6 * psu + n7 * degC) / \
+          wlngth + n8 / wlngth**2 + n9 / wlngth**3
+
+    # pure seawater
+    nsw = nsw * n_air
+    dnds = (n1 + n2 * degC + n3 * degC**2 + n6 / wlngth) * n_air
+
+    return nsw, dnds</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_3">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-02-21</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_isotherm_compress" class="doc doc-heading">
+            <code class="highlight language-python">flo_isotherm_compress(degC, psu)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute seawater isothermal compressibility.</p>
+<p>Helper function for flo_zhang_scatter_coeffs. Computes seawater
+isothermal compressibility from the secant bulk modulus using
+Millero (1980) for pure water and the seawater correction following
+Lepple and Millero (1971).</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>degC</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ water temperature [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psu</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ practical salinity [psu].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>iso_comp</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Seawater isothermal compressibility [Pa^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_isotherm_compress(degC, psu):
+    """
+    Compute seawater isothermal compressibility.
+
+    Helper function for flo_zhang_scatter_coeffs. Computes seawater
+    isothermal compressibility from the secant bulk modulus using
+    Millero (1980) for pure water and the seawater correction following
+    Lepple and Millero (1971).
+
+    Parameters
+    ----------
+    degC : array_like
+        In situ water temperature [degC].
+    psu : array_like
+        In situ practical salinity [psu].
+
+    Returns
+    -------
+    iso_comp : ndarray
+        Seawater isothermal compressibility [Pa^-1].
+    """
+    # pure water secant bulk Millero (1980, Deep-sea Research)
+    kw = 19652.21 + 148.4206 * degC - 2.327105 * degC**2 + 1.360477e-2 * degC**3 - 5.155288e-5 * degC**4
+
+    # seawater secant bulk
+    a0 = 54.6746 - 0.603459 * degC + 1.09987e-2 * degC**2 - 6.167e-5 * degC**3
+    b0 = 7.944e-2 + 1.6483e-2 * degC - 5.3009e-4 * degC**2
+    ks = kw + a0 * psu + b0 * psu**1.5
+
+    # calculate seawater isothermal compressibility from the secant bulk
+    iso_comp = 1 / ks * 1e-5  # unit is Pa
+
+    return iso_comp</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_4">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-02-21</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_density_seawater" class="doc doc-heading">
+            <code class="highlight language-python">flo_density_seawater(degC, psu)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the density of seawater.</p>
+<p>Helper function for flo_zhang_scatter_coeffs. Computes seawater
+density from the UNESCO Technical Papers in Marine Science No. 38
+(1981) formulation.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>degC</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ water temperature [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psu</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ practical salinity [psu].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>rho_sw</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Density of seawater [kg m^-3].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_density_seawater(degC, psu):
+    """
+    Compute the density of seawater.
+
+    Helper function for flo_zhang_scatter_coeffs. Computes seawater
+    density from the UNESCO Technical Papers in Marine Science No. 38
+    (1981) formulation.
+
+    Parameters
+    ----------
+    degC : array_like
+        In situ water temperature [degC].
+    psu : array_like
+        In situ practical salinity [psu].
+
+    Returns
+    -------
+    rho_sw : ndarray
+        Density of seawater [kg m^-3].
+    """
+    # density of water and seawater, unit is Kg/m^3, from UNESCO,38,1981
+    a0 = 8.24493e-1
+    a1 = -4.0899e-3
+    a2 = 7.6438e-5
+    a3 = -8.2467e-7
+    a4 = 5.3875e-9
+    a5 = -5.72466e-3
+    a6 = 1.0227e-4
+    a7 = -1.6546e-6
+    a8 = 4.8314e-4
+    b0 = 999.842594
+    b1 = 6.793952e-2
+    b2 = -9.09529e-3
+    b3 = 1.001685e-4
+    b4 = -1.120083e-6
+    b5 = 6.536332e-9
+
+    # density for pure water
+    rho_w = b0 + b1 * degC + b2 * degC**2 + b3 * degC**3 + b4 * degC**4 + b5 * degC**5
+
+    # density for pure seawater
+    rho_sw = rho_w + ((a0 + a1 * degC + a2 * degC**2 + a3 * degC**3 + a4 * degC**4) *
+                      psu + (a5 + a6 * degC + a7 * degC**2) * psu**1.5 + a8 * psu**2)
+
+    return rho_sw</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_5">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-02-21</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2023-08-15</td>
+<td>Samuel Dahlberg</td>
+<td>Removed use of numexpr</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wrapper-functions">Wrapper Functions</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_scat_seawater" class="doc doc-heading">
+            <code class="highlight language-python">flo_scat_seawater(degC, psu, theta, wlngth, delta=0.039)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute the total scattering coefficient of pure seawater.</p>
+<p>Thin wrapper around flo_zhang_scatter_coeffs that returns only the
+total scattering coefficient bsw. Used where only bsw is required
+without the volume scattering function betasw.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>degC</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ water temperature from co-located CTD [degC].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>psu</code></b>
+                  (<code>array_like</code>)
+              –
+              <div class="doc-md-description">
+                <p>In situ salinity from co-located CTD [psu].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>theta</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Optical backscatter scattering angle [degrees].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>wlngth</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Optical backscatter measurement wavelength [nm].</p>
+              </div>
+            </li>
+            <li>
+              <b><code>delta</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.039</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Depolarization ratio [unitless]. Default is 0.039.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>bsw</code></b>(                  <code>ndarray</code>
+)              –
+              <div class="doc-md-description">
+                <p>Total scattering coefficient of pure seawater [m^-1].</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_scat_seawater(degC, psu, theta, wlngth, delta=0.039):
+    """
+    Compute the total scattering coefficient of pure seawater.
+
+    Thin wrapper around flo_zhang_scatter_coeffs that returns only the
+    total scattering coefficient bsw. Used where only bsw is required
+    without the volume scattering function betasw.
+
+    Parameters
+    ----------
+    degC : array_like
+        In situ water temperature from co-located CTD [degC].
+    psu : array_like
+        In situ salinity from co-located CTD [psu].
+    theta : float
+        Optical backscatter scattering angle [degrees].
+    wlngth : float
+        Optical backscatter measurement wavelength [nm].
+    delta : float, optional
+        Depolarization ratio [unitless]. Default is 0.039.
+
+    Returns
+    -------
+    bsw : ndarray
+        Total scattering coefficient of pure seawater [m^-1].
+    """
+    _, bsw = flo_zhang_scatter_coeffs(degC, psu, theta, wlngth, delta)
+    return bsw</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_6">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-04-24</td>
+<td>Christopher Wingard</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>The three functions below are named-product wrappers that apply
+<code>flo_scale_and_offset</code> under instrument- and product-specific names to
+satisfy the OOI single-output data product requirement. External users
+should call <code>flo_scale_and_offset</code> directly.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_chla" class="doc doc-heading">
+            <code class="highlight language-python">flo_chla(counts_output, counts_dark, scale_factor)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for CHLAFLO_L1. Returns fluorometric
+chlorophyll-a concentration [ug L^-1].</p>
+
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>flo_scale_and_offset : Core algorithm; use directly where the same
+    scale-and-offset calculation is needed for other data products.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_chla(counts_output, counts_dark, scale_factor):
+    """
+    OOI single-output wrapper for CHLAFLO_L1. Returns fluorometric
+    chlorophyll-a concentration [ug L^-1].
+
+    See Also
+    --------
+    flo_scale_and_offset : Core algorithm; use directly where the same
+        scale-and-offset calculation is needed for other data products.
+    """
+    chla_conc = flo_scale_and_offset(counts_output, counts_dark, scale_factor)
+    return chla_conc</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_7">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-01-30</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_cdom" class="doc doc-heading">
+            <code class="highlight language-python">flo_cdom(counts_output, counts_dark, scale_factor)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for CDOMFLO_L1. Returns fluorometric
+CDOM concentration [ppb].</p>
+
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>flo_scale_and_offset : Core algorithm; use directly where the same
+    scale-and-offset calculation is needed for other data products.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_cdom(counts_output, counts_dark, scale_factor):
+    """
+    OOI single-output wrapper for CDOMFLO_L1. Returns fluorometric
+    CDOM concentration [ppb].
+
+    See Also
+    --------
+    flo_scale_and_offset : Core algorithm; use directly where the same
+        scale-and-offset calculation is needed for other data products.
+    """
+    cdom_conc = flo_scale_and_offset(counts_output, counts_dark, scale_factor)
+    return cdom_conc</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_8">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-01-30</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ion_functions.data.flo_functions.flo_beta" class="doc doc-heading">
+            <code class="highlight language-python">flo_beta(counts_output, counts_dark, scale_factor)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents first">
+
+        <p>OOI single-output wrapper for FLUBSCT_L1. Returns the volume
+scattering function at the instrument centroid angle [m^-1 sr^-1].</p>
+
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>flo_scale_and_offset : Core algorithm; use directly where the same
+    scale-and-offset calculation is needed for other data products.
+flo_bback_total : Computes FLUBSCT_L2 from the L1 beta value.</p>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ion_functions/data/flo_functions.py</code></summary>
+              <pre class="highlight"><code class="language-python">def flo_beta(counts_output, counts_dark, scale_factor):
+    """
+    OOI single-output wrapper for FLUBSCT_L1. Returns the volume
+    scattering function at the instrument centroid angle [m^-1 sr^-1].
+
+    See Also
+    --------
+    flo_scale_and_offset : Core algorithm; use directly where the same
+        scale-and-offset calculation is needed for other data products.
+    flo_bback_total : Computes FLUBSCT_L2 from the L1 beta value.
+    """
+    beta = flo_scale_and_offset(counts_output, counts_dark, scale_factor)
+    return beta</code></pre>
+            </details>
+    </div>
+
+</div><h4 id="history_9">History</h4>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Author</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2014-01-30</td>
+<td>Craig Risien</td>
+<td>Initial code</td>
+</tr>
+<tr>
+<td>2015-10-23</td>
+<td>Russell Desiderio</td>
+<td>Revised documentation</td>
+</tr>
+<tr>
+<td>2026-04-17</td>
+<td>Christopher Wingard</td>
+<td>Converted to NumPy docstring format; updated documentation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References</h2>
+<p>Ciddor, P. E. (1996). Refractive index of air: New equations for the
+visible and near infrared. Applied Optics, 35(9), 1566-1573.</p>
+<p>Farinato, R. S. and Roswell, R. L. (1976). New values of the light
+scattering depolarization and anisotropy of water. Journal of Chemical
+Physics, 65(2), 593-595.</p>
+<p>Lepple, F. K. and Millero, F. J. (1971). The isothermal compressibility
+of seawater near one atmosphere. Deep-Sea Research, 18(12), 1233-1254.</p>
+<p>Millero, F. J. and Leung, W. H. (1976). The thermodynamics of seawater
+at one atmosphere. American Journal of Science, 276, 1035-1077.</p>
+<p>Millero, F. J. (1980). The equation of state of seawater. Deep-Sea
+Research, 27(3-4), 255-274.</p>
+<p>Quan, X. and Fry, E. S. (1994). Empirical equation for the index of
+refraction of seawater. Applied Optics, 33(15), 3241-3243.</p>
+<p>Sullivan, J. M., Twardowski, M. S., Zaneveld, J. R. V., and Moore, C. C.
+(2013). Measuring optical backscattering in water. In A. A. Kokhanovsky
+(Ed.), Light Scattering Reviews 7 (pp. 189-224). Springer.</p>
+<p>UNESCO (1981). Tenth report of the joint panel on oceanographic tables
+and standards. UNESCO Technical Papers in Marine Science No. 38. UNESCO,
+Paris.</p>
+<p>Zhang, X., Hu, L., and He, M. (2009). Scattering by pure seawater:
+Effect of salinity. Optics Express, 17(7), 5698-5710.</p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00530_Data_Product_Specification_CHLAFLO_OOI.pdf">OOI (2012). Data Product Specification for Fluorometric Chlorophyll-a
+Concentration. Document Control Number 1341-00530.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00550_Data_Product_Specification_CDOMFLO_OOI.pdf">OOI (2012). Data Product Specification for Fluorometric CDOM
+Concentration. Document Control Number 1341-00550.</a></p>
+<p><a href="https://oceanobservatories.org/wp-content/uploads/2023/09/1341-00540_Data_Product_SPEC_FLUBSCT_OOI.pdf">OOI (2014). Data Product Specification for Optical Backscatter (Red
+Wavelengths). Document Control Number 1341-00540.</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../fdc_functions/" class="btn btn-neutral float-left" title="FDC Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../met_functions/" class="btn btn-neutral float-right" title="MET Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/oceanobservatories/ion-functions" class="fa fa-code-fork" style="color: #fcfcfc"> oceanobservatories/ion-functions</a>
+        </span>
+    
+    
+      <span><a href="../fdc_functions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../met_functions/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../js/print-site.js"></script>
+      <script src="../../assets/mathjax.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
