@@ -1,28 +1,35 @@
 #!/usr/bin/env python
 """
-@package ion_functions.data.plims_functions
-@file ion_functions/data/plims_functions.py
-@author Joffrey Peters
-@brief Module containing PLIMS/IFCB related data-calculations.
-"""
-
-"""
-#...................................................................................
-    The PLIMS/IFCB instrument outputs two data files for each sample: 
-     * a header file (*.hdr) and
-    * a data file from the ADCs (*.adc)
-    There are additionally several values of interest to be calculated for each
-    sample which combine values from the two files.
-#...................................................................................
+Module containing PLIMS (Plankton Imaging System) instrument family data
+processing functions for the Ocean Observatories Initiative.
 """
 import numpy as np
 
 
-def plims_flow_rate(run_fast, run_fast_factor, sample_speed, sample_volume):
+def plims_flow_rate(run_fast, run_fast_factor):
+    """
+    Compute the PLIMS sample flow rate (FLOWRT_L1).
+
+    The Imaging FlowCytobot injects sample at a standard rate of
+    0.25 mL/min. When the instrument is set to run fast, the standard
+    rate is multiplied by the run fast factor.
+
+    Parameters
+    ----------
+    run_fast : array_like
+        Run fast setting (runSampleFast, from the IFCB header file);
+        True or nonzero when the sampling speed is increased by the run
+        fast factor.
+    run_fast_factor : array_like
+        Factor multiplied by the standard injection rate when run_fast
+        is set (RunFastFactor, from the IFCB header file).
+
+    Returns
+    -------
+    flow_rate : ndarray
+        Sample flow rate (FLOWRT_L1) [mL min-1].
+    """
     run_fast = np.atleast_1d(run_fast).astype(bool)
-    output = np.zeros(run_fast.shape)
-    output[run_fast] = sample_volume[run_fast] / (sample_speed[run_fast] / run_fast_factor[run_fast])
-    output[~run_fast] = sample_volume[~run_fast] / sample_speed[~run_fast]
+    base_flow_rate = 0.25
 
-    return output
-
+    return base_flow_rate * np.where(run_fast, run_fast_factor, 1)

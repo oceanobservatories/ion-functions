@@ -21,10 +21,11 @@ Within the OOI data system, SFL data products fall under the Seafloor/Crust [sam
 regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
 products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
 
-THSPH and TRHPH calibration coefficients are from factory calibration sheets; PRESF calibration coefficients are from
-Sea-Bird factory calibration sheets. The SBE 54 (PREST) applies its calibration onboard.
+THSPH and TRHPH calibration coefficients are laboratory calibrations and constants specified in their DPS (see each
+instrument's Calibration Coefficients table); PRESF calibration coefficients are from Sea-Bird factory calibration
+sheets. The SBE 54 (PREST) applies its calibration onboard.
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI data
 file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
 with OOI Data](../using-ooi-data.md).
 
@@ -65,36 +66,36 @@ electrode.
 All THSPH processing uses 5th-degree polynomial evaluation via `eval_poly`,
 which implements Horner's algorithm for numerical stability. Calibration
 coefficients for each sensor are supplied as 6-element arrays in
-descending-degree order. All calibration coefficients are from factory
-calibration sheets.
+descending-degree order. The source of each coefficient is listed in the
+Calibration Coefficients table below.
 
 #### Calibration Coefficients
 
 | Function Argument | Calibration Coefficient | Source |
 |---|---|---|
-| `e2l_H` | `CC_e2l_H` | Factory calibration sheet |
-| `l2s_H` | `CC_l2s_H` | Factory calibration sheet |
-| `e2l_L` | `CC_e2l_L` | Factory calibration sheet |
-| `l2s_L` | `CC_l2s_L` | Factory calibration sheet |
-| `e2l_r` | `CC_e2l_r` | Factory calibration sheet |
-| `l2s_r` | `CC_l2s_r` | Factory calibration sheet |
-| `s2v_r` | `CC_s2v_r` | Factory calibration sheet |
-| `e2l_b` | `CC_e2l_b` | Factory calibration sheet |
-| `l2s_b` | `CC_l2s_b` | Factory calibration sheet |
-| `e2l_ysz` | `CC_e2l_ysz` | Factory calibration sheet |
-| `e2l_agcl` | `CC_e2l_agcl` | Factory calibration sheet |
-| `e2l_h2` | `CC_e2l_h2` | Factory calibration sheet |
-| `e2l_hs` | `CC_e2l_hs` | Factory calibration sheet |
-| `arr_hgo` | `CC_arr_hgo` | Factory calibration sheet |
-| `arr_agcl` | `CC_arr_agcl` | Factory calibration sheet |
-| `arr_agclref` | `CC_arr_agclref` | Factory calibration sheet |
-| `arr_tac` | `CC_arr_tac` | Factory calibration sheet |
-| `arr_tbc1` | `CC_arr_tbc1` | Factory calibration sheet |
-| `arr_tbc2` | `CC_arr_tbc2` | Factory calibration sheet |
-| `arr_tbc3` | `CC_arr_tbc3` | Factory calibration sheet |
-| `arr_logkfh2g` | `CC_arr_logkfh2g` | Factory calibration sheet |
-| `arr_eh2sg` | `CC_arr_eh2sg` | Factory calibration sheet |
-| `arr_yh2sg` | `CC_arr_yh2sg` | Factory calibration sheet |
+| `e2l_H` | `CC_e2l_H` | Instrument-specific calibration (DPS 1341-00120) |
+| `l2s_H` | `CC_l2s_H` | Sensor-material constants (DPS 1341-00120) |
+| `e2l_L` | `CC_e2l_L` | Instrument-specific calibration (DPS 1341-00120) |
+| `l2s_L` | `CC_l2s_L` | Sensor-material constants (DPS 1341-00120) |
+| `e2l_r` | `CC_e2l_r` | Instrument-specific calibration (DPS 1341-00120) |
+| `l2s_r` | `CC_l2s_r` | Sensor-material constants (DPS 1341-00120) |
+| `s2v_r` | `CC_s2v_r` | Sensor-material constants (DPS 1341-00120) |
+| `e2l_b` | `CC_e2l_b` | Instrument-specific calibration (DPS 1341-00120) |
+| `l2s_b` | `CC_l2s_b` | Sensor-material constants (DPS 1341-00120) |
+| `e2l_ysz` | `CC_e2l_ysz` | Instrument-specific calibration (DPS 1341-00120) |
+| `e2l_agcl` | `CC_e2l_agcl` | Instrument-specific calibration (DPS 1341-00120) |
+| `e2l_h2` | `CC_e2l_h2` | Instrument-specific calibration (DPS 1341-00120) |
+| `e2l_hs` | `CC_e2l_hs` | Instrument-specific calibration (DPS 1341-00120) |
+| `arr_hgo` | `CC_arr_hgo` | Thermodynamic constants for the electrode chemistry |
+| `arr_agcl` | `CC_arr_agcl` | Thermodynamic constants for the electrode chemistry |
+| `arr_agclref` | `CC_arr_agclref` | Thermodynamic constants for the electrode chemistry |
+| `arr_tac` | `CC_arr_tac` | Thermodynamic constants for the electrode chemistry |
+| `arr_tbc1` | `CC_arr_tbc1` | Thermodynamic constants for the electrode chemistry |
+| `arr_tbc2` | `CC_arr_tbc2` | Thermodynamic constants for the electrode chemistry |
+| `arr_tbc3` | `CC_arr_tbc3` | Thermodynamic constants for the electrode chemistry |
+| `arr_logkfh2g` | `CC_arr_logkfh2g` | Thermodynamic constants for the electrode chemistry |
+| `arr_eh2sg` | `CC_arr_eh2sg` | Thermodynamic constants for the electrode chemistry |
+| `arr_yh2sg` | `CC_arr_yh2sg` | Thermodynamic constants for the electrode chemistry |
 
 OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
@@ -122,8 +123,9 @@ R_{ts,eng} &= \frac{10000 \times ts_{rawdec} \times 0.125}
 
 **Step 2 -- Engineering to lab-calibrated values.** A 5th-degree polynomial
 correction (coefficients `e2l`) converts engineering values to lab-calibrated
-voltages or resistances. The `e2l`, `l2s`, and `s2v` coefficients used in Steps 2-4 are from the instrument's factory
-calibration sheet (see [Calibration Coefficients](#calibration-coefficients)).
+voltages or resistances. The `e2l` coefficients used in Step 2 are instrument-specific calibrations; the `l2s`
+and `s2v` coefficients used in Steps 3-4 are sensor-material constants (see
+[Calibration Coefficients](#calibration-coefficients)).
 
 **Step 3 -- Lab-calibrated to scientific units.** For the thermocouples, a
 5th-degree polynomial (coefficients `l2s`) converts calibrated voltage [mV] to
@@ -208,10 +210,10 @@ ORP electrode pair and three resistivity circuits scaled to different concentrat
 
 | Function Argument | Calibration Coefficient | Source |
 |---|---|---|
-| `tc_slope` | `CC_tc_slope` | Factory calibration sheet |
-| `ts_slope` | `CC_ts_slope` | Factory calibration sheet |
-| `gain` | `CC_gain` | Factory calibration sheet |
-| `offset` | `CC_offset` | Factory calibration sheet |
+| `tc_slope` | `CC_tc_slope` | Laboratory calibration (DPS 1341-00150) |
+| `ts_slope` | `CC_ts_slope` | Laboratory calibration (DPS 1341-00150) |
+| `gain` | `CC_gain` | Instrument calibration (DPS 1341-00170) |
+| `offset` | `CC_offset` | Instrument calibration (DPS 1341-00170) |
 
 OOI calibration coefficient names are explained in [Using These Functions with OOI Data](../using-ooi-data.md).
 
@@ -241,7 +243,7 @@ $$T = (V_{tc} + V_{tc} \times 244.97 \times tc_{slope}
 
 The polynomial coefficients $(c_3, c_2, c_1, c_0) = (-10^{-6},\ 7 \times
 10^{-5},\ 0.0024,\ 0.015)$ are fixed constants specified in the DPS.
-`tc_slope` and `ts_slope` are instrument-specific factory calibration
+`tc_slope` and `ts_slope` are laboratory calibration
 coefficients. The auxiliary product TRHPHTE-T\_TS-AUX (thermistor
 temperature only) is computed by `sfl_trhph_vfl_thermistor_temp` and is
 useful as an instrument diagnostic.

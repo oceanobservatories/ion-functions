@@ -1,9 +1,11 @@
 # ion-functions
 
 Python library of oceanographic data processing functions for the
-[Ocean Observatories Initiative (OOI)](https://oceanobservatories.org/). It converts raw instrument output (L0) into
-calibrated (L1) and derived (L2) data products, and applies corrections such as magnetic declination to products
-computed onboard the instruments. Functions are organized by instrument family and take and return NumPy arrays.
+[Ocean Observatories Initiative (OOI)](https://oceanobservatories.org/). The OOI data system uses these functions to
+compute L1 and L2 data products from the parameters parsed from instrument data: applying vendor calibration
+coefficients, scaling or correcting values (e.g., converting mm/s to m/s, or correcting for magnetic declination), and
+deriving new values from one or more inputs. Functions are organized by instrument family and take and return NumPy
+arrays.
 
 **Documentation:** https://oceanobservatories.github.io/ion-functions/
 
@@ -50,12 +52,14 @@ docs/            MkDocs documentation source
 
 | Level | Description | Example |
 |-------|-------------|---------|
-| L0 | Raw instrument output (counts, voltages, instrument-specific units) | Thermistor counts |
+| L0 | Unprocessed data in instrument units (e.g., counts, voltages), parsed from the instrument raw data | Thermistor counts |
 | L1 | Computed from L0 inputs from one instrument with calibration coefficients and metadata, or an instrument-computed value rescaled or corrected | Seawater temperature (&deg;C) |
 | L2 | Derived value computed from at least one L1 or L2 product | Practical salinity (PSS-78) |
 
+See [Data Product Levels](https://oceanobservatories.github.io/ion-functions/data_products/) for the full definitions.
+
 Algorithms come from the OOI Data Product Specifications (DPS), vendor documentation, and peer-reviewed literature.
-Where sources disagree, the implemented code is authoritative and the discrepancy is noted in the documentation.
+Where sources disagree, the discrepancy is noted in the documentation.
 
 ## Contributing
 

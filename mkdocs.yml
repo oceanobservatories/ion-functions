@@ -52,6 +52,7 @@ nav:
   - Function Types: function_types.md
   - Instrument Notes:
     - Deep SeapHOx V2: seaphox.md
+    - Bioacoustic Sonar (ZPLS): zpls.md
   - Instrument Families:
     - CO2 Functions: api/co2_functions.md
     - pH Functions: api/ph_functions.md
@@ -62,6 +63,7 @@ nav:
     - MET Functions: api/met_functions.md
     - NIT Functions: api/nit_functions.md
     - OPT Functions: api/opt_functions.md
+    - PLIMS Functions: api/plims_functions.md
     - PRS Functions: api/prs_functions.md
     - SFL Functions: api/sfl_functions.md
     - VEL Functions: api/vel_functions.md

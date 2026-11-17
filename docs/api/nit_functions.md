@@ -18,7 +18,7 @@ original ISUS instruments and the SUNA V2.
 | NUTNR-M | Sea-Bird Scientific (formerly Satlantic) SUNA V2 | Global profiling gliders | Nutrient, Nitrate |
 | NUTNR-N | Sea-Bird Scientific (formerly Satlantic) Deep SUNA | Pioneer coastal AUVs | Nutrient, Nitrate |
 
-`nit_functions.py` computes a single L2 data product, NITRTSC_L2, from raw
+`nit_functions.py` computes a single L2 data product, NITRTSC_L2, from L0
 UV absorption spectra produced by NUTNR instruments.
 
 Within the OOI data system, NIT data products fall under the Water Column [sampling
@@ -29,7 +29,7 @@ All calibration coefficients are from the factory calibration file supplied with
 
 This page documents the algorithms used to compute the NIT data products. For general guidance on working with OOI
 biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
-Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and L0 inputs, see [Calibration
 Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources

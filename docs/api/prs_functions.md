@@ -28,7 +28,7 @@ products](https://oceanobservatories.org/data-products/data-products-complete-li
 No factory calibration coefficients are passed to these functions. BOTPRES is computed onboard the instrument; the
 CCMP lookup table is selected by the LILY serial number reported in the data stream.
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI data
 file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
 with OOI Data](../using-ooi-data.md).
 

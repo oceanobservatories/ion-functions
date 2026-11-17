@@ -31,7 +31,7 @@ Velocity calculations use no calibration coefficients beyond the deployment loca
 correction; echo intensity uses the vendor scale factor, and bin depths use the instrument configuration (bin size,
 distance to the first bin, and orientation).
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI data
 file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
 with OOI Data](../using-ooi-data.md).
 
@@ -56,8 +56,8 @@ relative to the instrument frame, with the X-axis pointing from transducer 1
 toward transducer 2, and the Y-axis pointing from transducer 4 toward
 transducer 3 (TRDI, 2010a, p. 16-17).
 
-Raw L0 velocity data (VELPROF-B1 through VELPROF-B4) are output in the
-instrument's PD0 binary format in units of mm/s. For instruments programmed in
+L0 velocity data (VELPROF-B1 through VELPROF-B4) are parsed from the
+instrument's PD0 binary format and are in units of mm/s. For instruments programmed in
 beam coordinates (ADCPS-I, ADCPS-K, ADCPT-B, ADCPT-D, ADCPT-E), the
 processing chain is: beam to instrument coordinates, instrument to Earth
 coordinates, then magnetic declination correction. For instruments programmed
