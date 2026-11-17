@@ -35,7 +35,7 @@ noted in the Calibration Coefficients tables below.
 
 This page documents the algorithms used to compute the dissolved oxygen data products. For general guidance on working
 with OOI biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
-Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and L0 inputs, see [Calibration
 Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources

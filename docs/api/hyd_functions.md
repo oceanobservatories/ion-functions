@@ -18,7 +18,7 @@ and anthropogenic sources.
 | HYDBB | Ocean Sonics icListen HF | RCA cabled seafloor junction boxes and 200 m platforms | Hydrophone, Broadband |
 | HYDLF | HTI 90-U | RCA cabled seafloor junction boxes | Hydrophone, Low Frequency |
 
-`hyd_functions.py` converts raw L0 data from both instrument classes into
+`hyd_functions.py` converts L0 data from both instrument classes into
 their respective L1 data products: Broadband Acoustic Pressure Waves
 (HYDAPBB_L1) and Low Frequency Acoustic Pressure Waves (HYDAPLF_L1).
 
@@ -30,7 +30,7 @@ These functions apply a gain setting supplied by the caller (HYDBB) or a fixed n
 calibration coefficients are used. They are not currently mapped to any data stream in the OOI data system; the cabled
 hydrophone data are distributed through IRIS.
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI data
 file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
 with OOI Data](../using-ooi-data.md).
 

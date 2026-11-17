@@ -19,7 +19,7 @@ Incorporated Research Institutions for Seismology (IRIS).
 | OBSBB | Guralp CMG-1T/5T | RCA cabled seafloor junction boxes | Ocean Bottom Seismometer, Broadband |
 | OBSSP | Guralp CMG-6TF | RCA cabled seafloor junction boxes | Ocean Bottom Seismometer, Short Period |
 
-`obs_functions.py` converts raw L0 digital counts from both instrument
+`obs_functions.py` converts L0 digital counts from both instrument
 classes into their respective L1 data products: Broadband Ground Velocity
 (GRNDVEL_L1), Broadband Ground Acceleration (GRNDACC_L1), and Short Period
 Ground Velocity (SGRDVEL_L1).
@@ -32,7 +32,7 @@ These functions apply fixed nominal digitizer gain and sensor sensitivity values
 per-instrument calibration coefficients are used. They are not currently mapped to any data stream in the OOI data
 system; the cabled seismometer data are distributed through IRIS.
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI data
 file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
 with OOI Data](../using-ooi-data.md).
 

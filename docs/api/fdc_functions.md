@@ -12,18 +12,22 @@
 
 The Flux Direct Covariance High Power (FDCHP) system directly computes air-sea fluxes of
 momentum and buoyancy using the motion-corrected direct covariance (MCDC) method. The system
-combines a Gill Windmaster Pro (Model 1561-PK-020) 3-axis sonic anemometer/thermometer with a
-Lord MicroStrain 3DM-GX3-25 Inertial Measurement Unit (IMU, integrating 3-axis linear
-accelerometers, 3-axis angular rate sensors, and a 3-axis magnetometer), forming the FDCHP
-instrument class deployed on select OOI surface buoys. Note, MicroStrain was acquired by Hottinger
+combines a Gill 3-axis sonic anemometer/thermometer (Windmaster Pro, Model 1561-PK-020, in series A; R3-50 in
+series B) with a Lord MicroStrain 3DM-GX3-25 Inertial Measurement Unit (IMU, integrating 3-axis linear
+accelerometers, 3-axis angular rate sensors, and a 3-axis magnetometer) housed in the FDCHP control module, forming
+the FDCHP instrument class deployed on select OOI surface buoys. Note, MicroStrain was acquired by Hottinger
 Bruel and Kjaer (HBK) in September 2023 and now operates as MicroStrain by HBK.
 
 | Class | Hardware | Platform | Designator Meaning |
 |---|---|---|---|
-| FDCHP-A | Gill Windmaster Pro (1561-PK-020) sonic anemometer with Lord MicroStrain 3DM-GX3-25 IMU | Surface moorings (CE02SHSM, CP01CNSM, GI01SUMO, GS01SUMO) | Flux Direct Covariance High Power |
+| FDCHP-A | Gill Windmaster Pro (1561-PK-020) sonic anemometer with FDCHP control module (Lord MicroStrain 3DM-GX3-25 IMU) | Select surface moorings | Flux Direct Covariance High Power |
+| FDCHP-B | Gill R3-50 sonic anemometer with FDCHP control module (Lord MicroStrain 3DM-GX3-25 IMU) | Select surface moorings | Flux Direct Covariance High Power |
+
+Series B, with the Gill R3-50 anemometer and a control module upgraded for it, replaced series A beginning in 2021,
+following a test deployment.
 
 FDCHP collects 10 Hz data for 20 minutes out of every hour, yielding roughly 12000 records per
-dataset. `fdc_functions.py` parses the raw 1D input streams into discrete 12000-record dataset
+dataset. `fdc_functions.py` parses the L0 1D input streams into discrete 12000-record dataset
 packets, computes the motion-corrected L1 wind velocity (WINDTUR) and sonic temperature
 (TMPATUR) products, and derives the L2 momentum (FLUXMOM) and buoyancy (FLUXHOT) flux products
 from those L1 products. Two auxiliary time-base products, not specified in the DPS, provide

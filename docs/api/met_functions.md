@@ -45,7 +45,7 @@ applied by these functions. The calibration-record (`CC_`) inputs are deployment
 of the sea surface CT, latitude and longitude -- processing switches (`jwarm`, `jcool`, `use_velpt`), and the wind
 speed correction (`spd_corr`).
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI data
 file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
 with OOI Data](../using-ooi-data.md).
 

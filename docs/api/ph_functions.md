@@ -16,7 +16,7 @@ covered by this module.
 (PHWATER_L2). `phsen_h_functions.py` processes data from the [Sea-Bird 
 Scientific Deep SeapHOx V2](https://www.seabird.com/products/deep-seaphox-v2-ph-sensor) 
 (PHSEN-G and PHSEN-H) and computes the same PHWATER_L2 data product. Both 
-instruments measure pH on the total hydrogen ion scale ($\text{pH}_T$) and produce PHWATER_L2 directly from their raw
+instruments measure pH on the total hydrogen ion scale ($\text{pH}_T$) and produce PHWATER_L2 directly from their
 L0 data; there is no intermediate L1 product.
 
 Within the OOI data system, pH data products fall under the Water Column [sampling
@@ -28,7 +28,7 @@ noted in the Calibration Coefficients tables below.
 
 This page documents the algorithms used to compute the pH data products. For general guidance on working with OOI
 biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
-Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and L0 inputs, see [Calibration
 Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources

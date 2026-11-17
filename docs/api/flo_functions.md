@@ -16,7 +16,7 @@ Fixed-platform instruments include a wiper to actively limit biofouling.
 Mobile-platform instruments (profilers, gliders, AUVs) use only passive
 mitigation (copper faceplates).
 
-`flo_functions.py` converts raw L0 count data from these instruments into
+`flo_functions.py` converts L0 count data from these instruments into
 three L1 data products -- fluorometric chlorophyll-a concentration
 (CHLAFLO_L1), fluorometric CDOM concentration (CDOMFLO_L1), and the
 volume scattering function (FLUBSCT_L1) -- and one L2 product, the total
@@ -31,7 +31,7 @@ noted in the Calibration Coefficients tables below.
 
 This page documents the algorithms used to compute the FLO data products. For general guidance on working with OOI
 biogeochemical sensor data, see the [OOI Biogeochemical Sensor Data Best Practices and User
-Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and raw inputs, see [Calibration
+Guide](https://doi.org/10.25607/OBP-1865.2); for locating calibration coefficients and L0 inputs, see [Calibration
 Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../using-ooi-data.md).
 
 ### Primary Sources
@@ -46,7 +46,7 @@ Coefficients](../calibrations.md) and [Using These Functions with OOI Data](../u
 
 ### CHLAFLO and CDOMFLO -- Fluorescence Concentrations
 
-Raw output from the FLORD/FLORT instrument is in counts, ranging from 0 to approximately 4096.
+L0 output from the FLORD/FLORT instrument is in counts, ranging from 0 to approximately 4096.
 
 #### Calibration Coefficients
 

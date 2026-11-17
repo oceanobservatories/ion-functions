@@ -35,7 +35,7 @@ regime](https://oceanobservatories.org/data-products/); the DISSGAS products are
 No calibration coefficients are passed to these functions; the calibration tables and deconvolution constants
 specified in the DPS are fixed in the code.
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI data
 file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
 with OOI Data](../using-ooi-data.md).
 

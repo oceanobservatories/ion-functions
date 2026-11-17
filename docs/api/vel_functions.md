@@ -20,7 +20,7 @@ covered by this module.
 | VEL3D-K | Nortek Aquadopp II (MMP) | Wire following profiler | Velocity 3D |
 | VEL3D-L | FSI ACM-Plus (Scripps) | Global wire following profiler | Velocity 3D |
 
-`vel_functions.py` converts L0 raw velocity data from each instrument class
+`vel_functions.py` converts L0 velocity data from each instrument class
 into calibrated L1 velocity data products in m/s, referenced to true North
 and true East. All magnetic declination corrections are computed from the IGRF
 using the deployment location (latitude, longitude, depth) and NTP timestamp.
@@ -34,7 +34,7 @@ latitude and longitude are used for the magnetic declination correction. VELPT a
 velocities in instrument earth coordinates (magnetic); VEL3D-K beam velocities are transformed to earth coordinates by
 ion-functions using the fixed instrument and profiler geometry.
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI data
 file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
 with OOI Data](../using-ooi-data.md).
 

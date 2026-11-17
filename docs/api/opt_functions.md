@@ -6,7 +6,7 @@ The OPT instrument family covers three distinct optical measurement systems
 deployed across the OOI arrays: the Sea-Bird Scientific ac-s spectral
 absorption and attenuation meter (OPTAA), scalar PAR sensors from multiple
 manufacturers (PARAD), and the Sea-Bird Scientific OCR-507 multispectral
-downwelling irradiance radiometer (SPKIR). All three produce L1 or L2 data products from raw
+downwelling irradiance radiometer (SPKIR). All three produce L1 or L2 data products from L0
 counts or voltage, using instrument-specific factory calibration
 coefficients.
 
@@ -30,7 +30,7 @@ Within the OOI data system, OPT data products fall under the Water Column [sampl
 regime](https://oceanobservatories.org/data-products/) (see the [complete list of OOI data
 products](https://oceanobservatories.org/data-products/data-products-complete-list/)).
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI data
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI data
 file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and [Using These Functions
 with OOI Data](../using-ooi-data.md).
 

@@ -17,7 +17,7 @@ classes covered by this module.
 | CTDGV | SBE GPCTD (Seabird Payload CTD) | Gliders | CTD, Glider Vehicle |
 | PHSEN-G/H | SBE Deep SeapHOx V2 ([instrument notes](../seaphox.md)) | Moored (fixed depth) | pH Sensor |
 
-`ctd_functions.py` converts raw Sea-Bird Electronics CTD data into calibrated 
+`ctd_functions.py` converts L0 Sea-Bird Electronics CTD data into calibrated 
 L1 engineering products (TEMPWAT, PRESWAT, CONDWAT) and computes the L2 
 derived products Practical Salinity (PRACSAL) and in-situ Density (DENSITY) 
 using the [TEOS-10 GSW library](https://teos-10.github.io/GSW-Python/).
@@ -36,7 +36,7 @@ the L1 conversions below are not applied to it.
 
 All calibration coefficients are from factory calibration values supplied with individual instruments.
 
-For where to find the calibration coefficients and raw inputs for an OOI dataset, and how the variables in an OOI
+For where to find the calibration coefficients and L0 inputs for an OOI dataset, and how the variables in an OOI
 data file map to these functions' arguments, see [Calibration Coefficients](../calibrations.md) and
 [Using These Functions with OOI Data](../using-ooi-data.md).
 

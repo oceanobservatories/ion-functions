@@ -7,15 +7,17 @@ data product from its inputs.
 
 ## What an OOI Data Download Contains
 
-OOI data are delivered as NetCDF files, one per deployment and data stream. Each file contains the instrument's raw
-(L0) inputs alongside the derived (L1 and L2) data products computed from them, so in most cases everything a function
-needs is already in the file. For example, a beam-coordinate ADCP file contains the four beam velocities
-(`velocity_beam1` through `velocity_beam4`), the percent-good values, `heading`, `pitch`, and `roll` together with the
-`eastward_seawater_velocity`, `northward_seawater_velocity`, and `upward_seawater_velocity` products computed from
-them.
+OOI data are delivered as NetCDF files, one or more per deployment and data stream. Each file may contain the 
+instrument's L0 inputs alongside any L1 and L2 data products computed from them or directly reported by the instrument.
+In most cases everything a function, needs is already in the file. For example, a beam-coordinate ADCP file contains 
+the four beam velocities (`velocity_beam1` through `velocity_beam4`), the percent-good values, `heading`, `pitch`, 
+and `roll` together with the `eastward_seawater_velocity`, `northward_seawater_velocity`, and 
+`upward_seawater_velocity` products computed from them. In some cases, the user may want to also download data from a 
+co-located sensor (e.g., the CTD for in-situ temperature and salinity data) as part of the processing (see 
+[below](#inputs-from-co-located-instruments)). 
 
-The variable names in the file are the OOI parameter names, not the function argument names. The mapping between the
-two is described [below](#mapping-file-variables-to-function-arguments).
+The variable names in the file are the OOI parameter names, not the argument names used in the functions. The mapping 
+between the two is described [below](#mapping-file-variables-to-function-arguments).
 
 Files produced by the OOI data system use `obs` as the record dimension. With xarray, use
 `ds.swap_dims({'obs': 'time'})` to index the data by time.
